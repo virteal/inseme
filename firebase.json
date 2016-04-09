@@ -5,25 +5,25 @@
     "firebase.json",
     "**/.*",
     "**/node_modules/**"
-    "headers": [ {
+  ],
+  "headers": [ {
     "source" : "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
     "headers" : [ {
       "key" : "Access-Control-Allow-Origin",
       "value" : "*"
-  } ]
-  }, {
+    } ]
+    }, {
     "source" : "**/*.@(jpg|jpeg|gif|png)",
     "headers" : [ {
-    "key" : "Cache-Control",
-    "value" : "max-age=7200"
+      "key" : "Cache-Control",
+      "value" : "max-age=7200"
     } ]
-  }, {
+    }, {
     // Sets the cache header for the index page to a very short time
     "source" : "index.html",
     "headers" : [ {
-    "key" : "Cache-Control",
-    "value" : "max-age=1"
+      "key" : "Cache-Control",
+      "value" : "max-age=1"
     } ]
   } ]
-  ]
 }
