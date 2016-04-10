@@ -6,6 +6,7 @@
     "**/.*",
     "**/node_modules/**"
   ],
+  "cleanUrls": true,
   "headers": [ {
     "source" : "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
     "headers" : [ {
