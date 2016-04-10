@@ -1,0 +1,42 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Inseme pad</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  
+<!-- Firebase -->
+<script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.10.0/codemirror.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.10.0/codemirror.css" />
+
+<!-- Firepad -->
+<link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.3.0/firepad.css" />
+<script src="https://cdn.firebase.com/libs/firepad/1.3.0/firepad.min.js"></script>
+  
+</head>
+
+<body>
+
+ <div id="firepad"></div>
+ 
+<script>
+  var firepadRef = new Firebase('https://inseme.firebaseio.com/firepads/Paris');
+  var codeMirror = CodeMirror(document.getElementById('firepad'), { lineWrapping: true });
+  var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror,
+      { richTextShortcuts: true, richTextToolbar: true, defaultText: 'Hello, Paris !' });
+</script>
+    
+    <br><a href="/">Inseme</a>
+
+</body>
+</html>

@@ -20,8 +20,8 @@
       "value" : "max-age=7200"
     } ]
     }, {
-    // Sets the cache header for the index page to a very short time
-    "source" : "index.html",
+    // Sets the cache header for the jtml pages to a very short time
+    "source" : "*.html",
     "headers" : [ {
       "key" : "Cache-Control",
       "value" : "max-age=1"
