@@ -159,13 +159,36 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   if( !found ){
     Inseme.each_choice( function( c ){
       if( found )return;
-      if( Inseme.config.choice[ c ].text != vote )return;
+      if( Inseme.config.choices[ c ].text != vote )return;
       vote = c;
       found = true;
     });
   }
   // Handle special "audio", "video" and "image" actions
-  // ToDo: use parameter to customize content of page
+  var param = "";
+  var token1;
+  if( !found ){
+    var isp = vote.indexOf( " " );
+    if( isp >= 0 ){
+      token1 = vote.substring( 0, isp );
+      param = vote.substring( isp + 1 );
+    }else{
+      token1 = vote;
+      if( token1.substring( 0, 4 ) === "http" ){
+        param = token1;
+        token1 = "image";
+      }
+    }
+    if( param ){
+      if( token1 === "image" ){
+        Inseme.set_image( param );
+      }else if( token1 === "video" ){
+        Inseme.set_video( param );
+      }else if( token1 === "audio" ){
+        Inseme.set_audio( param );
+      }  
+    }
+  }
   if( !found )return;
   var user = message.name;
   de&&bug( "Inseme.on_firechat_message_add(...,", message, ") called" );
@@ -184,6 +207,24 @@ Inseme.each_choice = function( f ){
   for( var c in all_choices ){
     f( c );
   }
+};
+
+
+Inseme.set_image = function( image_url ){
+  $("#inseme_image_container")
+  .empty()
+  .prepend( $( '<a>',{href: image_url } ) )
+  .embedly();
+};
+
+
+Inseme.set_video = function( video_url ){
+  
+};
+
+
+Inseme.set_audio = function( audio_url ){
+  
 };
 
 

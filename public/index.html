@@ -10,7 +10,7 @@
   <meta name="author" content="@jhr">
   
   <!--Import Google Icon Font-->
-  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <!--Import materialize.css-->
   <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css"  media="screen,projection"/>
@@ -25,13 +25,17 @@
   <![endif]-->
   
   <!-- jQuery -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
-
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+  
+  <!-- Embedly -->
+  <script src="https://cdn.embed.ly/jquery.embedly-3.1.2.min.js" type="text/javascript"></script>
+  
   <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
 
   <!-- Firebase -->
   <script src='https://cdn.firebase.com/js/client/2.0.2/firebase.js'></script>
+  
   <!-- Firechat -->
   <link rel='stylesheet' href='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.min.css' />
   <script src='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.min.js'></script>
@@ -42,9 +46,22 @@
 
 <body class="grey-text text-darken-4">
 
- <script type='text/javascript'>
+  <script type='text/javascript'>
+  
+    var chatRef;
+
+      function login(provider) {
+        chatRef.authWithOAuthPopup(provider, function(error, authData) {
+          if (error) {
+            console.log(error);
+          }
+        });
+      }
+    
+    $(document).ready( function(){
+      $.embedly.defaults.key = '4b04162cd6134d0da674a15aa65b8c4b';
       // Create a new Firebase reference, and a new instance of the Login client
-      var chatRef = new Firebase('https://inseme.firebaseio.com/chat');
+      chatRef = new Firebase('https://inseme.firebaseio.com/chat');
       chatRef.onAuth(function(authData) {
         // Once authenticated, instantiate Firechat with our user id and user name
         if (authData) {
@@ -57,7 +74,7 @@
           setTimeout( 
             function(){
               Inseme.login( authData.uid, authData[authData.provider].displayName );
-              $vote_buttons = $("#vote_buttons");
+              $vote_buttons = $("#inseme_vote_buttons");
               Inseme.each_choice( function( c ){
                 var text = Inseme.config.choices[ c ].text;
                 if( !text )return;
@@ -70,30 +87,20 @@
                 $input.appendTo( $vote_buttons );
               });
               // Add handler to manage each button
-              $(".inseme_vote").click ( function() {
+              $(".inseme_vote_buttons").click ( function() {
                 var vote = $(this).attr ( "data-inseme-vote" );
                 Inseme.change_vote( vote );
               } );
             },
             5000
           );
-        };
-      });
-      function login(provider) {
-        chatRef.authWithOAuthPopup(provider, function(error, authData) {
-          if (error) {
-            console.log(error);
-          }
-        });
-      }
+        }
+      } );
+    } );
     </script>
     
-    <div class="container center">
-      <h2>Inseme</h2>
-    </div>
-    
-    <div class="container center">
-      <iframe src="https://embed.bambuser.com/channel/nuitdebout" width="460" height="345" frameborder="0"></iframe>
+    <div id="inseme_video_container" class="container center">
+      <iframe id="inseme_video_frame" src="https://embed.bambuser.com/channel/nuitdebout" width="460" height="345" frameborder="0"></iframe>
     </div>
     
     <div id='firechat-wrapper' class="container">
@@ -104,13 +111,20 @@
       
     </div>
     
-    <div id='help' class="container">
-      <div id="vote_buttons"></div>
-      <img src="https://pbs.twimg.com/media/CfJGLWBXEAEPBfC.jpg"/>
+    <div id='inseme_actions' class="container">
+      <div id="inseme_vote_buttons"></div>
+    </div>
+    
+    <div id='inseme_image_container' class="container">
+      <a href="https://pbs.twimg.com/media/CfJGLWBXEAEPBfC.jpg">
+      <img src="https://pbs.twimg.com/media/CfJGLWBXEAEPBfC.jpg">
+      </a>
+<script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
     </div>
     
     <footer class="page-footer blue lighten-4"><div class="container">
-    <a href="https://github.com/virteal/inseme">A propos</a>
+    Inseme
+    - <a href="https://github.com/virteal/inseme">A propos</a>
     - <a href="/pad">Pad</a>
     - <a href="http://nuitdebout.fr">nuitdebout.fr</a>
     </div></footer>
