@@ -78,7 +78,6 @@ var Inseme = {
 
 Inseme.init = function( config ){
   de&&bug( "Inseme.init(", config, ") called" );
-  if( !config ) config = {};
   de&mand( config );
   Inseme.config.firechat = config.firechat;
   Inseme.set_firechat_event_handlers();
@@ -152,17 +151,22 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   // Skip not inseme related messages
   if( text.substring( 0, "inseme".length ) !== "inseme" )return;
   var vote = text.substr( "inseme ".length ) || "quiet";
+  var found = false;
   // Lookup canonical form
-  if( !Inseme.config.choices[ vote ] ){
-    var found = false;
+  if( !found ){
+    found = Inseme.config.choices[ vote ];
+  }
+  if( !found ){
     Inseme.each_choice( function( c ){
       if( found )return;
       if( Inseme.config.choice[ c ].text != vote )return;
       vote = c;
       found = true;
     });
-    if( !found )return;
   }
+  // Handle special "audio", "video" and "image" actions
+  // ToDo: use parameter to customize content of page
+  if( !found )return;
   var user = message.name;
   de&&bug( "Inseme.on_firechat_message_add(...,", message, ") called" );
   de&&bug( "vote", vote, "user", user );
