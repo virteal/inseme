@@ -36,6 +36,8 @@
   <link rel='stylesheet' href='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.min.css' />
   <script src='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.min.js'></script>
   
+  <script src="inseme.js"></script>
+  
 </head>
 
 <body class="grey-text text-darken-4">
@@ -47,8 +49,35 @@
         // Once authenticated, instantiate Firechat with our user id and user name
         if (authData) {
           var chat = new FirechatUI(chatRef, document.getElementById('firechat-wrapper'));
-          chat.setUser(authData.uid, authData[authData.provider].displayName);
-        }
+          Inseme.init( { firechat: chat } );
+          chat.setUser(
+            authData.uid, 
+            authData[authData.provider].displayName
+          );
+          setTimeout( 
+            function(){
+              Inseme.login( authData.uid, authData[authData.provider].displayName );
+              $vote_buttons = $("#vote_buttons");
+              Inseme.each_choice( function( c ){
+                var text = Inseme.config.choices[ c ].text;
+                if( !text )return;
+                // Add a button to vote according to that choice
+                var $input = $(
+                  '<input type="button" class="inseme_vote" value="' + text
+                + '" data-inseme-vote="' + c
+                + '" />'
+                );
+                $input.appendTo( $vote_buttons );
+              });
+              // Add handler to manage each button
+              $(".inseme_vote").click ( function() {
+                var vote = $(this).attr ( "data-inseme-vote" );
+                Inseme.change_vote( vote );
+              } );
+            },
+            5000
+          );
+        };
       });
       function login(provider) {
         chatRef.authWithOAuthPopup(provider, function(error, authData) {
@@ -59,16 +88,25 @@
       }
     </script>
     
-    <div class="container">
+    <div class="container center">
       <h2>Inseme</h2>
     </div>
     
-    <div class="container">
+    <div class="container center">
       <iframe src="https://embed.bambuser.com/channel/nuitdebout" width="460" height="345" frameborder="0"></iframe>
     </div>
     
     <div id='firechat-wrapper' class="container">
       <a href='#' onclick='login("twitter");'>Connexion <img src="https://g.twimg.com/dev/sites/default/files/images_documentation/sign-in-with-twitter-gray.png"/></a>
+    </div>
+    
+    <div id='inseme' class="container">
+      
+    </div>
+    
+    <div id='help' class="container">
+      <div id="vote_buttons"></div>
+      <img src="https://pbs.twimg.com/media/CfJGLWBXEAEPBfC.jpg"/>
     </div>
     
     <footer class="page-footer blue lighten-4"><div class="container">
