@@ -9,9 +9,10 @@ http://www.slate.fr/story/116483/mains-nuit-debout-signes
 
 2/ choisir ou créer une "room", cad dire une assemblée
 
-3/ chatter en regardant la video
+3/ chatter en regardant la video et clicker pour se manifester
 
-Pour changer la question posée à l'assemblée, taper "inseme ? xxxx"
+Pour changer la question posée à l'assemblée, taper "inseme ? xxxx", 
+éventuellement précédé de "inseme ?" pour d'abord remettre tous les compteurs à zéro.
 
 Pour changer l'image affichée en bas, taper "inseme image http://xxxx" ou bien "inseme http://xxxx"
 
@@ -20,8 +21,6 @@ Pour enlever/remettre la video, taper "inseme video off" ou "inseme video on"
 ## Roadmap
 
 "inseme video xxxx" pour changer la video partagée par les participants.
-
-"inseme ?" pour partager le score instantané de la dite proposition.
 
 "inseme bye xxxx" pour que xxxx vote en votre absence (démocratie liquide).
 
