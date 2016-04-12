@@ -187,7 +187,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
         token1 = "image";
       }
     }
-    if( param ){
+    if( param || token1 === "?" ){
       if( token1 === "image" ){
         if( param === "help" ){
           param = "https://pbs.twimg.com/media/CfJGLWBXEAEPBfC.jpg";
@@ -223,6 +223,23 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     old_result.count--;
     if( old_result.who_first === user_name ){
       old_result.who_first = null;
+      if( old_result.count ){
+        var found_first = null;
+        var user_name2;
+        var user_object;
+        for( user_name2 in Inseme.users ){
+          var vote = Inseme.get_vote_of_user( user_name2 );
+          if( !found_first ){
+            found_first = vote;
+            old_result.who_first = user_name2;
+            continue;
+          }
+          if( vote.timestamp < found_first.timestamp ){
+            found_first = vote;
+            old_result.who_first = user_name2;
+          }
+        }
+      }
     }
   }
   user.vote = vote;
@@ -235,8 +252,6 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   result.count++;
   if( results[ vote ].count === 1 ){
     results[ vote ].who_first = user_name;
-  }else{
-    results[ vote ].who_first = null;
   }
   var msg = "";
   var orientation;
@@ -246,7 +261,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     if( !count )continue;
     msg +=  " "
     + Inseme.config.choices[ orientation ].text
-    + " : " 
+    + "/" 
     + ( count === 1 
       ? ( results[ orientation ].who_first || count )
       : count )
@@ -307,12 +322,15 @@ Inseme.set_audio = function( audio_url ){
 
 
 Inseme.set_proposition = function( text ){
-  if( !text )return;
-  Inseme.proposition = text;
+  Inseme.proposition = text || "";
   Inseme.votes = [];
-  inseme.vote = null;
-  inseme.timestamp = Date.now();
-  $("#inseme_proposition_text").text( text );
+  Inseme.vote = null;
+  Inseme.timestamp = Date.now();
+  if( !text ){
+    Inseme.results = {};
+    Inseme.users   = {};
+  }
+  $("#inseme_proposition_text").text( text || "Tapez inseme ? proposition" );
 };
 
 
