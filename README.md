@@ -11,6 +11,8 @@ http://www.slate.fr/story/116483/mains-nuit-debout-signes
 
 3/ chatter en regardant la video
 
+Pour changer la question posée à l'assemblée, taper "inseme ? xxxx"
+
 Pour changer l'image affichée en bas, taper "inseme image http://xxxx" ou bien "inseme http://xxxx"
 
 Pour enlever/remettre la video, taper "inseme video off" ou "inseme video on"
@@ -40,9 +42,13 @@ Affichage de statistiques temps réel sur les "gestes" pour compter qui fait quo
 
 ## Aspects techniques
 
-Le contenu du répertoire /public est directement hébergé par firebase.com sur lequel il est déployé au moyen de la commande "firebase deploy".
+Le contenu du répertoire /public est directement hébergé par firebase.com sur 
+lequel il est déployé au moyen de la commande "firebase deploy".
 
-L'application est basée sur l'exemple de chat fourni par firebase. Certains messages, débutant par "inseme" sont ensuite interprétés de façon particulière.
+L'application est basée sur l'exemple de chat fourni par firebase. 
+Certains messages, débutant par "inseme" sont ensuite interprétés de façon particulière. 
+Aucun code ne tourne coté serveur, chaque client est autonome et les clients
+se synchronisent via les messages spéciaux échangés avec le chat.
 
 ## License
 

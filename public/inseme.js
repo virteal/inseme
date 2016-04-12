@@ -18,6 +18,8 @@ var Inseme = {
   vote: null,
 
   timestamp: null,
+  
+  proposition: null,
 
   votes: [],
 
@@ -172,7 +174,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
       found = true;
     });
   }
-  // Handle special "audio", "video" and "image" actions
+  // Handle special actions
   var param = "";
   var token1;
   if( !found ){
@@ -197,13 +199,16 @@ Inseme.on_firechat_message_add = function( room_id, message ){
         Inseme.set_video( param );
       }else if( token1 === "audio" ){
         Inseme.set_audio( param );
-      }  
+      }else if( token1 === "?" ){
+        Inseme.set_proposition( param );
+      }
     }
   }
   if( !found )return;
   var user = message.name;
   de&&bug( "Inseme.on_firechat_message_add(...,", message, ") called" );
   de&&bug( "vote", vote, "user", user );
+  Inseme.votes.push( { orientation: vote, user: user } );
 };
 
 
@@ -245,8 +250,8 @@ Inseme.set_video = function( video_url ){
     return;
   }
   // Restore default
-  $("#inseme_video_container").prepend(
-  '"<iframe id="inseme_video_frame" src="https://embed.bambuser.com/channel/nuitdebout" width="460" height="345" frameborder="0"></iframe>"'
+  $("#inseme_video_container").empty().prepend(
+  '"<iframe id="inseme_video_frame" src="https://embed.bambuser.com/broadcast/6205163" width="460" height="345" frameborder="0"></iframe>"'
   ).removeClass( "hide" );
   
 };
@@ -254,6 +259,14 @@ Inseme.set_video = function( video_url ){
 
 Inseme.set_audio = function( audio_url ){
   
+};
+
+
+Inseme.set_proposition = function( text ){
+  if( !text )return;
+  Inseme.proposition = text;
+  Inseme.votes = [];
+  $("#inseme_proposition_text").text( text );
 };
 
 
