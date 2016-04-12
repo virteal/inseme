@@ -31,6 +31,14 @@ var Inseme = {
 
     choices:{
       
+      "inseme": {
+        text: "inseme"
+      },
+      
+      "image": {
+        text: "image"
+      },
+      
       "quiet": {
         text: "silencieux"
       },
@@ -146,7 +154,7 @@ Inseme.set_firechat_event_handlers = function(){
 Inseme.on_firechat_message_add = function( room_id, message ){
   // Skip old messages, process only those that are less than a minute old
   var age = Date.now() - message.timestamp;
-  if( age > 60 * 1000 )return;
+  // if( age > 1 * 60 * 1000 )return;
   var text = message.message;
   // Skip not inseme related messages
   if( text.substring( 0, "inseme".length ) !== "inseme" )return;
@@ -181,6 +189,9 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     }
     if( param ){
       if( token1 === "image" ){
+        if( param === "help" ){
+          param = "https://pbs.twimg.com/media/CfJGLWBXEAEPBfC.jpg";
+        }
         Inseme.set_image( param );
       }else if( token1 === "video" ){
         Inseme.set_video( param );

@@ -1,3 +1,8 @@
+#inseme_image_container {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
 
 #firepad {
   width: 640px;
@@ -5,16 +10,17 @@
   background-color: #f62; /* dark orange background */
 }
 
-#firechat .btn {
-  line-height: inherit
-}
-
-#firechat *, *:before, *:after {
-    box-sizing: content-box;
-}
 
 /* Note: CodeMirror applies its own styles which can be customized in the same way.
    To apply a background to the entire editor, we need to also apply it to CodeMirror. */
 .CodeMirror {
   background-color: #f62;
+}
+
+/* JHR, fix issue with material & bootstrap interaction */
+#firechat .btn {
+  line-height: inherit
+}
+#firechat *, *:before, *:after {
+  box-sizing: content-box;
 }

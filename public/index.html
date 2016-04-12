@@ -5,6 +5,7 @@
   <meta charset="utf-8">
 
   <title>Inseme</title>
+  <link rel="icon" href="http://virteal.com/yanugred16.png" type="image/png">
 
   <meta name="description" content="Votes pour assemblées, façon NuitDebout">
   <meta name="author" content="@jhr">
@@ -80,15 +81,32 @@
                 if( !text )return;
                 // Add a button to vote according to that choice
                 var $input = $(
-                  '<input type="button" class="inseme_vote" value="' + text
-                + '" data-inseme-vote="' + c
-                + '" />'
+                  '<a class="inseme_vote_button waves-effect waves-light btn"'
+                + ' data-inseme-vote="' + c 
+                + '">'
+                + text
+                + '</a>'
+                //  '<input type="button" class="inseme_vote_button" value="' + text
+                //
+                //+ '" />'
                 );
                 $input.appendTo( $vote_buttons );
               });
               // Add handler to manage each button
-              $(".inseme_vote_buttons").click ( function() {
+              $(".inseme_vote_button").click ( function() {
                 var vote = $(this).attr ( "data-inseme-vote" );
+                if( vote === "inseme" ){
+                  $("#firechat").find("textarea")
+                  .val( "inseme " )
+                  .focus();
+                  return;
+                }
+                if( vote === "image" ){
+                  $("#firechat").find("textarea")
+                  .val( "inseme image http://" )
+                  .focus();
+                  return;
+                }
                 Inseme.change_vote( vote );
               } );
             },
@@ -112,7 +130,7 @@
     </div>
     
     <div id='inseme_actions' class="container">
-      <div id="inseme_vote_buttons"></div>
+      <div id="inseme_vote_buttons" class="container"></div>
     </div>
     
     <div id='inseme_image_container' class="container">
@@ -123,11 +141,12 @@
     </div>
     
     <footer class="page-footer blue lighten-4"><div class="container">
+    <div class="row">
     Inseme
-    - <a href="https://github.com/virteal/inseme">A propos</a>
-    - <a href="/pad">Pad</a>
+    - <a href="https://github.com/virteal/inseme">&agrave; propos</a>
+    - <a href="/pad">pad</a>
     - <a href="http://nuitdebout.fr">nuitdebout.fr</a>
-    </div></footer>
+    </div></div></footer>
     
 </body>
 </html>
