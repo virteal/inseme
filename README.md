@@ -24,6 +24,8 @@ Pour enlever/remettre la video, taper "inseme video off" ou "inseme video on"
 
 "inseme bye xxxx" pour que xxxx vote en votre absence (démocratie liquide).
 
+Pour faire des suggestions, merci de me contacter et/ou d'écrire dans le 'pad' accessible via un lien en bas de page.
+
 
 ## Historique
 
