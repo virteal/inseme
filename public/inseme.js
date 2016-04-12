@@ -47,6 +47,10 @@ var Inseme = {
         text: "d'accord"
       },
       
+      "no": {
+        text: "pas d'accord"
+      },
+      
       "repeat": {
         text: "deja dit"
       },
@@ -63,16 +67,12 @@ var Inseme = {
         text: "pas compris"
       },
       
-      "no": {
-        text: "opposition radicale"
+      "volume": {
+        text: "plus fort"
       },
       
       "calm": {
         text: "calme"
-      },
-      
-      "volume": {
-        text: "plus fort"
       },
       
       "translate": {
@@ -230,6 +230,24 @@ Inseme.set_image = function( image_url ){
 
 
 Inseme.set_video = function( video_url ){
+  // periscope case
+  if( video_url.indexOf( "periscope.tv") >= 0 ){
+    return; 
+  }
+  // 'off' special case
+  if( video_url === "off" ){
+    $("#inseme_video_container").addClass( "hide" );
+    return;
+  }
+  // 'on' special case
+  if( video_url === "on" ){
+    $("#inseme_video_container").removeClass( "hide" );
+    return;
+  }
+  // Restore default
+  $("#inseme_video_container").prepend(
+  '"<iframe id="inseme_video_frame" src="https://embed.bambuser.com/channel/nuitdebout" width="460" height="345" frameborder="0"></iframe>"'
+  ).removeClass( "hide" );
   
 };
 
