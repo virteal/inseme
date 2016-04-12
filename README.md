@@ -13,6 +13,8 @@ http://www.slate.fr/story/116483/mains-nuit-debout-signes
 
 Pour changer l'image affichée en bas, taper "inseme image http://xxxx" ou bien "inseme http://xxxx"
 
+Pour enlever/remettre la video, taper "inseme video off" ou "inseme video on"
+
 ## Roadmap
 
 "inseme video xxxx" pour changer la video partagée par les participants.
