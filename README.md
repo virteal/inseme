@@ -21,11 +21,7 @@ Pour enlever/remettre la video, taper "inseme video off" ou "inseme video on"
 
 "inseme video xxxx" pour changer la video partagée par les participants.
 
-"inseme ? xxxx" pour désigner la proposition en cours de discussion.
-
 "inseme ?" pour partager le score instantané de la dite proposition.
-
-Affichage de statistiques temps réel sur les "gestes" pour compter qui fait quoi.
 
 "inseme bye xxxx" pour que xxxx vote en votre absence (démocratie liquide).
 
@@ -38,7 +34,7 @@ Affichage de statistiques temps réel sur les "gestes" pour compter qui fait quo
 
 11 avril 2016, ajout de boutons pour chaque signe + photo d'aide
 
-12 avril 2016, "inseme http://xxxxx" pour partager une image ou un site
+12 avril 2016, affichage temps réel des résultats
 
 ## Aspects techniques
 

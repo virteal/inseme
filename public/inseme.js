@@ -14,10 +14,8 @@ var Inseme = {
   user_id: null,
 
   user_label: "",
-
-  vote: null,
-
-  timestamp: null,
+  
+  users: {},
   
   proposition: null,
 
@@ -37,10 +35,6 @@ var Inseme = {
         text: "inseme"
       },
       
-      "image": {
-        text: "image"
-      },
-      
       "quiet": {
         text: "silencieux"
       },
@@ -53,20 +47,20 @@ var Inseme = {
         text: "pas d'accord"
       },
       
+      "explain": {
+        text: "pas compris"
+      },
+      
       "repeat": {
         text: "deja dit"
       },
       
       "talk": {
-        text: "demande la parole"
+        text: "parole"
       },
       
       "point": {
         text: "point technique"
-      },
-      
-      "explain": {
-        text: "pas compris"
       },
       
       "volume": {
@@ -130,8 +124,12 @@ Inseme.change_vote = function( vote ){
   }
   de&&bug( "Inseme.vote(" + vote + ") called" );
   if( vote === Inseme.vote )return;
-  Inseme.vote = vote;
-  Inseme.timestamp = Date.now();
+  var user = Inseme.users[ Inseme.user_label ];
+  if( !user ){
+    user = {};
+    Inseme.users[ Inseme.user_label ] = user;
+  }
+  $("#inseme_proposition_vote").text( Inseme.config.choices[ vote ].text );
   Inseme.config.firechat._chat.sendMessage( 
     Inseme.config.firechat._inseme_room_id,
     "inseme " + ( Inseme.config.choices[ vote ].text || vote )
@@ -205,10 +203,56 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     }
   }
   if( !found )return;
-  var user = message.name;
-  de&&bug( "Inseme.on_firechat_message_add(...,", message, ") called" );
-  de&&bug( "vote", vote, "user", user );
-  Inseme.votes.push( { orientation: vote, user: user } );
+  var user_name = message.name;
+  //de&&bug( "Inseme.on_firechat_message_add(...,", message, ") called" );
+  de&&bug( "vote", vote, "user", user_name );
+  Inseme.votes.push( { orientation: vote, user: user_name } );
+  var user = Inseme.users[ user_name ];
+  if( !user ){
+    user = {};
+    Inseme.users[ user_name ] = user;
+  }
+  var results = Inseme.results;
+  var previous_vote = user.vote;
+  if( previous_vote ){
+    var old_result = results[ previous_vote ];
+    if( !old_result ){
+      old_result = { count: 1, who_first: null };
+      results[ previous_vote ] = old_result;
+    }
+    old_result.count--;
+    if( old_result.who_first === user_name ){
+      old_result.who_first = null;
+    }
+  }
+  user.vote = vote;
+  user.timestamp = Date.now();
+  var result = results[ vote ];
+  if( !result ){
+    result = { count: 0, who_first: null };
+    results[ vote ] = result;
+  }
+  result.count++;
+  if( results[ vote ].count === 1 ){
+    results[ vote ].who_first = user_name;
+  }else{
+    results[ vote ].who_first = null;
+  }
+  var msg = "";
+  var orientation;
+  var count;
+  for( orientation in results ){
+    count = results[ orientation ].count;
+    if( !count )continue;
+    msg +=  " "
+    + Inseme.config.choices[ orientation ].text
+    + " : " 
+    + ( count === 1 
+      ? ( results[ orientation ].who_first || count )
+      : count )
+    ;
+  }
+  $("#inseme_proposition_results").text( msg );
 };
 
 
@@ -266,6 +310,8 @@ Inseme.set_proposition = function( text ){
   if( !text )return;
   Inseme.proposition = text;
   Inseme.votes = [];
+  inseme.vote = null;
+  inseme.timestamp = Date.now();
   $("#inseme_proposition_text").text( text );
 };
 
