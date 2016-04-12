@@ -294,20 +294,35 @@ Inseme.set_image = function( image_url ){
 
 
 Inseme.set_video = function( video_url ){
+
   // periscope case
-  if( video_url.indexOf( "periscope.tv") >= 0 ){
+  if( video_url.indexOf( "periscope.tv") > 0 ){
     return; 
   }
+
+  // bambuser case
+  if( video_url.indexOf( "bambuser.com/broadcast/" ) > 0 ){
+    var idx_last_slash = video_url.lastIndexOf( "/" );
+    var id = video_url.substring( idx_last_slash + 1 );
+    $("#inseme_video_container").empty().prepend(
+    '"<iframe id="inseme_video_frame" src="https://embed.bambuser.com/broadcast/'
+    + id + '" width="460" height="345" frameborder="0"></iframe>"'
+    ).removeClass( "hide" );
+    return;
+  }
+
   // 'off' special case
   if( video_url === "off" ){
     $("#inseme_video_container").addClass( "hide" );
     return;
   }
+
   // 'on' special case
   if( video_url === "on" ){
     $("#inseme_video_container").removeClass( "hide" );
     return;
   }
+
   // Restore default
   $("#inseme_video_container").empty().prepend(
   '"<iframe id="inseme_video_frame" src="https://embed.bambuser.com/broadcast/6205163" width="460" height="345" frameborder="0"></iframe>"'

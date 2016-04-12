@@ -16,11 +16,12 @@ Pour changer la question posée à l'assemblée, taper "inseme ? xxxx",
 
 Pour changer l'image affichée en bas, taper "inseme image http://xxxx" ou bien "inseme http://xxxx"
 
-Pour enlever/remettre la video, taper "inseme video off" ou "inseme video on"
+Pour enlever/remettre la vidéo, taper "inseme video off" ou "inseme video on".
+Pour changer la vidéo, taper "inseme video address-de-la-video" (seulement bambuser pour l'instant, periscope bientôt).
 
 ## Roadmap
 
-"inseme video xxxx" pour changer la video partagée par les participants.
+"inseme video xxxx" pour changer la video partagée par les participants (periscope)
 
 "inseme bye xxxx" pour que xxxx vote en votre absence (démocratie liquide).
 
