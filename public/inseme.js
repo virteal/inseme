@@ -348,18 +348,25 @@ Inseme.display_short_results = function(){
   var msg = "";
   var orientation;
   var count;
+  function twitter( n ){
+    return ""
+    + '<a href="http://twitter.com/' + n + '">' 
+    + n
+    + '</a>';
+  }
   for( orientation in results ){
     count = results[ orientation ].count;
     if( !count )continue;
+    var who_first = results[ orientation ].who_first;
     msg +=  " "
     + Inseme.config.choices[ orientation ].text
     + " " 
     + ( count === 1 
-      ? ( results[ orientation ].who_first || count )
+      ? ( ( who_first && twitter( who_first ) ) || count )
       : count )
     + ".";
   }
-  $("#inseme_proposition_results").text( msg );
+  $("#inseme_proposition_results").html( msg );
   return Inseme;
 }
 
@@ -373,13 +380,19 @@ Inseme.display_long_results = function(){
     list.push( n );
   }
   list = list.sort();
+  function twitter( n ){
+    return ""
+    + '<a href="http://twitter.com/' + n + '">' 
+    + n
+    + '</a>';
+  }
   list.forEach( function( n ){
     v = Inseme.users[ n ];
     msg += "<li>"
-    + n
+    + twitter( n )
     + ", " + Inseme.config.choices[ v.vote ].text
     + ( v.via 
-      ? " (via " + v.via + ")"
+      ? " (via " + twitter( v.via ) + ")"
       : "" )
     + ", depuis " 
     + Inseme.duration_label( now - v.timestamp )
