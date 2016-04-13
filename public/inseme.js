@@ -110,7 +110,7 @@ Inseme.login = function( user_id, user_label ){
   de&&mand( user_id );
   de&&mand( user_label );
   if( Inseme.user_id ){
-    Inseme.logou();
+    Inseme.logout();
   }
   Inseme.user_id = user_id;
   Inseme.user_label = user_label;
@@ -257,10 +257,10 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   if( !found )return;
   
   de&&bug( "vote", vote, "user", user_name );
-  Inseme.push_vote( user_name, vote );
+  Inseme.push_vote( user_name, vote, message.timestamp );
   if( proxied_users ){
     proxied_users.forEach( function( u ){
-      Inseme.push_vote( u, vote, user_name );
+      Inseme.push_vote( u, vote, message.timestamp, user_name );
       // When current user acquire that other person's vote
       if( user_name === Inseme.user_label ){
         Inseme.proxied_users[ u ] = u;
@@ -271,7 +271,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
 };
 
 
-Inseme.push_vote = function( user_name, vote, proxy ){
+Inseme.push_vote = function( user_name, vote, timestamp, proxy ){
   
   Inseme.votes.push( { orientation: vote, user: user_name } );
   
@@ -323,7 +323,7 @@ Inseme.push_vote = function( user_name, vote, proxy ){
   }
   
   user.vote = vote;
-  user.timestamp = Date.now();
+  user.timestamp = timestamp; // Date.now();
   user.via = proxy;
   
   // Increase counter and track first talker
@@ -337,7 +337,14 @@ Inseme.push_vote = function( user_name, vote, proxy ){
     result.who_first = user_name;
   }
   
-  // Update display, short
+  Inseme.display_short_results();
+  Inseme.display_long_results();
+ 
+};
+
+
+Inseme.display_short_results = function(){
+  var results = Inseme.results;
   var msg = "";
   var orientation;
   var count;
@@ -353,9 +360,12 @@ Inseme.push_vote = function( user_name, vote, proxy ){
     + ".";
   }
   $("#inseme_proposition_results").text( msg );
-  
-  // Update display, long
-  msg = "<ul>";
+  return Inseme;
+}
+
+
+Inseme.display_long_results = function(){
+  var msg = "<ul>";
   var now = Date.now();
   var v;
   var list = [];
@@ -376,6 +386,7 @@ Inseme.push_vote = function( user_name, vote, proxy ){
   });
   msg += "</ul>";
   $('#inseme_vote_list').empty().append( msg );
+  return Inseme;
 };
 
 
@@ -402,7 +413,7 @@ Inseme.each_choice = function( f ){
 Inseme.set_image = function( image_url ){
   $("#inseme_image_container")
   .empty()
-  .append( $( '<a>', { href: encodeURIComponent( image_url ) } ) )
+  .append( $( '<a>', { href: image_url } ) )
   .embedly();
 };
 
