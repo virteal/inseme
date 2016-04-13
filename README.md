@@ -12,8 +12,8 @@ Votes temps réel pour assemblées, façon NuitDebout
 Pour changer la question posée à l'assemblée, taper "inseme ? xxxx", 
 éventuellement précédé de "inseme ?" pour d'abord remettre tous les compteurs à zéro.
 
-Pour changer la vidéo, taper "inseme video addresse-de-la-video".
-Pour enlever/remettre la vidéo, taper "inseme video off" ou "inseme video on".
+Pour changer la vidéo, taper "inseme live addresse-de-la-video".
+Pour enlever/remettre la vidéo, taper "inseme live off" ou "inseme live on".
 Pour changer l'image affichée en bas, taper "inseme image http://xxxx" ou bien "inseme http://xxxx"
 
 Explications au sujet des gestes pour se manifester : http://www.slate.fr/story/116483/mains-nuit-debout-signes
@@ -40,6 +40,14 @@ A noter : dès que la personne revient et s'exprime, le logiciel cesse les copie
 ## Roadmap
 
 Transfer des déléguations à l'occasion d'un 'bye'
+
+Intégrer d'autres sources de vidéo "live"
+
+Intégrer des systèmes de video conférence
+
+Intégrer de système de chat
+
+S'intégrer dans des systèmes de chat, via un "chat bot" (robot)
 
 Pour faire des suggestions, merci de me contacter et/ou d'écrire dans le 'pad' accessible via un lien en bas de page.
 

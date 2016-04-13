@@ -240,11 +240,8 @@ Inseme.on_firechat_message_add = function( room_id, message ){
         }
         Inseme.set_image( param );
         
-      }else if( token1 === "video" ){
-        Inseme.set_video( param );
-        
-      }else if( token1 === "audio" ){
-        Inseme.set_audio( param );
+      }else if( token1 === "live" ){
+        Inseme.set_live( param );
         
       }else if( token1 === "?" ){
         Inseme.set_proposition( param );
@@ -410,7 +407,7 @@ Inseme.set_image = function( image_url ){
 };
 
 
-Inseme.set_video = function( video_url ){
+Inseme.set_live = function( video_url ){
   
   var idx_last_slash;
   var id;
@@ -432,11 +429,11 @@ Inseme.set_video = function( video_url ){
     + '"}'
     + "'"
     + '></script></body>';
-    var iframe_html = '<iframe id="inseme_video_frame" '
+    var iframe_html = '<iframe id="inseme_live_frame" '
     + '" width="316" height="561" frameborder="0"></iframe>';
     de&bug( "script:", html );
-    $("#inseme_video_container").empty().append( iframe_html ).removeClass( "hide" );
-    var $iframe = $('#inseme_video_frame');
+    $("#inseme_live_container").empty().append( iframe_html ).removeClass( "hide" );
+    var $iframe = $('#inseme_live_frame');
     var iFrameDoc = $iframe[0].contentDocument || $iframe[0].contentWindow.document;
     iFrameDoc.write( html );
     iFrameDoc.close();
@@ -447,8 +444,8 @@ Inseme.set_video = function( video_url ){
   if( video_url.indexOf( "bambuser.com/broadcast/" ) > 0 ){
     idx_last_slash = video_url.lastIndexOf( "/" );
     id = video_url.substring( idx_last_slash + 1 );
-    $("#inseme_video_container").empty().append(
-    '<iframe id="inseme_video_frame" src="https://embed.bambuser.com/broadcast/'
+    $("#inseme_live_container").empty().append(
+    '<iframe id="inseme_live_frame" src="https://embed.bambuser.com/broadcast/'
     + encodeURIComponent( id )
     + '" width="460" height="345" frameborder="0"></iframe>'
     ).removeClass( "hide" );
@@ -457,27 +454,27 @@ Inseme.set_video = function( video_url ){
 
   // 'off' special case
   if( video_url === "off" ){
-    $("#inseme_video_container").addClass( "hide" );
+    $("#inseme_live_container").addClass( "hide" );
     return;
   }
 
   // 'on' special case
   if( video_url === "on" ){
-    $("#inseme_video_container").removeClass( "hide" );
+    $("#inseme_live_container").removeClass( "hide" );
     return;
   }
   
   // Default to a link, if http starts the input
   if( video_url.indexOf( "http" ) === 0 ){
-    html = '<a id="inseme_video_link" href="" target="_blank">Live</a>'; 
-    $("#inseme_video_container").empty().append( html ).removeClass( "hide" );
-    $("#inseme_video_link").attr( "href", video_url );
+    html = '<a id="inseme_live_link" href="" target="_blank">Live</a>'; 
+    $("#inseme_live_container").empty().append( html ).removeClass( "hide" );
+    $("#inseme_live_link").attr( "href", video_url );
     return;
   }
 
   // Restore default, the same as on http://nuitdebout.fr
   // ToDo: per place default
-  $("#inseme_video_container")
+  $("#inseme_live_container")
   .empty().append(
   '"<iframe id="inseme_video_frame" src="https://embed.bambuser.com/broadcast/6205163" width="460" height="345" frameborder="0"></iframe>"'
   ).removeClass( "hide" );
