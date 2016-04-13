@@ -351,7 +351,7 @@ Inseme.display_short_results = function(){
   function twitter( n ){
     return ""
     + '<a href="http://twitter.com/' + n + '">' 
-    + n
+    + "@" + n
     + '</a>';
   }
   for( orientation in results ){
@@ -383,7 +383,7 @@ Inseme.display_long_results = function(){
   function twitter( n ){
     return ""
     + '<a href="http://twitter.com/' + n + '">' 
-    + n
+    + "@" + n
     + '</a>';
   }
   list.forEach( function( n ){

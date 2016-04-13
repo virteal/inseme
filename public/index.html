@@ -76,7 +76,7 @@
         );
         Inseme.init( { firechat: chat } );
         var uid = authData.uid;
-        var name = authData[authData.provider].displayName;
+        var name = authData[authData.provider].username;
         chat.setUser( uid, name );
         setTimeout( 
           function(){
