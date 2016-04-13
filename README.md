@@ -39,6 +39,8 @@ A noter : dès que la personne revient et s'exprime, le logiciel cesse les copie
 
 ## Roadmap
 
+Intégrer la radio mixlr en live
+
 Transfer des déléguations à l'occasion d'un 'bye'
 
 Intégrer d'autres sources de vidéo "live"
