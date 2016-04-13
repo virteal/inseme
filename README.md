@@ -21,8 +21,6 @@ Pour changer l'image affichée en bas, taper "inseme image http://xxxx" ou bien 
 
 ## Roadmap
 
-"inseme video xxxx" pour changer la video partagée par les participants (periscope)
-
 "inseme bye xxxx" pour que xxxx vote en votre absence (démocratie liquide).
 
 Pour faire des suggestions, merci de me contacter et/ou d'écrire dans le 'pad' accessible via un lien en bas de page.
