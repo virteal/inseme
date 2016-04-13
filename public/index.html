@@ -46,6 +46,25 @@
 </head>
 
 <body class="grey-text text-darken-4">
+  
+  <!-- Load Facebook SDK for JavaScript -->
+	<div id="fb-root"></div>
+	<script>
+	window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1765572157008965',
+      xfbml      : true,
+      version    : 'v2.6'
+    });
+  };
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+	</script>
 
     <script type='text/javascript'>
   
@@ -66,6 +85,7 @@
       
       // Create a new Firebase reference, and a new instance of the Login client
       chatRef = new Firebase('https://inseme.firebaseio.com/chat');
+      Inseme.chatRef = chatRef;
       
       // Once authenticated, instantiate Firechat with our user id and user name
       chatRef.onAuth( function( authData ){
@@ -98,7 +118,10 @@
     </script>
     
     <div id="inseme_live_container" class="container center">
-      <iframe id="inseme_live_frame" src="https://embed.bambuser.com/channel/nuitdebout" width="460" height="345" frameborder="0"></iframe>
+      <iframe id="inseme_live_frame" src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Flenouvelobservateur%2Fvideos%2Fvb.198508090036%2F10156868107940037%2F%3Ftype%3D3&show_text=0&width=400" width="400" height="400" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+       <!--
+       <iframe id="inseme_live_frame" src="https://embed.bambuser.com/channel/nuitdebout" width="460" height="345" frameborder="0"></iframe>
+       -->
     </div>
     
     <div id='firechat-wrapper' class="container">
