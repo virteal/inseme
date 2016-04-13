@@ -1,5 +1,5 @@
 # inseme - https://inseme.firebaseapp.com
-Votes temps réel pour assemblées, façon NuitDebout
+Votes temps réel pour assemblées, façon NuitDebout & #democratieliquide
 
 ## Mode d'emploi
 
@@ -7,7 +7,7 @@ Votes temps réel pour assemblées, façon NuitDebout
 
 2/ choisir ou créer une "room", cad dire une assemblée
 
-3/ chatter en regardant la video et clicker pour se manifester
+3/ chatter en regardant la video live et clicker pour se manifester
 
 Pour changer la question posée à l'assemblée, taper "inseme ? xxxx", 
 éventuellement précédé de "inseme ?" pour d'abord remettre tous les compteurs à zéro.
@@ -25,7 +25,7 @@ Elle permet de se partager le travail en automatisant une partie du vote.
 
 Une forme simple d'automisation consiste à copier le vote de quelqu'un en qui on a confiance.
 
-S'agissant d'assemblée "temps réel", il peut être par exemple utile de designer la personne dont on copie le vote quand on s'absente de l'assemblée.
+S'agissant d'assemblée "temps réel", il peut ainsi être utile de designer la personne dont on copie le vote quand on s'absente de l'assemblée.
 
 Pour cela, deux possibilités. 
 
@@ -45,7 +45,7 @@ Intégrer d'autres sources de vidéo "live"
 
 Intégrer des systèmes de video conférence
 
-Intégrer de système de chat
+Intégrer des système de chat
 
 S'intégrer dans des systèmes de chat, via un "chat bot" (robot)
 
@@ -61,6 +61,8 @@ Pour faire des suggestions, merci de me contacter et/ou d'écrire dans le 'pad' 
 11 avril 2016, ajout de boutons pour chaque signe + photo d'aide
 
 12 avril 2016, affichage temps réel des résultats
+
+13 avril 2016, délégations façon "démocratie liquide"
 
 ## Aspects techniques
 
