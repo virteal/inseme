@@ -129,20 +129,37 @@ Inseme.logout = function(){
 
 
 Inseme.change_vote = function( vote ){
+  
   if( !vote ){
     vote = "quiet";
   }
+  
   de&&bug( "Inseme.vote(" + vote + ") called" );
-  if( vote === Inseme.vote )return;
+  
+  // if( vote === Inseme.vote )return;
+  
   var user = Inseme.users[ Inseme.user_label ];
+  
   if( !user ){
     user = {};
     Inseme.users[ Inseme.user_label ] = user;
   }
+  
   $("#inseme_proposition_vote").text( Inseme.config.choices[ vote ].text );
+  
+  // Collect potential proxied users, => u1, u2, u3...
+  var proxied_users = [];
+  for( var u in Inseme.proxied_users ){
+    proxied_users.push( u );
+  }
   Inseme.config.firechat._chat.sendMessage( 
     Inseme.config.firechat._inseme_room_id,
-    "inseme " + ( Inseme.config.choices[ vote ].text || vote )
+    "inseme " 
+    + ( Inseme.config.choices[ vote ].text || vote )
+    + ( proxied_users.length
+      ? " => " + proxied_users.join( "," )
+      : ""
+    )
   );
   return Inseme;
 };
@@ -176,6 +193,14 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   // Skip not inseme related messages
   if( text.substring( 0, "inseme".length ) !== "inseme" )return;
   
+  // Extract proxied users, if any
+  var idx = text.indexOf( " => " );
+  var proxied_users = null;
+  if( idx > 0 ){
+    proxied_users = text.substring( idx + " => ".length ).split( "," );
+    text = text.substring( 0, idx );
+  }
+  
   // Look for vote orientation
   var vote = text.substr( "inseme ".length ) || "quiet";
   var found = false;
@@ -208,23 +233,49 @@ Inseme.on_firechat_message_add = function( room_id, message ){
       }
     }
     if( param || token1 === "?" ){
+      
       if( token1 === "image" ){
         if( param === "help" ){
           param = "https://pbs.twimg.com/media/CfJGLWBXEAEPBfC.jpg";
         }
         Inseme.set_image( param );
+        
       }else if( token1 === "video" ){
         Inseme.set_video( param );
+        
       }else if( token1 === "audio" ){
         Inseme.set_audio( param );
+        
       }else if( token1 === "?" ){
         Inseme.set_proposition( param );
+      
+      }else if( token1 === "bye" ){
+        if( param === Inseme.user_label ){
+          Inseme.proxied_users[ param ] = param;
+        }
       }
+      
     }
   }
   if( !found )return;
   
   de&&bug( "vote", vote, "user", user_name );
+  Inseme.push_vote( user_name, vote );
+  if( proxied_users ){
+    proxied_users.forEach( function( u ){
+      Inseme.push_vote( u, vote, user_name );
+      // When current user acquire that other person's vote
+      if( user_name === Inseme.user_label ){
+        Inseme.proxied_users[ u ] = u;
+      }
+    });
+  }
+  
+};
+
+
+Inseme.push_vote = function( user_name, vote, proxy ){
+  
   Inseme.votes.push( { orientation: vote, user: user_name } );
   
   var user = Inseme.users[ user_name ];
@@ -233,6 +284,11 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   if( !user ){
     user = {};
     Inseme.users[ user_name ] = user;
+  }
+  
+  // Track proxied users of current user
+  if( proxy === Inseme.user_label ){
+    Inseme.proxied_users[ user_name ] = user_name;
   }
   
   var results = Inseme.results;
@@ -254,7 +310,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
         var user_name2;
         for( user_name2 in Inseme.users ){
           var vote2 = Inseme.get_vote_of( user_name2 );
-          if( vote2 !== previous_vote )continue;
+          if( user_name2 === user_name || vote2 !== previous_vote )continue;
           if( !found_first ){
             found_first = vote2;
             old_result.who_first = user_name2;
@@ -271,6 +327,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   
   user.vote = vote;
   user.timestamp = Date.now();
+  user.via = proxy;
   
   // Increase counter and track first talker
   var result = results[ vote ];
@@ -283,7 +340,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     result.who_first = user_name;
   }
   
-  // Update display
+  // Update display, short
   var msg = "";
   var orientation;
   var count;
@@ -292,13 +349,36 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     if( !count )continue;
     msg +=  " "
     + Inseme.config.choices[ orientation ].text
-    + "/" 
+    + " " 
     + ( count === 1 
       ? ( results[ orientation ].who_first || count )
       : count )
-    ;
+    + ".";
   }
   $("#inseme_proposition_results").text( msg );
+  
+  // Update display, long
+  msg = "<ul>";
+  var now = Date.now();
+  var v;
+  var list = [];
+  for( var n in Inseme.users ){
+    list.push( n );
+  }
+  list = list.sort();
+  list.forEach( function( n ){
+    v = Inseme.users[ n ];
+    msg += "<li>"
+    + n
+    + ", " + Inseme.config.choices[ v.vote ].text
+    + ( v.via 
+      ? " (via " + v.via + ")"
+      : "" )
+    + ", depuis " + Math.round( ( now - v.timestamp ) / 1000 ) + " secondes"
+    + ".</li>";
+  });
+  msg += "</ul>";
+  $('#inseme_vote_list').empty().append( msg );
 };
 
 
@@ -325,7 +405,7 @@ Inseme.each_choice = function( f ){
 Inseme.set_image = function( image_url ){
   $("#inseme_image_container")
   .empty()
-  .prepend( $( '<a>', { href: encodeURIComponent( image_url ) } ) )
+  .append( $( '<a>', { href: encodeURIComponent( image_url ) } ) )
   .embedly();
 };
 
@@ -355,7 +435,7 @@ Inseme.set_video = function( video_url ){
     var iframe_html = '<iframe id="inseme_video_frame" '
     + '" width="316" height="561" frameborder="0"></iframe>';
     de&bug( "script:", html );
-    $("#inseme_video_container").empty().prepend( iframe_html ).removeClass( "hide" );
+    $("#inseme_video_container").empty().append( iframe_html ).removeClass( "hide" );
     var $iframe = $('#inseme_video_frame');
     var iFrameDoc = $iframe[0].contentDocument || $iframe[0].contentWindow.document;
     iFrameDoc.write( html );
@@ -367,7 +447,7 @@ Inseme.set_video = function( video_url ){
   if( video_url.indexOf( "bambuser.com/broadcast/" ) > 0 ){
     idx_last_slash = video_url.lastIndexOf( "/" );
     id = video_url.substring( idx_last_slash + 1 );
-    $("#inseme_video_container").empty().prepend(
+    $("#inseme_video_container").empty().append(
     '<iframe id="inseme_video_frame" src="https://embed.bambuser.com/broadcast/'
     + encodeURIComponent( id )
     + '" width="460" height="345" frameborder="0"></iframe>'
@@ -390,15 +470,15 @@ Inseme.set_video = function( video_url ){
   // Default to a link, if http starts the input
   if( video_url.indexOf( "http" ) === 0 ){
     html = '<a id="inseme_video_link" href="" target="_blank">Live</a>'; 
-    $("#inseme_video_container").empty().prepend( html ).removeClass( "hide" );
+    $("#inseme_video_container").empty().append( html ).removeClass( "hide" );
     $("#inseme_video_link").attr( "href", video_url );
     return;
   }
 
   // Restore default, the same as on http://nuitdebout.fr
   // ToDo: per place default
-  $("#inseme_video_container").empty()
-  .prepend(
+  $("#inseme_video_container")
+  .empty().append(
   '"<iframe id="inseme_video_frame" src="https://embed.bambuser.com/broadcast/6205163" width="460" height="345" frameborder="0"></iframe>"'
   ).removeClass( "hide" );
   
