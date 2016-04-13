@@ -381,7 +381,8 @@ Inseme.display_long_results = function(){
     + ( v.via 
       ? " (via " + v.via + ")"
       : "" )
-    + ", depuis " + Math.round( ( now - v.timestamp ) / 1000 ) + " secondes"
+    + ", depuis " 
+    + Inseme.duration_label( now - v.timestamp )
     + ".</li>";
   });
   msg += "</ul>";
@@ -560,6 +561,48 @@ Inseme.populate_vote_buttons = function(){
   // Show the div
   $('#inseme').removeClass( "hide" );
 };
+
+// extracted from kudocracy
+
+Inseme.duration_label = function duration_label( duration ){
+// Returns a sensible text info about a duration
+  // Slight increase to provide a better user feedback
+  //duration += 5000;
+  function l( x ){ return x; } // future i18n
+  var delta = duration / 1000;
+  var day_delta = Math.floor( delta / 86400);
+  if( isNaN( day_delta) )return "";
+  if( day_delta < 0 ) return l( "the future" );
+  return (day_delta == 0
+      && ( delta < 5
+        && l( "maintenant", "just now")
+        || delta < 60
+        && "" + Math.floor( delta )
+        + l( " secondes", " seconds")
+        || delta < 120
+        && l( "1 minutes", "1 minute")
+        || delta < 3600
+        && "" + Math.floor( delta / 60 )
+        + l( " minutes", " minutes")
+        || delta < 7200
+        && l( "environ une heure", "about an hour")
+        || delta < 86400
+        && "" + Math.floor( delta / 3600 )
+        + l( "heures", " hours")
+        )
+      || day_delta == 1
+      && l( "un jour", "a day")
+      || day_delta < 7
+      && "" + day_delta
+      + l( " jours", " days")
+      || day_delta < 31
+      && "" + Math.ceil( day_delta / 7 )
+      + l( " semaines", " weeks")
+      || day_delta >= 31
+      && "" + Math.ceil( day_delta / 30.5 )
+      + l( "mois", " months")
+      ).replace( /^ /, ""); // Fix double space issue with "il y a "
+}
 
 
 console.log( "Inseme was loaded" );
