@@ -7,8 +7,22 @@
   margin-bottom: 1em;
 }
 
+.inseme_vote_button {
+  /* margin-left: 10px; */
+}
+
 #inseme_proposition_text {
   font-size: larger;
+}
+
+#inseme_vote_button_ul{
+  list-style-type: none;
+  display: inline;
+}
+
+.inseme_vote_button_li{
+  display: inline-block;
+  margin: 0.5em;
 }
 
 
