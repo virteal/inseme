@@ -33,9 +33,9 @@ Pour cela, deux possibilités.
 Quand martin exprimera son avis au sujet d'une proposition, le logiciel indiquera que vous copiez cet avis.
 
 2/ Envoyer 'inseme pas d'accord => jacques,pierre" pour signaler votre avis et le fait que jacques et pierre vous font confiance.
-Quand vous exprimerez votre avis au sujet d'une proposition, le logiciel inquera qui vous copie.
+Chaque fois que vous exprimerez votre avis au sujet d'une proposition, le logiciel indiquera que jacques et pierre vous font confiance et vous copient.
 
-A noter : dès que la personne revient et s'exprime, le logiciel cesse les copies de vote la concernant.
+A noter : dès que la personne revient et s'exprime, le logiciel cesse les copies de vote la concernant, elle s'exprime donc désormais directement et non plus via un représentant.
 
 ## Roadmap
 
