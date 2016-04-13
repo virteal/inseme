@@ -8,23 +8,24 @@
   ],
   "cleanUrls": true,
   "headers": [ {
-    "source" : "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
-    "headers" : [ {
-      "key" : "Access-Control-Allow-Origin",
-      "value" : "*"
-    } ]
+      "source" : "**/*.@(eot|otf|ttf|ttc|woff|woff2|font.css)",
+      "headers" : [ {
+        "key" : "Access-Control-Allow-Origin",
+        "value" : "*"
+      } ]
     }, {
-    "source" : "**/*.@(jpg|jpeg|gif|png)",
-    "headers" : [ {
-      "key" : "Cache-Control",
-      "value" : "max-age=7200"
-    } ]
+      "source" : "**/*.@(jpg|jpeg|gif|png)",
+      "headers" : [ {
+        "key" : "Cache-Control",
+        "value" : "max-age=7200"
+      } ]
     }, {
-    // Sets the cache header for the jtml pages to a very short time
-    "source" : "*.html",
-    "headers" : [ {
-      "key" : "Cache-Control",
-      "value" : "max-age=1"
-    } ]
-  } ]
+      /* Sets the cache header for the jtml pages to a very short time */
+      "source" : "*.html",
+      "headers" : [ {
+        "key" : "Cache-Control",
+        "value" : "max-age=1"
+      } ]
+    } 
+  ]
 }
