@@ -15,16 +15,22 @@ var Inseme = {
 
   user_label: "",
   
-  is_https: false,
-  
+  // All seen users, including current one
   users: {},
   
+  // offline users that the current user vote on behalf of
+  proxied_users: {},
+  
+  // inseme ? xxxx to set the currently discussed proposition
   proposition: null,
 
   votes: [],
 
+  // Count hands, one counter per vote orientation
   results:{},
 
+  is_https: false,
+  
   config:{
     
     place: "Paris",
@@ -156,12 +162,21 @@ Inseme.set_firechat_event_handlers = function(){
 
 
 Inseme.on_firechat_message_add = function( room_id, message ){
+  
   // Skip old messages, process only those that are less than a minute old
   var age = Date.now() - message.timestamp;
   // if( age > 1 * 60 * 1000 )return;
+  
   var text = message.message;
+  var user_name = message.name;
+  
+  // Never proxy a talking user
+  delete Inseme.proxied_users[ user_name ];
+  
   // Skip not inseme related messages
   if( text.substring( 0, "inseme".length ) !== "inseme" )return;
+  
+  // Look for vote orientation
   var vote = text.substr( "inseme ".length ) || "quiet";
   var found = false;
   // Lookup canonical form
@@ -176,6 +191,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
       found = true;
     });
   }
+  
   // Handle special actions
   var param = "";
   var token1;
@@ -207,16 +223,21 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     }
   }
   if( !found )return;
-  var user_name = message.name;
-  //de&&bug( "Inseme.on_firechat_message_add(...,", message, ") called" );
+  
   de&&bug( "vote", vote, "user", user_name );
   Inseme.votes.push( { orientation: vote, user: user_name } );
+  
   var user = Inseme.users[ user_name ];
+  
+  // Track all seen users, including current one
   if( !user ){
     user = {};
     Inseme.users[ user_name ] = user;
   }
+  
   var results = Inseme.results;
+  
+  // Remove previous vote
   var previous_vote = user.vote;
   if( previous_vote ){
     var old_result = results[ previous_vote ];
@@ -225,38 +246,44 @@ Inseme.on_firechat_message_add = function( room_id, message ){
       results[ previous_vote ] = old_result;
     }
     old_result.count--;
+    // If this was the first talker, find the other older one
     if( old_result.who_first === user_name ){
       old_result.who_first = null;
       if( old_result.count ){
         var found_first = null;
         var user_name2;
-        var user_object;
         for( user_name2 in Inseme.users ){
-          var vote = Inseme.get_vote_of_user( user_name2 );
+          var vote2 = Inseme.get_vote_of( user_name2 );
+          if( vote2 !== previous_vote )continue;
           if( !found_first ){
-            found_first = vote;
+            found_first = vote2;
             old_result.who_first = user_name2;
             continue;
           }
-          if( vote.timestamp < found_first.timestamp ){
-            found_first = vote;
+          if( vote2.timestamp < found_first.timestamp ){
+            found_first = vote2;
             old_result.who_first = user_name2;
           }
         }
       }
     }
   }
+  
   user.vote = vote;
   user.timestamp = Date.now();
+  
+  // Increase counter and track first talker
   var result = results[ vote ];
   if( !result ){
     result = { count: 0, who_first: null };
     results[ vote ] = result;
   }
   result.count++;
-  if( results[ vote ].count === 1 ){
-    results[ vote ].who_first = user_name;
+  if( result.count === 1 ){
+    result.who_first = user_name;
   }
+  
+  // Update display
   var msg = "";
   var orientation;
   var count;
@@ -272,6 +299,12 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     ;
   }
   $("#inseme_proposition_results").text( msg );
+};
+
+
+Inseme.get_vote_of = function( user_name ){
+  var vote = Inseme.users[ user_name ];
+  return vote && vote.vote;
 };
 
 
