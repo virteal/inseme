@@ -14,10 +14,10 @@ http://www.slate.fr/story/116483/mains-nuit-debout-signes
 Pour changer la question posée à l'assemblée, taper "inseme ? xxxx", 
 éventuellement précédé de "inseme ?" pour d'abord remettre tous les compteurs à zéro.
 
-Pour changer l'image affichée en bas, taper "inseme image http://xxxx" ou bien "inseme http://xxxx"
-
+Pour changer la vidéo, taper "inseme video addresse-de-la-video".
 Pour enlever/remettre la vidéo, taper "inseme video off" ou "inseme video on".
-Pour changer la vidéo, taper "inseme video address-de-la-video" (seulement bambuser pour l'instant, periscope bientôt).
+
+Pour changer l'image affichée en bas, taper "inseme image http://xxxx" ou bien "inseme http://xxxx"
 
 ## Roadmap
 
