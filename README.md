@@ -70,7 +70,7 @@ Le contenu du répertoire /public est directement hébergé par firebase.com sur
 lequel il est déployé au moyen de la commande "firebase deploy".
 
 L'application est basée sur l'exemple de chat fourni par firebase. 
-Certains messages, débutant par "inseme" sont ensuite interprétés de façon particulière. 
+Certains messages, débutant par "inseme", sont ensuite interprétés de façon particulière. 
 Aucun code ne tourne coté serveur, chaque client est autonome et les clients
 se synchronisent via les messages spéciaux échangés avec le chat.
 
