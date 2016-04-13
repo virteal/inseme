@@ -18,11 +18,28 @@ Pour changer l'image affichée en bas, taper "inseme image http://xxxx" ou bien 
 
 Explications au sujet des gestes pour se manifester : http://www.slate.fr/story/116483/mains-nuit-debout-signes
 
+## Démocratie Liquide
+
+La démocratie liquide est une solution pour pratiquer la démocratie directe à grande échelle.
+Elle permet de se partager le travail en automatisant une partie du vote.
+
+Une forme simple d'automisation consiste à copier le vote de quelqu'un en qui on a confiance.
+
+S'agissant d'assemblée "temps réel", il peut être par exemple utile de designer la personne dont on copie le vote quand on s'absente de l'assemblée.
+
+Pour cela, deux possibilités. 
+
+1/ Envoyer 'inseme bye martin' pour signaler qu'on part et qu'on fait confiance à martin.
+Quand martin exprimera son avis au sujet d'une proposition, le logiciel indiquera que vous copiez cet avis.
+
+2/ Envoyer 'inseme pas d'accord => jacques,pierre" pour signaler votre avis et le fait que jacques et pierre vous font confiance.
+Quand vous exprimerez votre avis au sujet d'une proposition, le logiciel inquera qui vous copie.
+
+A noter : dès que la personne revient et s'exprime, le logiciel cesse les copies de vote la concernant.
+
 ## Roadmap
 
-Gestion multi-assemblées, ie reset lors du changement de "room"
-
-"inseme bye xxxx" pour que xxxx vote en votre absence (démocratie liquide).
+Transfer des déléguations à l'occasion d'un 'bye'
 
 Pour faire des suggestions, merci de me contacter et/ou d'écrire dans le 'pad' accessible via un lien en bas de page.
 
