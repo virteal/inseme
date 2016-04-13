@@ -82,8 +82,15 @@
           function(){
             Inseme.populate_vote_buttons();
             Inseme.login( uid, name );
+            setTimeout( 
+              function(){
+                Inseme.display_short_results();
+                Inseme.display_long_results();
+              },
+              3000 // Enought time to process previous 'inseme' messages
+            );
           },
-          5000 // Enought time to reload previous chat messages
+          3000 // Enought time to reload previous chat messages
         );
       } );
     } );
@@ -96,8 +103,9 @@
     
     <div id='firechat-wrapper' class="container">
       <a href='#' onclick='login("twitter");'>
-        Connexion
+        Version alpha 0.1, 13 avril 2016 - Connexion
         <img src="https://g.twimg.com/dev/sites/default/files/images_documentation/sign-in-with-twitter-gray.png"/>
+        Note : lors de la première connexion via Twitter, il y a des demandes d'autorisations. En réalité, Inseme n'en a pas besoin, il n'utiliser Twitter que pour identifier le visiteur. Les autres autorisations ne sont jamais employées, elles sont demandés uniquement en raison de l'inflexibilité de la solution proposée par firebase.com (qui héberge le chat).
       </a>
     </div>
     
