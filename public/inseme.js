@@ -288,25 +288,52 @@ Inseme.each_choice = function( f ){
 Inseme.set_image = function( image_url ){
   $("#inseme_image_container")
   .empty()
-  .prepend( $( '<a>',{href: image_url } ) )
+  .prepend( $( '<a>', { href: encodeURIComponent( image_url ) } ) )
   .embedly();
 };
 
 
 Inseme.set_video = function( video_url ){
+  
+  var idx_last_slash;
+  var id;
+  var html;
 
-  // periscope case
-  if( video_url.indexOf( "periscope.tv") > 0 ){
+  // ToDo: periscope case
+  if( false && video_url.indexOf( "periscope.tv") > 0 ){
+    idx_last_slash = video_url.lastIndexOf( "/" );
+    id = video_url.substring( idx_last_slash + 1 );
+    // ToDo: cannot open unsecure http iframe from https page
+    /*
+    html = ""
+    + '<!doctype html><body><script id="periscope-embed"'
+    + ' src="http://embedperiscope.com/app/embed.js"'
+    + " data-options='"
+    + '{"width":316,"height":561,"orientation":"portrait","broadcast_id":"'
+    + encodeURIComponent( id ) 
+    + '"}'
+    + "'"
+    + '></script></body>';
+    var iframe_html = '<iframe id="inseme_video_frame" '
+    + '" width="316" height="561" frameborder="0"></iframe>';
+    de&bug( "script:", html );
+    $("#inseme_video_container").empty().prepend( iframe_html ).removeClass( "hide" );
+    var $iframe = $('#inseme_video_frame');
+    var iFrameDoc = $iframe[0].contentDocument || $iframe[0].contentWindow.document;
+    iFrameDoc.write( html );
+    iFrameDoc.close();
+    */
     return; 
   }
 
   // bambuser case
   if( video_url.indexOf( "bambuser.com/broadcast/" ) > 0 ){
-    var idx_last_slash = video_url.lastIndexOf( "/" );
-    var id = video_url.substring( idx_last_slash + 1 );
+    idx_last_slash = video_url.lastIndexOf( "/" );
+    id = video_url.substring( idx_last_slash + 1 );
     $("#inseme_video_container").empty().prepend(
-    '"<iframe id="inseme_video_frame" src="https://embed.bambuser.com/broadcast/'
-    + id + '" width="460" height="345" frameborder="0"></iframe>"'
+    '<iframe id="inseme_video_frame" src="https://embed.bambuser.com/broadcast/'
+    + encodeURIComponent( id )
+    + '" width="460" height="345" frameborder="0"></iframe>'
     ).removeClass( "hide" );
     return;
   }
@@ -320,6 +347,14 @@ Inseme.set_video = function( video_url ){
   // 'on' special case
   if( video_url === "on" ){
     $("#inseme_video_container").removeClass( "hide" );
+    return;
+  }
+  
+  // Default to a link
+  if( video_url.indexOf( "http" ) === 0 ){
+    html = '<a id="inseme_video_link" href="" target="_blank">Live</a>'; 
+    $("#inseme_video_container").empty().prepend( html ).removeClass( "hide" );
+    $("#inseme_video_link").attr( "href", video_url );
     return;
   }
 
