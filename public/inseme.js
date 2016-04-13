@@ -170,7 +170,7 @@ Inseme.set_firechat_event_handlers = function(){
   // Monkey patch firechatui to track roomId
   var old = chat.focusTab;
   chat.focusTab = function( room_id ){
-    chat._inseme_room_id = room_id;
+    Inseme.room_id = chat._inseme_room_id = room_id;
     return old.apply( this, arguments );
   };
   chat.on( 'message-add',    Inseme.on_firechat_message_add );
@@ -267,6 +267,20 @@ Inseme.on_firechat_message_add = function( room_id, message ){
       }
     });
   }
+  
+  // Remove some messages after a while to improve signal/noise
+  setTimeout( 
+    function(){
+      // chat/room-messages/room_id/msg_id
+      var room_id = Inseme.room_id;
+      var msg_id = message.id;
+      // var ref = "room_messages/" + room_id + "/" + msg_id;
+      // var msg_ref = Inseme.chatRef.child( ref );
+      // msg_ref.remove();
+      Inseme.config.firechat.removeMessage( room_id, msg_id );
+    },
+    3 * 1000
+  );
   
 };
 
@@ -476,6 +490,19 @@ Inseme.set_live = function( video_url ){
     ).removeClass( "hide" );
     return;
   }
+  
+  // http://mixlr.com/radiodebout
+  // ToDo: issue with https
+  if( !Inseme.is_https && video_url.indexOf( "mixlr.com" ) > 0 ){
+    idx_last_slash = video_url.lastIndexOf( "/" );
+    id = video_url.substring( idx_last_slash + 1 );
+    $("#inseme_live_container").empty().append(
+    '<iframe id="inseme_live_frame" src="https://mixlr.com/'
+    + encodeURIComponent( id )
+    + '" width="300" height="34" frameborder="0"></iframe>'
+    ).removeClass( "hide" );
+    return;
+  }
 
   // 'off' special case
   if( video_url === "off" ){
@@ -529,23 +556,30 @@ Inseme.populate_vote_buttons = function(){
   
   var $vote_buttons = $("#inseme_vote_buttons");
   
+  var html = '<ul id="#inseme_vote_button_ul">';
+  //+ '<tr class="inseme_vote_button_tr">'
+  
   Inseme.each_choice( function( c ){
     
     var text = Inseme.config.choices[ c ].text;
     if( !text )return;
+    
     // Add a button to vote according to that choice
-    var $input = $(
-      '<a class="inseme_vote_button waves-effect waves-light btn"'
+    html += "" //+ '<tr class="inseme_vote_button_tr">'
+    + '<li class="inseme_vote_button_li">'
+    + '<a class="inseme_vote_button waves-effect waves-light btn"'
     + ' data-inseme-vote="' + c 
     + '">'
     + text
     + '</a>'
-    //  '<input type="button" class="inseme_vote_button" value="' + text
-    //
-    //+ '" />'
-    );
-    $input.appendTo( $vote_buttons );
+    + '</li>'
+    //+ '</tr>'
+    ;
   });
+  
+  //html += "</tr>";
+  html += "</ul>";
+  $vote_buttons.empty().append( html );
   
   // Add one global handler to manage all buttons
   $(".inseme_vote_button").click ( function() {
@@ -585,7 +619,7 @@ Inseme.duration_label = function duration_label( duration ){
   var delta = duration / 1000;
   var day_delta = Math.floor( delta / 86400);
   if( isNaN( day_delta) )return "";
-  if( day_delta < 0 ) return l( "the future" );
+  if( day_delta < 0 ) return l( "le futur", "the future" );
   return (day_delta == 0
       && ( delta < 5
         && l( "maintenant", "just now")
@@ -601,7 +635,7 @@ Inseme.duration_label = function duration_label( duration ){
         && l( "environ une heure", "about an hour")
         || delta < 86400
         && "" + Math.floor( delta / 3600 )
-        + l( "heures", " hours")
+        + l( " heures", " hours")
         )
       || day_delta == 1
       && l( "un jour", "a day")
