@@ -47,74 +47,47 @@
 
 <body class="grey-text text-darken-4">
 
-  <script type='text/javascript'>
+    <script type='text/javascript'>
   
     var chatRef;
 
-      function login(provider) {
-        chatRef.authWithOAuthPopup(provider, function(error, authData) {
-          if (error) {
-            console.log(error);
-          }
-        });
-      }
-    
+    function login( provider ){
+      chatRef.authWithOAuthPopup( provider, function( error, authData ){
+        if( error ){
+          console.log( error );
+        }
+      });
+    }
+  
     $(document).ready( function(){
+      
+      // I use embedly for the content display at the bottom of the page
       $.embedly.defaults.key = '4b04162cd6134d0da674a15aa65b8c4b';
+      
       // Create a new Firebase reference, and a new instance of the Login client
       chatRef = new Firebase('https://inseme.firebaseio.com/chat');
-      chatRef.onAuth(function(authData) {
-        // Once authenticated, instantiate Firechat with our user id and user name
-        if (authData) {
-          var chat = new FirechatUI(chatRef, document.getElementById('firechat-wrapper'));
-          Inseme.init( { firechat: chat } );
-          chat.setUser(
-            authData.uid, 
-            authData[authData.provider].displayName
-          );
-          setTimeout( 
-            function(){
-              Inseme.login( authData.uid, authData[authData.provider].displayName );
-              $vote_buttons = $("#inseme_vote_buttons");
-              Inseme.each_choice( function( c ){
-                var text = Inseme.config.choices[ c ].text;
-                if( !text )return;
-                // Add a button to vote according to that choice
-                var $input = $(
-                  '<a class="inseme_vote_button waves-effect waves-light btn"'
-                + ' data-inseme-vote="' + c 
-                + '">'
-                + text
-                + '</a>'
-                //  '<input type="button" class="inseme_vote_button" value="' + text
-                //
-                //+ '" />'
-                );
-                $input.appendTo( $vote_buttons );
-              });
-              // Add handler to manage each button
-              $(".inseme_vote_button").click ( function() {
-                var vote = $(this).attr ( "data-inseme-vote" );
-                if( vote === "inseme" ){
-                  $("#firechat").find("textarea")
-                  .val( "inseme " )
-                  .focus();
-                  return;
-                }
-                if( vote === "image" ){
-                  $("#firechat").find("textarea")
-                  .val( "inseme image http://" )
-                  .focus();
-                  return;
-                }
-                Inseme.change_vote( vote );
-              } );
-            },
-            5000
-          );
-        }
+      
+      // Once authenticated, instantiate Firechat with our user id and user name
+      chatRef.onAuth( function( authData ){
+        if( !authData )return;
+        var chat = new FirechatUI( 
+          chatRef, 
+          document.getElementById( 'firechat-wrapper') 
+        );
+        Inseme.init( { firechat: chat } );
+        var uid = authData.uid;
+        var name = authData[authData.provider].displayName;
+        chat.setUser( uid, name );
+        setTimeout( 
+          function(){
+            Inseme.populate_vote_buttons();
+            Inseme.login( uid, name );
+          },
+          5000 // Enought time to reload previous chat messages
+        );
       } );
     } );
+    
     </script>
     
     <div id="inseme_video_container" class="container center">
@@ -122,10 +95,13 @@
     </div>
     
     <div id='firechat-wrapper' class="container">
-      <a href='#' onclick='login("twitter");'>Connexion <img src="https://g.twimg.com/dev/sites/default/files/images_documentation/sign-in-with-twitter-gray.png"/></a>
+      <a href='#' onclick='login("twitter");'>
+        Connexion
+        <img src="https://g.twimg.com/dev/sites/default/files/images_documentation/sign-in-with-twitter-gray.png"/>
+      </a>
     </div>
     
-    <div id='inseme' class="container">
+    <div id='inseme' class="container hide">
       <span>Proposition : </span><span id="inseme_proposition_text">
         Envoyez 'inseme ? le texte de votre proposition'
       </span>
@@ -141,16 +117,17 @@
       <a href="https://pbs.twimg.com/media/CfJGLWBXEAEPBfC.jpg">
       <img src="https://pbs.twimg.com/media/CfJGLWBXEAEPBfC.jpg">
       </a>
-<script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
+      <script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
     </div>
     
-    <footer class="page-footer blue lighten-4"><div class="container">
-    <div class="row">
+    <footer class="page-footer blue lighten-4">
+    <div class="container"><div class="row">
     Inseme
     - <a href="https://github.com/virteal/inseme">&agrave; propos</a>
     - <a href="/pad">pad</a>
     - <a href="http://nuitdebout.fr">nuitdebout.fr</a>
-    </div></div></footer>
+    </div></div>
+    </footer>
     
 </body>
 </html>

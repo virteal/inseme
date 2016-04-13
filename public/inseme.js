@@ -15,6 +15,8 @@ var Inseme = {
 
   user_label: "",
   
+  is_https: false,
+  
   users: {},
   
   proposition: null,
@@ -85,6 +87,8 @@ Inseme.init = function( config ){
   de&mand( config );
   Inseme.config.firechat = config.firechat;
   Inseme.set_firechat_event_handlers();
+  // Autodetect https access
+  Inseme.is_https = ( 'https:' == document.location.protocol );
   return Inseme;
 };
 
@@ -300,11 +304,12 @@ Inseme.set_video = function( video_url ){
   var html;
 
   // ToDo: periscope case
-  if( false && video_url.indexOf( "periscope.tv") > 0 ){
+  // Periscope does not allow embedding, I am looking for a solution
+  // http://embedperiscope has issues with https
+  if( !Inseme.is_https && video_url.indexOf( "periscope.tv") > 0 ){
     idx_last_slash = video_url.lastIndexOf( "/" );
     id = video_url.substring( idx_last_slash + 1 );
-    // ToDo: cannot open unsecure http iframe from https page
-    /*
+    // Note: per spec, cannot open unsecure http iframe from https page
     html = ""
     + '<!doctype html><body><script id="periscope-embed"'
     + ' src="http://embedperiscope.com/app/embed.js"'
@@ -322,11 +327,10 @@ Inseme.set_video = function( video_url ){
     var iFrameDoc = $iframe[0].contentDocument || $iframe[0].contentWindow.document;
     iFrameDoc.write( html );
     iFrameDoc.close();
-    */
     return; 
   }
 
-  // bambuser case
+  // bambuser case, the live video is embedded at the top of the page
   if( video_url.indexOf( "bambuser.com/broadcast/" ) > 0 ){
     idx_last_slash = video_url.lastIndexOf( "/" );
     id = video_url.substring( idx_last_slash + 1 );
@@ -350,7 +354,7 @@ Inseme.set_video = function( video_url ){
     return;
   }
   
-  // Default to a link
+  // Default to a link, if http starts the input
   if( video_url.indexOf( "http" ) === 0 ){
     html = '<a id="inseme_video_link" href="" target="_blank">Live</a>'; 
     $("#inseme_video_container").empty().prepend( html ).removeClass( "hide" );
@@ -358,8 +362,10 @@ Inseme.set_video = function( video_url ){
     return;
   }
 
-  // Restore default
-  $("#inseme_video_container").empty().prepend(
+  // Restore default, the same as on http://nuitdebout.fr
+  // ToDo: per place default
+  $("#inseme_video_container").empty()
+  .prepend(
   '"<iframe id="inseme_video_frame" src="https://embed.bambuser.com/broadcast/6205163" width="460" height="345" frameborder="0"></iframe>"'
   ).removeClass( "hide" );
   
@@ -381,6 +387,57 @@ Inseme.set_proposition = function( text ){
     Inseme.users   = {};
   }
   $("#inseme_proposition_text").text( text || "Tapez inseme ? proposition" );
+};
+
+
+Inseme.populate_vote_buttons = function(){
+  
+  var $vote_buttons = $("#inseme_vote_buttons");
+  
+  Inseme.each_choice( function( c ){
+    
+    var text = Inseme.config.choices[ c ].text;
+    if( !text )return;
+    // Add a button to vote according to that choice
+    var $input = $(
+      '<a class="inseme_vote_button waves-effect waves-light btn"'
+    + ' data-inseme-vote="' + c 
+    + '">'
+    + text
+    + '</a>'
+    //  '<input type="button" class="inseme_vote_button" value="' + text
+    //
+    //+ '" />'
+    );
+    $input.appendTo( $vote_buttons );
+  });
+  
+  // Add one global handler to manage all buttons
+  $(".inseme_vote_button").click ( function() {
+    var vote = $(this).attr ( "data-inseme-vote" );
+    
+    // inseme: prefill textarea
+    if( vote === "inseme" ){
+      $("#firechat").find("textarea")
+      .val( "inseme " )
+      .focus();
+      return;
+    }
+    
+    // image, prefill textare to set url of embedded content at bottom of page
+    if( vote === "image" ){
+      $("#firechat").find("textarea")
+      .val( "inseme image http://" )
+      .focus();
+      return;
+    }
+    
+    // Else, it is a vote, raising hand style
+    Inseme.change_vote( vote );
+  } );
+  
+  // Show the div
+  $('#inseme').removeClass( "hide" );
 };
 
 

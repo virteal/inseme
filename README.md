@@ -1,8 +1,6 @@
 # inseme - https://inseme.firebaseapp.com
 Votes temps réel pour assemblées, façon NuitDebout
 
-http://www.slate.fr/story/116483/mains-nuit-debout-signes
-
 ## Mode d'emploi
 
 1/ se connecter via twitter
@@ -16,10 +14,13 @@ Pour changer la question posée à l'assemblée, taper "inseme ? xxxx",
 
 Pour changer la vidéo, taper "inseme video addresse-de-la-video".
 Pour enlever/remettre la vidéo, taper "inseme video off" ou "inseme video on".
-
 Pour changer l'image affichée en bas, taper "inseme image http://xxxx" ou bien "inseme http://xxxx"
 
+Explications au sujet des gestes pour se manifester : http://www.slate.fr/story/116483/mains-nuit-debout-signes
+
 ## Roadmap
+
+Gestion multi-assemblées, ie reset lors du changement de "room"
 
 "inseme bye xxxx" pour que xxxx vote en votre absence (démocratie liquide).
 
