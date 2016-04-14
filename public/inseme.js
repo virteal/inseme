@@ -210,7 +210,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   delete Inseme.proxied_users[ user_name ];
   
   // Skip not inseme related messages
-  if( text.substring( 0, "inseme".length ) !== "inseme" )return;
+  if( text.substring( 0, "inseme".length ).toLowerCase() !== "inseme" )return;
   
   // Extract proxied users, if any
   var idx = text.indexOf( " => " );
@@ -330,6 +330,8 @@ Inseme.on_firechat_message_add = function( room_id, message ){
               }else{
                 $('#inseme_countdown')
                 .text( Inseme.countdown )
+                .removeClass( Inseme.countdown >  5 ? "red-text" : "grey-text" )
+                .addClass(    Inseme.countdown <= 5 ? "red-text" : "grey-text" )
                 .removeClass( "hide" );
               }
             },
@@ -455,9 +457,49 @@ Inseme.display_short_results = function(){
 }
 
 
+Inseme.date_label = function( timestamp ){
+  var date = new Date( timestamp || Date.now() );
+  var annee = date.getFullYear();
+  var mois = date.getMonth();
+  var mois_labels = [ 
+    'Janvier', 'F&eacute;vrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+    'Ao&ucirc;t', 'Septembre', 'Octobre', 'Novembre', 'D&eacute;cembre'
+  ];
+  var j = date.getDate();
+  var jour = date.getDay();
+  var jours_labels = [ 
+    'Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'
+  ];
+  var h = date.getHours();
+  if( h < 10 ){
+    h = "0" + h;
+  }
+  var m = date.getMinutes();
+  if( m < 10 ){
+    m = "0" + m;
+  }
+  var s = date.getSeconds();
+  if( s<10 ){
+    s = "0" + s;
+  }
+  return "" 
+  + jours_labels[ jour ] 
+  + ' ' + j 
+  + ' ' + mois_labels[ mois ] 
+  + ' ' + annee 
+  + ' &agrave; ' + h + ':' + m + ':' + s;
+};
+
+
 Inseme.display_long_results = function(){
-  var msg = "<ul>";
+  
+  var msg = "";
+  
   var now = Date.now();
+  
+  msg += Inseme.date_label( now );
+  
+  msg += "<ul>";
   var v;
   var list = [];
   for( var n in Inseme.users ){
@@ -711,7 +753,9 @@ Inseme.duration_label = function duration_label( duration ){
   var delta = duration / 1000;
   var day_delta = Math.floor( delta / 86400);
   if( isNaN( day_delta) )return "";
-  if( day_delta < 0 )return l( "maintenant", "the future" );
+  if( day_delta < 0 ){
+    return l( "maintenant", "the future" );
+  }
   return (day_delta == 0
       && ( delta < 5
         && l( "maintenant", "just now")

@@ -139,15 +139,22 @@
     </div>
     
     <div id='inseme' class="container hide">
-      <span>Proposition : </span><span id="inseme_proposition_text">
-        Envoyez 'inseme ? le texte de votre proposition'
-      </span>
-      <div id="inseme_you">
-        Vous : <span id="inseme_proposition_vote"></span>
-        <span id="inseme_countdown" class="hide"></span>
-      </div>
-      <div id="inseme_inseme">
-        Ensemble : <span id="inseme_proposition_results"></span>
+      <div id="inseme_inseme" class="card-panel">
+        <div>
+          <span>Proposition : </span>
+          <span id="inseme_proposition_text">
+            Envoyez 'inseme ? le texte de votre proposition'
+          </span>
+        </div>
+        <div>
+          <span>Ensemble : </span>
+          <span id="inseme_proposition_results"></span>
+        </div>
+        <div id="inseme_you">
+          <span>Vous : </span>
+          <span id="inseme_proposition_vote"></span>
+          <span id="inseme_countdown" class="hide text-darken-2"></span>
+        </div>
       </div>
     </div>
     
@@ -162,7 +169,9 @@
       <script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
     </div>
     
-    <div id="inseme_vote_list" class="container"></div>
+    <div class="container">
+      <div id="inseme_vote_list" class="card-panel"></div>
+    </div>
     
     <footer class="page-footer blue lighten-4">
     <div class="container"><div class="row">
