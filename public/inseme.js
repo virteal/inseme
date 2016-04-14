@@ -25,7 +25,7 @@ var Inseme = {
   proxied_users: {},
   
   // inseme ? xxxx to set the currently discussed proposition
-  proposition: null,
+  proposition: "",
 
   votes: [],
 
@@ -39,6 +39,8 @@ var Inseme = {
     place: "Paris",
     
     firechat: null,
+    
+    countdown: 30,
 
     choices:{
       
@@ -87,10 +89,10 @@ var Inseme = {
       "calm": {
         text: "Calme"
       }
-    },
+    }
+  },
     
-    countdown: 30
-  }
+  delta_clock: 0
 
 };
 
@@ -193,15 +195,23 @@ Inseme.set_firechat_event_handlers = function(){
 };
 
 
+Inseme.now = function(){
+  return Date.now() + Inseme.delta_clock;
+};
+
+
 Inseme.on_firechat_message_add = function( room_id, message ){
   
-  // Skip old messages, process only those that are less than a minute old
-  var age = Date.now() - message.timestamp;
+  var age = Inseme.now() - message.timestamp;
+  
+  // If local clock is late compared server's one, adjust local one
   if( age < 0 ){
-    de&&bug( "negative age", age );
+    Inseme.delta_clock -= age;
     age = 0;
   }
-  // if( age > 1 * 60 * 1000 )return;
+  
+  // Skip old messages, 1 day
+  if( age > 24 * 60 * 60 * 1000 )return;
   
   var text = message.message;
   var user_name = message.name;
@@ -429,7 +439,7 @@ Inseme.refresh_display = function(){
 };
 
 
-Inseme.display_short_results = function(){
+Inseme.get_short_results = function(){
   var results = Inseme.results;
   var msg = "";
   var orientation;
@@ -452,13 +462,17 @@ Inseme.display_short_results = function(){
       : count )
     + ".";
   }
-  $("#inseme_proposition_results").html( msg );
-  return Inseme;
+  return msg;
+}
+
+
+Inseme.display_short_results = function(){
+  $("#inseme_proposition_results").html( Inseme.get_short_results() );
 }
 
 
 Inseme.date_label = function( timestamp ){
-  var date = new Date( timestamp || Date.now() );
+  var date = new Date( timestamp || Inseme.now() );
   var annee = date.getFullYear();
   var mois = date.getMonth();
   var mois_labels = [ 
@@ -495,9 +509,10 @@ Inseme.display_long_results = function(){
   
   var msg = "";
   
-  var now = Date.now();
+  var now = Inseme.now();
   
   msg += Inseme.date_label( now );
+  msg += "<br>" + Inseme.proposition;
   
   msg += "<ul>";
   var v;
@@ -526,6 +541,8 @@ Inseme.display_long_results = function(){
     + ".</li>";
   });
   msg += "</ul>";
+  
+  msg += Inseme.get_short_results();
   $('#inseme_vote_list').empty().append( msg );
   return Inseme;
 };
@@ -676,7 +693,7 @@ Inseme.set_proposition = function( text ){
   Inseme.proposition = text || "";
   Inseme.votes = [];
   Inseme.vote = null;
-  Inseme.timestamp = Date.now();
+  Inseme.timestamp = Inseme.now();
   if( !text ){
     Inseme.results = {};
     Inseme.users   = {};
@@ -754,6 +771,7 @@ Inseme.duration_label = function duration_label( duration ){
   var day_delta = Math.floor( delta / 86400);
   if( isNaN( day_delta) )return "";
   if( day_delta < 0 ){
+    de&&bug( "negative timestamp", delta );
     return l( "maintenant", "the future" );
   }
   return (day_delta == 0
@@ -785,7 +803,7 @@ Inseme.duration_label = function duration_label( duration ){
       && "" + Math.ceil( day_delta / 30.5 )
       + l( "mois", " months")
       ).replace( /^ /, ""); // Fix double space issue with "il y a "
-}
+};
 
 
 console.log( "Inseme was loaded" );
