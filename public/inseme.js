@@ -232,8 +232,8 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     Inseme.each_choice( function( c ){
       if( found )return;
       if( Inseme.config.choices[ c ].text.toLowerCase() !== vote ){
-        if( Inseme.config.choices[ c ].ascii
-        &&  Inseme.config.choices[ c ].ascii.toLowerCase() !== vote
+        if( !Inseme.config.choices[ c ].ascii
+        ||   Inseme.config.choices[ c ].ascii.toLowerCase() !== vote
         ){
           return;
         }
