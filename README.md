@@ -66,6 +66,8 @@ Pour faire des suggestions, merci de me contacter et/ou d'écrire dans le 'pad' 
 
 13 avril 2016, délégations façon "démocratie liquide"
 
+14 avril 2016, filtre anti bruit, live facebook
+
 ## Aspects techniques
 
 Le contenu du répertoire /public est directement hébergé par firebase.com sur 

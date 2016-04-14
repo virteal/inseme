@@ -15,6 +15,9 @@ var Inseme = {
 
   user_label: "",
   
+  interval: null,
+  countdown: 0,
+  
   // All seen users, including current one
   users: {},
   
@@ -43,6 +46,10 @@ var Inseme = {
         text: "inseme"
       },
       
+      "talk": {
+        text: "parole"
+      },
+      
       "quiet": {
         text: "silencieux"
       },
@@ -55,16 +62,12 @@ var Inseme = {
         text: "pas d'accord"
       },
       
+      "block": {
+        text: "non radical"
+      },
+      
       "explain": {
         text: "pas compris"
-      },
-      
-      "repeat": {
-        text: "deja dit"
-      },
-      
-      "talk": {
-        text: "parole"
       },
       
       "point": {
@@ -75,14 +78,16 @@ var Inseme = {
         text: "plus fort"
       },
       
-      "calm": {
-        text: "calme"
+      "repeat": {
+        text: "deja dit"
       },
       
-      "translate": {
-        text: "traduire"
+      "calm": {
+        text: "calme"
       }
-    }
+    },
+    
+    countdown: 30
   }
 
 };
@@ -146,21 +151,29 @@ Inseme.change_vote = function( vote ){
   }
   
   $("#inseme_proposition_vote").text( Inseme.config.choices[ vote ].text );
+  if( vote === "quiet" ){
+    $('#inseme_you').addClass( "hide" );
+  }else{
+    $('#inseme_you').removeClass( "hide" );
+  }
   
   // Collect potential proxied users, => u1, u2, u3...
   var proxied_users = [];
   for( var u in Inseme.proxied_users ){
     proxied_users.push( u );
   }
-  Inseme.config.firechat._chat.sendMessage( 
-    Inseme.config.firechat._inseme_room_id,
-    "inseme " 
-    + ( Inseme.config.choices[ vote ].text || vote )
-    + ( proxied_users.length
-      ? " => " + proxied_users.join( "," )
-      : ""
-    )
-  );
+  
+  if( Inseme.config.firechat._inseme_room_id ){
+    Inseme.config.firechat._chat.sendMessage( 
+      Inseme.config.firechat._inseme_room_id,
+      "inseme " 
+      + ( Inseme.config.choices[ vote ].text || vote )
+      + ( proxied_users.length
+        ? " => " + proxied_users.join( "," )
+        : ""
+      )
+    );
+  }
   return Inseme;
 };
 
@@ -182,6 +195,10 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   
   // Skip old messages, process only those that are less than a minute old
   var age = Date.now() - message.timestamp;
+  if( age < 0 ){
+    de&&bug( "negative age", age );
+    age = 0;
+  }
   // if( age > 1 * 60 * 1000 )return;
   
   var text = message.message;
@@ -258,6 +275,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   
   de&&bug( "vote", vote, "user", user_name );
   Inseme.push_vote( user_name, vote, message.timestamp );
+  
   if( proxied_users ){
     proxied_users.forEach( function( u ){
       Inseme.push_vote( u, vote, message.timestamp, user_name );
@@ -267,6 +285,9 @@ Inseme.on_firechat_message_add = function( room_id, message ){
       }
     });
   }
+  
+  var delay = (3 * 1000) - age;
+  if( delay <= 0 || vote === "quiet" ){ delay = 1; }
   
   // Remove some messages after a while to improve signal/noise
   setTimeout( 
@@ -279,8 +300,43 @@ Inseme.on_firechat_message_add = function( room_id, message ){
       // msg_ref.remove();
       Inseme.config.firechat.removeMessage( room_id, msg_id );
     },
-    3 * 1000
+    delay
   );
+  
+  // Restore "quiet" after a while
+  if( user_name === Inseme.user_label ){
+    if( vote !== "quiet" ){
+      if( delay > 1 ){
+        Inseme.countdown = Inseme.config.countdown;
+        if( !Inseme.interval ){
+          Inseme.interval = setInterval(
+            function(){
+              if( --Inseme.countdown <= 0 ){
+                clearInterval( Inseme.interval );
+                Inseme.interval = null;
+                $('#inseme_countdown').text( "" )
+                .addClass( "hide" );
+                Inseme.change_vote();
+                Inseme.refresh_display();
+              }else{
+                $('#inseme_countdown')
+                .text( Inseme.countdown )
+                .removeClass( "hide" );
+              }
+            },
+            1000
+          );
+        }
+      }
+      
+    }else{
+      if( Inseme.interval ){
+        clearInterval( Inseme.interval );
+        Inseme.interval = null;
+        $('#inseme_countdown').addClass( "hide" );
+      }
+    }
+  }
   
 };
 
@@ -351,9 +407,14 @@ Inseme.push_vote = function( user_name, vote, timestamp, proxy ){
     result.who_first = user_name;
   }
   
+  Inseme.refresh_display();
+ 
+};
+
+
+Inseme.refresh_display = function(){
   Inseme.display_short_results();
   Inseme.display_long_results();
- 
 };
 
 
@@ -402,6 +463,7 @@ Inseme.display_long_results = function(){
   }
   list.forEach( function( n ){
     v = Inseme.users[ n ];
+    if( !v.vote )return;
     msg += "<li>"
     + twitter( n )
     + ", " + Inseme.config.choices[ v.vote ].text
@@ -602,7 +664,7 @@ Inseme.populate_vote_buttons = function(){
   $vote_buttons.empty().append( html );
   
   // Add one global handler to manage all buttons
-  $(".inseme_vote_button").click ( function() {
+  $(".inseme_vote_button").click( function() {
     var vote = $(this).attr ( "data-inseme-vote" );
     
     // inseme: prefill textarea
@@ -639,7 +701,7 @@ Inseme.duration_label = function duration_label( duration ){
   var delta = duration / 1000;
   var day_delta = Math.floor( delta / 86400);
   if( isNaN( day_delta) )return "";
-  if( day_delta < 0 ) return l( "le futur", "the future" );
+  if( day_delta < 0 )return l( "maintenant", "the future" );
   return (day_delta == 0
       && ( delta < 5
         && l( "maintenant", "just now")
