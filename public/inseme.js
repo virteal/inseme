@@ -47,43 +47,45 @@ var Inseme = {
       },
       
       "talk": {
-        text: "parole"
+        text: "Parole"
       },
       
       "quiet": {
-        text: "silencieux"
+        text: "Silencieux"
       },
       
       "ok": {
-        text: "d'accord"
+        text: "D'accord"
       },
       
       "no": {
-        text: "pas d'accord"
+        text: "Pas d'accord"
       },
       
       "block": {
-        text: "non radical"
+        text: "Non radical"
       },
       
       "explain": {
-        text: "pas compris"
+        text: "Pas compris"
       },
       
       "point": {
-        text: "point technique"
+        text: "Point technique"
       },
       
       "volume": {
-        text: "plus fort"
+        text: "Plus fort"
       },
       
       "repeat": {
-        text: "deja dit"
+        text: "Déja dit",
+        ascii: "Deja dit",
+        html: "D&eacute;ja dit"
       },
       
       "calm": {
-        text: "calme"
+        text: "Calme"
       }
     },
     
@@ -220,6 +222,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   
   // Look for vote orientation
   var vote = text.substr( "inseme ".length ) || "quiet";
+  vote = vote.toLowerCase();
   var found = false;
   // Lookup canonical form
   if( !found ){
@@ -228,7 +231,13 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   if( !found ){
     Inseme.each_choice( function( c ){
       if( found )return;
-      if( Inseme.config.choices[ c ].text != vote )return;
+      if( Inseme.config.choices[ c ].text.toLowerCase() !== vote ){
+        if( Inseme.config.choices[ c ].ascii
+        &&  Inseme.config.choices[ c ].ascii.toLowerCase() !== vote
+        ){
+          return;
+        }
+      }
       vote = c;
       found = true;
     });
@@ -645,6 +654,7 @@ Inseme.populate_vote_buttons = function(){
     
     var text = Inseme.config.choices[ c ].text;
     if( !text )return;
+    var html_label = Inseme.config.choices[ c ].html || text;
     
     // Add a button to vote according to that choice
     html += "" //+ '<tr class="inseme_vote_button_tr">'
@@ -652,7 +662,7 @@ Inseme.populate_vote_buttons = function(){
     + '<a class="inseme_vote_button waves-effect waves-light btn"'
     + ' data-inseme-vote="' + c 
     + '">'
-    + text
+    + html_label
     + '</a>'
     + '</li>'
     //+ '</tr>'
