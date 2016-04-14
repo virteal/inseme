@@ -503,9 +503,9 @@ Inseme.set_live = function( video_url ){
     var template = ""
     + '<div class="fb-video"' 
     + ' data-href="https://www.facebook.com/facebook/videos/10153231379946729/"'
-    + 'data-width="500">'
+    + ' data-width="500" data-autoplay=true>'
     + '</div>';
-    var html = template.replace( "10153231379946729", encodeURIComponent( id ) );
+    html = template.replace( "10153231379946729", encodeURIComponent( id ) );
     // https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Flenouvelobservateur%2Fvideos%2Fvb.198508090036%2F10156868107940037%2F%3Ftype%3D3&show_text=0&width=400" width="400" height="400" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
     $("#inseme_live_container").empty().append( html ).removeClass( "hide" );
     FB.XFBML.parse();

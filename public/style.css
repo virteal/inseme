@@ -1,3 +1,8 @@
+#inseme_title {
+  margin: 2em;
+  font-size: larger;
+}
+
 #inseme_image_container {
   margin-top: 1em;
   margin-bottom: 1em;
@@ -5,10 +10,6 @@
 
 #inseme {
   margin-bottom: 1em;
-}
-
-.inseme_vote_button {
-  /* margin-left: 10px; */
 }
 
 #inseme_proposition_text {

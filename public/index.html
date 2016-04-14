@@ -89,6 +89,7 @@
       
       // Once authenticated, instantiate Firechat with our user id and user name
       chatRef.onAuth( function( authData ){
+        $('#inseme_live_container').removeClass( "hide" );
         if( !authData )return;
         var chat = new FirechatUI( 
           chatRef, 
@@ -117,20 +118,25 @@
     
     </script>
     
-    <div id="inseme_live_container" class="container center">
+    <div id="inseme_live_container" class="container center hide">
+      <!--
       <iframe id="inseme_live_frame" src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Flenouvelobservateur%2Fvideos%2Fvb.198508090036%2F10156868107940037%2F%3Ftype%3D3&show_text=0&width=400" width="400" height="400" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
-       <!--
-       <iframe id="inseme_live_frame" src="https://embed.bambuser.com/channel/nuitdebout" width="460" height="345" frameborder="0"></iframe>
-       -->
+      -->
+      <iframe id="inseme_live_frame" src="https://embed.bambuser.com/channel/nuitdebout" width="460" height="345" frameborder="0"></iframe>
+       
     </div>
     
-    <div id='firechat-wrapper' class="container">
-      <a href='#' onclick='login("twitter");'>
-        Version alpha 0.1, 13 avril 2016 - Connexion
-        <img src="https://g.twimg.com/dev/sites/default/files/images_documentation/sign-in-with-twitter-gray.png"/>
-        Note : lors de la première connexion via Twitter, il y a des demandes d'autorisations. En réalité, Inseme n'en a pas besoin, il n'utilise Twitter que pour identifier le visiteur.
-      </a>
-    </div>
+    <div id='firechat-wrapper' class="container center">
+      <div id="inseme_title">Inseme, alpha 0.2, 14 avril 2016</div>
+      <div>
+        <a href='#' onclick='login("twitter");'>
+          <img src="https://g.twimg.com/dev/sites/default/files/images_documentation/sign-in-with-twitter-gray.png"/> 
+        </a>
+      </div>
+      <div>
+        <iframe width="600" height="350" src="https://www.youtube.com/embed/04Z6X4iaZrc" frameborder="0" allowfullscreen></iframe>
+      </div>
+    <div>
     
     <div id='inseme' class="container hide">
       <span>Proposition : </span><span id="inseme_proposition_text">
