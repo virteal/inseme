@@ -29,9 +29,10 @@ Explications au sujet des gestes pour se manifester : http://www.slate.fr/story/
 ## Démocratie Liquide
 
 La démocratie liquide est une solution pour pratiquer la démocratie directe à grande échelle.
+
 Elle permet de se partager le travail en automatisant une partie du vote.
 
-Une forme simple d'automatisation consiste à copier le vote de quelqu'un en qui on a confiance.
+Une forme simple d'automatisation consiste à copier les votes de quelqu'un en qui on a confiance.
 
 S'agissant d'assemblées "temps réel", il peut ainsi être utile de designer la personne dont on copie le vote quand on s'absente de l'assemblée.
 
@@ -43,7 +44,7 @@ Quand martin exprimera son avis au sujet d'une proposition, le logiciel indiquer
 2/ Envoyer 'inseme pas d'accord => jacques,pierre" pour signaler votre avis et le fait que jacques et pierre vous font confiance.
 Chaque fois que vous exprimerez votre avis au sujet d'une proposition, le logiciel indiquera que jacques et pierre vous font confiance et vous copient.
 
-A noter : dès que la personne revient et s'exprime, le logiciel cesse les copies de vote la concernant, elle s'exprime donc désormais de nouveau directement et non plus via un représentant.
+A noter : dès que la personne revient et s'exprime, le logiciel cesse les copies de votes la concernant, elle s'exprime donc désormais de nouveau directement et non plus via un représentant.
 
 
 ## Live
