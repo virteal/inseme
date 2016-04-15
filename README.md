@@ -53,9 +53,10 @@ Les sources de "live" supportées sont celles venant de facebook, bambuser.com (
 Pour les autres sources, un lien est affiché, il permet d'ouvrir le flux dans une nouvelle fenêtre.
 
 Exemple :
-  inseme live https://www.facebook.com/lenouvelobservateur/videos/10156868107940037/
-  inseme live https://embed.bambuser.com/broadcast/6209824
-  inseme live http://mixlr.com/radiodebout/
+
+- inseme live https://www.facebook.com/lenouvelobservateur/videos/10156868107940037/
+- inseme live https://embed.bambuser.com/broadcast/6209824
+- inseme live http://mixlr.com/radiodebout/
   
 
 ## Roadmap
