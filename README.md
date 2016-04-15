@@ -44,7 +44,7 @@ Quand martin exprimera son avis au sujet d'une proposition, le logiciel indiquer
 2/ Envoyer 'inseme pas d'accord => jacques,pierre" pour signaler votre avis et le fait que jacques et pierre vous font confiance.
 Chaque fois que vous exprimerez votre avis au sujet d'une proposition, le logiciel indiquera que jacques et pierre vous font confiance et vous copient.
 
-A noter : dès que la personne revient et s'exprime, le logiciel cesse les copies de vote la concernant, elle s'exprime donc désormais directement et non plus via un représentant.
+A noter : dès que la personne revient et s'exprime, le logiciel cesse les copies de vote la concernant, elle s'exprime donc désormais de nouveau directement et non plus via un représentant.
 
 ## Roadmap
 
@@ -90,8 +90,6 @@ Aucun code ne tourne coté serveur, chaque client est autonome et les clients
 se synchronisent via les messages spéciaux échangés avec le chat.
 
 ## Aider
-
-J'ai (@jhr) besoin d'aide sur différents sujets.
 
 Un proxy https/http me permettrait peut-être d'embarquer les videos periscope dans la page, pour l'instant ce n'est pas possible, idem avec la radio debout qui utilise mixlr. Si vous avez ça sur un de vos serveur... merci.
 
