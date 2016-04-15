@@ -232,6 +232,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   
   // Look for vote orientation
   var vote = text.substr( "inseme ".length ) || "quiet";
+  var cmd = vote;
   vote = vote.toLowerCase();
   var found = false;
   // Lookup canonical form
@@ -260,7 +261,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     var isp = vote.indexOf( " " );
     if( isp >= 0 ){
       token1 = vote.substring( 0, isp );
-      param = vote.substring( isp + 1 );
+      param = cmd.substring( isp + 1 );
     }else{
       token1 = vote;
       if( token1.substring( 0, 4 ) === "http" ){
@@ -596,25 +597,14 @@ Inseme.set_live = function( video_url ){
     
   // ToDo: periscope case
   // Periscope does not allow embedding, I am looking for a solution
-  // http://embedperiscope has issues with https
-  if( !Inseme.is_https && video_url.indexOf( "periscope.tv") > 0 ){
+  if( video_url.indexOf( "periscope.tv") > 0 ){
     idx_last_slash = video_url.lastIndexOf( "/" );
     id = video_url.substring( idx_last_slash + 1 );
-    // Note: per spec, cannot open unsecure http iframe from https page
-    html = ""
-    + '<!doctype html><body><script id="periscope-embed"'
-    + ' src="http://embedperiscope.com/app/embed.js"'
-    + " data-options='"
-    + '{"width":316,"height":561,"orientation":"portrait","broadcast_id":"'
-    + encodeURIComponent( id ) 
-    + '"}'
-    + "'"
-    + '></script></body>';
-    var iframe_html = '<iframe id="inseme_live_frame" '
-    + '" width="316" height="561" frameborder="0"></iframe>';
-    de&bug( "script:", html );
-    $("#inseme_live_container").empty().append( iframe_html ).removeClass( "hide" );
-    fill_frame( html );
+    $("#inseme_live_container").empty().append(
+      '<iframe id="inseme_live_frame" '
+    + ' src="https://periscope.tv/w/'+ encodeURIComponent( id ) + '"'
+    + ' width="100%" height="600" frameborder="0"></iframe>'
+    ).removeClass( "hide" );
     return; 
   }
 
@@ -623,9 +613,9 @@ Inseme.set_live = function( video_url ){
     idx_last_slash = video_url.lastIndexOf( "/" );
     id = video_url.substring( idx_last_slash + 1 );
     $("#inseme_live_container").empty().append(
-    '<iframe id="inseme_live_frame" src="https://embed.bambuser.com/broadcast/'
+      '<iframe id="inseme_live_frame" src="https://embed.bambuser.com/broadcast/'
     + encodeURIComponent( id )
-    + '" width="460" height="345" frameborder="0"></iframe>'
+    + '" width="100%" height="600" frameborder="0"></iframe>'
     ).removeClass( "hide" );
     return;
   }
@@ -656,7 +646,7 @@ Inseme.set_live = function( video_url ){
     $("#inseme_live_container").empty().append(
     '<iframe id="inseme_live_frame" src="https://mixlr.com/'
     + encodeURIComponent( id ) + "/embed"
-    + '" width="300" height="100" frameborder="0">'
+    + '" width="100%" height="100" frameborder="0">'
     + '</iframe>'
     ).removeClass( "hide" );
     return;
@@ -686,7 +676,7 @@ Inseme.set_live = function( video_url ){
   // ToDo: per place default
   $("#inseme_live_container")
   .empty().append(
-  '"<iframe id="inseme_video_frame" src="https://embed.bambuser.com/broadcast/6205163" width="460" height="345" frameborder="0"></iframe>"'
+  '"<iframe id="inseme_video_frame" src="https://embed.bambuser.com/broadcast/6205163" width="100%" height="600" frameborder="0"></iframe>"'
   ).removeClass( "hide" );
   
 };

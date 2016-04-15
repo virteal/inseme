@@ -49,11 +49,12 @@ A noter : dès que la personne revient et s'exprime, le logiciel cesse les copie
 
 ## Live
 
-Les sources de "live" supportées sont celles venant de facebook, bambuser.com (video) et mixlr.com (radio). Les sources Periscope posent problème car Twitter interdit de les intégrer à une page existante, il faut se rendre sur le site de periscope.
+Les sources de "live" supportées sont celles venant de periscope, facebook, bambuser.com (video) et mixlr.com (radio). 
 Pour les autres sources, un lien est affiché, il permet d'ouvrir le flux dans une nouvelle fenêtre.
 
 Exemple :
 
+- inseme live https://www.periscope.tv/w/1ynJOmElDalKR
 - inseme live https://www.facebook.com/lenouvelobservateur/videos/10156868107940037/
 - inseme live https://embed.bambuser.com/broadcast/6209824
 - inseme live http://mixlr.com/radiodebout/
@@ -90,7 +91,7 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 
 14 avril 2016, filtre anti bruit, live facebook, tweets de @ReportersDebout
 
-15 avril 2016, intégration des radios mixlr
+15 avril 2016, intégration des radios mixlr, video live periscope
 
 ## Aspects techniques
 
@@ -103,8 +104,6 @@ Aucun code ne tourne coté serveur, chaque client est autonome et les clients
 se synchronisent via les messages spéciaux échangés avec le chat.
 
 ## Aider
-
-Un proxy https/http me permettrait peut-être d'embarquer les videos periscope dans la page, pour l'instant ce n'est pas possible. Si vous avez ça sur un de vos serveurs... merci.
 
 Pour former les participants à la gestuelle d'intervention j'aimerai avoir des icones pour chaque geste. S'ils sont en plus animés, c'est le top.
 
