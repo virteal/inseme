@@ -105,6 +105,10 @@ se synchronisent via les messages spéciaux échangés avec le chat.
 
 ## Aider
 
+Sur PC, le live periscope est en léger différé, de sorte que la participation n'est praticable qu'à condition d'utiliser periscope sur son mobile en même temps que Inseme sur son PC.
+
+Sur mobile, le live periscope n'est visible que depuis l'application periscope et du coup l'application web Inseme n'est plus à l'écran, de sorte qu'il faut 2 mobiles, l'un pour périscope, l'autre pour Inseme.
+
 Pour former les participants à la gestuelle d'intervention j'aimerai avoir des icones pour chaque geste. S'ils sont en plus animés, c'est le top.
 
 J'ignore si c'est possible, mais si ça l'est, ce serait sympa que quelqu'un présente Inseme à l'occasion du hackathon chez numa ce vendredi 15 avril.
