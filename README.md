@@ -88,7 +88,7 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 
 13 avril 2016, délégations façon "démocratie liquide"
 
-14 avril 2016, filtre anti bruit, live facebook, tweets de @ReporterDebout
+14 avril 2016, filtre anti bruit, live facebook, tweets de @ReportersDebout
 
 15 avril 2016, intégration des radios mixlr
 
