@@ -104,7 +104,7 @@ se synchronisent via les messages spéciaux échangés avec le chat.
 
 ## Aider
 
-Un proxy https/http me permettrait peut-être d'embarquer les videos periscope dans la page, pour l'instant ce n'est pas possible, idem avec la radio debout qui utilise mixlr. Si vous avez ça sur un de vos serveur... merci.
+Un proxy https/http me permettrait peut-être d'embarquer les videos periscope dans la page, pour l'instant ce n'est pas possible. Si vous avez ça sur un de vos serveurs... merci.
 
 Pour former les participants à la gestuelle d'intervention j'aimerai avoir des icones pour chaque geste. S'ils sont en plus animés, c'est le top.
 
