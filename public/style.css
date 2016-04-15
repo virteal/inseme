@@ -31,6 +31,16 @@ body, #firechat message-content {
   margin-left: 0em;
 }
 
+#inseme_social_buttons {
+  display: inline-block;
+}
+
+#inseme_social_buttons iframe {
+	vertical-align: middle;
+}
+
+- Read more: https://www.reinisfischer.com/how-align-facebook-google-and-twitter-buttons
+
 
 #firepad {
   width: 640px;
