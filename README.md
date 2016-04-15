@@ -78,6 +78,16 @@ Certains messages, débutant par "inseme", sont ensuite interprétés de façon 
 Aucun code ne tourne coté serveur, chaque client est autonome et les clients
 se synchronisent via les messages spéciaux échangés avec le chat.
 
+## Aider
+
+J'ai (@jhr) besoin d'aide sur différents sujets.
+
+Un proxy https/http me permettrait peut-être d'embarquer les videos periscope dans la page, pour l'instant ce n'est pas possible, idem avec la radio debout qui utilise mixlr. Si vous avez ça sur un de vos serveur... merci.
+
+Pour former les participants à la gestuelle d'intervention j'aimerai avoir des icones pour chaque geste. S'ils sont en plus animés, c'est le top.
+
+J'ignore si c'est possible, mais si ça l'est, ce serait sympa que quelqu'un présente Inseme à l'occasion du hackathon chez numa ce vendredi 15 avril.
+
 ## License
 
 Open source. Faites en ce que vous voulez !
