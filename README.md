@@ -1,5 +1,5 @@
 # inseme - https://inseme.firebaseapp.com
-Votes temps réel pour assemblées, façon NuitDebout & #democratieliquide
+Votes temps réel pour assemblées, façon NuitDebout et #democratieliquide
 
 Inseme vise à faciliter l'accès aux assemblées organisées selon la façon NuitDebout.
 D'une part à titre de formation en familiarisant les participants avec la gestuelle à utiliser pour s'exprimer.
@@ -52,7 +52,7 @@ Migration vers inseme.kudocracy.com
 
 Intégrer la radio mixlr en live
 
-Transfer des déléguations à l'occasion d'un 'bye'
+Transfer des délégations à l'occasion d'un 'bye'
 
 Intégrer d'autres sources de vidéo "live"
 
