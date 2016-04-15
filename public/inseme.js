@@ -581,7 +581,19 @@ Inseme.set_live = function( video_url ){
   var idx_last_slash;
   var id;
   var html;
+  var url;
+  
+  function fill_frame( html ){
+    var $iframe = $('#inseme_live_frame');
+    var iFrameDoc = $iframe[0].contentDocument || $iframe[0].contentWindow.document;
+    iFrameDoc.write( html );
+    iFrameDoc.close();
+  }
 
+  if( video_url[ video_url.length - 1 ] === "/" ){
+    video_url = video_url.substring( 0, video_url.length - 1 );
+  }
+    
   // ToDo: periscope case
   // Periscope does not allow embedding, I am looking for a solution
   // http://embedperiscope has issues with https
@@ -602,10 +614,7 @@ Inseme.set_live = function( video_url ){
     + '" width="316" height="561" frameborder="0"></iframe>';
     de&bug( "script:", html );
     $("#inseme_live_container").empty().append( iframe_html ).removeClass( "hide" );
-    var $iframe = $('#inseme_live_frame');
-    var iFrameDoc = $iframe[0].contentDocument || $iframe[0].contentWindow.document;
-    iFrameDoc.write( html );
-    iFrameDoc.close();
+    fill_frame( html );
     return; 
   }
 
@@ -624,9 +633,6 @@ Inseme.set_live = function( video_url ){
   // facebook live case
   if( video_url.indexOf( "facebook.com" ) > 0 ){
     // https://www.facebook.com/lenouvelobservateur/videos/10156868107940037/
-    if( video_url[ video_url.length - 1 ] === "/" ){
-      video_url = video_url.substring( 0, video_url.length - 1 );
-    }
     idx_last_slash = video_url.lastIndexOf( "/" );
     id = video_url.substring( idx_last_slash + 1 );
     id = id.replace( "/", "" );
@@ -642,14 +648,16 @@ Inseme.set_live = function( video_url ){
     return;
   }
   // http://mixlr.com/radiodebout
-  // ToDo: issue with https
-  if( !Inseme.is_https && video_url.indexOf( "mixlr.com" ) > 0 ){
+  if( video_url.indexOf( "mixlr.com" ) > 0 ){
+    video_url = video_url.replace( "/embed", "" );
     idx_last_slash = video_url.lastIndexOf( "/" );
     id = video_url.substring( idx_last_slash + 1 );
+    var url = "https://mixlr.com/" + encodeURIComponent( id );
     $("#inseme_live_container").empty().append(
     '<iframe id="inseme_live_frame" src="https://mixlr.com/'
-    + encodeURIComponent( id )
-    + '" width="300" height="34" frameborder="0"></iframe>'
+    + encodeURIComponent( id ) + "/embed"
+    + '" width="300" height="100" frameborder="0">'
+    + '</iframe>'
     ).removeClass( "hide" );
     return;
   }

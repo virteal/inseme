@@ -21,11 +21,12 @@ Pour participer à une assemblée à distance, deux conditions sont requises.
 Pour changer la question posée à l'assemblée, taper "inseme ? xxxx", 
 éventuellement précédé de "inseme ?" pour d'abord remettre tous les compteurs à zéro.
 
-Pour changer la vidéo, taper "inseme live addresse-de-la-video".
+Pour changer la vidéo/audio, taper "inseme live addresse-du-live".
 Pour enlever/remettre la vidéo, taper "inseme live off" ou "inseme live on".
 Pour changer l'image affichée en bas, taper "inseme image http://xxxx" ou bien "inseme http://xxxx"
 
 Explications au sujet des gestes pour se manifester : http://www.slate.fr/story/116483/mains-nuit-debout-signes
+
 
 ## Démocratie Liquide
 
@@ -34,7 +35,7 @@ Elle permet de se partager le travail en automatisant une partie du vote.
 
 Une forme simple d'automatisation consiste à copier le vote de quelqu'un en qui on a confiance.
 
-S'agissant d'assemblée "temps réel", il peut ainsi être utile de designer la personne dont on copie le vote quand on s'absente de l'assemblée.
+S'agissant d'assemblées "temps réel", il peut ainsi être utile de designer la personne dont on copie le vote quand on s'absente de l'assemblée.
 
 Pour cela, deux possibilités. 
 
@@ -46,11 +47,21 @@ Chaque fois que vous exprimerez votre avis au sujet d'une proposition, le logici
 
 A noter : dès que la personne revient et s'exprime, le logiciel cesse les copies de vote la concernant, elle s'exprime donc désormais de nouveau directement et non plus via un représentant.
 
+
+## Live
+
+Les sources de "live" supportées sont celles venant de facebook, bambuser.com (video) et mixlr.com (radio). Les sources Periscope posent problème car Twitter interdit de les intégrer à une page existante, il faut se rendre sur le site de periscope.
+Pour les autres sources, un lien est affiché, il permet d'ouvrir le flux dans une nouvelle fenêtre.
+
+Exemple :
+  inseme live https://www.facebook.com/lenouvelobservateur/videos/10156868107940037/
+  inseme live https://embed.bambuser.com/broadcast/6209824
+  inseme live http://mixlr.com/radiodebout/
+  
+
 ## Roadmap
 
 Migration vers inseme.kudocracy.com
-
-Intégrer la radio mixlr en live
 
 Transfer des délégations à l'occasion d'un 'bye'
 
@@ -58,11 +69,11 @@ Intégrer d'autres sources de vidéo "live"
 
 Intégrer des systèmes de video conférence
 
-Intégrer des système de chat
+Intégrer des système de chat, Rocket.chat typiquement
 
 S'intégrer dans des systèmes de chat, via un "chat bot" (robot)
 
-Pour faire des suggestions, merci de me contacter et/ou d'écrire dans le 'pad' accessible via un lien en bas de page.
+Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dans le 'pad'.
 
 
 ## Historique
@@ -78,6 +89,8 @@ Pour faire des suggestions, merci de me contacter et/ou d'écrire dans le 'pad' 
 13 avril 2016, délégations façon "démocratie liquide"
 
 14 avril 2016, filtre anti bruit, live facebook, tweets de @ReporterDebout
+
+15 avril 2016, intégration des radios mixlr
 
 ## Aspects techniques
 
