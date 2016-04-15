@@ -1,6 +1,15 @@
 # inseme - https://inseme.firebaseapp.com
 Votes temps réel pour assemblées, façon NuitDebout & #democratieliquide
 
+Inseme vise à faciliter l'accès aux assemblées organisées selon la façon NuitDebout.
+D'une part à titre de formation en familiarisant les participants avec la gestuelle à utiliser pour s'exprimer.
+D'autre part à titre opérationnel en permettant de participer à distance, afin de réduire le gap entre irl et virtuel, entre ceux qui sont sur place et ceux qui sont sur Internet.
+
+Pour participer à une assemblée à distance, deux conditions sont requises.
+1 disposer de l'adresse d'un flux video "live" (ou audio).
+2 s'organiser avec un modérateur "relai" sur place qui tiendra compte des interventions par Internet et les communiquera aux participants présents "en personne".
+
+
 ## Mode d'emploi
 
 1/ se connecter via twitter
@@ -66,7 +75,7 @@ Pour faire des suggestions, merci de me contacter et/ou d'écrire dans le 'pad' 
 
 13 avril 2016, délégations façon "démocratie liquide"
 
-14 avril 2016, filtre anti bruit, live facebook
+14 avril 2016, filtre anti bruit, live facebook, tweets de @ReporterDebout
 
 ## Aspects techniques
 
