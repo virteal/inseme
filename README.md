@@ -48,6 +48,8 @@ A noter : dès que la personne revient et s'exprime, le logiciel cesse les copie
 
 ## Roadmap
 
+Migration vers inseme.kudocracy.com
+
 Intégrer la radio mixlr en live
 
 Transfer des déléguations à l'occasion d'un 'bye'
