@@ -48,10 +48,6 @@ var Inseme = {
         text: "inseme"
       },
       
-      "talk": {
-        text: "Parole"
-      },
-      
       "quiet": {
         text: "Silencieux"
       },
@@ -70,6 +66,10 @@ var Inseme = {
       
       "explain": {
         text: "Pas compris"
+      },
+      
+      "talk": {
+        text: "Parole"
       },
       
       "point": {
@@ -577,13 +577,38 @@ Inseme.set_image = function( image_url ){
 };
 
 
-Inseme.set_live = function( video_url ){
+Inseme.set_live = function( url ){
   
-  var idx_last_slash;
-  var id;
+  // remove extra spaces
+  url = url.replace( /  /, " " ).trim();
+  
+  // 'off' special case
+  if( url === "off" ){
+    $("#inseme_live_container").addClass( "hide" );
+    return;
+  }
+
+  // 'on' special case
+  if( url === "on" ){
+    $("#inseme_live_container").removeClass( "hide" );
+    return;
+  }
+  
+  function use_link( url ){
+    var html = '<a id="inseme_live_link" href="" target="_blank">Live</a>'; 
+    $("#inseme_live_container").empty().append( html ).removeClass( "hide" );
+    $("#inseme_live_link").attr( "href", url );
+    $('html, body').animate({ scrollTop: 0 }, 0);
+  }
+  
+  var needs_link = url.substring( 0, "in ".length ) === "in ";
+  if( needs_link ){
+    use_link( url.substring( "in ".length ) );
+    return;
+  }
+  
   var html;
-  var url;
-  
+
   function fill_frame( html ){
     var $iframe = $('#inseme_live_frame');
     var iFrameDoc = $iframe[0].contentDocument || $iframe[0].contentWindow.document;
@@ -591,99 +616,103 @@ Inseme.set_live = function( video_url ){
     iFrameDoc.close();
   }
 
-  if( video_url[ video_url.length - 1 ] === "/" ){
-    video_url = video_url.substring( 0, video_url.length - 1 );
+  function get_id( url ){
+    if( !url )return "";
+    var id = url;
+    // Remove / at the end
+    if( id[ id.length - 1 ] === "/" ){
+      id = id.substring( 0, id.length - 1 );
+    }
+    // Remove anything after ? included
+    var idx_question_mark = id.indexOf( "?" );
+    if( idx_question_mark >= 0 ){
+      id = id.substring( 0, idx_question_mark );
+    }
+    var idx_last_slash = id.lastIndexOf( "/" );
+    if( idx_last_slash < 0 )return "";
+    id = id.substring( idx_last_slash + 1 );
+    // Sanitize to avoid html code injections
+    id = encodeURIComponent( id );
+    return id;
+  }
+  
+  // A common case is when id is after last / (and before ?)
+  var id = get_id( url );
+  
+  var frame_height = "600";
+  var frame_template = ""
+  + '<iframe id="inseme_live_frame" '
+  + ' src="SRC"'
+  + ' width="100%" height="' + frame_height + '" frameborder="0">'
+  + '</iframe>';
+  
+  function use_iframe( url, height ){
+    var html = frame_template.replace( "SRC", url );
+    if( height ){
+      html = html.replace( 'height="' + frame_height, 'height="' + height );
+    }
+    $("#inseme_live_container").empty().append( html ).removeClass( "hide" );
+    $('html, body').animate({ scrollTop: 0 }, 0);
   }
     
-  // ToDo: periscope case
-  // Periscope does not allow embedding, I am looking for a solution
-  if( video_url.indexOf( "periscope.tv") > 0 ){
-    idx_last_slash = video_url.lastIndexOf( "/" );
-    id = video_url.substring( idx_last_slash + 1 );
-    $("#inseme_live_container").empty().append(
-      '<iframe id="inseme_live_frame" '
-    + ' src="https://periscope.tv/w/'+ encodeURIComponent( id ) + '"'
-    + ' width="100%" height="600" frameborder="0"></iframe>'
-    ).removeClass( "hide" );
+  // Periscope case, the video is embedded in the top of the page iframe
+  if( id && url.indexOf( "periscope.tv/") > 0 ){
+    use_iframe( "https://periscope.tv/w/"+ id );
+    // Another, complex, solution would be to play the stream myself
+    // See: https://medium.com/@matteocontrini/how-to-use-the-public-periscope-stream-api-8dfedc7fe872#.jl8iz41uy
     return; 
   }
 
-  // bambuser case, the live video is embedded at the top of the page
-  if( video_url.indexOf( "bambuser.com/broadcast/" ) > 0 ){
-    idx_last_slash = video_url.lastIndexOf( "/" );
-    id = video_url.substring( idx_last_slash + 1 );
-    $("#inseme_live_container").empty().append(
-      '<iframe id="inseme_live_frame" src="https://embed.bambuser.com/broadcast/'
-    + encodeURIComponent( id )
-    + '" width="100%" height="600" frameborder="0"></iframe>'
-    ).removeClass( "hide" );
+  // bambuser case, the live video is embedded in the top of page iframe
+  if( id && url.indexOf( "bambuser.com/broadcast/" ) > 0 ){
+    use_iframe( "https://embed.bambuser.com/broadcast/" + id );
     return;
   }
   
   // facebook live case
-  if( video_url.indexOf( "facebook.com" ) > 0 ){
+  if( id && url.indexOf( "facebook.com/" ) > 0 ){
     // https://www.facebook.com/lenouvelobservateur/videos/10156868107940037/
-    idx_last_slash = video_url.lastIndexOf( "/" );
-    id = video_url.substring( idx_last_slash + 1 );
-    id = id.replace( "/", "" );
+    var width = $("#inseme_live_container").width();
     var template = ""
     + '<div class="fb-video"' 
-    + ' data-href="https://www.facebook.com/facebook/videos/10153231379946729/"'
-    + ' data-width="500" data-autoplay=true>'
+    + ' data-href="https://www.facebook.com/facebook/videos/ID/"'
+    + ' data-width="' + width + '" data-autoplay=true>'
     + '</div>';
-    html = template.replace( "10153231379946729", encodeURIComponent( id ) );
-    // https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Flenouvelobservateur%2Fvideos%2Fvb.198508090036%2F10156868107940037%2F%3Ftype%3D3&show_text=0&width=400" width="400" height="400" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+    html = template.replace( "ID", id );
     $("#inseme_live_container").empty().append( html ).removeClass( "hide" );
     FB.XFBML.parse();
-    return;
-  }
-  // http://mixlr.com/radiodebout
-  if( video_url.indexOf( "mixlr.com" ) > 0 ){
-    video_url = video_url.replace( "/embed", "" );
-    idx_last_slash = video_url.lastIndexOf( "/" );
-    id = video_url.substring( idx_last_slash + 1 );
-    var url = "https://mixlr.com/" + encodeURIComponent( id );
-    $("#inseme_live_container").empty().append(
-    '<iframe id="inseme_live_frame" src="https://mixlr.com/'
-    + encodeURIComponent( id ) + "/embed"
-    + '" width="100%" height="100" frameborder="0">'
-    + '</iframe>'
-    ).removeClass( "hide" );
-    return;
-  }
-
-  // 'off' special case
-  if( video_url === "off" ){
-    $("#inseme_live_container").addClass( "hide" );
-    return;
-  }
-
-  // 'on' special case
-  if( video_url === "on" ){
-    $("#inseme_live_container").removeClass( "hide" );
+    $('html, body').animate({ scrollTop: 0 }, 0);
     return;
   }
   
-  // Default to a link, if http starts the input
-  if( video_url.indexOf( "http" ) === 0 ){
-    html = '<a id="inseme_live_link" href="" target="_blank">Live</a>'; 
-    $("#inseme_live_container").empty().append( html ).removeClass( "hide" );
-    $("#inseme_live_link").attr( "href", video_url );
+  // mixlr audio case
+  if( id && url.indexOf( "mixlr.com/" ) > 0 ){
+    id = get_id( url.replace( "/embed", "" ) );
+    if( id ){
+      use_iframe( "https://mixlr.com/" + id + "/embed", "100" );
+      return;
+    }
+  }
+
+  // Use iframe if "http" starts the input
+  if( url.indexOf( "http" ) === 0 ){
+    // Minimal code injection protection
+    id = url.replace( />/, "!" ).replace( /script/i, "!" );
+    // Force https
+    id = id.replace( "http:", "https:" );
+    use_iframe( id );
+    return;
+  }
+  
+  // Default to a link if http starts the input
+  if( url.indexOf( "http" ) === 0 ){
+    use_link( id );
     return;
   }
 
-  // Restore default, the same as on http://nuitdebout.fr
-  // ToDo: per place default
-  $("#inseme_live_container")
-  .empty().append(
-  '"<iframe id="inseme_video_frame" src="https://embed.bambuser.com/broadcast/6205163" width="100%" height="600" frameborder="0"></iframe>"'
-  ).removeClass( "hide" );
-  
-};
-
-
-Inseme.set_audio = function( audio_url ){
-  
+  // Anything else restores the default, the same as on http://nuitdebout.fr
+  // ToDo: per place default & .config one
+  use_iframe( "https://embed.bambuser.com/broadcast/6205163" );
 };
 
 
@@ -756,6 +785,7 @@ Inseme.populate_vote_buttons = function(){
   
   // Show the div
   $('#inseme').removeClass( "hide" );
+  $('html, body').animate({ scrollTop: 0 }, 0);
 };
 
 // extracted from kudocracy

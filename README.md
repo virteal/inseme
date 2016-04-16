@@ -19,9 +19,10 @@ Pour participer à une assemblée à distance, deux conditions sont requises.
 Pour changer la question posée à l'assemblée, taper "inseme ? xxxx", 
 éventuellement précédé de "inseme ?" pour d'abord remettre tous les compteurs à zéro.
 
-Pour changer la vidéo/audio, taper "inseme live addresse-du-live".
-Pour enlever/remettre la vidéo, taper "inseme live off" ou "inseme live on".
-Pour changer l'image affichée en bas, taper "inseme image http://xxxx" ou bien "inseme http://xxxx"
+Pour changer l'image affichée en bas, taper "inseme adresse-de-l-image".
+Pour changer la vidéo/audio, taper "inseme live adresse-du-live".
+Pour simplement fournir un lien, taper "inseme live in adresse-du-live".
+
 
 Explications au sujet des gestes pour se manifester : http://www.slate.fr/story/116483/mains-nuit-debout-signes
 
@@ -49,8 +50,7 @@ A noter : dès que la personne revient et s'exprime, le logiciel cesse les copie
 
 ## Live
 
-Les sources de "live" supportées sont celles venant de periscope, facebook, bambuser.com (video) et mixlr.com (radio). 
-Pour les autres sources, un lien est affiché, il permet d'ouvrir le flux dans une nouvelle fenêtre.
+Diverses sources de "live" sont possibles dont celles de periscope, facebook, bambuser.com (video) et mixlr.com (radio).
 
 Exemple :
 
@@ -58,11 +58,12 @@ Exemple :
 - inseme live https://www.facebook.com/lenouvelobservateur/videos/10156868107940037/
 - inseme live https://embed.bambuser.com/broadcast/6209824
 - inseme live http://mixlr.com/radiodebout/
+- inseme live in http://nuitdebout.fr
+
+Dans le dernier exemple, "inseme live in", seul un lien vers la source spécifiée est affiché.
   
 
 ## Roadmap
-
-Migration vers inseme.kudocracy.com
 
 Transfer des délégations à l'occasion d'un 'bye'
 
@@ -92,6 +93,8 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 14 avril 2016, filtre anti bruit, live facebook, tweets de @ReportersDebout
 
 15 avril 2016, intégration des radios mixlr, video live periscope
+
+16 avril 2016, "inseme live in adresse-du-live" pour n'afficher qu'un lien
 
 ## Aspects techniques
 
