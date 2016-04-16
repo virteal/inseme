@@ -785,6 +785,7 @@ Inseme.populate_vote_buttons = function(){
   
   // Show the div
   $('#inseme').removeClass( "hide" );
+  $('#inseme_twitter_timeline').removeClass( "hide" );
   $('html, body').animate({ scrollTop: 0 }, 0);
 };
 
