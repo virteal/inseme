@@ -96,6 +96,8 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 
 16 avril 2016, "inseme live in adresse-du-live" pour n'afficher qu'un lien
 
+17 avril 2016, comptage des accords et affichage en temps réel du résultat
+
 ## Aspects techniques
 
 Le contenu du répertoire /public est directement hébergé par firebase.com sur 

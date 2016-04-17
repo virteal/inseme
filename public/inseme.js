@@ -26,6 +26,7 @@ var Inseme = {
   
   // inseme ? xxxx to set the currently discussed proposition
   proposition: "",
+  proposition_timestamp: 0,
 
   votes: [],
 
@@ -53,15 +54,18 @@ var Inseme = {
       },
       
       "ok": {
-        text: "D'accord"
+        text: "D'accord",
+        is_sticky: true
       },
       
       "no": {
-        text: "Pas d'accord"
+        text: "Pas d'accord",
+        is_sticky: true
       },
       
       "block": {
-        text: "Non radical"
+        text: "Non radical",
+        is_sticky: true
       },
       
       "explain": {
@@ -281,7 +285,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
         Inseme.set_live( param );
         
       }else if( token1 === "?" ){
-        Inseme.set_proposition( param );
+        Inseme.set_proposition( param, message.timestamp );
       
       }else if( token1 === "bye" ){
         if( param === Inseme.user_label ){
@@ -293,7 +297,12 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   }
   if( !found )return;
   
-  de&&bug( "vote", vote, "user", user_name );
+  de&&bug( 
+    "vote", 
+    vote, "user", 
+    user_name, 
+    "ago", Inseme.duration_label( Inseme.now() - message.timestamp )
+  );
   Inseme.push_vote( user_name, vote, message.timestamp );
   
   if( proxied_users ){
@@ -365,7 +374,11 @@ Inseme.on_firechat_message_add = function( room_id, message ){
 
 Inseme.push_vote = function( user_name, vote, timestamp, proxy ){
   
-  Inseme.votes.push( { orientation: vote, user: user_name } );
+  Inseme.votes.push( { 
+    user: user_name,
+    orientation: vote,
+    timestamp: timestamp
+  } );
   
   var user = Inseme.users[ user_name ];
   
@@ -383,7 +396,7 @@ Inseme.push_vote = function( user_name, vote, timestamp, proxy ){
   var results = Inseme.results;
   
   // Remove previous vote
-  var previous_vote = user.vote;
+  var previous_vote = user.state;
   if( previous_vote ){
     var old_result = results[ previous_vote ];
     if( !old_result ){
@@ -414,8 +427,23 @@ Inseme.push_vote = function( user_name, vote, timestamp, proxy ){
     }
   }
   
-  user.vote = vote;
-  user.timestamp = timestamp; // Date.now();
+  var previous_state = user.state;
+  var previous_via   = user.via;
+  user.state = vote;
+  if( Inseme.config.choices[ vote ].is_sticky ){
+    user.vote = vote;
+    user.timestamp = timestamp;
+  }
+  if( vote === "quiet" ){
+    if( previous_state !== "quiet" || proxy !== previous_via ){
+      user.timestamp = timestamp;
+    }
+  }else{
+    if( vote !== previous_state || proxy !== previous_via ){
+      user.timestamp = timestamp;
+    }
+  }
+
   user.via = proxy;
   
   // Increase counter and track first talker
@@ -435,6 +463,10 @@ Inseme.push_vote = function( user_name, vote, timestamp, proxy ){
 
 
 Inseme.refresh_display = function(){
+  if( !Inseme.interval_refresh_display ){
+    Inseme.interval_refresh_display 
+    = setInterval( Inseme.refresh_display, 1000 );
+  }
   Inseme.display_short_results();
   Inseme.display_long_results();
 };
@@ -494,7 +526,7 @@ Inseme.date_label = function( timestamp ){
     m = "0" + m;
   }
   var s = date.getSeconds();
-  if( s<10 ){
+  if( s < 10 ){
     s = "0" + s;
   }
   return "" 
@@ -511,29 +543,60 @@ Inseme.display_long_results = function(){
   var msg = "";
   
   var now = Inseme.now();
+  var age = now - ( Inseme.proposition_timestamp || now );
   
-  msg += Inseme.date_label( now );
-  msg += "<br>" + Inseme.proposition;
+  msg += "Nous sommes " + Inseme.date_label( now ) + ".";
   
-  msg += "<ul>";
-  var v;
-  var list = [];
-  for( var n in Inseme.users ){
-    list.push( n );
+  if( Inseme.proposition ){
+    msg += "<br>Sur la proposition \"" + Inseme.proposition + "\"";
+    msg += " faite " + Inseme.date_label( Inseme.proposition_timestamp );
+    msg += ", il y a " + Inseme.duration_label( age ) + ".";
+  }else{
+    msg += "<br>Sur la discussion en cours depuis "
+    + Inseme.duration_label( age ) + ".";
   }
-  list = list.sort();
+  
   function twitter( n ){
     return ""
     + '<a href="http://twitter.com/' + n + '">' 
     + "@" + n
     + '</a>';
   }
+  
+  msg += "<ul>";
+  
+  var sticky_votes = {};
+  var v;
+  var list = [];
+  for( var n in Inseme.users ){
+    list.push( n );
+  }
+  list = list.sort();
+  
+  function twitter( n ){
+    return ""
+    + '<a href="http://twitter.com/' + n + '">' 
+    + "@" + n
+    + '</a>';
+  }
+  
   list.forEach( function( n ){
     v = Inseme.users[ n ];
     if( !v.vote )return;
-    msg += "<li>"
-    + twitter( n )
-    + ", " + Inseme.config.choices[ v.vote ].text
+    msg += "<li>" + twitter( n ) + ", ";
+    if( v.vote && Inseme.config.choices[ v.vote ].is_sticky ){
+      if( !sticky_votes[ v.vote ] ){
+        sticky_votes[ v.vote ] = 0;
+      }
+      sticky_votes[ v.vote ]++;
+      msg += Inseme.config.choices[ v.vote ].text;
+      if( v.state !== v.vote ){
+        msg += ", puis " + Inseme.config.choices[ v.state ].text;
+      }
+    }else{
+       msg += Inseme.config.choices[ v.state ].text;
+    }
+    msg += ""
     + ( v.via 
       ? " (via " + twitter( v.via ) + ")"
       : "" )
@@ -542,6 +605,27 @@ Inseme.display_long_results = function(){
     + ".</li>";
   });
   msg += "</ul>";
+  
+  var orientation;
+  var orientations = [];
+  for( orientation in sticky_votes ){
+    orientations.push( orientation );
+  }
+  if( orientations.length ){
+    msg += "<br>R&eacute;sultat : ";
+    orientations.sort( function( a, b ){
+      return sticky_votes[ b ] - sticky_votes[ a ];
+    });
+    msg += '<table class="inseme_results">';
+    orientations.forEach( function( orientation ){
+      msg += "<tr><td>" 
+      + Inseme.config.choices[ orientation ].text
+      + "</td><td>"
+      + sticky_votes[ orientation ]
+      + "</td></tr>";
+    });
+    msg += "</table>";
+  }
   
   msg += Inseme.get_short_results();
   $('#inseme_vote_list').empty().append( msg );
@@ -716,11 +800,15 @@ Inseme.set_live = function( url ){
 };
 
 
-Inseme.set_proposition = function( text ){
-  Inseme.proposition = text || "";
+Inseme.set_proposition = function( text, timestamp ){
+  var proposition = text || "";
+  // Filter out if no change
+  if( proposition && proposition === Inseme.proposition )return;
+  Inseme.proposition = proposition;
+  Inseme.proposition_timestamp = timestamp || Inseme.now();
   Inseme.votes = [];
   Inseme.vote = null;
-  Inseme.timestamp = Inseme.now();
+  Inseme.timestamp = timestamp || Inseme.now();
   if( !text ){
     Inseme.results = {};
     Inseme.users   = {};
@@ -801,16 +889,16 @@ Inseme.duration_label = function duration_label( duration ){
   if( isNaN( day_delta) )return "";
   if( day_delta < 0 ){
     de&&bug( "negative timestamp", delta );
-    return l( "maintenant", "the future" );
+    return l( "... bientot", "... soon" );
   }
   return (day_delta == 0
-      && ( delta < 5
-        && l( "maintenant", "just now")
+      && ( delta < 3
+        && l( '<span class="red-text">maintenant</span>', "just now")
         || delta < 60
         && "" + Math.floor( delta )
         + l( " secondes", " seconds")
         || delta < 120
-        && l( "1 minutes", "1 minute")
+        && l( "1 minute", "1 minute")
         || delta < 3600
         && "" + Math.floor( delta / 60 )
         + l( " minutes", " minutes")
@@ -821,7 +909,7 @@ Inseme.duration_label = function duration_label( duration ){
         + l( " heures", " hours")
         )
       || day_delta == 1
-      && l( "un jour", "a day")
+      && l( " un jour", " a day")
       || day_delta < 7
       && "" + day_delta
       + l( " jours", " days")
@@ -830,7 +918,7 @@ Inseme.duration_label = function duration_label( duration ){
       + l( " semaines", " weeks")
       || day_delta >= 31
       && "" + Math.ceil( day_delta / 30.5 )
-      + l( "mois", " months")
+      + l( " mois", " months")
       ).replace( /^ /, ""); // Fix double space issue with "il y a "
 };
 
