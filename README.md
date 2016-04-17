@@ -98,6 +98,7 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 
 17 avril 2016, comptage des accords et affichage en temps réel du résultat
 
+
 ## Aspects techniques
 
 Le contenu du répertoire /public est directement hébergé par firebase.com sur 
@@ -108,6 +109,7 @@ Certains messages, débutant par "inseme", sont ensuite interprétés de façon 
 Aucun code ne tourne coté serveur, chaque client est autonome et les clients
 se synchronisent via les messages spéciaux échangés avec le chat.
 
+
 ## Aider
 
 Sur PC, le live periscope est en léger différé, de sorte que la participation n'est praticable qu'à condition d'utiliser periscope sur son mobile en même temps que Inseme sur son PC.
@@ -116,7 +118,6 @@ Sur mobile, le live periscope n'est visible que depuis l'application periscope e
 
 Pour former les participants à la gestuelle d'intervention j'aimerai avoir des icones pour chaque geste. S'ils sont en plus animés, c'est le top.
 
-J'ignore si c'est possible, mais si ça l'est, ce serait sympa que quelqu'un présente Inseme à l'occasion du hackathon chez numa ce vendredi 15 avril.
 
 ## License
 
