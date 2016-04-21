@@ -39,6 +39,8 @@ var Inseme = {
     
     place: "Paris",
     
+    url_help: "http://documentup.com/Virteal/inseme",
+    
     firechat: null,
     
     countdown: 30,
@@ -96,6 +98,10 @@ var Inseme = {
       "silence": {
         text: "Silence",
         html: '<i class="inseme_sprite inseme_sprite-silence"></i>',
+      },
+      
+      "help": {
+        text: "Aide"
       }
     }
   },
@@ -878,6 +884,12 @@ Inseme.populate_vote_buttons = function(){
       $("#firechat").find("textarea")
       .val( "inseme " )
       .focus();
+      return;
+    }
+    
+    // help: goto to help page
+    if( vote === "help" ){
+      window.open( Inseme.config.url_help );
       return;
     }
     

@@ -104,7 +104,7 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 
 17 avril 2016, comptage des accords et affichage en temps réel du résultat
 
-21 avril 2016, icones associés à gestuelle
+21 avril 2016, icones associés à gestuelle, Boutton 'AIDE'
 
 
 ## Aspects techniques
