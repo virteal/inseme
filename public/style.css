@@ -31,6 +31,65 @@ body, #firechat message-content {
   margin-left: 0em;
 }
 
+#inseme_you {
+  display: inline;
+}
+
+
+.inseme_sprite {
+    background-image: url(nuitdebout.png);
+    background-repeat: no-repeat;
+    display: block;
+}
+
+.inseme_sprite-ok {
+    width: 54px;
+    height: 54px;
+    background-position: -5px -10px;
+}
+
+.inseme_sprite-no {
+    width: 54px;
+    height: 54px;
+    background-position: -121px -14px;
+}
+
+.inseme_sprite-block {
+    width: 54px;
+    height: 54px;
+    background-position: -183px -14px;
+}
+
+.inseme_sprite-talk {
+    width: 54px;
+    height: 54px;
+    background-position: -299px -14px;
+}
+
+.inseme_sprite-volume {
+    width: 54px;
+    height: 54px;
+    background-position: -244px -14px;
+}
+
+.inseme_sprite-point {
+    width: 54px;
+    height: 54px;
+    background-position: -410px -14px;
+}
+
+.inseme_sprite-repeat {
+    width: 54px;
+    height: 54px;
+    background-position: -357px -10px;
+}
+
+.inseme_sprite-silence {
+    width: 54px;
+    height: 54px;
+    background-position: -60px -14px;
+}
+
 .inseme_results {
   width: auto;
 }

@@ -65,6 +65,12 @@ Dans le dernier exemple, "inseme live in", seul un lien vers la source spécifi�
 
 ## Roadmap
 
+Intégration dans Google Hangouts pour entendre les participants distants
+
+Intégration avec le chat de periscope, pour y injecter les votes distants
+
+Broadcast avec webRTC, pour diffuser le live et celui qui a la parole
+
 Transfer des délégations à l'occasion d'un 'bye'
 
 Intégrer d'autres sources de vidéo "live"
@@ -98,6 +104,8 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 
 17 avril 2016, comptage des accords et affichage en temps réel du résultat
 
+21 avril 2016, icones associés à gestuelle
+
 
 ## Aspects techniques
 
@@ -116,8 +124,7 @@ Sur PC, le live periscope est en léger différé, de sorte que la participation
 
 Sur mobile, le live periscope n'est visible que depuis l'application periscope et du coup l'application web Inseme n'est plus à l'écran, de sorte qu'il faut 2 mobiles, l'un pour périscope, l'autre pour Inseme.
 
-Pour former les participants à la gestuelle d'intervention j'aimerai avoir des icones pour chaque geste. S'ils sont en plus animés, c'est le top.
-
+Pour former les participants à la gestuelle d'intervention j'aimerai avoir des images animées pour chaque geste.
 
 ## License
 

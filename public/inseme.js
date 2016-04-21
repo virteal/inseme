@@ -45,9 +45,9 @@ var Inseme = {
 
     choices:{
       
-      "inseme": {
-        text: "inseme"
-      },
+      //"inseme": {
+      //  text: "inseme"
+      //},
       
       "quiet": {
         text: "Silencieux"
@@ -55,43 +55,47 @@ var Inseme = {
       
       "ok": {
         text: "D'accord",
-        is_sticky: true
+        is_sticky: true,
+        html: '<i class="inseme_sprite inseme_sprite-ok"></i>'
       },
       
       "no": {
         text: "Pas d'accord",
-        is_sticky: true
+        is_sticky: true,
+        html: '<i class="inseme_sprite inseme_sprite-no"></i>'
       },
       
       "block": {
         text: "Non radical",
-        is_sticky: true
-      },
-      
-      "explain": {
-        text: "Pas compris"
+        is_sticky: true,
+        html: '<i class="inseme_sprite inseme_sprite-block"></i>'
       },
       
       "talk": {
-        text: "Parole"
+        text: "Parole",
+        html: '<i class="inseme_sprite inseme_sprite-talk"></i>'
       },
       
       "point": {
-        text: "Point technique"
+        text: "Point technique",
+        html: '<i class="inseme_sprite inseme_sprite-point"></i>'
       },
       
       "volume": {
-        text: "Plus fort"
+        text: "Plus fort",
+        html: '<i class="inseme_sprite inseme_sprite-volume"></i>'
       },
       
       "repeat": {
         text: "Déja dit",
+        html: '<i class="inseme_sprite inseme_sprite-repeat"></i>',
         ascii: "Deja dit",
-        html: "D&eacute;ja dit"
+        // html: "D&eacute;ja dit"
       },
       
-      "calm": {
-        text: "Calme"
+      "silence": {
+        text: "Silence",
+        html: '<i class="inseme_sprite inseme_sprite-silence"></i>',
       }
     }
   },
@@ -159,6 +163,12 @@ Inseme.change_vote = function( vote ){
   }
   
   $("#inseme_proposition_vote").text( Inseme.config.choices[ vote ].text );
+  var icon = Inseme.config.choices[ vote ].html;
+  if( icon ){
+   $("#inseme_proposition_vote").html(
+     icon + $("#inseme_proposition_vote").html()
+   );
+  }
   if( vote === "quiet" ){
     $('#inseme_you').addClass( "hide" );
   }else{
@@ -277,7 +287,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
       
       if( token1 === "image" ){
         if( param === "help" ){
-          param = "https://pbs.twimg.com/media/CfJGLWBXEAEPBfC.jpg";
+          param = "nuitdebout.png";
         }
         Inseme.set_image( param );
         
@@ -443,6 +453,9 @@ Inseme.push_vote = function( user_name, vote, timestamp, proxy ){
       user.timestamp = timestamp;
     }
   }
+  if( !user.timestamp ){
+    user.timestamp = timestamp;
+  }
 
   user.via = proxy;
   
@@ -496,12 +509,12 @@ Inseme.get_short_results = function(){
     + ".";
   }
   return msg;
-}
+};
 
 
 Inseme.display_short_results = function(){
   $("#inseme_proposition_results").html( Inseme.get_short_results() );
-}
+};
 
 
 Inseme.date_label = function( timestamp ){
@@ -678,6 +691,12 @@ Inseme.set_live = function( url ){
     return;
   }
   
+  // 'broadcast' special case, using webRTC
+  // See https://webrtc.ventures/2016/01/live-streaming-with-webrtc/
+  if( url === "broadcast" ){
+    // ToDo: implement sender side and receivers side
+  }
+  
   function use_link( url ){
     var html = '<a id="inseme_live_link" href="" target="_blank">Live</a>'; 
     $("#inseme_live_container").empty().append( html ).removeClass( "hide" );
@@ -744,6 +763,9 @@ Inseme.set_live = function( url ){
     use_iframe( "https://periscope.tv/w/"+ id );
     // Another, complex, solution would be to play the stream myself
     // See: https://medium.com/@matteocontrini/how-to-use-the-public-periscope-stream-api-8dfedc7fe872#.jl8iz41uy
+    // and https://github.com/gabrielg/periscope_api/blob/master/API.md
+    // and https://github.com/ArnaudRinquin/peristream-examples/blob/master/browser-example.js
+    // hls player: https://github.com/dailymotion/hls.js
     return; 
   }
 
@@ -833,7 +855,7 @@ Inseme.populate_vote_buttons = function(){
     // Add a button to vote according to that choice
     html += "" //+ '<tr class="inseme_vote_button_tr">'
     + '<li class="inseme_vote_button_li">'
-    + '<a class="inseme_vote_button waves-effect waves-light btn"'
+    + '<a class="inseme_vote_button waves-effect waves-light btn-large"'
     + ' data-inseme-vote="' + c 
     + '">'
     + html_label
