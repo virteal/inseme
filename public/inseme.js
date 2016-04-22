@@ -339,7 +339,8 @@ Inseme.track_room = function( id, name, timestamp ){
       proposition: "",
       proposition_timestamp: 0,
       live: "",
-      image: ""
+      image: "",
+      twitter: ""
     };
   }
   
@@ -513,6 +514,7 @@ Inseme.set_current_room = function( id, name ){
     de&&bug( "Current room becomes", id, name, "was", previous_room_id );
     Inseme.set_live( room.id, room.live );
     Inseme.set_image( room.id, room.image );
+    Inseme.set_twitter( room.id, room.twitter );
     Inseme.refresh_display();
   }
   
