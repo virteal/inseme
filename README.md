@@ -20,11 +20,14 @@ Pour participer à une assemblée à distance, deux conditions sont requises.
 
 Pour changer la question posée à l'assemblée, taper "inseme ? xxxx", éventuellement précédé de "inseme ?" pour d'abord remettre tous les compteurs à zéro.
 
-Pour changer l'image affichée en bas, taper "inseme adresse-de-l-image".
-
 Pour changer la vidéo/audio, taper "inseme live adresse-du-live".
 
 Pour simplement fournir un lien, taper "inseme live in adresse-du-live".
+
+Pour changer l'image affichée en bas, taper "inseme adresse-de-l-image".
+
+Pour changer le fil twitter affiché en bas, taper "inseme twitter nom".
+
 
 
 ## Démocratie Liquide

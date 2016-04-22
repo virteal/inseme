@@ -35,6 +35,9 @@ body, #firechat message-content {
   display: inline;
 }
 
+#inseme_image_container a {
+  margin: 1em;
+}
 
 .inseme_sprite {
     background-image: url(nuitdebout.png);
