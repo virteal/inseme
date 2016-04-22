@@ -111,7 +111,8 @@
         Inseme.init( { firechat: chat } );
         Inseme.populate_vote_buttons();
         var uid = authData.uid;
-        var name = authData[authData.provider].username;
+        var info = authData[authData.provider]
+        var name = info.username || info.displayName;
         if( authData.provider === "twitter" ){
           name = "@" + name;
         }
