@@ -159,6 +159,11 @@ Inseme.patch_i18n_template = function( name, html ){
     r = r.replace( en, fr );
   }
   
+  // ToDo: find where this is defined, not in a template apparently
+  if( r.indexOf( "Create Public Room" ) > 0 ){
+    de&&bug( "Message found in template", name );
+  }
+  
   if( name === "layout-full" ){
     s( "Chat Rooms", "Assembl&eacute;es" );
     s( "Create Room", "Cr&eacute;er une assembl&eacute;e" );
@@ -172,8 +177,8 @@ Inseme.patch_i18n_template = function( name, html ){
   }else if( name === "message-context-menu" ){
     s( "Warn User", "Pr&eacute;venir le participant" );
     s( "Kick User", "Faire sortir le participant" );
-    s( "Suspend User (1 hour)", "Suspendre le participant (1 heure)" );
-    s( "Suspend User (1 day)", "Suspendre le participant (1 jour)" );
+    s( "Suspend User (1 Hour)", "Suspendre le participant (1 heure)" );
+    s( "Suspend User (1 Day)", "Suspendre le participant (1 jour)" );
     s( "Delete Message", "Effacer le message" );
 
   }else if( name === "message" ){
@@ -185,7 +190,7 @@ Inseme.patch_i18n_template = function( name, html ){
     
   }else if( name === "prompt-create-room" ){
     s( "Give your chat room a name:", "Donner un nom &agrave; votre assembl&eacute;e : " );
-    s( "Room name...", "Nom de l\\'assembl&eacute;e..." );
+    s( "Room name...", "Nom..." );
 
   }else if( name === "prompt-invitation" ){
     s( "invited you to join", "Vous invite &agrave; vous joindre" );
