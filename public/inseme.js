@@ -449,6 +449,32 @@ Inseme.set_firechat_event_handlers = function(){
     Inseme.set_current_room( room_id );
     return old.apply( this, arguments );
   };
+  // Monkey patch .prompt() for additionnal i18n
+  var old_prompt = chat.prompt.bind( chat );
+  chat.prompt = function( msg, template ){
+    if( msg === "Create Public Room" ){
+      msg = "Créer un espace public";
+    }else if( msg === "Invite" ){
+      msg = "Inviter";
+    }else if( msg === "Accepted" ){
+      msg = "Accepté";
+    }else if( msg === "Declined" ){
+      msg = "Décliné";
+    }else if( msg === "Mute User?" ){
+      msg = "Filrer le participant ?";
+    }else if( msg === "Private Invite" ){
+      msg = "Invitation privée";
+    }else if( msg === "Warning" ){
+      msg = "Attention";
+      if( template[ 0 ] === "Y" ){
+        template = "Messages inappropri&eacute;s. Risque de suspension.";
+      }
+    }else if( msg === "Suspended" ){
+      msg = "Suspension";
+      // ToDo: i18n of string templace that include time left suspended
+    }
+    return old_prompt( msg, template );
+  }
   // Hack to track currently shown tab/room
   $(document).delegate('[data-toggle="firechat-tab"]', 'click', function(event) {
     event.preventDefault();
