@@ -1,5 +1,5 @@
 # inseme - http://inseme.kudocracy.com
-Votes temps réel pour assemblées, façon NuitDebout et #democratieliquide
+Votes temps réel pour assemblées, façon NuitDebout et #DémocratieLiquide
 
 Inseme vise à faciliter l'accès aux assemblées organisées selon la façon NuitDebout. D'une part à titre de formation en familiarisant les participants avec la gestuelle à utiliser pour s'exprimer. D'autre part à titre opérationnel en permettant de participer à distance.
 
@@ -10,21 +10,21 @@ Pour participer à une assemblée à distance, deux conditions sont requises.
 
 ## Mode d'emploi
 
-1/ se connecter via twitter
+1/ se connecter via twitter, facebook ou github
 
-2/ choisir ou créer une "room", cad dire une assemblée
+2/ choisir ou créer une assemblée
 
 3/ chatter en regardant la video live et clicker pour se manifester
 
-Pour changer la question posée à l'assemblée, taper "inseme ? xxxx", 
-éventuellement précédé de "inseme ?" pour d'abord remettre tous les compteurs à zéro.
+## Modérateurs
+
+Pour changer la question posée à l'assemblée, taper "inseme ? xxxx", éventuellement précédé de "inseme ?" pour d'abord remettre tous les compteurs à zéro.
 
 Pour changer l'image affichée en bas, taper "inseme adresse-de-l-image".
+
 Pour changer la vidéo/audio, taper "inseme live adresse-du-live".
+
 Pour simplement fournir un lien, taper "inseme live in adresse-du-live".
-
-
-Explications au sujet des gestes pour se manifester : http://www.slate.fr/story/116483/mains-nuit-debout-signes
 
 
 ## Démocratie Liquide
@@ -104,7 +104,9 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 
 17 avril 2016, comptage des accords et affichage en temps réel du résultat
 
-21 avril 2016, icones associés à gestuelle, Boutton 'AIDE'
+21 avril 2016, icones associés à la gestuelle, boutton 'AIDE'
+
+22 avril 2016, connexion facebook ou github + déconnexion, traduction
 
 
 ## Aspects techniques
@@ -115,7 +117,7 @@ lequel il est déployé au moyen de la commande "firebase deploy".
 L'application est basée sur l'exemple de chat fourni par firebase. 
 Certains messages, débutant par "inseme", sont ensuite interprétés de façon particulière. 
 Aucun code ne tourne coté serveur, chaque client est autonome et les clients
-se synchronisent via les messages spéciaux échangés avec le chat.
+se synchronisent via les messages spéciaux échangés via le chat.
 
 
 ## Aider
@@ -124,7 +126,7 @@ Sur PC, le live periscope est en léger différé, de sorte que la participation
 
 Sur mobile, le live periscope n'est visible que depuis l'application periscope et du coup l'application web Inseme n'est plus à l'écran, de sorte qu'il faut 2 mobiles, l'un pour périscope, l'autre pour Inseme.
 
-Pour former les participants à la gestuelle d'intervention j'aimerai avoir des images animées pour chaque geste.
+Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoir des images animées pour chaque geste.
 
 ## License
 

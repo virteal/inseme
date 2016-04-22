@@ -40,8 +40,8 @@
   <script src='https://cdn.firebase.com/js/client/2.0.2/firebase.js'></script>
   
   <!-- Firechat -->
-  <link rel='stylesheet' href='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.min.css' />
-  <script src='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.min.js'></script>
+  <link rel='stylesheet' href='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.css' />
+  <script src='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.js'></script>
   
   <script src="inseme.js"></script>
   
@@ -82,6 +82,11 @@
   
     $(document).ready( function(){
       
+      // Scroll to top when reload
+      window.onbeforeunload = function(){
+	      window.scrollTo( 0, 0 );
+      };
+      
       // I use embedly for the content display at the bottom of the page
       $.embedly.defaults.key = '4b04162cd6134d0da674a15aa65b8c4b';
       
@@ -93,18 +98,35 @@
       chatRef.onAuth( function( authData ){
         $('#inseme_live_container').removeClass( "hide" );
         if( !authData )return;
+        $('#inseme_logout').removeClass( "hide" ).click( function(){
+          Inseme.logout();
+          chatRef.unauth();
+          document.location.reload();
+        });
+        Inseme.patch_firechat();
         var chat = new FirechatUI( 
           chatRef, 
           document.getElementById( 'firechat-wrapper') 
         );
         Inseme.init( { firechat: chat } );
+        Inseme.populate_vote_buttons();
         var uid = authData.uid;
         var name = authData[authData.provider].username;
+        if( authData.provider === "twitter" ){
+          name = "@" + name;
+        }
+        var room = window.location.search;
+        // Get rid of ? if some room was specified
+        if( room.length ){
+          room = room.substring( 1 );
+        }
         chat.setUser( uid, name );
+        // Hack: because FirechatUI's .setUser() does not allow a callback,
+        // I need to use a timeout...
+        // ToDo: monkey patch firechat API to set up a callback
         setTimeout( 
           function(){
-            Inseme.populate_vote_buttons();
-            Inseme.login( uid, name );
+            Inseme.login( uid, name, room );
             setTimeout( 
               function(){
                 Inseme.display_short_results();
@@ -132,14 +154,23 @@
     
     <div id='firechat-wrapper' class="container center">
       <div id="inseme_title">
-        Inseme, alpha 0.6, 21 avril 2016
+        <h5>Inseme</h5>version alpha 0.7 du 22 avril 2016
       </div>
       <div>
         <a href='#' onclick='login("twitter");'>
           <img src="https://g.twimg.com/dev/sites/default/files/images_documentation/sign-in-with-twitter-gray.png"/> 
         </a>
       </div>
-      <div id="inseme_slogan">Apprennez la gestuelle Nuit Debout et participez à distance aux assemblées</div>
+      <div>
+        ou
+        <a href='#' onclick='login("facebook");'>
+          Facebook
+        </a>
+        <a href='#' onclick='login("github");'>
+          Github
+        </a>
+      </div>
+      <div id="inseme_slogan"><h4>Apprenez la gestuelle Nuit Debout et participez à distance aux assemblées</h4></div>
       <div>
         <iframe width="100%" height="600" src="https://www.youtube.com/embed/04Z6X4iaZrc" frameborder="0" allowfullscreen></iframe>
       </div>
@@ -165,8 +196,9 @@
       </div>
     </div>
     
-    <div id='inseme_actions'>
-      <div id="inseme_vote_buttons" class="container"></div>
+    <div id='inseme_actions' class="container">
+      <div id="inseme_vote_buttons"></div>
+      <a id="inseme_logout" class="waves-effect waves-light btn hide">D&eacute;connexion</a>
     </div>
     
     <div class="container">

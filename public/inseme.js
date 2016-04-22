@@ -5,7 +5,7 @@
 //  April 11th 2016 by @jhr
 
 var de = true;
-var bug  = function(){ return console.log.apply( console, arguments ); };
+var bug  = console.log.bind( console );
 var mand = function( p ){ if( !p ) throw new Error( "assert failed" ); };
 
 
@@ -13,7 +13,7 @@ var Inseme = {
 
   user_id: null,
 
-  user_label: "",
+  user_name: "",
   
   interval: null,
   countdown: 0,
@@ -35,6 +35,15 @@ var Inseme = {
 
   is_https: false,
   
+  rooms: {},
+  rooms_by_id: {},
+  
+  // id of current room
+  room_id: "",
+  
+  // name of current room
+  room_name: "",
+  
   config:{
     
     place: "Paris",
@@ -42,6 +51,8 @@ var Inseme = {
     url_help: "http://documentup.com/Virteal/inseme",
     
     firechat: null,
+    maxLengthMessage: 1000,
+    
     
     countdown: 30,
 
@@ -111,10 +122,139 @@ var Inseme = {
 };
 
 
+Inseme.patch_firechat = function(){
+  var templates = FirechatDefaultTemplates;
+  for( var template_name in templates ){
+    templates[ template_name ] 
+    = Inseme.patch_i18n_template( template_name, templates[ template_name ] );
+  }
+};
+
+
+Inseme.patch_i18n_template = function( name, html ){
+  
+  // Extract name from xxxx/name.xxx
+  var idx_slash = name.lastIndexOf( "/" );
+  if( idx_slash >= 0 ){
+    name = name.substring( idx_slash + 1 );
+  }
+  var idx_dot = name.lastIndexOf( "." );
+  if( idx_dot >= 0 ){
+    name = name.substring( 0, idx_dot );
+  }
+  
+  de&&bug( "Template i18n patch for", name );
+  var r;
+  
+  // Decompile template
+  var text = html.toString();
+  
+  r = text;
+  
+  function s( en, fr ){
+    if( r.indexOf( en ) === -1 ){
+      de&&bug( "Cannot translate in", name, "not found:", en );
+      return;
+    }
+    r = r.replace( en, fr );
+  }
+  
+  if( name === "layout-full" ){
+    s( "Chat Rooms", "Assembl&eacute;es" );
+    s( "Create Room", "Cr&eacute;er une assembl&eacute;e" );
+    s( "Visitors", "Participants" );
+    s( 
+      'Use "+ Invite" button within chat rooms for regular invites',
+      'Utiliser "+ Inviter" pour les invitations normales'
+    );
+    s( "Next", "Suite" );
+    
+  }else if( name === "message-context-menu" ){
+    s( "Warn User", "Pr&eacute;venir le participant" );
+    s( "Kick User", "Faire sortir le participant" );
+    s( "Suspend User (1 hour)", "Suspendre le participant (1 heure)" );
+    s( "Suspend User (1 day)", "Suspendre le participant (1 jour)" );
+    s( "Delete Message", "Effacer le message" );
+
+  }else if( name === "message" ){
+    s( "Invite to Private Chat", "Inviter dans un salon priv&eacute;" );
+    s( "Mute User", "Filtrer le participant" );
+    
+  }else if( name === "prompt-alert" ){
+    s( "Close", "Fermer" );
+    
+  }else if( name === "prompt-create-room" ){
+    s( "Give your chat room a name:", "Donner un nom &agrave; votre assembl&eacute;e : " );
+    s( "Room name...", "Nom de l\\'assembl&eacute;e..." );
+
+  }else if( name === "prompt-invitation" ){
+    s( "invited you to join", "Vous invite &agrave; vous joindre" );
+    s( "Accept", "Accepter" );
+    s( "Decline", "D&eacute;cliner" );
+
+  }else if( name === "prompt-invite-private" ){
+    s( "Invite", "Inviter" );
+    s( " to ", " dans " );
+    s( "Invite", "Inviter" );
+    s( "Cancel", "Annuler" );
+    
+  }else if( name === "prompt-invite-reply" ){
+    s( "accepted your invite", "a accept&eacute; votre invitation" );
+    s( "declined your invite", "a d&eacute;clin&eacute; votre invitation" );
+  
+  
+  }else if( name === "prompt-user-mute" ){
+    s( "Mute", "Filtrer" );
+    s( "Cancel", "Annuler" );
+  
+  }else if( name === "room-user-list-item" ){
+    s( "Toggle User Mute", "Inverser le filtrage" );
+    s( "Invite to Private Chat", "Inviter dans une salon priv&eacute" );
+
+  }else if( name === "room-user-search-list-item" ){
+    s( "Invite to Room", "Inviter &agrave; une assembl&eacute;e" );
+
+  }else if( name === "tab-content" ){
+    s( "In Room", "Pr&eacute;sents" );
+    s( "Invite", "Inviter" );
+    s( "Leave Room", "Quitter l\\'assembl&eacute;e" );
+    s( "Your message:", "Votre message :" );
+    s( "Type your message here...", "Tapez votre message ici..." );
+    
+  }else if( name === "user-search-list-item" ){
+    s( "Invite to Private Chat", "Inviter dans un salon priv&eacute;" );
+  
+  }
+  
+  // Recompile if needed
+  if( r !== text ){
+    try{
+      r = r.replace( "function (obj) {", "" );
+      var idx_last_close_statement = r.lastIndexOf( "}" );
+      r = r.substring( 0, idx_last_close_statement );
+      r = new Function( "obj", r );
+    }catch( err ){
+      de&&bug( "i18n compile error for templace", name, err );
+      debugger;
+      r = html;
+    }
+  }else{
+    r = html;
+  }
+  
+  return r;
+  
+};
+
+
 Inseme.init = function( config ){
   de&&bug( "Inseme.init(", config, ") called" );
   de&mand( config );
   Inseme.config.firechat = config.firechat;
+  if( config.maxLengthMessage ){
+    Inseme.config.maxLengthMessage = config.maxLengthMessage;
+  }
+  config.firechat.maxLengthMessage = Inseme.config.maxLengthMessage;
   Inseme.set_firechat_event_handlers();
   // Autodetect https access
   Inseme.is_https = ( 'https:' == document.location.protocol );
@@ -128,15 +268,81 @@ Inseme.close = function(){
 };
 
 
-Inseme.login = function( user_id, user_label ){
-  de&&bug( "Inseme.login(" + user_id + ", " + user_label + ") called" );
+Inseme.track_room = function( id, name, timestamp ){
+// Remember/retrieve all seen rooms, even when some info is missing
+  var room;
+  if( !room && id ){
+    room = Inseme.rooms_by_id[ id ];
+  }
+  if( !room && name ){
+    room = Inseme.rooms[ name ];
+  }
+  if( id && !name && room ){
+    name = room.name;
+  }
+  if( !id && name && room ){
+    id = room.id;
+  }
+  if( !room ){
+    de&&bug( "Tracking new room", id, name, timestamp );
+    room = {
+      id:   "",
+      name: "",
+      proposition: "",
+      proposition_timestamp: 0,
+      live: "",
+      image: ""
+    };
+  }
+  if( !room.proposition_timestamp && timestamp ){
+    room.proposition_timestamp = timestamp;
+  }
+  if( name ){
+    room.name = name;
+    Inseme.rooms[ name ] = room;
+  }
+  if( id ){
+    room.id = id;
+    Inseme.rooms_by_id[ id ] = room;
+  }
+  return room;
+};
+
+
+Inseme.login = function( user_id, user_name, room_name ){
+  de&&bug( "Inseme.login(" + user_id + ", " + user_name + ", " + room_name + ") called" );
   de&&mand( user_id );
-  de&&mand( user_label );
+  de&&mand( user_name );
   if( Inseme.user_id ){
     Inseme.logout();
   }
   Inseme.user_id = user_id;
-  Inseme.user_label = user_label;
+  Inseme.user_name = user_name;
+  // Enter specified room, if any
+  var chatui_api = Inseme.config.firechat;
+  var chat_api = Inseme.config.firechat._chat;
+  // Scan all existing room
+  chat_api.getRoomList( function( list ){
+    de&&bug( list );
+    for( var id in list ){
+      var a_room = list[ id ];
+      Inseme.track_room( a_room.id, a_room.name );
+    }
+    var found_room = room_name && Inseme.rooms[ room_name ];
+    if( found_room ){
+      de&&bug( "Entering room ", found_room.name, found_room.id );
+      Inseme.set_current_room( found_room.id, found_room.name );
+      if( chatui_api.$messages[ found_room.id ] ){
+        chatui_api.focusTab( found_room.id );
+      }else{
+        chatui_api._chat.enterRoom( found_room.id, found_room.name );
+      }
+    }
+    Inseme.change_vote();
+    setTimeout( function(){
+      Inseme.change_vote();
+    }, 1000 );
+  });
   Inseme.change_vote();
   return Inseme;
 };
@@ -157,15 +363,15 @@ Inseme.change_vote = function( vote ){
     vote = "quiet";
   }
   
-  de&&bug( "Inseme.vote(" + vote + ") called" );
+  de&&bug( "UI. Inseme.vote(" + vote + ") called" );
   
   // if( vote === Inseme.vote )return;
   
-  var user = Inseme.users[ Inseme.user_label ];
+  var user = Inseme.users[ Inseme.user_name ];
   
   if( !user ){
     user = {};
-    Inseme.users[ Inseme.user_label ] = user;
+    Inseme.users[ Inseme.user_name ] = user;
   }
   
   $("#inseme_proposition_vote").text( Inseme.config.choices[ vote ].text );
@@ -187,9 +393,12 @@ Inseme.change_vote = function( vote ){
     proxied_users.push( u );
   }
   
-  if( Inseme.config.firechat._inseme_room_id ){
+  var room_id = Inseme.room_id;
+
+  if( room_id ){
+    de&&bug( "Send vote", room_id, vote );
     Inseme.config.firechat._chat.sendMessage( 
-      Inseme.config.firechat._inseme_room_id,
+      room_id,
       "inseme " 
       + ( Inseme.config.choices[ vote ].text || vote )
       + ( proxied_users.length
@@ -202,18 +411,61 @@ Inseme.change_vote = function( vote ){
 };
 
 
+Inseme.set_current_room = function( id, name ){
+  var previous_room_id = Inseme.room_id;
+  var room = Inseme.track_room( id, name );
+  if( !room ){
+    de&&bug( "weird missing room in Inseme.set_current_room", id );
+    debugger;
+    return Inseme;
+  }
+  if( !room.id ){
+    // This happens at starup only
+    de&&bug( "missing id for room in Inseme.set_current_room", room );
+    return Inseme;
+  }
+  Inseme.room_id = room.id;
+  Inseme.room_name = room.name;
+  if( Inseme.room_id !== previous_room_id ){
+    // Adjust current live, image & proposition
+    de&&bug( "Current room becomes", id, name, "was", previous_room_id );
+    Inseme.set_live( room.id, room.live );
+    Inseme.set_image( room.id, room.image );
+  }
+  return Inseme;
+};
+
+
 Inseme.set_firechat_event_handlers = function(){
   var chat = Inseme.config.firechat;
   // Monkey patch firechatui to track roomId
   var old = chat.focusTab;
   chat.focusTab = function( room_id ){
-    Inseme.room_id = chat._inseme_room_id = room_id;
+    Inseme.set_current_room( room_id );
     return old.apply( this, arguments );
   };
+  // Hack to track currently shown tab/room
+  $(document).delegate('[data-toggle="firechat-tab"]', 'click', function(event) {
+    event.preventDefault();
+    var tab_name = $(this).text();
+    Inseme.set_current_room( null, tab_name );
+  });
   chat.on( 'message-add',    Inseme.on_firechat_message_add );
   chat.on( 'message-remove', Inseme.on_firechat_message_remove );
+  chat.on( 'room-enter',     Inseme.on_firechat_room_enter );
+  chat.on( 'room-exit',      Inseme.on_firechat_room_exit );
 };
 
+
+Inseme.on_firechat_room_enter = function( room ){
+  Inseme.set_current_room( room.id, room.name );
+};
+
+
+Inseme.on_firechat_room_exit = function( room_id ){
+  // ToDo: deal with it
+  de&&bug( "leave room", room_id );
+};
 
 Inseme.now = function(){
   return Date.now() + Inseme.delta_clock;
@@ -230,17 +482,49 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     age = 0;
   }
   
+  Inseme.track_room( room_id, null, message.timestamp );
+  
   // Skip old messages, 1 day
-  if( age > 24 * 60 * 60 * 1000 )return;
+  // if( age > 24 * 60 * 60 * 1000 )return;
   
   var text = message.message;
   var user_name = message.name;
   
-  // Never proxy a talking user
-  delete Inseme.proxied_users[ user_name ];
+  if( user_name === Inseme.user_name ){
+    Inseme.set_current_room( room_id );
+  }
   
   // Skip not inseme related messages
   if( text.substring( 0, "inseme".length ).toLowerCase() !== "inseme" )return;
+  
+  // Remove some messages after a while to improve signal/noise
+  var to_be_removed = true;
+  setTimeout( 
+    function(){
+      if( !to_be_removed )return;
+      // chat/room-messages/room_id/msg_id
+      var msg_id = message.id;
+      // var ref = "room_messages/" + room_id + "/" + msg_id;
+      // var msg_ref = Inseme.chatRef.child( ref );
+      // msg_ref.remove();
+      Inseme.config.firechat.removeMessage( room_id, msg_id );
+    },
+    delay
+  );
+  
+  // If not about a known room, ignore
+  if( !Inseme.rooms_by_id[ room_id ] ){
+    de&&bug( "Message in unkown room", room_id );
+    return;
+  }
+  
+  // Track which room the current user talks into
+  if( user_name === Inseme.user_name ){
+    Inseme.set_current_room( room_id );
+  }
+  
+  // Never proxy a talking user
+  delete Inseme.proxied_users[ user_name ];
   
   // Extract proxied users, if any
   var idx = text.indexOf( " => " );
@@ -295,16 +579,20 @@ Inseme.on_firechat_message_add = function( room_id, message ){
         if( param === "help" ){
           param = "nuitdebout.png";
         }
-        Inseme.set_image( param );
+        to_be_removed = false;
+        Inseme.set_image( room_id, param, message.timestamp );
         
       }else if( token1 === "live" ){
-        Inseme.set_live( param );
+        to_be_removed = false;
+        Inseme.set_live( room_id, param, message.timestamp );
         
       }else if( token1 === "?" ){
-        Inseme.set_proposition( param, message.timestamp );
+        to_be_removed = false;
+        Inseme.set_proposition( room_id, param, message.timestamp );
       
       }else if( token1 === "bye" ){
-        if( param === Inseme.user_label ){
+        to_be_removed = false;
+        if( param === Inseme.user_name ){
           Inseme.proxied_users[ param ] = param;
         }
       }
@@ -314,18 +602,20 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   if( !found )return;
   
   de&&bug( 
-    "vote", 
-    vote, "user", 
-    user_name, 
+    "Received vote", 
+    vote, 
+    "user", user_name,
+    "room", room_id,
+    "named", Inseme.rooms_by_id[ room_id ].name,
     "ago", Inseme.duration_label( Inseme.now() - message.timestamp )
   );
-  Inseme.push_vote( user_name, vote, message.timestamp );
+  Inseme.push_vote( room_id, user_name, vote, message.timestamp );
   
   if( proxied_users ){
     proxied_users.forEach( function( u ){
-      Inseme.push_vote( u, vote, message.timestamp, user_name );
+      Inseme.push_vote( room_id, u, vote, message.timestamp, user_name );
       // When current user acquire that other person's vote
-      if( user_name === Inseme.user_label ){
+      if( user_name === Inseme.user_name ){
         Inseme.proxied_users[ u ] = u;
       }
     });
@@ -334,22 +624,8 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   var delay = (3 * 1000) - age;
   if( delay <= 0 || vote === "quiet" ){ delay = 1; }
   
-  // Remove some messages after a while to improve signal/noise
-  setTimeout( 
-    function(){
-      // chat/room-messages/room_id/msg_id
-      var room_id = Inseme.room_id;
-      var msg_id = message.id;
-      // var ref = "room_messages/" + room_id + "/" + msg_id;
-      // var msg_ref = Inseme.chatRef.child( ref );
-      // msg_ref.remove();
-      Inseme.config.firechat.removeMessage( room_id, msg_id );
-    },
-    delay
-  );
-  
   // Restore "quiet" after a while
-  if( user_name === Inseme.user_label ){
+  if( user_name === Inseme.user_name ){
     if( vote !== "quiet" ){
       if( delay > 1 ){
         Inseme.countdown = Inseme.config.countdown;
@@ -388,9 +664,10 @@ Inseme.on_firechat_message_add = function( room_id, message ){
 };
 
 
-Inseme.push_vote = function( user_name, vote, timestamp, proxy ){
+Inseme.push_vote = function( room_id, user_name, vote, timestamp, proxy ){
   
   Inseme.votes.push( { 
+    room_id: room_id,
     user: user_name,
     orientation: vote,
     timestamp: timestamp
@@ -405,14 +682,26 @@ Inseme.push_vote = function( user_name, vote, timestamp, proxy ){
   }
   
   // Track proxied users of current user
-  if( proxy === Inseme.user_label ){
+  if( proxy === Inseme.user_name ){
     Inseme.proxied_users[ user_name ] = user_name;
   }
   
-  var results = Inseme.results;
+  var results = Inseme.results[ room_id ];
+  if( !results ){
+    results = Inseme.results[ room_id ] = {};
+  }
+  
+  var votes = user.votes;
+  if( !votes ){
+    votes = user.votes = {};
+  }
+  var user_vote = votes[ room_id ];
+  if( !user_vote ){
+    user_vote = votes[ room_id ] = {};
+  }
   
   // Remove previous vote
-  var previous_vote = user.state;
+  var previous_vote = user_vote.state;
   if( previous_vote ){
     var old_result = results[ previous_vote ];
     if( !old_result ){
@@ -427,7 +716,7 @@ Inseme.push_vote = function( user_name, vote, timestamp, proxy ){
         var found_first = null;
         var user_name2;
         for( user_name2 in Inseme.users ){
-          var vote2 = Inseme.get_vote_of( user_name2 );
+          var vote2 = Inseme.get_vote_of( room_id, user_name2 );
           if( user_name2 === user_name || vote2 !== previous_vote )continue;
           if( !found_first ){
             found_first = vote2;
@@ -443,27 +732,28 @@ Inseme.push_vote = function( user_name, vote, timestamp, proxy ){
     }
   }
   
-  var previous_state = user.state;
-  var previous_via   = user.via;
-  user.state = vote;
+  var previous_state = user_vote.state;
+  var previous_via   = user_vote.via;
+  
+  user_vote.state = vote;
   if( Inseme.config.choices[ vote ].is_sticky ){
-    user.vote = vote;
-    user.timestamp = timestamp;
+    user_vote.vote = vote;
+    user_vote.timestamp = timestamp;
   }
   if( vote === "quiet" ){
     if( previous_state !== "quiet" || proxy !== previous_via ){
-      user.timestamp = timestamp;
+      user_vote.timestamp = timestamp;
     }
   }else{
     if( vote !== previous_state || proxy !== previous_via ){
-      user.timestamp = timestamp;
+      user_vote.timestamp = timestamp;
     }
   }
-  if( !user.timestamp ){
-    user.timestamp = timestamp;
+  if( !user_vote.timestamp ){
+    user_vote.timestamp = timestamp;
   }
 
-  user.via = proxy;
+  user_vote.via = proxy;
   
   // Increase counter and track first talker
   var result = results[ vote ];
@@ -492,14 +782,20 @@ Inseme.refresh_display = function(){
 
 
 Inseme.get_short_results = function(){
-  var results = Inseme.results;
+  var room_id = Inseme.room_id;
+  var results = Inseme.results[ room_id ];
+  if( !results ){
+    results = Inseme.results[ room_id ] = {};
+  }
   var msg = "";
   var orientation;
   var count;
   function twitter( n ){
+    if( !n )return "";
+    if( n[0] !== "@" )return n;
     return ""
-    + '<a href="http://twitter.com/' + n + '">' 
-    + "@" + n
+    + '<a href="http://twitter.com/' + n.substring( 1 ) + '">' 
+    + n
     + '</a>';
   }
   for( orientation in results ){
@@ -559,33 +855,33 @@ Inseme.date_label = function( timestamp ){
 
 Inseme.display_long_results = function(){
   
+  var room = Inseme.rooms[ Inseme.room_name ];
+  if( !room )return;
+  
   var msg = "";
   
   var now = Inseme.now();
-  var age = now - ( Inseme.proposition_timestamp || now );
-  
+  var age = 0;
+  if( room.proposition_timestamp ){
+    age = now - room.proposition_timestamp;
+  }
   msg += "Nous sommes " + Inseme.date_label( now ) + ".";
   
-  if( Inseme.proposition ){
-    msg += "<br>Sur la proposition \"" + Inseme.proposition + "\"";
-    msg += " faite " + Inseme.date_label( Inseme.proposition_timestamp );
+  msg += "<br>Dans l'assemblée '" + ( Inseme.room_name || "sans nom" ) + "'.";
+  
+  
+  if( room.proposition ){
+    msg += "<br>Sur la proposition \"" + room.proposition + "\"";
+    msg += " faite " + Inseme.date_label( room.proposition_timestamp );
     msg += ", il y a " + Inseme.duration_label( age ) + ".";
   }else{
     msg += "<br>Sur la discussion en cours depuis "
     + Inseme.duration_label( age ) + ".";
   }
   
-  function twitter( n ){
-    return ""
-    + '<a href="http://twitter.com/' + n + '">' 
-    + "@" + n
-    + '</a>';
-  }
-  
   msg += "<ul>";
   
   var sticky_votes = {};
-  var v;
   var list = [];
   for( var n in Inseme.users ){
     list.push( n );
@@ -593,34 +889,51 @@ Inseme.display_long_results = function(){
   list = list.sort();
   
   function twitter( n ){
+    if( !n )return "";
+    if( n[0] !== "@" )return n;
     return ""
-    + '<a href="http://twitter.com/' + n + '">' 
-    + "@" + n
+    + '<a href="http://twitter.com/' + n.substring( 1 ) + '">' 
+    + n
     + '</a>';
   }
   
+  var room_id = Inseme.room_id;
+  
   list.forEach( function( n ){
-    v = Inseme.users[ n ];
-    if( !v.vote )return;
+    var user;
+    var votes;
+    var vote;
+    
+    user = Inseme.users[ n ];
+    votes = user.votes;
+    if( !votes ){
+      votes = user.votes = {};
+    }
+    vote = votes[ room_id ];
+    if( !vote ){
+      vote = votes[ room_id ] = {};
+    }
+    if( !vote.vote )return;
+    
     msg += "<li>" + twitter( n ) + ", ";
-    if( v.vote && Inseme.config.choices[ v.vote ].is_sticky ){
-      if( !sticky_votes[ v.vote ] ){
-        sticky_votes[ v.vote ] = 0;
+    if( vote.vote && Inseme.config.choices[ vote.vote ].is_sticky ){
+      if( !sticky_votes[ vote.vote ] ){
+        sticky_votes[ vote.vote ] = 0;
       }
-      sticky_votes[ v.vote ]++;
-      msg += Inseme.config.choices[ v.vote ].text;
-      if( v.state !== v.vote ){
-        msg += ", puis " + Inseme.config.choices[ v.state ].text;
+      sticky_votes[ vote.vote ]++;
+      msg += Inseme.config.choices[ vote.vote ].text;
+      if( vote.state !== vote.vote ){
+        msg += ", puis " + Inseme.config.choices[ vote.state ].text;
       }
     }else{
-       msg += Inseme.config.choices[ v.state ].text;
+       msg += Inseme.config.choices[ vote.state ].text;
     }
     msg += ""
-    + ( v.via 
-      ? " (via " + twitter( v.via ) + ")"
+    + ( vote.via 
+      ? " (via " + twitter( vote.via ) + ")"
       : "" )
     + ", depuis " 
-    + Inseme.duration_label( now - v.timestamp )
+    + Inseme.duration_label( now - vote.timestamp )
     + ".</li>";
   });
   msg += "</ul>";
@@ -652,8 +965,16 @@ Inseme.display_long_results = function(){
 };
 
 
-Inseme.get_vote_of = function( user_name ){
-  var vote = Inseme.users[ user_name ];
+Inseme.get_vote_of = function( room_id, user_name ){
+  var user = Inseme.users[ user_name ];
+  var votes = user.votes;
+  if( !votes ){
+    votes = user.votes = {};
+  }
+  var vote = votes[ room_id ];
+  if( !vote ){
+    vote = vote[ room_id ] = { vote: {} };
+  }
   return vote && vote.vote;
 };
 
@@ -672,18 +993,51 @@ Inseme.each_choice = function( f ){
 };
 
 
-Inseme.set_image = function( image_url ){
-  $("#inseme_image_container")
-  .empty()
-  .append( $( '<a>', { href: image_url } ) )
-  .embedly();
+Inseme.set_image = function( room_id, image_url, timestamp ){
+  
+  var room = Inseme.track_room( room_id, null, timestamp );
+  if( !room ){
+    de&&bug( "Weird call to set_image for unknow room", room_id );
+    return;
+  }
+  
+  room.image = image_url || "";
+  
+  // Don't change display if not about the current room
+  if( room.id !== Inseme.room_id )return;
+
+  $("#inseme_image_container").empty();
+  if( image_url ){
+    $("#inseme_image_container")
+    .append( $( '<a>', { href: image_url } ) )
+    .embedly();
+  }
+  
 };
 
 
-Inseme.set_live = function( url ){
+Inseme.set_live = function( room_id, url, timestamp ){
+  
+  
+  var room = Inseme.track_room( room_id, null, timestamp );
+  if( !room ){
+    de&&bug( "Weird call to set_live for unknow room", room_id );
+    return;
+  }
+  
+  room.live = url || "";
+  
+  // Don't change display if not about the current room
+  if( room.id !== Inseme.room_id )return;
   
   // remove extra spaces
-  url = url.replace( /  /, " " ).trim();
+  url = url.replace( /  /g, " " ).trim();
+  
+  // Empty url to remove all
+  if( !url ){
+    $("#inseme_live_container").addClass( "hide" ).empty();
+    return;
+  }
   
   // 'off' special case
   if( url === "off" ){
@@ -809,7 +1163,7 @@ Inseme.set_live = function( url ){
   // Use iframe if "http" starts the input
   if( url.indexOf( "http" ) === 0 ){
     // Minimal code injection protection
-    id = url.replace( />/, "!" ).replace( /script/i, "!" );
+    id = url.replace( />/g, "!" ).replace( /script/gi, "!" );
     // Force https
     id = id.replace( "http:", "https:" );
     use_iframe( id );
@@ -828,20 +1182,28 @@ Inseme.set_live = function( url ){
 };
 
 
-Inseme.set_proposition = function( text, timestamp ){
+Inseme.set_proposition = function( room_id, text, timestamp ){
+  var room = Inseme.track_room( room_id, null, timestamp );
+  if( !room ){
+    de&&bug( "Weird call to set_proposition for unknow room", room_id );
+    return;
+  }
   var proposition = text || "";
   // Filter out if no change
-  if( proposition && proposition === Inseme.proposition )return;
-  Inseme.proposition = proposition;
-  Inseme.proposition_timestamp = timestamp || Inseme.now();
-  Inseme.votes = [];
-  Inseme.vote = null;
-  Inseme.timestamp = timestamp || Inseme.now();
+  if( proposition && proposition === room.proposition )return;
+  room.proposition = proposition;
+  room.proposition_timestamp = timestamp || Inseme.now();
   if( !text ){
-    Inseme.results = {};
-    Inseme.users   = {};
+    Inseme.results[ room_id ] = {};
   }
-  $("#inseme_proposition_text").text( text || "Tapez inseme ? proposition" );
+  if( proposition ){
+    de&&bug( "New proposition in room", room.id, room.name, proposition );
+  }
+  if( room_id === Inseme.room_id ){
+    $("#inseme_proposition_text").text( 
+      text || "Tapez inseme ? proposition" 
+    );
+  }
 };
 
 
