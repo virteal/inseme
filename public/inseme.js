@@ -182,7 +182,7 @@ Inseme.patch_i18n_template = function( name, html ){
     s( "Delete Message", "Effacer le message" );
 
   }else if( name === "message" ){
-    s( "Invite to Private Chat", "Inviter dans un salon priv&eacute;" );
+    s( "Invite to Private Chat", "Inviter dans un espace priv&eacute;" );
     s( "Mute User", "Filtrer le participant" );
     
   }else if( name === "prompt-alert" ){
@@ -214,7 +214,7 @@ Inseme.patch_i18n_template = function( name, html ){
   
   }else if( name === "room-user-list-item" ){
     s( "Toggle User Mute", "Inverser le filtrage" );
-    s( "Invite to Private Chat", "Inviter dans une salon priv&eacute" );
+    s( "Invite to Private Chat", "Inviter dans une espace priv&eacute" );
 
   }else if( name === "room-user-search-list-item" ){
     s( "Invite to Room", "Inviter &agrave; une assembl&eacute;e" );
@@ -227,7 +227,7 @@ Inseme.patch_i18n_template = function( name, html ){
     s( "Type your message here...", "Tapez votre message ici..." );
     
   }else if( name === "user-search-list-item" ){
-    s( "Invite to Private Chat", "Inviter dans un salon priv&eacute;" );
+    s( "Invite to Private Chat", "Inviter dans un espace priv&eacute;" );
   
   }
   
