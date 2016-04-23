@@ -10,7 +10,7 @@ Pour participer à une assemblée à distance, deux conditions sont requises.
 
 ## Mode d'emploi
 
-1/ se connecter via twitter, facebook ou github
+1/ se connecter via twitter, facebook, google ou github
 
 2/ choisir ou créer une assemblée
 
@@ -20,13 +20,13 @@ Pour participer à une assemblée à distance, deux conditions sont requises.
 
 Pour changer la question posée à l'assemblée, taper "inseme ? xxxx", éventuellement précédé de "inseme ?" pour d'abord remettre tous les compteurs à zéro.
 
-Pour changer la vidéo/audio, taper "inseme live adresse-du-live".
+Pour changer la vidéo/audio partagée, taper "inseme live adresse-du-live".
 
 Pour simplement fournir un lien, taper "inseme live in adresse-du-live".
 
-Pour changer l'image affichée en bas, taper "inseme adresse-de-l-image".
+Pour changer l'image partagée affichée en bas, taper "inseme adresse-de-l-image".
 
-Pour changer le fil twitter affiché en bas, taper "inseme twitter nom".
+Pour changer le fil twitter partagé affiché en bas, taper "inseme twitter nom".
 
 
 
