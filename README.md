@@ -1,5 +1,6 @@
 # inseme - http://inseme.kudocracy.com
-Votes temps réel pour assemblées, façon NuitDebout et #DémocratieLiquide
+
+## Votes temps réel pour assemblées, façon NuitDebout et #DémocratieLiquide
 
 Inseme vise à faciliter l'accès aux assemblées organisées selon la façon NuitDebout. D'une part à titre de formation en familiarisant les participants avec la gestuelle à utiliser pour s'exprimer. D'autre part à titre opérationnel en permettant de participer à distance.
 
