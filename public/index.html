@@ -43,6 +43,9 @@
   <link rel='stylesheet' href='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.css' />
   <script src='https://cdn.firebase.com/libs/firechat/2.0.1/firechat.js'></script>
   
+  <!-- Google hangout related -->
+  <script src="https://apis.google.com/js/platform.js" lang="fr" parsetags="explicit" async defer></script>
+  
   <script src="inseme.js"></script>
   
 </head>
@@ -67,7 +70,17 @@
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 	</script>
-
+	
+	<script>
+	  // Google api config
+    window.___gcfg = {
+      lang: 'fr',
+      parsetagsl: "explicit"
+    };
+	</script>
+  <!-- Google hangout related -->
+  <script src="https://apis.google.com/js/platform.js" lang="fr" parsetags="explicit" async defer></script>
+  
     <script type='text/javascript'>
   
     var chatRef;
@@ -150,7 +163,7 @@
     
     <div id='firechat-wrapper' class="container center">
       <div id="inseme_title">
-        <h5>Inseme</h5>version alpha 0.7 du 22 avril 2016
+        <h5>Inseme</h5>version alpha 0.8 du 23 avril 2016
       </div>
       <div>
         <a href='#' onclick='login("twitter");'>
@@ -161,6 +174,9 @@
         ou
         <a href='#' onclick='login("facebook");'>
           Facebook
+        </a>
+        <a href='#' onclick='login("google");'>
+          Google
         </a>
         <a href='#' onclick='login("github");'>
           Github
@@ -175,6 +191,9 @@
     <div id='inseme_actions' class="container">
       <div id="inseme_vote_buttons"></div>
       <a id="inseme_logout" class="waves-effect waves-light btn hide">D&eacute;connexion</a>
+      <a id="inseme_hangout_button" class="btn">
+        <div id="inseme_hangout">Google Hangout</div>
+      </a>
     </div>
     
     <div id='inseme' class="container hide">

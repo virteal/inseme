@@ -126,7 +126,7 @@ var Inseme = {
         html: '<i class="inseme_sprite inseme_sprite-silence"></i>',
       },
       
-      "help": {
+     "help": {
         text: "Aide"
       }
     }
@@ -270,14 +270,18 @@ Inseme.patch_i18n_template = function( name, html ){
 
 Inseme.init = function( config ){
 // Called after user is firebase authenticated and after firechat is started
+
   de&&bug( "Inseme.init(", config, ") called" );
   de&mand( config );
+  
   Inseme.firechat = config.firechat;
   if( config.maxLengthMessage ){
     Inseme.config.maxLengthMessage = config.maxLengthMessage;
   }
   config.firechat.maxLengthMessage = Inseme.config.maxLengthMessage;
+  
   Inseme.set_firechat_event_handlers();
+  
   // Scroll to top when reload
   window.onbeforeunload = function(){
     Inseme.close();
@@ -286,6 +290,7 @@ Inseme.init = function( config ){
 
   // Autodetect https access (not needed at this point)
   Inseme.is_https = ( 'https:' == document.location.protocol );
+  
   return Inseme;
 };
 
@@ -1201,6 +1206,7 @@ Inseme.set_twitter = function( room_id, name, timestamp ){
 
 Inseme.set_live = function( room_id, url, timestamp ){
   
+  url = url.trim();
   
   var room = Inseme.track_room( room_id, null, timestamp );
   if( !room ){
@@ -1238,6 +1244,15 @@ Inseme.set_live = function( room_id, url, timestamp ){
   // See https://webrtc.ventures/2016/01/live-streaming-with-webrtc/
   if( url === "broadcast" ){
     // ToDo: implement sender side and receivers side
+    return;
+  }
+  
+  var idx_space = url.indexOf( " " );
+  var token1 = url;
+  var but_token1 = "";
+  if( idx_space >= 0 ){
+    token1 = url.substring( 0, idx_space );
+    but_token1 = url.substring( idx_space + 1 );
   }
   
   function use_link( url ){
@@ -1315,6 +1330,14 @@ Inseme.set_live = function( room_id, url, timestamp ){
   // bambuser case, the live video is embedded in the top of page iframe
   if( id && url.indexOf( "bambuser.com/broadcast/" ) > 0 ){
     use_iframe( "https://embed.bambuser.com/broadcast/" + id );
+    return;
+  }
+  
+  // youtube case
+  if( id 
+  && ( url.indexOf( "youtube.com/embed") > 0 || url.indexOf( "/youtu.be/") )
+  ){
+    use_iframe( "https://www.youtube.com/embed/" + id + "&autoplay=1" );
     return;
   }
   
@@ -1449,6 +1472,27 @@ Inseme.populate_vote_buttons = function(){
     // Else, it is a vote, raising hand style
     Inseme.change_vote( vote );
   } );
+  
+  try{
+    gapi.hangout.render( 
+      'inseme_hangout', 
+      { 
+        render: 'createhangout',
+        topic: "Inseme/" + Inseme.room_name,
+        hangout_type: "onair",
+        initial_apps: [
+          { 
+            app_id : '1008226714074',
+            start_data : Inseme.user_name,
+            app_type: 'ROOM_APP'
+          }
+        ],
+        widget_size: 200
+      }
+    );
+  }catch( err ){
+    console.log( err );
+  }
   
   // Show the div
   $('#inseme').removeClass( "hide" );

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="Inseme">
+    <Require feature="rpc"/>
+    <Require feature="views"/>
+  </ModulePrefs>
+  <Content type="html">
+    <![CDATA[
+      <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
+      <script>
+      gapi.hangout.onApiReady.add(
+        function( eventObj ){
+          if( eventObj.isApiReady ){
+            document.write( 
+              '<iframe src="https://inseme.firebaseapp.com"'
+              + ' marginwidth="0" marginheight="0" frameborder="0"'
+              + ' vspace="0" hspace="0" height="200" width="320"'
+              + ' class="IP"'
+              + ' style="min-height: inherit; min-width: inherit; height: 100%; width: 100%; display: block; background:#FFFFFF"'
+              + '></iframe>' 
+            );
+          }
+        }
+      );
+      </script>
+    ]]>
+  </Content>
+</Module>

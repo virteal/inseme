@@ -53,7 +53,7 @@ A noter : dès que la personne revient et s'exprime, le logiciel cesse les copie
 
 ## Live
 
-Diverses sources de "live" sont possibles dont celles de periscope, facebook, bambuser.com (video) et mixlr.com (radio).
+Diverses sources de "live" sont possibles dont celles de periscope, youtube, facebook, bambuser.com (video) et mixlr.com (radio).
 
 Exemple :
 
@@ -111,6 +111,8 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 
 22 avril 2016, connexion facebook ou github + déconnexion, traduction
 
+23 avril 2016, connexion google, intégration de Google Hangout.
+
 
 ## Aspects techniques
 
@@ -125,11 +127,22 @@ se synchronisent via les messages spéciaux échangés via le chat.
 
 ## Aider
 
+### Periscope
+
 Sur PC, le live periscope est en léger différé, de sorte que la participation n'est praticable qu'à condition d'utiliser periscope sur son mobile en même temps que Inseme sur son PC.
 
 Sur mobile, le live periscope n'est visible que depuis l'application periscope et du coup l'application web Inseme n'est plus à l'écran, de sorte qu'il faut 2 mobiles, l'un pour périscope, l'autre pour Inseme.
 
+### Google Hangout
+
+Quand on ne fait pas partie de la conférence, on peut cependant voir ce qui s'y dit. Pour cela, un des participants à la conférence doit publier le lien vers le live. Ce lien est accessible dans la fenêtre Hangout, en bas à droite. 
+
+Il y a un décalage temporel entre ce live et la réalité, de l'ordre de 10 secondes, j'étudie comment l'éviter.
+
+### Misc
+
 Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoir des images animées pour chaque geste.
+
 
 ## License
 

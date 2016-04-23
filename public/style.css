@@ -31,6 +31,10 @@ body, #firechat message-content {
   margin-left: 0em;
 }
 
+#inseme_hangout_button {
+  vertical-align: middle;
+}
+
 #inseme_you {
   display: inline;
 }
