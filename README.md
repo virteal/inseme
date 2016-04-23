@@ -144,6 +144,14 @@ Il y a un décalage temporel entre ce live et la réalité, de l'ordre de 10 sec
 Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoir des images animées pour chaque geste.
 
 
+## Auteur
+
+Ce logiciel open source est écrit par Jean Hugues Robert.
+
+On peut me joindre par mail jean_hugues_robert@yahoo.com, via twitter @jhr et sur skype jeanhuguesrobert.
+
+Pour être informé des nouveautés concernant Inseme, le plus simple est de s'abonner au compte twitter @Kudocracy. Il y a aussi une page facebook Iseme.
+
 ## License
 
-Open source. Faites en ce que vous voulez !
+Open source, sur github. Faites en ce que vous voulez !
