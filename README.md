@@ -63,9 +63,10 @@ Exemple :
 - inseme live https://embed.bambuser.com/broadcast/6209824
 - inseme live http://mixlr.com/radiodebout/
 - inseme live in http://nuitdebout.fr
+- inseme live https://meet.jit.si/nuitdebout
 
-Dans le dernier exemple, "inseme live in", seul un lien vers la source spécifiée est affiché.
-  
+Dans l'avant dernier exemple, "inseme live in", seul un lien vers la source spécifiée est affiché.
+Dans le dernier exemple, meet.jit.si, c'est une video conférence.  
 
 ## Aider
 
@@ -81,12 +82,19 @@ Quand on ne fait pas partie de la conférence, on peut cependant voir ce qui s'y
 
 Il y a un décalage temporel entre ce live et la réalité, de l'ordre de 10 secondes, j'étudie comment l'éviter.
 
+### jit.si
+
+Cet outil permet de créer des video conférence. Tapez "inseme live https://meet.jit.si/nom-de-l-assemblee".
+
 ### Misc
 
 Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoir des images animées pour chaque geste.
 
 
 ## Roadmap
+
+Intégration de l'agenda NuitDebout pour au sujet des AG.
+https://openagenda.com/agendas/27805494/events.json?
 
 Intégration avec le chat de periscope, pour y injecter les votes distants
 
