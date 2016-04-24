@@ -17,7 +17,8 @@
 
   <!--Import materialize.css-->
   <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css"  media="screen,projection"/>
-
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -120,10 +121,7 @@
         Inseme.populate_vote_buttons();
         var uid = authData.uid;
         var info = authData[authData.provider]
-        var name = info.username || info.displayName;
-        if( authData.provider === "twitter" ){
-          name = "@" + name;
-        }
+        var name = info.displayName || info.username;
         var room = window.location.search;
         // Get rid of ? if some room was specified
         if( room.length ){
@@ -151,34 +149,27 @@
     
     </script>
     
-    <div id="iseme_logo" class="container center"><img src="nuitdebout.png"></div>
+    <div id="inseme_logo" class="container center"><img src="nuitdebout.png"></div>
     
-    <div id="inseme_live_container" class="container center hide">
-      <!--
-      <iframe id="inseme_live_frame" src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Flenouvelobservateur%2Fvideos%2Fvb.198508090036%2F10156868107940037%2F%3Ftype%3D3&show_text=0&width=400" width="400" height="400" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
-      -->
-      <iframe id="inseme_live_frame" src="https://embed.bambuser.com/channel/nuitdebout" width="100%" height="600" frameborder="0"></iframe>
-       
+    <div id="inseme_live" class="container center hide">
     </div>
     
     <div id='firechat-wrapper' class="container center">
       <div id="inseme_title">
-        <h5>Inseme</h5>version alpha 0.8 du 23 avril 2016
+        <h5>Inseme</h5>version alpha 0.9 du 24 avril 2016
       </div>
       <div>
-        <a href='#' onclick='login("twitter");'>
-          <img src="https://g.twimg.com/dev/sites/default/files/images_documentation/sign-in-with-twitter-gray.png"/> 
+        Se connecter : 
+        <a href='#' class="btn" onclick='login("twitter");'>
+          Twitter 
         </a>
-      </div>
-      <div>
-        ou
-        <a href='#' onclick='login("facebook");'>
+        <a href='#' class="btn" onclick='login("facebook");'>
           Facebook
         </a>
-        <a href='#' onclick='login("google");'>
+        <a href='#' class="btn" onclick='login("google");'>
           Google
         </a>
-        <a href='#' onclick='login("github");'>
+        <a href='#' class="btn" onclick='login("github");'>
           Github
         </a>
       </div>
@@ -189,11 +180,34 @@
     </div>
     
     <div id='inseme_actions' class="container">
+      
       <div id="inseme_vote_buttons"></div>
-      <a id="inseme_logout" class="waves-effect waves-light btn hide">D&eacute;connexion</a>
-      <a id="inseme_hangout_button" class="btn">
+      
+      <a id="inseme_logout" class="waves-effect waves-light btn hide tooltipped" data-tooltip="Déconnexion">
+        <i class="material-icons">power_settings_new</i>
+      </a>
+      
+      <a id="inseme_hangout_button" class="btn hide">
         <div id="inseme_hangout">Google Hangout</div>
       </a>
+      
+      <div id="inseme_help" class="card hide">
+        <div class="card-content">
+          <span class="card-title activator grey-text text-darken-4">Aide<i class="material-icons right">more_vert</i></span>
+          <p><a id="inseme_help_link" href="http://documentup.com/Virteal/inseme" target="Inseme - aide">&agrave; propos</a></p>
+        </div>
+        <div class="card-reveal">
+          <span class="card-title grey-text text-darken-4">Aide<i class="material-icons right">close</i></span>
+          <p>
+            'inseme ? proposition' pour changer la proposition.<br>
+            'inseme !' pour remettre à zéro les compteurs.<br>
+            'inseme live adresse-du-live' pour changer le live.<br>
+            'inseme live in adress-du-live' pour partager seulement le lien.<br>
+            'inseme image adresse-de-l-image' pour changer l'image.<br>
+            'inseme twitter nom' pour changer le fil twitter.<br>
+            'inseme bye nom' pour d&eacute;l&eacute;guer.
+        </div>
+      </div>
     </div>
     
     <div id='inseme' class="container hide">
@@ -218,9 +232,7 @@
       </div>
     </div>
     
-    <div id='inseme_image_container' class="container center">
-      <img src="nuitdebout.png">
-      </a>
+    <div id="inseme_image" class="container center">
       <script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
     </div>
     
@@ -230,26 +242,26 @@
     </div>
     
     <footer class="page-footer blue lighten-4">
-    <div class="container"><div class="row">
-    Inseme
-    - <a href="http://documentup.com/Virteal/inseme">&agrave; propos</a>
-    - <a href="/pad">pad</a>
-    - <a href="http://nuitdebout.fr">nuitdebout.fr</a>
-    - 
+    <div class="container">
+      <div class="row">
+        Inseme
+        - <a href="http://documentup.com/Virteal/inseme">&agrave; propos</a>
+        - <a href="/pad">pad</a>
+        - <a href="http://nuitdebout.fr">nuitdebout.fr</a>
+        - 
+        <div id="inseme_social_buttons">
+          <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://inseme.kudocracy.com" data-text="#inseme. Se former et participer aux assemblées #nuitdebout. #DemocratieDirecte #kudocracy" data-via="kudocracy" data-lang="fr" data-dnt="true">Partage</a>
+          <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+          <div class="fb-share-button" 
+		        data-href="http://inseme.kudocracy.com" 
+		        data-layout="button_count">
+	        </div>
+   	    </div>
+   	  <div>
+   	    <br>
+   	  </div>
+    </div>
+    </footer>
     
-    <div id="inseme_social_buttons">
-<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://inseme.kudocracy.com" data-text="#inseme. Se former et participer aux assemblées #nuitdebout. #DemocratieDirecte #kudocracy" data-via="kudocracy" data-lang="fr" data-dnt="true">Partage</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-
-    <div class="fb-share-button" 
-		  data-href="http://inseme.kudocracy.com" 
-		  data-layout="button_count">
-	  </div>
-
-   	</div>
-   	<div>
-   	  <br>
-   	</div>
-   	
 </body>
 </html>

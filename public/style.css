@@ -8,9 +8,13 @@ body, #firechat message-content {
   font-size: larger;
 }
 
-#inseme_image_container {
+#inseme_image {
   margin-top: 1em;
   margin-bottom: 1em;
+}
+
+#inseme_image a {
+  margin: 1em;
 }
 
 #inseme {
@@ -25,7 +29,7 @@ body, #firechat message-content {
   list-style-type: none;
 }
 
-.inseme_vote_button_li{
+.inseme_vote_button_li {
   display: inline-block;
   margin: 0.5em;
   margin-left: 0em;
@@ -39,9 +43,6 @@ body, #firechat message-content {
   display: inline;
 }
 
-#inseme_image_container a {
-  margin: 1em;
-}
 
 .inseme_sprite {
     background-image: url(nuitdebout.png);
@@ -97,10 +98,16 @@ body, #firechat message-content {
     background-position: -60px -14px;
 }
 
-.inseme_results {
+#inseme_results {
   width: auto;
 }
 
+#inseme_results table {
+  border-collapse: collapse;
+}
+#inseme_results td, th {
+  border: 1px solid black;
+}
 
 #inseme_social_buttons {
   display: inline-block;
@@ -113,14 +120,14 @@ body, #firechat message-content {
 #firepad {
   width: 640px;
   height: 450px;
-  background-color: #f62; /* dark orange background */
+  background-color: #BBDEFB;
 }
 
 
 /* Note: CodeMirror applies its own styles which can be customized in the same way.
    To apply a background to the entire editor, we need to also apply it to CodeMirror. */
 .CodeMirror {
-  background-color: #f62;
+  background-color: #BBDEFB;
 }
 
 /* JHR, fix issue with material & bootstrap interaction */
