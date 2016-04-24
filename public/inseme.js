@@ -271,6 +271,58 @@ Inseme.patch_i18n_template = function( name, html ){
 };
 
 
+Inseme.connect = function( chatref, authdata ){
+  
+  if( !authdata )return;
+  var random_name = "Anonyme" + Math.round( Math.random() * 1000 );
+  
+  $('#inseme_live').removeClass( "hide" );
+  
+  $('#inseme_logout').removeClass( "hide" ).click( function(){
+    Inseme.logout();
+    chatref.unauth();
+    document.location.reload();
+  });
+  
+  Inseme.patch_firechat();
+  
+  var chat = new FirechatUI( 
+    chatref, 
+    document.getElementById( 'firechat-wrapper') 
+  );
+  
+  Inseme.init( { firechat: chat } );
+  Inseme.populate_vote_buttons();
+  
+  var uid = authdata.uid;
+  var info = authdata[authdata.provider]
+  var name = info.displayName || info.username || random_name;
+  
+  var room = window.location.search;
+  // Get rid of ? if some room was specified
+  if( room.length ){
+    room = room.substring( 1 );
+  }
+  
+  chat.setUser( uid, name );
+  
+  // Hack: because FirechatUI's .setUser() does not allow a callback,
+  // I need to use a timeout...
+  // ToDo: monkey patch firechat API to set up a callback
+  setTimeout( 
+    function(){
+      Inseme.login( uid, name, room );
+      setTimeout( 
+        function(){
+          Inseme.refresh_display();
+        },
+        3000 // Enought time to process previous 'inseme' messages
+      );
+    },
+    3000 // Enought time to reload previous chat messages
+  );
+};
+
 Inseme.init = function( config ){
 // Called after user is firebase authenticated and after firechat is started
 
@@ -465,7 +517,9 @@ Inseme.track_user = function( name, id ){
     return;
   }
   
-  if( id.indexOf( ":" ) === -1 ){
+  if( id.indexOf( ":" ) === -1 
+  &&  id.length !== "5f917712-8d29-4c2e-96ac-9240365b6702".length
+  ){
     de&&bug( "Wrong id, name instead", name, id );
     debugger;
     return;

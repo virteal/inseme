@@ -11,7 +11,7 @@ Pour participer à une assemblée à distance, deux conditions sont requises.
 
 ## Mode d'emploi
 
-1/ se connecter via twitter, facebook, google ou github
+1/ se connecter
 
 2/ choisir ou créer une assemblée
 
@@ -111,7 +111,7 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 - 21 avril 2016, icones associés à la gestuelle, boutton 'AIDE'
 - 22 avril 2016, connexion facebook ou github + déconnexion, traduction
 - 23 avril 2016, connexion google, intégration de Google Hangout
-- 24 avril 2016, section 'aide' dans la page, liens vers profils sociaux
+- 24 avril 2016, section 'aide' dans la page, profils sociaux, anonymes
 
 
 ## Aspects techniques
