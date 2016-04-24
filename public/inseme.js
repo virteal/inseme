@@ -36,7 +36,7 @@ var Inseme = {
   // Some user actions are automatically stopped after a while
   interval: null,
   
-  // This is how long (sec) until user actions is stopped
+  // This is how long (sec) until user actions are stopped automatically
   countdown: 0,
   
   // offline users (names) that the current user vote on behalf of
@@ -988,7 +988,7 @@ Inseme.refresh_display = function(){
   }
   
   var room = Inseme.lookup_room( Inseme.room_id );
-  var user = Inseme.lookup_user( Inseme.user_name );
+  var user = Inseme.lookup_user( Inseme.user_id );
   
   // 'quiet' button is shown only when user is not quiet
   if( room 
