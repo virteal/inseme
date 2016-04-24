@@ -63,7 +63,7 @@ Exemple :
 - inseme live https://embed.bambuser.com/broadcast/6209824
 - inseme live http://mixlr.com/radiodebout/
 - inseme live in http://nuitdebout.fr
-- inseme live https://meet.jit.si/nuitdebout
+- inseme live https://meet.jit.si/inseme
 
 Dans l'avant dernier exemple, "inseme live in", seul un lien vers la source spécifiée est affiché. Dans le dernier exemple, meet.jit.si, c'est une video conférence.  
 
@@ -83,7 +83,7 @@ Il y a un décalage temporel entre ce live et la réalité, de l'ordre de 10 sec
 
 ### jit.si
 
-Cet outil permet de créer des video conférences. Tapez "inseme live https://meet.jit.si/nom-de-l-assemblee".
+Cet outil permet de créer des video conférences. Tapez "inseme live https://meet.jit.si/inseme" (remplacer "inseme", typiquement par le nom de l'assemblée).
 
 ### Misc
 
