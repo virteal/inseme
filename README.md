@@ -65,8 +65,7 @@ Exemple :
 - inseme live in http://nuitdebout.fr
 - inseme live https://meet.jit.si/nuitdebout
 
-Dans l'avant dernier exemple, "inseme live in", seul un lien vers la source spécifiée est affiché.
-Dans le dernier exemple, meet.jit.si, c'est une video conférence.  
+Dans l'avant dernier exemple, "inseme live in", seul un lien vers la source spécifiée est affiché. Dans le dernier exemple, meet.jit.si, c'est une video conférence.  
 
 ## Aider
 
@@ -84,7 +83,7 @@ Il y a un décalage temporel entre ce live et la réalité, de l'ordre de 10 sec
 
 ### jit.si
 
-Cet outil permet de créer des video conférence. Tapez "inseme live https://meet.jit.si/nom-de-l-assemblee".
+Cet outil permet de créer des video conférences. Tapez "inseme live https://meet.jit.si/nom-de-l-assemblee".
 
 ### Misc
 
