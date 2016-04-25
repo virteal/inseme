@@ -92,9 +92,6 @@ Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoi
 
 ## Roadmap
 
-Intégration de l'agenda NuitDebout pour au sujet des AG.
-https://openagenda.com/agendas/27805494/events.json?
-
 Intégration avec le chat de periscope, pour y injecter les votes distants
 
 Transfer des délégations à l'occasion d'un 'bye'
@@ -119,6 +116,7 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 - 22 avril 2016, connexion facebook ou github + déconnexion, traduction
 - 23 avril 2016, connexion google, intégration de Google Hangout
 - 24 avril 2016, section 'aide' dans la page, profils sociaux, anonymes
+- 25 avril 2016, affichage de l'agenda NuitDebout
 
 
 ## Aspects techniques

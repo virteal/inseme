@@ -123,7 +123,7 @@
       
       <div id="inseme_title">
         <img src="nuitdebout.png">
-        <h5>Inseme</h5>version alpha 0.9 du 24 avril 2016
+        <h2>Inseme</h2>version alpha 0.10 du 25 avril 2016
       </div>
       
       <div>
@@ -214,6 +214,41 @@
       <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     </div>
     
+    <div id="inseme_agenda" class="container">
+      <h3 class="center">Programme du jour</h3>
+      <p class="center">
+        Pour compl&eacute;ter cet agenda : 
+        <a href="https://openagenda.com/nuitdebout">l'agenda participatif Nuit Debout.</a>
+      </p>
+      <div class="row">
+        <div class="col s12 l7">
+          <iframe 
+            style="width:100%;" 
+            frameborder="0" 
+            scrolling="no" 
+            allowtransparency="allowtransparency" 
+            class="cibulFrame cbpgbdy"
+            data-oabdy src='//openagenda.com/agendas/27805494/embeds/8131954/events'>
+          </iframe>
+        </div>
+        <div class="col s12 l5">
+          <div id="inseme_openagenda_calendar" class="cbpgcl cibulCalendar" data-oacl data-cbctl='27805494/8131954|{"2016-04-25";}' data-lang="fr"></div>
+          <script>
+             var date = new Date();
+             var txt = "" 
+             + date.getFullYear() 
+             + "-" + ( date.getMonth() + 1 )
+             + "-" + date.getDate();
+             var e = document.getElementById( "inseme_openagenda_calendar" );
+             var old_txt = e.dataset[ "cbctl" ];
+             var new_txt = old_txt.replace( "2016-04-25", txt );
+             e.dataset[ "cbctl" ] = new_txt;
+          </script>
+          <div class="cbpgmp cibulMap" data-oamp data-cbctl='27805494/8131954' data-lang="fr" ></div>
+        </div>
+      </div>
+    </div>
+    
     <footer class="page-footer blue lighten-4">
     <div class="container">
       <div class="row">
@@ -237,5 +272,9 @@
     </div>
     </footer>
     
+  <script type="text/javascript" src="//openagenda.com/js/embed/cibulCalendarWidget.js"></script>
+  <script type="text/javascript" src="//openagenda.com/js/embed/cibulBodyWidget.js"></script>
+  <script type="text/javascript" src="//openagenda.com/js/embed/cibulMapWidget.js"></script>
+ 
 </body>
 </html>
