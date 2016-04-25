@@ -927,7 +927,7 @@ Inseme.push_vote = function( room_id, name, user_id, vote, timestamp, proxy ){
   
   // Log all votes, this may be useful in the future, not at this stage however
   Inseme.votes.push( {
-    room_id: room_id,
+    room_id: room.id,
     room_name: room.name,
     proposition: room.proposition,
     proposition_timestamp: room.proposition_timestamp,
@@ -943,9 +943,9 @@ Inseme.push_vote = function( room_id, name, user_id, vote, timestamp, proxy ){
   }
   
   // Update result
-  var results = Inseme.results[ room_id ];
+  var results = Inseme.results[ room.id ];
   if( !results ){
-    results = Inseme.results[ room_id ] = {};
+    results = Inseme.results[ room.id ] = room.results = {};
   }
   
   var votes = user.votes;
@@ -953,9 +953,9 @@ Inseme.push_vote = function( room_id, name, user_id, vote, timestamp, proxy ){
     votes = user.votes = {};
   }
   
-  var user_vote = votes[ room_id ];
+  var user_vote = votes[ room.id ];
   if( !user_vote ){
-    user_vote = votes[ room_id ] = {};
+    user_vote = votes[ room.id ] = {};
   }
   
   // Remove previous vote
@@ -976,7 +976,7 @@ Inseme.push_vote = function( room_id, name, user_id, vote, timestamp, proxy ){
         var found_first = null;
         var user_name2;
         for( user_name2 in Inseme.all_users ){
-          var vote2 = Inseme.get_vote_of( room_id, user_name2 );
+          var vote2 = Inseme.get_vote_of( room.id, user_name2 );
           if( user_name2 === user.name || vote2 !== previous_vote )continue;
           if( !found_first ){
             found_first = vote2;
@@ -1056,7 +1056,7 @@ Inseme.refresh_display = function(){
     $("#inseme_vote_button_quiet").removeClass( "hide" );
   }
   
-  Inseme.debounce_run( Inseme.room_id );
+  Inseme.debounce_run( room.id );
   Inseme.display_short_results();
   Inseme.display_long_results();
 };
@@ -1112,10 +1112,11 @@ Inseme.user_link = function( n ){
 
 
 Inseme.get_short_results = function(){
-  var room_id = Inseme.room_id;
-  var results = Inseme.results[ room_id ];
+  
+  var room = Inseme.lookup_room( Inseme.room_id );
+  var results = Inseme.results[ room.id ];
   if( !results ){
-    results = Inseme.results[ room_id ] = {};
+    results = room.results = Inseme.results[ room.id ] = {};
   }
   var msg = "";
   var orientation;
@@ -1137,6 +1138,10 @@ Inseme.get_short_results = function(){
 
 
 Inseme.display_short_results = function(){
+  var room = Inseme.lookup_room( Inseme.room_id );
+  $("#inseme_proposition_text").text( 
+    room.proposition || "Tapez inseme ? proposition" 
+  );
   $("#inseme_proposition_results").html( Inseme.get_short_results() );
 };
 
@@ -1170,7 +1175,7 @@ Inseme.date_label = function( timestamp ){
   + jours_labels[ jour ] 
   + ' ' + j 
   + ' ' + mois_labels[ mois ] 
-  + ' ' + annee 
+  // + ' ' + annee 
   + ' &agrave; ' + h + ':' + m + ':' + s;
 };
 
@@ -1597,7 +1602,7 @@ Inseme.set_proposition = function( room_id, text, timestamp ){
   if( proposition && proposition === room.proposition )return;
   
   if( !proposition ){
-    Inseme.results[ room_id ] = {};
+    room.results = Inseme.results[ room.id ] = room.results = {};
     room.reset_timestamp = timestamp || Inseme.now();
   }
   
@@ -1605,12 +1610,6 @@ Inseme.set_proposition = function( room_id, text, timestamp ){
     de&&bug( "New proposition in room", room.id, room.name, proposition );
     room.proposition = proposition;
     room.proposition_timestamp = timestamp || Inseme.now();
-  }
-  
-  if( room_id === Inseme.room_id ){
-    $("#inseme_proposition_text").text( 
-      proposition || "Tapez inseme ? proposition" 
-    );
   }
   
   return Inseme;
