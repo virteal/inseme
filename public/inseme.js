@@ -24,7 +24,7 @@ var Inseme = {
   // This is the current user's id, as per Firebase auth
   user_id: null,
 
-  // This is the displayed name of the current user, @xxx if twitter
+  // This is the displayed name of the current user
   user_name: "",
   
   // id of current room, the one with the focus
@@ -42,6 +42,7 @@ var Inseme = {
   // offline users (names) that the current user vote on behalf of
   proxied_users: {},
   
+  // Log of all votes
   votes: [],
 
   // Count hands, per room_id, one counter per vote orientation
@@ -62,7 +63,6 @@ var Inseme = {
     place: "Paris",
     
     url_help: "http://documentup.com/Virteal/inseme",
-    
     
     // Max for user messages in UI
     maxLengthMessage: 1000,
@@ -128,7 +128,7 @@ var Inseme = {
         html: '<i class="inseme_sprite inseme_sprite-silence"></i>',
       },
       
-     "help": {
+      "help": {
         text: "Aide",
         html: '<i class="material-icons">help</i>'
       }
@@ -139,7 +139,7 @@ var Inseme = {
 
 
 Inseme.patch_firechat = function(){
-// Inject some modification into Firechat code
+// Inject some modifications into Firechat code
   // I could fork firechat but this is overkill for now
   var templates = FirechatDefaultTemplates;
   for( var template_name in templates ){
@@ -247,7 +247,6 @@ Inseme.patch_i18n_template = function( name, html ){
     
   }else if( name === "user-search-list-item" ){
     s( "Invite to Private Chat", "Inviter dans un espace priv&eacute;" );
-  
   }
   
   // Recompile function if needed
@@ -258,7 +257,7 @@ Inseme.patch_i18n_template = function( name, html ){
       r = r.substring( 0, idx_last_close_statement );
       r = new Function( "obj", r );
     }catch( err ){
-      de&&bug( "i18n compile error for templace", name, err );
+      de&&bug( "i18n compile error for template", name, err );
       debugger;
       r = html;
     }
@@ -322,6 +321,7 @@ Inseme.connect = function( chatref, authdata ){
     3000 // Enought time to reload previous chat messages
   );
 };
+
 
 Inseme.init = function( config ){
 // Called after user is firebase authenticated and after firechat is started
@@ -413,7 +413,8 @@ Inseme.track_room = function( id, name, timestamp ){
       live: "",
       image: "",
       twitter: "",
-      debounce_table: {}
+      debounce_table: {},
+      votes: {} // by user.id
     };
   }
   
@@ -425,7 +426,7 @@ Inseme.track_room = function( id, name, timestamp ){
     room.proposition_timestamp = timestamp;
   }
   
-  // Make sure invariant are robust
+  // Make sure invariants are robust
   if( name ){
     room.name = name;
     Inseme.rooms[ name ] = room;
@@ -493,7 +494,7 @@ Inseme.logout = function(){
 
 
 Inseme.lookup_user = function( id ){
-// Find a user, by id or by name, unless id is alreay a user itself
+// Find a user, by id or by name, unless id is already a user itself
   if( !id )return null;
   if( typeof id !== "string" && id.id && id.name )return id;
   var user = Inseme.all_users_by_id[ id ];
@@ -527,16 +528,20 @@ Inseme.track_user = function( name, id ){
   
   var user = Inseme.all_users_by_id[ id ];
   
-  // Create, on the fly
+  // Create new user, on the fly
   if( !user ){
     user = {
       id: id,
-      name: name
+      name: name,
+      is_there: true, // ToDo: handle disconnect, remove votes
+      votes: {} // by room.id
     };
     Inseme.all_users[ name ] = user;
     Inseme.all_users_by_id[ id ] = user;
   }
+  
   return user;
+  
 };
 
 
@@ -1191,10 +1196,12 @@ Inseme.display_long_results = function(){
   var age = 0;
   if( room.proposition_timestamp ){
     age = now - room.proposition_timestamp;
+  }else{
+    age = now - room.reset_timestamp;
   }
   msg += "Nous sommes " + Inseme.date_label( now );
   
-  msg += ", dans l'assemblée '" + ( Inseme.room_name || "sans nom" ) + "'.";
+  msg += ", dans l'assemblée '" + ( room.name || "sans nom" ) + "'.";
   
   
   if( room.proposition ){
@@ -1232,6 +1239,14 @@ Inseme.display_long_results = function(){
       vote = votes[ room.id ] = {};
     }
     if( !vote.vote )return;
+    
+    var room_votes = room.votes;
+    if( !room_votes ){
+      room_votes = room.votes = {};
+    }
+    if( !room_votes[ user.id ] ){
+      room_votes[ user.id ] = vote;
+    }
     
     msg += "<li>" + Inseme.user_link( user ) + ", ";
     if( vote.vote && Inseme.config.choices[ vote.vote ].is_sticky ){
@@ -1533,6 +1548,7 @@ Inseme.set_live = function( room_id, url, timestamp ){
   }
   
   // youtube case
+  // ToDo: case https://www.youtube.com/watch?v=xjS6SftYQaQ
   if( id 
   && ( url.indexOf( "youtube.com/embed" ) > 0 
     || url.indexOf( "/youtu.be/" )        > 0 )
@@ -1704,7 +1720,7 @@ Inseme.populate_vote_buttons = function(){
         hangout_type: "onair",
         initial_apps: [
           { 
-            app_id : '1008226714074',
+            app_id : '1008226714074', // ToDo: config
             start_data : Inseme.user_name,
             app_type: 'ROOM_APP'
           }
