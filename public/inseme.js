@@ -1251,6 +1251,15 @@ Inseme.display_long_results = function(){
     }
     if( !vote.vote )return;
     
+    // Ignore vote if too old, ie before last reset
+    if( room.reset_timestamp
+    &&  vote.timestamp
+    &&  vote.timestamp < room.reset_timestamp
+    &&  vote.vote !== "talk"
+    ){
+      return;
+    }
+    
     var room_votes = room.votes;
     if( !room_votes ){
       room_votes = room.votes = {};
