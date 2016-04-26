@@ -67,6 +67,9 @@ var Inseme = {
     // Max for user messages in UI
     maxLengthMessage: 1000,
     
+    // Number of previous messages to process when entering a room
+    numMaxMessages: 500,
+    
     // Initial value of countdown for auto stop actions, seconds
     countdown: 30,
 
@@ -287,7 +290,10 @@ Inseme.connect = function( chatref, authdata ){
   
   var chat = new FirechatUI( 
     chatref, 
-    document.getElementById( 'firechat-wrapper') 
+    document.getElementById( 'firechat-wrapper'),
+    {
+      numMaxMessages: Inseme.config.numMaxMessages
+    }
   );
   
   Inseme.init( { firechat: chat } );
@@ -1230,19 +1236,22 @@ Inseme.display_long_results = function(){
   msg += "<ul>";
   
   var sticky_votes = {};
+  var count_sticky_votes = 0;
+  
   var list = [];
   for( var n in Inseme.all_users ){
     list.push( Inseme.lookup_user( n ).name );
   }
   list = list.sort();
   
+  // For each known user
   list.forEach( function( n ){
     var user;
     var votes;
     var vote;
     
     user = Inseme.lookup_user( n );
-    if( !user )return;
+    if( !user || !user.is_there )return;
     
     votes = user.votes;
     if( !votes ){
@@ -1296,6 +1305,7 @@ Inseme.display_long_results = function(){
       }
       if( !room.reset_timestamp || vote.timestamp > room.reset_timestamp ){
         sticky_votes[ vote.vote ]++;
+        count_sticky_votes++;
       }
       msg += ""
       + '<span class="orange-text">'
@@ -1332,15 +1342,20 @@ Inseme.display_long_results = function(){
   for( orientation in sticky_votes ){
     orientations.push( orientation );
   }
+  
   if( orientations.length ){
+
     msg += "<br>R&eacute;sultats, depuis " 
     + Inseme.date_label( room.reset_timestamp )
     + ", il y a " + Inseme.duration_label( now - room.reset_timestamp )
     + " : ";
+
     orientations.sort( function( a, b ){
       return sticky_votes[ b ] - sticky_votes[ a ];
     });
+
     msg += '<table id="inseme_results">';
+
     orientations.forEach( function( orientation ){
       msg += "<tr><td>" 
       + Inseme.config.choices[ orientation ].text
@@ -1348,7 +1363,13 @@ Inseme.display_long_results = function(){
       + sticky_votes[ orientation ]
       + "</td></tr>";
     });
+
+    if( orientations.length > 1 ){
+      msg += "<tr><td>Total</td><td>" + count_sticky_votes + '</td></tr>';
+    }
+    
     msg += "</table>";
+
   }
   
   $('#inseme_vote_list').empty().append( msg );
