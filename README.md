@@ -19,6 +19,8 @@ Pour participer à une assemblée à distance, deux conditions sont requises.
 
 ## Modérateurs
 
+Pour l'instant, n'importe qui peut faire de la modération. Pour se déclarer modérateur, taper "inseme modérateur". Pour désigner un modérateur, "inseme modérateur son_nom".
+
 Pour changer la question posée à l'assemblée, taper "inseme ? xxxx", éventuellement précédé de "inseme !" pour d'abord remettre tous les compteurs à zéro.
 
 Pour changer la vidéo/audio partagée, taper "inseme live adresse-du-live".
@@ -92,6 +94,8 @@ Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoi
 
 ## Roadmap
 
+Renforcer la modération dans la mesure du nécessaire
+
 Intégration avec le chat de periscope, pour y injecter les votes distants
 
 Transfer des délégations à l'occasion d'un 'bye'
@@ -118,6 +122,7 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 - 24 avril 2016, section 'aide' dans la page, profils sociaux, anonymes
 - 25 avril 2016, affichage de l'agenda NuitDebout
 - 26 avril 2016, 'inseme agenda nom_ou_adresse' pour changer d'agenda
+- 27 avril 2016, 'inseme modérateur' pour devenir modérateur
 
 
 ## Aspects techniques
