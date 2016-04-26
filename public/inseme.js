@@ -1261,7 +1261,7 @@ Inseme.display_long_results = function(){
     if( !vote ){
       vote = votes[ room.id ] = {};
     }
-    // if( !vote.vote )return;
+    if( !vote.state )return;
     
     // Ignore vote if too old, ie before last reset
     if( room.reset_timestamp
