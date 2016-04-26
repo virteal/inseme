@@ -1210,7 +1210,7 @@ Inseme.display_long_results = function(){
   }else{
     age = now - room.reset_timestamp;
   }
-  msg += "Nous sommes " + Inseme.date_label( now );
+  msg += "<br>Nous sommes " + Inseme.date_label( now );
   
   msg += ", dans l'assemblée '" + ( room.name || "sans nom" ) + "'.";
   
@@ -1249,13 +1249,13 @@ Inseme.display_long_results = function(){
     if( !vote ){
       vote = votes[ room.id ] = {};
     }
-    if( !vote.vote )return;
+    // if( !vote.vote )return;
     
     // Ignore vote if too old, ie before last reset
     if( room.reset_timestamp
     &&  vote.timestamp
     &&  vote.timestamp < room.reset_timestamp
-    &&  vote.vote !== "talk"
+    &&  vote.state !== "talk"
     ){
       return;
     }
@@ -1269,6 +1269,7 @@ Inseme.display_long_results = function(){
     }
     
     msg += "<li>" + Inseme.user_link( user ) + ", ";
+    var state = vote.state;
     if( vote.vote && Inseme.config.choices[ vote.vote ].is_sticky ){
       if( !sticky_votes[ vote.vote ] ){
         sticky_votes[ vote.vote ] = 0;
@@ -1276,12 +1277,24 @@ Inseme.display_long_results = function(){
       if( !room.reset_timestamp || vote.timestamp > room.reset_timestamp ){
         sticky_votes[ vote.vote ]++;
       }
-      msg += Inseme.config.choices[ vote.vote ].text;
+      msg += ""
+      + '<span class="blue-text">'
+      + Inseme.config.choices[ vote.vote ].text
+      + '</span>';
       if( vote.state !== vote.vote ){
-        msg += ", puis " + Inseme.config.choices[ vote.state ].text;
+        msg += ", puis ";
+      }else{
+        state = null;
       }
-    }else{
-       msg += Inseme.config.choices[ vote.state ].text;
+    }
+    if( state ){
+      if( vote.state !== "quiet" ){
+        msg += '<span class="red-text">';
+      }
+      msg += Inseme.config.choices[ vote.state || "quiet" ].text;
+      if( vote.state !== "quiet" ){
+        msg += '</span>';
+      }
     }
     msg += ""
     + ( vote.via 
