@@ -98,6 +98,11 @@ body, #firechat message-content {
     background-position: -60px -14px;
 }
 
+.inseme_cold_state {
+  font-size: smaller;
+  color: gray;
+}
+
 #inseme_results {
   width: auto;
 }

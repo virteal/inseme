@@ -79,7 +79,7 @@ var Inseme = {
       //},
       
       "quiet": {
-        text: "Silencieux",
+        text: "silencieux",
         html: '<i class="material-icons">stop</i>'
       },
       
@@ -505,7 +505,7 @@ Inseme.lookup_user = function( id ){
 };
 
 
-Inseme.track_user = function( name, id ){
+Inseme.track_user = function( name, id, timestamp ){
   
   if( !name || !id ){
     de&&bug( "Missing name or id in Inseme.track_user()", name, id );
@@ -534,12 +534,15 @@ Inseme.track_user = function( name, id ){
     user = {
       id: id,
       name: name,
+      timestamp: null,
       is_there: true, // ToDo: handle disconnect, remove votes
       votes: {} // by room.id
     };
     Inseme.all_users[ name ] = user;
     Inseme.all_users_by_id[ id ] = user;
   }
+  
+  user.timestamp = timestamp || Inseme.now();
   
   return user;
   
@@ -555,7 +558,7 @@ Inseme.change_vote = function( vote ){
   
   de&&bug( "UI. Inseme.vote(" + vote + ") called" );
   
-  var user = Inseme.track_user( Inseme.user_name, Inseme.user_id );
+  var user = Inseme.track_user( Inseme.user_name, Inseme.user_id, Inseme.now() );
   if( !user ){
     de&&bug( "Weird change_vote() for unknown user", Inseme.user_name );
     return Inseme;
@@ -934,7 +937,7 @@ Inseme.push_vote = function( room_id, name, user_id, vote, timestamp, proxy ){
   }
   
   // Track all seen users, including current one
-  var user = Inseme.track_user( name, user_id );  
+  var user = Inseme.track_user( name, user_id, timestamp );  
   
   // Log all votes, this may be useful in the future, not at this stage however
   Inseme.votes.push( {
@@ -1268,8 +1271,25 @@ Inseme.display_long_results = function(){
       room_votes[ user.id ] = vote;
     }
     
-    msg += "<li>" + Inseme.user_link( user ) + ", ";
-    var state = vote.state;
+
+    var state = vote.state || "quiet";
+    var age = now - ( vote.timestamp || user.timestamp );
+    
+    var is_cold = age > 60 * 60 * 1000; // one hour
+    
+    // Not cold if after last reset of votes/proposition
+    if( is_cold 
+    && vote.timestamp 
+    && room.reset_timestamp 
+    && vote.timestamp > room.reset_timestamp
+    ){
+      is_cold = false;
+    }
+    
+    msg += ( is_cold ? '<li class="inseme_cold_state">' : '<li>' )
+    + Inseme.user_link( user ) + ", ";
+   
+    // Sticky votes are special, they remain active, they impact the global results
     if( vote.vote && Inseme.config.choices[ vote.vote ].is_sticky ){
       if( !sticky_votes[ vote.vote ] ){
         sticky_votes[ vote.vote ] = 0;
@@ -1278,7 +1298,7 @@ Inseme.display_long_results = function(){
         sticky_votes[ vote.vote ]++;
       }
       msg += ""
-      + '<span class="blue-text">'
+      + '<span class="orange-text">'
       + Inseme.config.choices[ vote.vote ].text
       + '</span>';
       if( vote.state !== vote.vote ){
@@ -1287,12 +1307,13 @@ Inseme.display_long_results = function(){
         state = null;
       }
     }
+    
     if( state ){
-      if( vote.state !== "quiet" ){
+      if( state !== "quiet" ){
         msg += '<span class="red-text">';
       }
-      msg += Inseme.config.choices[ vote.state || "quiet" ].text;
-      if( vote.state !== "quiet" ){
+      msg += Inseme.config.choices[ state || "quiet" ].text;
+      if( state !== "quiet" ){
         msg += '</span>';
       }
     }
@@ -1301,7 +1322,7 @@ Inseme.display_long_results = function(){
       ? " (via " + Inseme.user_link( vote.via ) + ")"
       : "" )
     + ", depuis " 
-    + Inseme.duration_label( now - vote.timestamp )
+    + Inseme.duration_label( age )
     + ".</li>";
   });
   msg += "</ul>";
