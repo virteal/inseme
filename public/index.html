@@ -123,7 +123,7 @@
       
       <div id="inseme_title">
         <img src="nuitdebout.png">
-        <h2>Inseme</h2>version alpha 0.10 du 25 avril 2016
+        <h2>Inseme</h2>version alpha 0.11 du 26 avril 2016
       </div>
       
       <div>
@@ -178,7 +178,10 @@
             'inseme live in adress-du-live' pour partager seulement le lien.<br>
             'inseme image adresse-de-l-image' pour changer l'image.<br>
             'inseme twitter nom' pour changer le fil twitter.<br>
+            'inseme agenda nom_ou_adresse" pour changer l'agenda.<br>
             'inseme bye nom' pour d&eacute;l&eacute;guer.
+          </p>
+          <p>Voir plus de d&eacute;tails dans <a id="inseme_help_link" href="http://documentup.com/Virteal/inseme" target="Inseme - aide">&agrave; propos</a></p>
         </div>
       </div>
     </div>
@@ -234,6 +237,7 @@
         <div class="col s12 l5">
           <div id="inseme_openagenda_calendar" class="cbpgcl cibulCalendar" data-oacl data-cbctl='27805494/8131954|{"2016-04-25";}' data-lang="fr"></div>
           <script>
+             // ToDo: ca ne marche pas
              var date = new Date();
              var txt = "" 
              + date.getFullYear() 

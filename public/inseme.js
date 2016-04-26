@@ -413,6 +413,7 @@ Inseme.track_room = function( id, name, timestamp ){
       live: "",
       image: "",
       twitter: "",
+      agenda: "",
       debounce_table: {},
       votes: {} // by user.id
     };
@@ -628,6 +629,7 @@ Inseme.set_current_room = function( id, name ){
     Inseme.set_live( room.id, room.live );
     Inseme.set_image( room.id, room.image );
     Inseme.set_twitter( room.id, room.twitter );
+    Inseme.set_agenda( room.id, room.agenda );
     Inseme.refresh_display();
   }
   
@@ -832,6 +834,10 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     }else if( token1 === "twitter" ){
       to_be_removed = false;
       Inseme.set_twitter( room_id, param, message.timestamp );
+      
+    }else if( token1 === "agenda" ){
+      to_be_removed = false;
+      Inseme.set_agenda( room_id, param, message.timestamp );
       
     }else if( token1 === "!" || ( param && token1 === "?" ) ){
       to_be_removed = false;
@@ -1383,6 +1389,7 @@ Inseme.set_image = function( room_id, image_url, timestamp ){
   
 };
 
+
 Inseme.set_twitter = function( room_id, name, timestamp ){
   
   var room = Inseme.track_room( room_id, null, timestamp );
@@ -1412,6 +1419,41 @@ Inseme.set_twitter = function( room_id, name, timestamp ){
           document.getElementById( "inseme_twitter_timeline" )
         );
       });
+    }
+  });
+  
+};
+
+
+Inseme.set_agenda = function( room_id, name, timestamp ){
+  
+  var room = Inseme.track_room( room_id, null, timestamp );
+  if( !room ){
+    de&&bug( "Weird call to set_agenda for unknow room", room_id );
+    return;
+  }
+  
+  name = name.trim();
+  name = name.replace( "http:", "https:" );
+  
+  room.agenda = name || "";
+  
+  Inseme.debounce( room, "agenda", function(){
+    if( !name ){
+      $("#inseme_agenda").empty().addClass( "hide" );
+      return;
+    }
+    if( name.indexOf( "//" ) === -1 ){
+      name = "https://openagenda.com/" + name;
+    }
+    if( name ){
+      var frame_height = "1000";
+      var html = ""
+      + '<iframe id="inseme_agenda_frame" '
+      + ' src="' + name + '"'
+      + ' width="100%" height="' + frame_height + '" frameborder="0">'
+      + '</iframe>';
+      $("#inseme_agenda").empty().append( html ).removeClass( "hide" );
     }
   });
   

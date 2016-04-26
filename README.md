@@ -117,6 +117,7 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 - 23 avril 2016, connexion google, intégration de Google Hangout
 - 24 avril 2016, section 'aide' dans la page, profils sociaux, anonymes
 - 25 avril 2016, affichage de l'agenda NuitDebout
+- 26 avril 2016, 'inseme agenda nom_ou_adresse' pour changer d'agenda
 
 
 ## Aspects techniques
