@@ -1067,7 +1067,7 @@ Inseme.refresh_display = function(){
     $("#inseme_vote_button_quiet").removeClass( "hide" );
   }
   
-  Inseme.debounce_run( room.id );
+  room && Inseme.debounce_run( room.id );
   Inseme.display_short_results();
   Inseme.display_long_results();
 };
@@ -1125,6 +1125,9 @@ Inseme.user_link = function( n ){
 Inseme.get_short_results = function(){
   
   var room = Inseme.lookup_room( Inseme.room_id );
+  if( !room ){
+    return "";
+  }
   var results = Inseme.results[ room.id ];
   if( !results ){
     results = room.results = Inseme.results[ room.id ] = {};
@@ -1151,7 +1154,9 @@ Inseme.get_short_results = function(){
 Inseme.display_short_results = function(){
   var room = Inseme.lookup_room( Inseme.room_id );
   $("#inseme_proposition_text").text( 
-    room.proposition || "Tapez inseme ? proposition" 
+    room
+    ? ( room.proposition || "Tapez inseme ? proposition" )
+    : "Choisir une assemblée"
   );
   $("#inseme_proposition_results").html( Inseme.get_short_results() );
 };
