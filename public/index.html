@@ -89,7 +89,7 @@
     function login( provider ){
       function cb( error, authdata ){ 
         error && console.error( error );
-        !error && Inseme.connect( chatRef, authdata );
+        // !error && Inseme.connect( chatRef, authdata );
       }
       provider  && chatRef.authWithOAuthPopup( provider, cb );
       !provider && chatRef.authAnonymously( cb , { remember: "sessionOnly" } );
@@ -108,6 +108,8 @@
       chatRef.onAuth( function( authdata ){ 
         if( !authdata ){
           Inseme.logout();
+        }else{
+          Inseme.connect( chatRef, authdata );
         }
       }); 
     } );
@@ -123,7 +125,7 @@
       
       <div id="inseme_title">
         <img src="nuitdebout.png">
-        <h2>Inseme</h2>version alpha 0.11 du 26 avril 2016
+        <h2>Inseme</h2>version alpha 0.18.5 du 26 avril 2016
       </div>
       
       <div>
