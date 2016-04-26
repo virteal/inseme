@@ -321,10 +321,10 @@ Inseme.connect = function( chatref, authdata ){
         function(){
           Inseme.refresh_display();
         },
-        3000 // Enought time to process previous 'inseme' messages
+        1 // Enough time to process previous 'inseme' messages
       );
     },
-    3000 // Enought time to reload previous chat messages
+    1 // Enought time to reload previous chat messages
   );
 };
 
@@ -511,7 +511,7 @@ Inseme.lookup_user = function( id ){
 };
 
 
-Inseme.track_user = function( name, id, timestamp ){
+Inseme.track_user = function( id, name, timestamp ){
   
   if( !name || !id ){
     de&&bug( "Missing name or id in Inseme.track_user()", name, id );
@@ -540,6 +540,7 @@ Inseme.track_user = function( name, id, timestamp ){
     user = {
       id: id,
       name: name,
+      is_moderator: false,
       timestamp: null,
       is_there: true, // ToDo: handle disconnect, remove votes
       votes: {} // by room.id
@@ -564,7 +565,7 @@ Inseme.change_vote = function( vote ){
   
   de&&bug( "UI. Inseme.vote(" + vote + ") called" );
   
-  var user = Inseme.track_user( Inseme.user_name, Inseme.user_id, Inseme.now() );
+  var user = Inseme.track_user( Inseme.user_id, Inseme.user_name, Inseme.now() );
   if( !user ){
     de&&bug( "Weird change_vote() for unknown user", Inseme.user_name );
     return Inseme;
@@ -717,7 +718,22 @@ Inseme.on_firechat_room_exit = function( room_id ){
 
 Inseme.now = function(){
 // Local clock is not as reliable as server's one
-  return Date.now() + Inseme.delta_clock;
+  var server_now = Firebase.ServerValue.TIMESTAMP;
+  var basic_now  = Date.now() 
+  var local_now  = basic_now + Inseme.delta_clock;
+  if( server_now ){
+    var delta = server_now - local_now;
+    if( delta < 1000 || delta > 1000 ){
+      de&&bug( "Clock delta", delta );
+      if( local_now < server_now ){
+        Inseme.delta_clock += delta;
+        console.warn( "Insme.now(), adjust local clock", delta );
+        de&&mand( basic_now + Inseme.delta_clock === server_now );
+        local_now = server_now;
+      }
+    }
+  }
+  return local_now;
 };
 
 
@@ -730,12 +746,13 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   // If local clock is late compared server's one, adjust local one
   // ToDo: what if it is early, not late?
   if( age < 0 ){
+    console.warn( "Inseme.on_firechat_message_add(), adjust local clock", -age );
     Inseme.delta_clock -= age;
     age = 0;
   }
   
   // This may be the first message about that room
-  Inseme.track_room( room_id, null, message.timestamp );
+  var room = Inseme.track_room( room_id, null, message.timestamp );
   
   // Skip old messages, 1 day
   // if( age > 24 * 60 * 60 * 1000 )return;
@@ -743,11 +760,12 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   var text = message.message;
   var user_name = message.name;
   var user_id = message.userId;
+  var user = Inseme.track_user( user_id, user_name, message.timestamp );
   
   // If the message was sent by the current user, we can assume he/she
   // focuses on the associated room
-  if( user_name === Inseme.user_name ){
-    Inseme.set_current_room( room_id );
+  if( user.id === Inseme.user_id ){
+    Inseme.set_current_room( room.id );
   }
   
   // Skip not inseme related messages
@@ -847,6 +865,10 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     }else if( token1 === "agenda" ){
       to_be_removed = false;
       Inseme.set_agenda( room_id, param, message.timestamp );
+    
+    }else if( token1 === "moderateur" || token1 === "modérateur" ){
+      to_be_removed = false;
+      Inseme.set_moderator( user, room_id, param, message.timestamp );
       
     }else if( token1 === "!" || ( param && token1 === "?" ) ){
       to_be_removed = false;
@@ -869,25 +891,25 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   de&&bug( 
     "Received vote", 
     vote, 
-    "user", user_name,
-    "room", room_id,
-    "named", Inseme.rooms_by_id[ room_id ].name,
+    "user", user.name,
+    "room", room.id,
+    "named", Inseme.rooms_by_id[ room.id ].name,
     "ago", Inseme.duration_label( Inseme.now() - message.timestamp )
   );
-  Inseme.push_vote( room_id, user_name, message.userId, vote, message.timestamp );
+  Inseme.push_vote( room_id, user.name, user.id, vote, message.timestamp );
   
   if( proxied_users ){
     proxied_users.forEach( function( u ){
-      Inseme.push_vote( room_id, u, vote, message.timestamp, user_name );
+      Inseme.push_vote( room_id, u, vote, message.timestamp, user.name );
       // When current user acquire that other person's vote
-      if( user_name === Inseme.user_name ){
+      if( user.name === Inseme.user_name ){
         Inseme.proxied_users[ u ] = u;
       }
     });
   }
   
   // Restore "quiet" after a while if message is from current user
-  if( user_name === Inseme.user_name ){
+  if( user.name === Inseme.user_name ){
     
     // Not "quiet"...
     if( vote !== "quiet" ){
@@ -943,7 +965,7 @@ Inseme.push_vote = function( room_id, name, user_id, vote, timestamp, proxy ){
   }
   
   // Track all seen users, including current one
-  var user = Inseme.track_user( name, user_id, timestamp );  
+  var user = Inseme.track_user( user_id, name, timestamp );  
   
   // Log all votes, this may be useful in the future, not at this stage however
   Inseme.votes.push( {
@@ -1455,6 +1477,68 @@ Inseme.set_image = function( room_id, image_url, timestamp ){
       .embedly();
     }
   });
+  
+};
+
+
+Inseme.set_moderator = function( by_user, room_id, name, timestamp ){
+  
+  var room = Inseme.track_room( room_id, null, timestamp );
+  if( !room ){
+    de&&bug( "Weird call to set_moderator for unknow room", room_id );
+    return;
+  }
+  
+  var user = Inseme.lookup_user( by_user );
+  
+  // Default to sending user if nothing else was specified
+  if( !name ){
+    // However, anonymous users cannot designate themselves
+    if( user.id.indexOf( ":" ) !== -1 ){
+      name = user.name;
+    }
+  }
+  if( !name )return;
+  
+  var moderator = Inseme.lookup_user( name );
+  
+  // Only moderators can designate an anonymous moderators
+  if( moderator.id.indexOf( ":" ) === -1 && !user.is_moderator ){
+    return;
+  }
+  
+  function add_to_database( a_user ){
+    // Hack into firechat internals
+    Inseme.firechat._chat.isModerator = true;
+    a_user.is_moderator = true;
+    // Only the command sender does the actual update, it avoids useless work
+    // if( user.id !== Inseme.user_id )return;
+    // Hack into firechat internals
+    var ref = Inseme.firechat._chat._moderatorsRef;
+    var new_administrator = ref.child( a_user.id ).push();
+    // ToDo: should be by room, not global
+    var when = timestamp || Inseme.now();
+    new_administrator.update( {
+      set_by_user_id: user.id,
+      set_by_user_name: user.name,
+      from_room_id: room.id,
+      from_room_name: room.name,
+      to_user_id: a_user.id,
+      to_user_name: a_user.name,
+      at: when,
+      at_label: Inseme.date_label( when ).replace( "&agrave;", "à" )
+    } );
+  }
+  
+  if( !moderator.is_moderator ){
+    add_to_database( moderator );
+  }
+  
+  // Whoever designated a moderator is also a moderator
+  if( !user.is_moderator ){
+    // de&&mand( user.id.indexOf( ":" ) !== -1 );
+    add_to_database( user );
+  }
   
 };
 
