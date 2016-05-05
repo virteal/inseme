@@ -31,6 +31,7 @@ Pour changer l'image partagée affichée en bas, taper "inseme adresse-de-l-imag
 
 Pour changer le fil twitter partagé affiché en bas, taper "inseme twitter nom".
 
+Pour afficher un pad collaboratif, taper "inseme pad un_message".
 
 
 ## Démocratie Liquide
@@ -105,24 +106,25 @@ Intégrer des système de chat, Rocket.chat typiquement, via un "chat bot" (robo
 Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dans le 'pad'.
 
 
-## Historique
+## Historique 2016
 
-- 9 avril 2016, version initiale, juste des chats, https://inseme.firebaseapp.com
-- 10 avril 2016, ajout d'un pad et des vidéos live de "nuitdebout"
-- 11 avril 2016, ajout de boutons pour chaque signe + photo d'aide
-- 12 avril 2016, affichage temps réel des résultats
-- 13 avril 2016, délégations façon "démocratie liquide"
-- 14 avril 2016, filtre anti bruit, live facebook, tweets de @ReportersDebout
-- 15 avril 2016, intégration des radios mixlr, video live periscope
-- 16 avril 2016, "inseme live in adresse-du-live" pour n'afficher qu'un lien
-- 17 avril 2016, comptage des accords et affichage en temps réel du résultat
-- 21 avril 2016, icones associés à la gestuelle, boutton 'AIDE'
-- 22 avril 2016, connexion facebook ou github + déconnexion, traduction
-- 23 avril 2016, connexion google, intégration de Google Hangout
-- 24 avril 2016, section 'aide' dans la page, profils sociaux, anonymes
-- 25 avril 2016, affichage de l'agenda NuitDebout
-- 26 avril 2016, 'inseme agenda nom_ou_adresse' pour changer d'agenda
-- 27 avril 2016, 'inseme modérateur' pour devenir modérateur
+-  9 avril, version initiale, juste des chats, https://inseme.firebaseapp.com
+- 10 avril, ajout d'un pad et des vidéos live de "nuitdebout"
+- 11 avril, ajout de boutons pour chaque signe + photo d'aide
+- 12 avril, affichage temps réel des résultats
+- 13 avril, délégations façon "démocratie liquide"
+- 14 avril, filtre anti bruit, live facebook, tweets de @ReportersDebout
+- 15 avril, intégration des radios mixlr, video live periscope
+- 16 avril, "inseme live in adresse-du-live" pour n'afficher qu'un lien
+- 17 avril, comptage des accords et affichage en temps réel du résultat
+- 21 avril, icones associés à la gestuelle, boutton 'AIDE'
+- 22 avril, connexion facebook ou github + déconnexion, traduction
+- 23 avril, connexion google, intégration de Google Hangout
+- 24 avril, section 'aide' dans la page, profils sociaux, anonymes
+- 25 avril, affichage de l'agenda NuitDebout
+- 26 avril, 'inseme agenda nom_ou_adresse' pour changer d'agenda
+- 27 avril, 'inseme modérateur' pour devenir modérateur
+-  5 mai, 'inseme pad un_message' pour afficher un pad collaboratif
 
 
 ## Aspects techniques

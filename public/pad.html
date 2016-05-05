@@ -7,7 +7,7 @@
   <title>Inseme pad</title>
 
   <!--Import Google Icon Font-->
-  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <!--Import materialize.css-->
   <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css"  media="screen,projection"/>
@@ -45,16 +45,37 @@
  <div id="firepad" class="container"></div>
  
   <script>
-  var firepadRef = new Firebase( 'https://inseme.firebaseio.com/firepads/Paris' );
-  var codeMirror = CodeMirror( document.getElementById( 'firepad' ), { lineWrapping: true } );
-  var firepad = Firepad.fromCodeMirror(
-    firepadRef,
-    codeMirror,
-    { richTextShortcuts: true, richTextToolbar: true, defaultText: 'Hello, Paris !' }
-  );
+  $(document).ready( function(){
+    var query = window.location.search || "?id=Inseme";
+    var query_map = {};
+    query.replace( /(^\?)/, "").split("&").map(
+      function( p ){ 
+        var nv = p.split( "=" );
+        query_map[ nv[0] ] = nv[1];
+      }
+    );
+    var is_embed = !!window.location.search;
+    if( is_embed ){
+      $("#inseme_footer").addClass( "hide" );
+    }
+    var pad_id = ( query_map.id || "Inseme" ).trim();
+    pad_id = pad_id.replace( /^[A-Za-z0-9_-]/g, "" ) || "Inseme";
+    var firepadRef 
+    = new Firebase( 'https://inseme.firebaseio.com/firepads/' + pad_id );
+    var codeMirror = CodeMirror( document.getElementById( 'firepad' ), { lineWrapping: true } );
+    var firepad = Firepad.fromCodeMirror(
+      firepadRef,
+      codeMirror,
+      { 
+        richTextShortcuts: true, 
+        richTextToolbar: true, 
+        defaultText: query_map.id ? 'Ordre du jour du xx/xx/xx' : "Commentaires ?"
+      }
+    );
+  });
   </script>
     
-  <footer class="page-footer blue lighten-4"><div class="container">
+  <footer id="inseme_footer" class="page-footer blue lighten-4"><div class="container">
     <a href="/">Inseme</a>
   </div></footer>
 
