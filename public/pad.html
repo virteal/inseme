@@ -46,7 +46,20 @@
  
   <script>
   $(document).ready( function(){
-    var query = window.location.search || "?id=Inseme";
+    var query = window.location.search;
+    if( !query ){
+      var in_iframe = false;
+      try {
+        in_iframe = window.self !== window.top;
+      } catch (e) {
+        in_iframe = true;
+      }
+      if( in_iframe ){
+        query = "?id=" + window.name;
+      }else{
+        query = "?id=Inseme";
+      }
+    }
     var query_map = {};
     query.replace( /(^\?)/, "").split("&").map(
       function( p ){ 
