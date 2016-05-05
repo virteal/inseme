@@ -47,8 +47,8 @@
   <script>
   $(document).ready( function(){
     var query = window.location.search;
+    var in_iframe = false;
     if( !query ){
-      var in_iframe = false;
       try {
         in_iframe = window.self !== window.top;
       } catch (e) {
@@ -67,8 +67,7 @@
         query_map[ nv[0] ] = nv[1];
       }
     );
-    var is_embed = !!window.location.search;
-    if( is_embed ){
+    if( in_iframe ){
       $("#inseme_footer").addClass( "hide" );
     }
     var pad_id = ( query_map.id || "Inseme" ).trim();
