@@ -55,32 +55,25 @@
   
   <!-- Load Facebook SDK for JavaScript -->
 	<div id="fb-root"></div>
+	<script src="//connect.facebook.net/fr_FR/sdk.js" async defer></script>
 	<script>
 	window.fbAsyncInit = function() {
+	  console.log( "Facebook sdk OK" );
     FB.init({
       appId      : '1765572157008965',
       xfbml      : true,
       version    : 'v2.6'
     });
   };
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
 	</script>
 	
 	<script>
 	  // Google api config
     window.___gcfg = {
       lang: 'fr',
-      parsetagsl: "explicit"
+      parsetags: "explicit"
     };
 	</script>
-  <!-- Google hangout related -->
-  <script src="https://apis.google.com/js/platform.js" lang="fr" parsetags="explicit" async defer></script>
   
     <script type='text/javascript'>
   
@@ -174,14 +167,15 @@
         <div class="card-reveal">
           <span class="card-title grey-text text-darken-4">Aide<i class="material-icons right">close</i></span>
           <p>
-            'inseme ? proposition' pour changer la proposition.<br>
+            'inseme ? libell&eacute;-de-la-proposition' pour changer la proposition.<br>
             'inseme !' pour remettre à zéro les compteurs.<br>
             'inseme live adresse-du-live' pour changer le live.<br>
-            'inseme live in adress-du-live' pour partager seulement le lien.<br>
+            'inseme live in adresse-du-live' pour partager seulement le lien.<br>
             'inseme image adresse-de-l-image' pour changer l'image.<br>
             'inseme twitter nom' pour changer le fil twitter.<br>
-            'inseme agenda nom_ou_adresse" pour changer l'agenda.<br>
-            'inseme bye nom' pour d&eacute;l&eacute;guer.
+            'inseme agenda nom-ou-adresse" pour changer l'agenda.<br>
+            'inseme pad son-titre' pour afficher le "pad" de l'assembl&eacute;e.<br>
+            'inseme bye un-nom' pour d&eacute;l&eacute;guer.
           </p>
           <p>Voir plus de d&eacute;tails dans <a id="inseme_help_link" href="http://documentup.com/Virteal/inseme" target="Inseme - aide">&agrave; propos</a></p>
         </div>
@@ -230,6 +224,7 @@
         <a href="https://openagenda.com/nuitdebout">l'agenda participatif Nuit Debout.</a>
       </p>
       <div class="row">
+        <div class="cbpgmp cibulMap" data-oamp data-cbctl='27805494/8131954' data-lang="fr" ></div>
         <div class="col s12 l7">
           <iframe 
             style="width:100%;" 
@@ -254,7 +249,6 @@
              var new_txt = old_txt.replace( "2016-04-25", txt );
              e.dataset[ "cbctl" ] = new_txt;
           </script>
-          <div class="cbpgmp cibulMap" data-oamp data-cbctl='27805494/8131954' data-lang="fr" ></div>
         </div>
       </div>
     </div>
@@ -282,9 +276,9 @@
     </div>
     </footer>
     
+  <script type="text/javascript" src="//openagenda.com/js/embed/cibulMapWidget.js"></script>  
   <script type="text/javascript" src="//openagenda.com/js/embed/cibulCalendarWidget.js"></script>
   <script type="text/javascript" src="//openagenda.com/js/embed/cibulBodyWidget.js"></script>
-  <script type="text/javascript" src="//openagenda.com/js/embed/cibulMapWidget.js"></script>
  
 </body>
 </html>
