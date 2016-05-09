@@ -14,27 +14,18 @@ var mand = function( p ){ if( !p ) throw new Error( "assert failed" ); };
 var Inseme = {
 
   // All seen users, including the current one, on all rooms
-  all_users: {},
-  all_users_by_id: {}, // id is <provider>:<id>
+  all_users_by_name: {},
+  all_users_by_id: {}, // id is <provider>:<id>, unless anonymous
   
   // All rooms
   rooms: {},
   rooms_by_id: {},
   
-  // This is the current user's id, as per Firebase auth
-  user_id: null,
-
-  // This is the displayed name of the current user
-  user_name: "",
+  // This is the current user, the one logged in
+  user: null,
   
   // the current room, if any
   room: null,
-  
-  // id of current room, the one with the focus
-  room_id: "",
-  
-  // name of current room
-  room_name: "",
   
   // Some user actions are automatically stopped after a while
   interval: null,
@@ -42,14 +33,11 @@ var Inseme = {
   // This is how long (sec) until user actions are stopped automatically
   countdown: 0,
   
-  // offline users (names) that the current user vote on behalf of
+  // users (names) that the current user vote on behalf of
   proxied_users: {},
   
-  // Log of all votes
-  votes: [],
-
-  // Count hands, per room_id, one counter per vote orientation
-  results:{},
+  // Log of all votes, not used yet
+  log_votes: [],
 
   // Always true as of today, served by firebase hosting solution
   is_https: false,
@@ -79,10 +67,6 @@ var Inseme = {
     // This defines the content of the action menu to "vote".
     // "sticky" ones are remembered when user gets back to "quiet" state
     choices:{
-      
-      //"inseme": {
-      //  text: "inseme"
-      //},
       
       "quiet": {
         text: "silencieux",
@@ -157,7 +141,7 @@ Inseme.patch_firechat = function(){
 
 
 Inseme.patch_i18n_template = function( name, html ){
-// Patch jQuery style templates, including for i18n purposes
+// Patch firechat's jQuery style templates, including for i18n purposes
   
   // Extract name from xxxx/name.xxx
   var idx_slash = name.lastIndexOf( "/" );
@@ -279,7 +263,6 @@ Inseme.patch_i18n_template = function( name, html ){
 Inseme.connect = function( chatref, authdata ){
   
   if( !authdata )return;
-  var random_name = "Anonyme" + Math.round( Math.random() * 1000 );
   
   $('#inseme_live').removeClass( "hide" );
   
@@ -304,6 +287,7 @@ Inseme.connect = function( chatref, authdata ){
   
   var uid = authdata.uid;
   var info = authdata[authdata.provider]
+  var random_name = "Anonyme" + Math.round( Math.random() * 1000 );
   var name = info.displayName || info.username || random_name;
   
   var room = window.location.search;
@@ -427,7 +411,8 @@ Inseme.track_room = function( id, name, timestamp ){
       twitter: "",
       agenda: "",
       debounce_table: {},
-      votes: {} // by user.id
+      votes_by_user_id: {},
+      results: {} // by orientation (ie by sticky state)
     };
   }
   
@@ -461,14 +446,14 @@ Inseme.login = function( user_id, user_name, room_name ){
   de&&mand( user_name );
   
   // Logout previous user (not expected at this stage)
-  if( Inseme.user_id ){
+  if( Inseme.user ){
     Inseme.logout();
   }
   
   Inseme.set_current_room( null );
   
-  Inseme.user_id = user_id;
-  Inseme.user_name = user_name;
+  Inseme.user = Inseme.track_user( user_id, user_name );
+  de&&mand( Inseme.user );
   
   // Enter specified room, if any
   var chatui_api = Inseme.firechat;
@@ -509,11 +494,10 @@ Inseme.login = function( user_id, user_name, room_name ){
 
 Inseme.logout = function(){
   de&&bug( "Inseme.logout() called" );
-  if( !Inseme.user_id )return Inseme;
+  if( !Inseme.user )return Inseme;
   // Broadcast a last "quiet" message
   Inseme.change_vote();
-  Inseme.user_id = null;
-  Inseme.user_name = null;
+  Inseme.user = null;
   return Inseme;
 };
 
@@ -524,7 +508,7 @@ Inseme.lookup_user = function( id ){
   if( typeof id !== "string" && id.id && id.name )return id;
   var user = Inseme.all_users_by_id[ id ];
   if( user )return user;
-  user = Inseme.all_users[ id ];
+  user = Inseme.all_users_by_name[ id ];
   return user;
 };
 
@@ -560,10 +544,9 @@ Inseme.track_user = function( id, name, timestamp ){
       name: name,
       is_moderator: false,
       timestamp: null,
-      is_there: true, // ToDo: handle disconnect, remove votes
-      votes: {} // by room.id
+      is_there: true // ToDo: handle disconnect, remove votes
     };
-    Inseme.all_users[ name ] = user;
+    Inseme.all_users_by_name[ name ] = user;
     Inseme.all_users_by_id[ id ] = user;
   }
   
@@ -583,9 +566,9 @@ Inseme.change_vote = function( vote ){
   
   de&&bug( "UI. Inseme.vote(" + vote + ") called" );
   
-  var user = Inseme.track_user( Inseme.user_id, Inseme.user_name, Inseme.now() );
+  var user = Inseme.user;
   if( !user ){
-    de&&bug( "Weird change_vote() for unknown user", Inseme.user_name );
+    de&&bug( "Weird change_vote() for unknown user" );
     return Inseme;
   }
   
@@ -633,19 +616,20 @@ Inseme.change_vote = function( vote ){
 Inseme.set_current_room = function( id, name ){
 // Track which tab has the focus
 
-  var previous_room_id = Inseme.room && Inseme.room_id;
+  var previous_room = Inseme.room;
   
   var room = Inseme.track_room( id, name );
   
   if( !room ){
     if( Inseme.room ){
       Inseme.room = null;
-      de&&bug( "Current room becomes null", "was", previous_room_id );
+      de&&bug( "Current room becomes null, was", previous_room && previous_room.id );
       Inseme.set_live();
       Inseme.set_pad();
       Inseme.set_image();
       Inseme.set_twitter();
       Inseme.set_agenda();
+      $("#inseme_hangout_button").addClass( "hide" );
       Inseme.refresh_display();
     }else{
       Inseme.room = null;
@@ -661,13 +645,36 @@ Inseme.set_current_room = function( id, name ){
     return Inseme;
   }
   
-  Inseme.room_id = room.id;
-  Inseme.room_name = room.name;
-  
   // If changed
-  if( Inseme.room_id !== previous_room_id ){
+  if( Inseme.room !== previous_room ){
+    
+      var room_name = ( Inseme.room && Inseme.room.name ) || ""; 
+      var user_name = ( Inseme.user && Inseme.user.name ) || "";
+      try{
+        gapi.hangout.render( 
+          'inseme_hangout', 
+          { 
+            render: 'createhangout',
+            topic: "Inseme/" + room_name,
+            hangout_type: "onair",
+            initial_apps: [
+              { 
+                app_id : '1008226714074', // ToDo: config
+                start_data : user_name,
+                app_type: 'ROOM_APP'
+              }
+            ],
+            widget_size: 200
+          }
+        );
+        $("#inseme_hangout_button").removeClass( "hide" );
+      }catch( err ){
+        console.log( "Error starting hangout" );
+        console.log( err );
+      }
+
     // Adjust current live, image & proposition
-    de&&bug( "Current room becomes", id, name, "was", previous_room_id );
+    de&&bug( "Current room becomes", id, name, "was", previous_room && previous_room.id );
     Inseme.set_live( room.id, room.live );
     Inseme.set_pad( room.id, room.pad );
     Inseme.set_image( room.id, room.image );
@@ -796,9 +803,14 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   var user_id = message.userId;
   var user = Inseme.track_user( user_id, user_name, message.timestamp );
   
+  if( !user ){
+    de&&bug( "weird missing user in on_firechat_message", user_id, user_name );
+    return;
+  }
+  
   // If the message was sent by the current user, we can assume he/she
   // focuses on the associated room
-  if( user.id === Inseme.user_id ){
+  if( user === Inseme.user ){
     Inseme.set_current_room( room.id );
   }
   
@@ -821,12 +833,6 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     },
     delay
   );
-  
-  // If not about a known room, ignore
-  if( !Inseme.rooms_by_id[ room_id ] ){
-    de&&bug( "Weird, message in unkown room", room_id );
-    return;
-  }
   
   // Never proxy a talking user
   delete Inseme.proxied_users[ user_name ];
@@ -918,7 +924,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
 
     }else if( token1 === "bye" ){
       to_be_removed = false;
-      if( param === Inseme.user_name ){
+      if( param === Inseme.user.name ){
         Inseme.proxied_users[ param ] = param;
       }
     }
@@ -939,15 +945,15 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   if( proxied_users ){
     proxied_users.forEach( function( u ){
       Inseme.push_vote( room_id, u, vote, message.timestamp, user.name );
-      // When current user acquire that other person's vote
-      if( user.name === Inseme.user_name ){
+      // When current user acquires that other person's vote
+      if( user.name === Inseme.user.name ){
         Inseme.proxied_users[ u ] = u;
       }
     });
   }
   
   // Restore "quiet" after a while if message is from current user
-  if( user.name === Inseme.user_name ){
+  if( user === Inseme.user ){
     
     // Not "quiet"...
     if( vote !== "quiet" ){
@@ -1006,7 +1012,7 @@ Inseme.push_vote = function( room_id, name, user_id, vote, timestamp, proxy ){
   var user = Inseme.track_user( user_id, name, timestamp );  
   
   // Log all votes, this may be useful in the future, not at this stage however
-  Inseme.votes.push( {
+  Inseme.log_votes.push( {
     room_id: room.id,
     room_name: room.name,
     proposition: room.proposition,
@@ -1018,24 +1024,17 @@ Inseme.push_vote = function( room_id, name, user_id, vote, timestamp, proxy ){
   } );
   
   // Track proxied users of current user
-  if( proxy === Inseme.user_name ){
+  if( proxy === Inseme.user.name ){
     Inseme.proxied_users[ user.name ] = user.name;
   }
   
   // Update result
-  var results = Inseme.results[ room.id ];
-  if( !results ){
-    results = Inseme.results[ room.id ] = room.results = {};
-  }
+  var results = Inseme.room.results;
+  var votes_by_user_id = Inseme.room.votes_by_user_id;
   
-  var votes = user.votes;
-  if( !votes ){
-    votes = user.votes = {};
-  }
-  
-  var user_vote = votes[ room.id ];
+  var user_vote = votes_by_user_id[ user.id ];
   if( !user_vote ){
-    user_vote = votes[ room.id ] = {};
+    user_vote = votes_by_user_id[ user.id ] = {};
   }
   
   // Remove previous vote
@@ -1047,6 +1046,7 @@ Inseme.push_vote = function( room_id, name, user_id, vote, timestamp, proxy ){
       old_result = { count: 1, who_first: null };
       results[ previous_vote ] = old_result;
     }
+    
     old_result.count--;
     
     // If this was the first talker, find the other older one
@@ -1054,18 +1054,18 @@ Inseme.push_vote = function( room_id, name, user_id, vote, timestamp, proxy ){
       old_result.who_first = null;
       if( old_result.count ){
         var found_first = null;
-        var user_name2;
-        for( user_name2 in Inseme.all_users ){
-          var vote2 = Inseme.get_vote_of( room.id, user_name2 );
-          if( user_name2 === user.name || vote2 !== previous_vote )continue;
+        for( var user_id2 in Inseme.all_users_by_id ){
+          var user2 = Inseme.all_users_by_id[ user_id2 ];
+          var vote2 = Inseme.get_vote_of( room.id, user_id2 );
+          if( user2 === user || vote2 !== previous_vote )continue;
           if( !found_first ){
             found_first = vote2;
-            old_result.who_first = user_name2;
+            old_result.who_first = user2.name;
             continue;
           }
           if( vote2.timestamp < found_first.timestamp ){
             found_first = vote2;
-            old_result.who_first = user_name2;
+            old_result.who_first = user2.name;
           }
         }
       }
@@ -1122,7 +1122,7 @@ Inseme.refresh_display = function(){
   }
   
   var room = Inseme.room;
-  var user = Inseme.lookup_user( Inseme.user_id );
+  var user = Inseme.user;
   
   if( !room ){
     $("#inseme_actions").addClass( "hide" );
@@ -1133,22 +1133,23 @@ Inseme.refresh_display = function(){
   // 'quiet' button is shown only when user is not quiet
   if( room 
   &&  user
-  &&  user.votes
-  &&  user.votes[ room.id ]
-  &&  user.votes[ room.id ].state === "quiet"
+  &&  room.votes_by_user_id[ user.id ]
+  &&  room.votes_by_user_id[ user.id ].state !== "quiet"
   ){
-    $("#inseme_vote_button_quiet").addClass( "hide" );
-  }else{
     $("#inseme_vote_button_quiet").removeClass( "hide" );
+  }else{
+    $("#inseme_vote_button_quiet").addClass( "hide" );
   }
   
   Inseme.debounce_run( room && room.id );
   Inseme.display_short_results();
   Inseme.display_long_results();
+  
 };
 
 
 Inseme.user_link = function( n ){
+  
   var user = Inseme.lookup_user( n );
   if( !user )return "";
   
@@ -1200,16 +1201,13 @@ Inseme.user_link = function( n ){
 Inseme.get_short_results = function(){
   
   var room = Inseme.room;
-  if( !room ){
-    return "";
-  }
-  var results = Inseme.results[ room.id ];
-  if( !results ){
-    results = room.results = Inseme.results[ room.id ] = {};
-  }
+  if( !room )return "";
+  
+  var results = room.results;
   var msg = "";
   var orientation;
   var count;
+  
   for( orientation in results ){
     count = results[ orientation ].count;
     if( !count )continue;
@@ -1223,6 +1221,7 @@ Inseme.get_short_results = function(){
     + ".";
   }
   return msg;
+
 };
 
 
@@ -1231,7 +1230,7 @@ Inseme.display_short_results = function(){
   $("#inseme_proposition_text").text( 
     room
     ? ( room.proposition || "Tapez inseme ? proposition" )
-    : "Choisir une assemblée"
+    : "Choisissez une assemblée"
   );
   $("#inseme_proposition_results").html( Inseme.get_short_results() );
 };
@@ -1308,29 +1307,23 @@ Inseme.display_long_results = function(){
   var count_sticky_votes = 0;
   
   var list = [];
-  for( var n in Inseme.all_users ){
-    list.push( Inseme.lookup_user( n ).name );
+  for( var ii in Inseme.all_users_by_id ){
+    list.push( Inseme.all_users_by_id[ ii ] );
   }
-  list = list.sort();
+  list = list.sort( function( a, b ){
+    if( a.name < b.name )return -1;
+    if( a.name > b.name )return 1;
+    return 0;
+  });
   
   // For each known user
-  list.forEach( function( n ){
-    var user;
-    var votes;
-    var vote;
+  list.forEach( function( user ){
     
-    user = Inseme.lookup_user( n );
+    // Is there a vote from that user in the current room?
     if( !user || !user.is_there )return;
-    
-    votes = user.votes;
-    if( !votes ){
-      votes = user.votes = {};
-    }
-    vote = votes[ room.id ];
-    if( !vote ){
-      vote = votes[ room.id ] = {};
-    }
-    if( !vote.state )return;
+    var votes_by_user_id = room.votes_by_user_id;
+    var vote = votes_by_user_id[ user.id ]
+    if( !vote )return;
     
     // Ignore vote if too old, ie before last reset
     if( room.reset_timestamp
@@ -1340,15 +1333,6 @@ Inseme.display_long_results = function(){
     ){
       return;
     }
-    
-    var room_votes = room.votes;
-    if( !room_votes ){
-      room_votes = room.votes = {};
-    }
-    if( !room_votes[ user.id ] ){
-      room_votes[ user.id ] = vote;
-    }
-    
 
     var state = vote.state || "quiet";
     var age = now - ( vote.timestamp || user.timestamp );
@@ -1408,7 +1392,9 @@ Inseme.display_long_results = function(){
     + ", depuis " 
     + Inseme.duration_label( age )
     + ".</li>";
+    
   });
+  
   msg += "</ul>";
   
   var orientation;
@@ -1451,17 +1437,13 @@ Inseme.display_long_results = function(){
 };
 
 
-Inseme.get_vote_of = function( room_id, user_name ){
-  var user = Inseme.lookup_user( user_name );
-  var votes = user.votes;
-  if( !votes ){
-    votes = user.votes = {};
-  }
-  var vote = votes[ room_id ];
-  if( !vote ){
-    vote = vote[ room_id ] = { vote: {} };
-  }
-  return vote && vote.vote;
+Inseme.get_vote_of = function( room_id, user_id ){
+  
+  var room = Inseme.lookup_room( room_id );
+  var user = Inseme.lookup_user( user_id );
+  if( !user || !room )return null;
+  return room.votes_by_user_id[ user.id ];
+
 };
 
 
@@ -1471,34 +1453,36 @@ Inseme.on_firechat_message_remove = function( room_id, message ){
 };
 
 
-Inseme.each_choice = function( f ){
-  var all_choices = Inseme.config.choices;
-  for( var c in all_choices ){
-    f( c );
-  }
-};
-
-
 Inseme.debounce = function( room_id, key, fun ){
 // Register a function to execute when a room becomes the current one.
 // Execution of such function is never immediate. If multiple functions
 // are registered quickly, only the last one is run.
+
   var room = Inseme.lookup_room( room_id );
+  
+  // Use global table if there is no "current room"
   if( !room ){
     room = Inseme;
   }
+  
   if( !room.debounce_table ){
     room.debounce_table = {};
   }
+  
   room.debounce_table[ key ] = fun;
+  
 };
 
 
 Inseme.debounce_run = function( room_id ){
+  
   var room = Inseme.lookup_room( room_id );
+  
+  // Use global table if there is no "current room"
   if( !room ){
     room = Inseme;
   }
+  
   var table = room.debounce_table;
   if( !table )return;
   
@@ -1512,6 +1496,7 @@ Inseme.debounce_run = function( room_id ){
       console.warn( "failed run of debounced", key, "in", room.name );
     }
   }
+  
 };
 
 
@@ -1553,6 +1538,10 @@ Inseme.set_moderator = function( by_user, room_id, name, timestamp ){
   }
   
   var user = Inseme.lookup_user( by_user );
+  if( !user ){
+    de&&bug( "Missing user in set_moderator", by_user );
+    return;
+  }
   
   // Default to sending user if nothing else was specified
   if( !name ){
@@ -1574,8 +1563,6 @@ Inseme.set_moderator = function( by_user, room_id, name, timestamp ){
     // Hack into firechat internals
     Inseme.firechat._chat.isModerator = true;
     a_user.is_moderator = true;
-    // Only the command sender does the actual update, it avoids useless work
-    // if( user.id !== Inseme.user_id )return;
     // Hack into firechat internals
     var ref = Inseme.firechat._chat._moderatorsRef;
     var new_administrator = ref.child( a_user.id ).push();
@@ -1695,15 +1682,14 @@ Inseme.set_pad = function( room_id, msg, timestamp ){
     return;
   }
   
-  msg = msg.trim();
-  
   var room = Inseme.track_room( room_id, null, timestamp );
   if( !room ){
     de&&bug( "Weird call to set_pad for unknow room", room_id );
     return;
   }
   
-  room.pad = msg || "";
+  msg = ( msg || "" ).trim();
+  room.pad = msg;
   
   // Empty msg to remove all
   if( !msg ){
@@ -1714,7 +1700,7 @@ Inseme.set_pad = function( room_id, msg, timestamp ){
   }
   
   // 'off' special case
-  if( !msg || msg === "off" ){
+  if( !msg || msg === "off" || msg === "-" ){
     Inseme.debounce( room, "pad_on_off", function(){
       $("#inseme_pad").addClass( "hide" );
     });
@@ -1722,7 +1708,7 @@ Inseme.set_pad = function( room_id, msg, timestamp ){
   }
 
   // 'on' special case
-  if( msg === "on" ){
+  if( msg === "on" || msg === "+" ){
     Inseme.debounce( room, "pad_on_off", function(){
       $("#inseme_pad").removeClass( "hide" );
     });
@@ -1749,7 +1735,8 @@ Inseme.set_pad = function( room_id, msg, timestamp ){
     var frame_template = ""
     + '<h3>Pad "' + msg.replace( /</g, "&lt;" ) + '"</h3>'
     + '<iframe id="inseme_pad_frame" '
-    + ' src="pad.html?id=SRC"'
+    + ' src="pad.html"'
+    + ' name="SRC"'
     + ' width="100%" height="' + frame_height + '" frameborder="0">'
     + '</iframe>';
   
@@ -1800,7 +1787,7 @@ Inseme.set_live = function( room_id, url, timestamp ){
   }
   
   // 'off' special case
-  if( url === "off" ){
+  if( url === "off" || url === "-" ){
     Inseme.debounce( room, "live_on_off", function(){
       $("#inseme_live").addClass( "hide" );
     });
@@ -1808,7 +1795,7 @@ Inseme.set_live = function( room_id, url, timestamp ){
   }
 
   // 'on' special case
-  if( url === "on" ){
+  if( url === "on" || url === "+" ){
     Inseme.debounce( room, "live_on_off", function(){
       $("#inseme_live").removeClass( "hide" );
     });
@@ -1953,15 +1940,15 @@ Inseme.set_live = function( room_id, url, timestamp ){
     return;
   }
   
-  // Default to a link if http starts the input
+  // Use a link if http starts the input
   if( url.indexOf( "http" ) === 0 ){
     use_link( id );
     return;
   }
-
-  // Anything else restores the default, the same as on http://nuitdebout.fr
-  // ToDo: per place default & .config one
-  // use_iframe( "https://embed.bambuser.com/broadcast/6205163" );
+  
+  // Just set a text, default
+  $("#inseme_live").empty().text( url ).removeClass( "hide" );
+  
 };
 
 
@@ -1974,13 +1961,15 @@ Inseme.set_proposition = function( room_id, text, timestamp ){
     de&&bug( "Weird call to set_proposition for unknow room", room_id );
     return;
   }
+  
   var proposition = text || "";
   
   // Filter out if no change
   if( proposition && proposition === room.proposition )return;
   
   if( !proposition ){
-    room.results = Inseme.results[ room.id ] = room.results = {};
+    room.results = {};
+    room.votes_by_user_id = {};
     room.reset_timestamp = timestamp || Inseme.now();
   }
   
@@ -1992,6 +1981,14 @@ Inseme.set_proposition = function( room_id, text, timestamp ){
   
   return Inseme;
   
+};
+
+
+Inseme.each_choice = function( f ){
+  var all_choices = Inseme.config.choices;
+  for( var c in all_choices ){
+    f( c );
+  }
 };
 
 
@@ -2073,34 +2070,13 @@ Inseme.populate_vote_buttons = function(){
     Inseme.change_vote( vote );
   } );
   
-  try{
-    gapi.hangout.render( 
-      'inseme_hangout', 
-      { 
-        render: 'createhangout',
-        topic: "Inseme/" + Inseme.room_name,
-        hangout_type: "onair",
-        initial_apps: [
-          { 
-            app_id : '1008226714074', // ToDo: config
-            start_data : Inseme.user_name,
-            app_type: 'ROOM_APP'
-          }
-        ],
-        widget_size: 200
-      }
-    );
-    $("#inseme_hangout_button").removeClass( "hide" );
-  }catch( err ){
-    console.log( "Error starting hangout" );
-    console.log( err );
-  }
-  
   // Show the div
   $('#inseme').removeClass( "hide" );
   $('#inseme_twitter_timeline').removeClass( "hide" );
-  $('html, body').animate({ scrollTop: 0 }, 0);
+  $('html, body').animate({ scrollTop: 0 }, 0 );
+  
 };
+
 
 // extracted from kudocracy
 
@@ -2112,7 +2088,7 @@ Inseme.duration_label = function duration_label( duration ){
   var delta = duration / 1000;
   var day_delta = Math.floor( delta / 86400);
   if( isNaN( day_delta) )return "";
-  if( day_delta > 555 *  0 )return "un certain temps";
+  if( day_delta > 555 *  30 )return "un certain temps";
   if( day_delta < 0 ){
     de&&bug( "negative timestamp", delta );
     return l( "... bientot", "... soon" );
