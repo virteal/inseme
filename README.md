@@ -97,11 +97,9 @@ Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoi
 
 Renforcer la modération dans la mesure du nécessaire
 
-Intégration avec le chat de periscope, pour y injecter les votes distants
-
 Transfer des délégations à l'occasion d'un 'bye'
 
-Intégrer des système de chat, Rocket.chat typiquement, via un "chat bot" (robot)
+Meilleure gestion des participants qui sont partis
 
 Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dans le 'pad'.
 
