@@ -67,8 +67,8 @@
         query_map[ nv[0] ] = nv[1];
       }
     );
-    if( in_iframe ){
-      $("#inseme_footer").addClass( "hide" );
+    if( !in_iframe ){
+      $("#inseme_footer").removeClass( "hide" );
     }
     var pad_id = ( query_map.id || "Inseme" ).trim();
     pad_id = pad_id.replace( /^[A-Za-z0-9_-]/g, "" ) || "Inseme";
@@ -87,7 +87,7 @@
   });
   </script>
     
-  <footer id="inseme_footer" class="page-footer blue lighten-4"><div class="container">
+  <footer id="inseme_footer" class="page-footer blue lighten-4 hide"><div class="container">
     <a href="/">Inseme</a>
   </div></footer>
 
