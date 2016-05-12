@@ -19,19 +19,53 @@ Pour participer à une assemblée à distance, deux conditions sont requises.
 
 ## Modérateurs
 
+### Désignation des modérateurs
+
 Pour l'instant, n'importe qui peut faire de la modération. Pour se déclarer modérateur, taper "inseme modérateur". Pour désigner un modérateur, "inseme modérateur son_nom".
 
+### Proposition soumise aux votes
+
 Pour changer la question posée à l'assemblée, taper "inseme ? xxxx", éventuellement précédé de "inseme !" pour d'abord remettre tous les compteurs à zéro.
+
+### Flux 'live'
 
 Pour changer la vidéo/audio partagée, taper "inseme live adresse-du-live".
 
 Pour simplement fournir un lien, taper "inseme live in adresse-du-live".
 
+Pour enlever l'affichage, "inseme live -" ou "inseme live off". Pour le remettre, "inseme live +" ou "inseme live on".
+
+### Image partagée
+
 Pour changer l'image partagée affichée en bas, taper "inseme adresse-de-l-image".
+
+Dans certains cas (via embedly.com) le contenu du lien est reconnu même s'il ne s'agit pas d'une image.
+
+Pour enlever l'affichage de l'image ou le remettre, utiliser "inseme image -" ou "inseme image +".
+
+### Fil twitter partagé
 
 Pour changer le fil twitter partagé affiché en bas, taper "inseme twitter nom".
 
-Pour afficher un pad collaboratif, taper "inseme pad un_message".
+"inseme twitter" suivit de "+" (ou "on") ou "-" (ou "off") pour enlever/remettre l'affichage du fil.
+
+### Agenda partagé
+
+Pour changer l'agenda partagé, taper "inseme agenda son-nom". Si le nom n'est pas un lien, c'est qu'il s'agit d'un agenda hébergé par openagenda.com.
+
+"inseme agenda -" enlève l'affichage, "+" le remet.
+
+### Pad
+
+Un pad est un document dont plusieurs personnes à la fois peuvent changer en temps réel le contenu.
+
+Pour afficher un pad collaboratif, taper "inseme pad son-titre".
+
+Pour utiliser un pad externe, taper "Inseme pad url". Un lien vers ce pad sera affiché.
+
+Si le lien pointe vers framapad.org, alors le pad est embarqué, sauf s'il est précédé de "in".
+
+"inseme pad -" pour enlever l'affichage du pad, "+" pour le remettre.
 
 
 ## Démocratie Liquide
