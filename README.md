@@ -95,6 +95,8 @@ Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoi
 
 ## Roadmap
 
+Injection des messages dans une chat-room Rocket.chat
+
 Renforcer la modération dans la mesure du nécessaire
 
 Transfer des délégations à l'occasion d'un 'bye'
@@ -122,7 +124,8 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 - 25 avril, affichage de l'agenda NuitDebout
 - 26 avril, 'inseme agenda nom_ou_adresse' pour changer d'agenda
 - 27 avril, 'inseme modérateur' pour devenir modérateur
--  5 mai, 'inseme pad un_message' pour afficher un pad collaboratif
+-  5 mai, 'inseme pad un_titre' pour afficher un pad collaboratif
+- 12 mai, 'inseme pad https:xxx' pour utiliser un pad externe, dont framapad
 
 
 ## Aspects techniques

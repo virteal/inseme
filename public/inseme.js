@@ -1724,12 +1724,48 @@ Inseme.set_pad = function( room_id, msg, timestamp ){
     });
   }
   
+  function use_iframe_external( url, name, height ){
+    
+    var frame_height = "600";
+    var frame_template = ""
+    + '<h3>Pad</h3>'
+    + '<iframe id="inseme_pad_frame" '
+    + ' src="SRC"'
+    + ' name="NAME"'
+    + ' width="100%" height="' + frame_height + '" frameborder="0">'
+    + '</iframe>';
+  
+    var html = frame_template.replace( "SRC", url );
+    html = html.replace( "NAME", name || "pad" );
+    if( height ){
+      html = html.replace( 'height="' + frame_height, 'height="' + height );
+    }
+    Inseme.debounce( room, "pad", function(){
+      $("#inseme_pad").empty().append( html ).removeClass( "hide" );
+      $('html, body').animate({ scrollTop: 0 }, 0);
+    });
+  }
+  
   if( msg.substring( 0, 4 ) === "http" ){
+    // in xxxx to provide a link
+    if( msg.substring( 0, 3 ) === "in " ){
+      msg = msg.substring( 4 );
+    }else{
+     // Special cases when I can embed in a frame, Framapad
+     if( msg.indexOf( "framapad.org" ) !== -1 ){
+       msg = msg.replace( "http:", "https:" );
+       if( msg.indexOf( "?" ) === -1 ){
+         msg += "?showControls=true&showChat=true&showLineNumbers=true&useMonospaceFont=false";
+       }
+       use_iframe_external( msg, "embed_readwrite" );
+       return;
+     }
+    }
     use_link( msg );
     return;
   }
 
-  function use_iframe( msg, room_name, height ){
+  function use_iframe_pad( msg, room_name, height ){
     
     var frame_height = "600";
     var frame_template = ""
@@ -1751,7 +1787,7 @@ Inseme.set_pad = function( room_id, msg, timestamp ){
     
   }
   
-  use_iframe( msg, room.name );
+  use_iframe_pad( msg, room.name );
 
 };
 
