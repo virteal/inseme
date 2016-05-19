@@ -71,7 +71,7 @@
       $("#inseme_footer").removeClass( "hide" );
     }
     var pad_id = ( query_map.id || "Inseme" ).trim();
-    pad_id = pad_id.replace( /^[A-Za-z0-9_-]/g, "" ) || "Inseme";
+    pad_id = pad_id.replace( /[^A-Za-z0-9_-]/g, "" ) || "Inseme";
     var firepadRef 
     = new Firebase( 'https://inseme.firebaseio.com/firepads/' + pad_id );
     var codeMirror = CodeMirror( document.getElementById( 'firepad' ), { lineWrapping: true } );
