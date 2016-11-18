@@ -1,8 +1,8 @@
 # inseme - http://inseme.kudocracy.com
 
-## Votes temps réel pour assemblées, façon NuitDebout
+## Votes temps réel pour assemblées, façon démocratie directe et liquide
 
-Inseme vise à faciliter l'accès aux assemblées organisées selon la façon NuitDebout. D'une part à titre de formation en familiarisant les participants avec la gestuelle à utiliser pour s'exprimer. D'autre part à titre opérationnel en permettant de participer à distance.
+Inseme vise à faciliter l'accès à distance à des assemblées organisées dans un lieu déterminé.
 
 Pour participer à une assemblée à distance, deux conditions sont requises.
 1 disposer de l'adresse d'un flux video "live" (ou audio).
@@ -22,6 +22,8 @@ Pour participer à une assemblée à distance, deux conditions sont requises.
 ### Désignation des modérateurs
 
 Pour l'instant, n'importe qui peut faire de la modération. Pour se déclarer modérateur, taper "inseme modérateur". Pour désigner un modérateur, "inseme modérateur son_nom".
+
+Dans le panneau affichant le récapitulatif des positions de chacun, une astérisque précède le nom des modérateurs, ça permet de les identifier.
 
 ### Proposition soumise aux votes
 
@@ -104,8 +106,6 @@ Exemple :
 
 Dans l'avant dernier exemple, "inseme live in", seul un lien vers la source spécifiée est affiché. Dans le dernier exemple, meet.jit.si, c'est une video conférence.  
 
-## Aider
-
 ### Periscope
 
 Sur PC, le live periscope est en léger différé, de sorte que la participation n'est praticable qu'à condition d'utiliser periscope sur son mobile en même temps que Inseme sur son PC.
@@ -160,6 +160,7 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 - 27 avril, 'inseme modérateur' pour devenir modérateur
 -  5 mai, 'inseme pad un_titre' pour afficher un pad collaboratif
 - 12 mai, 'inseme pad https:xxx' pour utiliser un pad externe, dont framapad
+- 17 novembre, version Suvranu
 
 
 ## Aspects techniques

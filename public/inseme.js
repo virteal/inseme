@@ -242,7 +242,8 @@ Inseme.patch_i18n_template = function( name, html ){
   // Recompile function if needed
   if( r !== text ){
     try{
-      r = r.replace( "function (obj) {", "" );
+      var idx_first_open_statement = r.indexOf( "{" );
+      r = r.substring( idx_first_open_statement + 1 );
       var idx_last_close_statement = r.lastIndexOf( "}" );
       r = r.substring( 0, idx_last_close_statement );
       r = new Function( "obj", r );
@@ -268,7 +269,7 @@ Inseme.connect = function( chatref, authdata ){
   
   $('#inseme_logout').removeClass( "hide" ).click( function(){
     Inseme.logout();
-    chatref.unauth();
+    chatref.signOut();
     document.location.reload();
   });
   
@@ -286,7 +287,12 @@ Inseme.connect = function( chatref, authdata ){
   Inseme.populate_vote_buttons();
   
   var uid = authdata.uid;
-  var info = authdata[authdata.provider]
+  var info;
+  if( authdata.isAnonymous ){
+    info = {}; 
+  }else{
+    info = authdata[authdata.provider];
+  }
   var random_name = "Anonyme" + Math.round( Math.random() * 1000 );
   var name = info.displayName || info.username || random_name;
   
@@ -294,6 +300,10 @@ Inseme.connect = function( chatref, authdata ){
   // Get rid of ? if some room was specified
   if( room.length ){
     room = room.substring( 1 );
+    // Get rid of c9 special stuff
+    if( room.indexOf( "_c9" ) !== -1 ){
+      room = null;
+    }
   }
   
   chat.setUser( uid, name );
@@ -528,7 +538,8 @@ Inseme.track_user = function( id, name, timestamp ){
   }
   
   if( id.indexOf( ":" ) === -1 
-  &&  id.length !== "5f917712-8d29-4c2e-96ac-9240365b6702".length
+  &&  id.length !== "PzM6AKsQGhMR7smnk7i2eEpuXHC2".length
+  &&  id.length !== "bc964d54-a3aa-4791-a201-9836f4452700".length
   ){
     de&&bug( "Wrong id, name instead", name, id );
     debugger;
@@ -759,7 +770,7 @@ Inseme.on_firechat_room_exit = function( room_id ){
 
 Inseme.now = function(){
 // Local clock is not as reliable as server's one
-  var server_now = Firebase.ServerValue.TIMESTAMP;
+  var server_now = firebase.database.ServerValue.TIMESTAMP;
   var basic_now  = Date.now() 
   var local_now  = basic_now + Inseme.delta_clock;
   if( server_now ){

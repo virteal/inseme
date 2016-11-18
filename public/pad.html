@@ -22,20 +22,20 @@
   <![endif]-->
   
   <!-- jQuery -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
 
   <!-- Materialize JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
 
   <!-- Firebase -->
-  <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
+  <script src="https://cdn.firebase.com/js/client/3.6.1/firebase.js"></script>
 
   <!-- CodeMirror -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.10.0/codemirror.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.10.0/codemirror.css" />
 
   <!-- Firepad -->
-  <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.3.0/firepad.css" />
+  <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.css" />
   <script src="https://cdn.firebase.com/libs/firepad/1.3.0/firepad.min.js"></script>
   
 </head>
@@ -71,7 +71,7 @@
       $("#inseme_footer").removeClass( "hide" );
     }
     var pad_id = ( query_map.id || "Inseme" ).trim();
-    pad_id = pad_id.replace( /[^A-Za-z0-9_-]/g, "" ) || "Inseme";
+    pad_id = pad_id.replace( /[^A-Za-z0-9_]/g, "" ) || "Inseme";
     var firepadRef 
     = new Firebase( 'https://inseme.firebaseio.com/firepads/' + pad_id );
     var codeMirror = CodeMirror( document.getElementById( 'firepad' ), { lineWrapping: true } );
