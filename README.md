@@ -180,7 +180,7 @@ Ce logiciel open source est écrit par Jean Hugues Robert.
 
 On peut me joindre par mail jean_hugues_robert@yahoo.com, via twitter jhr et sur skype jeanhuguesrobert.
 
-Pour être informé des nouveautés concernant Inseme, le plus simple est de s'abonner au compte twitter Kudocracy. Il y a aussi une page facebook Iseme.
+Pour être informé des nouveautés concernant Inseme, le plus simple est de s'abonner au compte twitter Kudocracy. Il y a aussi une page facebook Inseme.
 
 ## License
 
