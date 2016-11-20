@@ -269,7 +269,8 @@ Inseme.connect = function( chatref, authdata ){
   
   $('#inseme_logout').removeClass( "hide" ).click( function(){
     Inseme.logout();
-    chatref.signOut();
+    // chatref.signOut();
+    firebase.auth().signOut();
     document.location.reload();
   });
   
@@ -288,10 +289,13 @@ Inseme.connect = function( chatref, authdata ){
   
   var uid = authdata.uid;
   var info;
+  var provider;
   if( authdata.isAnonymous ){
     info = {}; 
+    provider = "anonymous";
   }else{
-    info = authdata[authdata.provider];
+    info = authdata.providerData[ 0 ];
+    provider = info.providerId.replace( /\..*/, "" );
   }
   var random_name = "Anonyme" + Math.round( Math.random() * 1000 );
   var name = info.displayName || info.username || random_name;
@@ -313,7 +317,7 @@ Inseme.connect = function( chatref, authdata ){
   // ToDo: monkey patch firechat API to set up a callback
   setTimeout( 
     function(){
-      Inseme.login( uid, name, room );
+      Inseme.login( provider, uid, name, room );
       setTimeout( 
         function(){
           Inseme.refresh_display();
@@ -449,9 +453,9 @@ Inseme.track_room = function( id, name, timestamp ){
 };
 
 
-Inseme.login = function( user_id, user_name, room_name ){
+Inseme.login = function( provider, user_id, user_name, room_name ){
   
-  de&&bug( "Inseme.login(" + user_id + ", " + user_name + ", " + room_name + ") called" );
+  de&&bug( "Inseme.login( " + provider + ", " + user_id + ", " + user_name + ", " + room_name + ") called" );
   de&&mand( user_id );
   de&&mand( user_name );
   
@@ -462,7 +466,7 @@ Inseme.login = function( user_id, user_name, room_name ){
   
   Inseme.set_current_room( null );
   
-  Inseme.user = Inseme.track_user( user_id, user_name );
+  Inseme.user = Inseme.track_user( provider, user_id, user_name );
   de&&mand( Inseme.user );
   
   // Enter specified room, if any
@@ -523,7 +527,7 @@ Inseme.lookup_user = function( id ){
 };
 
 
-Inseme.track_user = function( id, name, timestamp ){
+Inseme.track_user = function( provider, id, name, timestamp ){
   
   if( !name || !id ){
     de&&bug( "Missing name or id in Inseme.track_user()", name, id );
@@ -531,7 +535,7 @@ Inseme.track_user = function( id, name, timestamp ){
     return null;
   }
   
-  if( name.indexOf( ":" ) !== -1 ){
+  if( false && name.indexOf( ":" ) !== -1 ){
     de&&bug( "Wrong name, id instead", name, id );
     debugger;
     return;
@@ -554,11 +558,20 @@ Inseme.track_user = function( id, name, timestamp ){
       id: id,
       name: name,
       is_moderator: false,
+      is_anonymous: provider === "anonymous",
+      provider: provider,
       timestamp: null,
       is_there: true // ToDo: handle disconnect, remove votes
     };
     Inseme.all_users_by_name[ name ] = user;
     Inseme.all_users_by_id[ id ] = user;
+  
+  // Update user info
+  }else{
+    if( user.is_anonymous && provider !== "anonymous" ){
+      user.is_anonymous = false;
+      user.provider = provider;
+    }
   }
   
   user.timestamp = timestamp || Inseme.now();
@@ -610,7 +623,8 @@ Inseme.change_vote = function( vote ){
     de&&bug( "Send vote", room.id, vote );
     Inseme.firechat._chat.sendMessage( 
       room.id,
-      "inseme " 
+      "inseme "
+      + user.provider + " "
       + ( Inseme.config.choices[ vote ].text || vote )
       + ( proxied_users.length
         ? " => " + proxied_users.join( "," )
@@ -812,7 +826,22 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   var text = message.message;
   var user_name = message.name;
   var user_id = message.userId;
-  var user = Inseme.track_user( user_id, user_name, message.timestamp );
+  
+  // Detect inseme special messages
+  var is_command = text.substring( 0, "inseme".length ).toLowerCase() === "inseme";
+  
+  // Extract provider from message "inseme xxxx ...."
+  var provider = "anonymous";
+  if( is_command ){
+    provider = text.substring( "inseme".length + 1 );
+    provider = provider.substring( 0, provider.indexOf( " " ) );
+    if( [ "anonymous", "twitter", "facebook", "google", "github" ].indexOf( provider ) !== -1 ){
+      text = text.replace( provider + " ", "" );
+    }else{
+      provider = "anonymous";
+    }
+  }
+  var user = Inseme.track_user( provider, user_id, user_name, message.timestamp );
   
   if( !user ){
     de&&bug( "weird missing user in on_firechat_message", user_id, user_name );
@@ -826,7 +855,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   }
   
   // Skip not inseme related messages
-  if( text.substring( 0, "inseme".length ).toLowerCase() !== "inseme" )return;
+  if( !is_command )return;
   
   // Remove some messages after a while to improve signal/noise
   var to_be_removed = true;
@@ -935,7 +964,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
 
     }else if( token1 === "bye" ){
       to_be_removed = false;
-      if( param === Inseme.user.name ){
+      if( param === Inseme.user && Inseme.user.name ){
         Inseme.proxied_users[ param ] = param;
       }
     }
@@ -957,7 +986,7 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     proxied_users.forEach( function( u ){
       Inseme.push_vote( room_id, u, vote, message.timestamp, user.name );
       // When current user acquires that other person's vote
-      if( user.name === Inseme.user.name ){
+      if( user.name === ( Inseme.user && Inseme.user.name ) ){
         Inseme.proxied_users[ u ] = u;
       }
     });
@@ -1020,7 +1049,7 @@ Inseme.push_vote = function( room_id, name, user_id, vote, timestamp, proxy ){
   }
   
   // Track all seen users, including current one
-  var user = Inseme.track_user( user_id, name, timestamp );  
+  var user = Inseme.track_user( "anonymous", user_id, name, timestamp );  
   
   // Log all votes, this may be useful in the future, not at this stage however
   Inseme.log_votes.push( {
@@ -1035,7 +1064,7 @@ Inseme.push_vote = function( room_id, name, user_id, vote, timestamp, proxy ){
   } );
   
   // Track proxied users of current user
-  if( proxy === Inseme.user.name ){
+  if( Inseme.user && ( proxy === Inseme.user.name ) ){
     Inseme.proxied_users[ user.name ] = user.name;
   }
   
@@ -1166,17 +1195,7 @@ Inseme.user_link = function( n ){
   
   var id = user.id;
   var name = user.name;
-  var provider = "";
-  
-  if( id.indexOf( ":" ) !== -1 ){
-    provider = id.substring( 0, id.indexOf( ":" ) );
-    id = id.substring( id.indexOf( ":" ) + 1 );
-  }
-  
-  if( false && !provider ){
-    de&&bug( "Weird user id without a provider name", id );
-    debugger;
-  }
+  var provider = user.provider;
   
   var link = name;
   
@@ -1557,7 +1576,7 @@ Inseme.set_moderator = function( by_user, room_id, name, timestamp ){
   // Default to sending user if nothing else was specified
   if( !name ){
     // However, anonymous users cannot designate themselves
-    if( user.id.indexOf( ":" ) !== -1 ){
+    if( user.provider === "anonymous" ){
       name = user.name;
     }
   }

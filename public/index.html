@@ -78,18 +78,29 @@
     };
 	</script>
   
-    <script type='text/javascript'>
+  <script type='text/javascript'>
   
     var chatRef;
 
     function login( provider ){
-      function cb( error ){ 
-        error && console.error( error );
-        // !error && Inseme.connect( chatRef, authdata );
-      }
       var p;
       if( provider ){
-        p = firebase.auth().signInWithPopup( provider, cb );
+        switch( provider ){
+          case "twitter": 
+            provider = new firebase.auth.TwitterAuthProvider();
+            break;
+          case "facebook": 
+            provider = new firebase.auth.FacebookAuthProvider();
+            break;
+          case "github": 
+            provider = new firebase.auth.GithubAuthProvider();
+            break;
+          case "google": 
+            provider = new firebase.auth.GoogleAuthProvider();
+            break;
+          default: return;
+        }
+        p = firebase.auth().signInWithPopup( provider );
       }else{
         p = firebase.auth().signInAnonymously()
       }
@@ -99,8 +110,6 @@
     }
   
     $(document).ready( function(){
-      
-      debugger;
       
       // I use embedly for the content display at the bottom of the page
       $.embedly.defaults.key = '4b04162cd6134d0da674a15aa65b8c4b';
@@ -137,10 +146,13 @@
       
       <div id="inseme_title">
         <img src="nuitdebout.png">
-        <h2>Inseme</h2>version alpha 0.36 du 17 octobre 2016
+        <h2>Inseme</h2>
       </div>
       
+      <div id="inseme_slogan"><h4>Participez à distance</h4></div>
+      
       <div>
+        Connexion : 
         <a href='#' class="btn" onclick='login();'>
           Anonyme 
         </a>
@@ -158,7 +170,6 @@
         </a>
       </div>
       
-      <div id="inseme_slogan"><h4>Participez à distance aux assemblées</h4></div>
       
       <div>
         <iframe width="100%" height="600" src="https://www.youtube.com/embed/04Z6X4iaZrc" frameborder="0" allowfullscreen></iframe>
