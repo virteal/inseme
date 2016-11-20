@@ -22,21 +22,21 @@
   <![endif]-->
   
   <!-- jQuery -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
 
   <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
 
   <!-- Firebase -->
-  <script src="https://cdn.firebase.com/js/client/3.6.1/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
 
   <!-- CodeMirror -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.10.0/codemirror.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.10.0/codemirror.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.css" />
 
   <!-- Firepad -->
   <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.css" />
-  <script src="https://cdn.firebase.com/libs/firepad/1.3.0/firepad.min.js"></script>
+  <script src="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js"></script>
   
 </head>
 
@@ -46,6 +46,7 @@
  
   <script>
   $(document).ready( function(){
+    
     var query = window.location.search;
     var in_iframe = false;
     if( !query ){
@@ -72,8 +73,16 @@
     }
     var pad_id = ( query_map.id || "Inseme" ).trim();
     pad_id = pad_id.replace( /[^A-Za-z0-9_]/g, "" ) || "Inseme";
-    var firepadRef 
-    = new Firebase( 'https://inseme.firebaseio.com/firepads/' + pad_id );
+    
+    var config = {
+      apiKey: "AIzaSyAW2bxl3yNuj2_R2wihaKFVecq-MYWXKm4",
+      authDomain: "inseme.firebaseapp.com",
+      databaseURL: 'https://inseme.firebaseio.com',
+      storageBucket: 'project-3215974354260520004.appspot.com'
+    };
+    firebase.initializeApp( config );
+
+    var firepadRef = firebase.database().ref().child( "pad" ).child( pad_id );
     var codeMirror = CodeMirror( document.getElementById( 'firepad' ), { lineWrapping: true } );
     var firepad = Firepad.fromCodeMirror(
       firepadRef,
@@ -81,7 +90,7 @@
       { 
         richTextShortcuts: true, 
         richTextToolbar: true, 
-        defaultText: query_map.id ? 'Ordre du jour du xx/xx/xx' : "Commentaires ?"
+        defaultText: id !== "Inseme" ? 'Ordre du jour du xx/xx/xx' : "Ajoutez vos commentaires, merci."
       }
     );
   });
