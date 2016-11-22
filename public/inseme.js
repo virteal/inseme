@@ -1330,7 +1330,9 @@ Inseme.display_long_results = function(){
   if( room.proposition_timestamp ){
     age = now - room.proposition_timestamp;
   }else{
-    age = now - room.reset_timestamp;
+    if( room.reset_timestamp ){
+      age = now - room.reset_timestamp;
+    }
   }
   msg += ", dans l'assemblée '" + ( room.name || "sans nom" ) + "'.";
   
@@ -1338,7 +1340,7 @@ Inseme.display_long_results = function(){
     msg += "<br>Proposition \"" + room.proposition + "\"";
     msg += " faite " + Inseme.date_label( room.proposition_timestamp );
     msg += ", il y a " + Inseme.duration_label( age ) + ".";
-  }else{
+  }else if( age ){
     msg += "<br>Sur la discussion en cours depuis "
     + Inseme.duration_label( age ) + ".";
   }
