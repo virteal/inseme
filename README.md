@@ -159,6 +159,7 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 -  5 mai, 'inseme pad un_titre' pour afficher un pad collaboratif
 - 12 mai, 'inseme pad https:xxx' pour utiliser un pad externe, dont framapad
 - 17 novembre, version Suvranu, pour la Corse
+- 22 novembre, 'inseme facebook http:xxx' pour afficher un post
 
 
 ## Aspects techniques

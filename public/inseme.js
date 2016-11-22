@@ -425,6 +425,7 @@ Inseme.track_room = function( id, name, timestamp ){
       live: "",
       image: "",
       twitter: "",
+      facebook: "",
       agenda: "",
       debounce_table: {},
       votes_by_user_id: {},
@@ -657,6 +658,7 @@ Inseme.set_current_room = function( id, name ){
       Inseme.set_pad();
       Inseme.set_image();
       Inseme.set_twitter();
+      Inseme.set_facebook();
       Inseme.set_agenda();
       $("#inseme_hangout_button").addClass( "hide" );
       Inseme.refresh_display();
@@ -708,6 +710,7 @@ Inseme.set_current_room = function( id, name ){
     Inseme.set_pad( room.id, room.pad );
     Inseme.set_image( room.id, room.image );
     Inseme.set_twitter( room.id, room.twitter );
+    Inseme.set_facebook( room.id, room.facebook );
     Inseme.set_agenda( room.id, room.agenda );
     Inseme.refresh_display();
   }
@@ -841,11 +844,11 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     provider = text.substring( "inseme".length + 1 );
     provider = provider.substring( 0, provider.indexOf( " " ) );
     if( [ "anonymous", "twitter", "facebook", "google", "github" ].indexOf( provider ) !== -1 ){
-      text = text.replace( provider + " ", "" );
-      provider_uid = text.substring( "inseme".length + 1 );
+      var new_text = text.replace( provider + " ", "" );
+      provider_uid = new_text.substring( "inseme".length + 1 );
       provider_uid = provider_uid.substring( 0, provider_uid.indexOf( " " ) );
-      if( provider_uid ){
-        text = text.replace( provider_uid + " ", "" );
+      if( provider_uid && provider_uid.substring( 0, 4 ) !== "http" ){
+        text = new_text.replace( provider_uid + " ", "" );
       }else{
         provider = "anonymous";
       }
@@ -957,6 +960,10 @@ Inseme.on_firechat_message_add = function( room_id, message ){
     }else if( token1 === "twitter" ){
       to_be_removed = false;
       Inseme.set_twitter( room_id, param, message.timestamp );
+      
+    }else if( token1 === "facebook" ){
+      to_be_removed = false;
+      Inseme.set_facebook( room_id, param, message.timestamp );
       
     }else if( token1 === "agenda" ){
       to_be_removed = false;
@@ -1646,7 +1653,7 @@ Inseme.set_twitter = function( room_id, name, timestamp ){
   
   var room = Inseme.track_room( room_id, null, timestamp );
   if( !room ){
-    de&&bug( "Weird call to set_image for unknow room", room_id );
+    de&&bug( "Weird call to set_twitter for unknow room", room_id );
     return;
   }
   
@@ -1656,21 +1663,74 @@ Inseme.set_twitter = function( room_id, name, timestamp ){
   
   Inseme.debounce( room, "twitter", function(){
     $("#inseme_twitter_timeline").empty();
-    if( name ){
-      $("#inseme_twitter_timeline")
-      .append( $( 
-        "<a>", 
-        { 
-          text: "Tweets de @" + name,
-          "class": "twitter-timeline",
-          href: "https://twitter.com/" + name
-        }
-      ) );
-      window.twttr && window.twttr.ready( function(){
-        twttr.widgets.load( 
-          document.getElementById( "inseme_twitter_timeline" )
-        );
-      });
+    if( !name )return;
+    $("#inseme_twitter_timeline")
+    .append( $( 
+      "<a>", 
+      { 
+        text: "Tweets de @" + name,
+        "class": "twitter-timeline",
+        href: "https://twitter.com/" + name
+      }
+    ) );
+    window.twttr && window.twttr.ready( function(){
+      twttr.widgets.load( 
+        document.getElementById( "inseme_twitter_timeline" )
+      );
+    });
+  });
+  
+};
+
+
+Inseme.set_facebook = function( room_id, name, timestamp ){
+  
+  if( !room_id ){
+    $("#inseme_facebook").empty();
+    return;
+  }
+  
+  var room = Inseme.track_room( room_id, null, timestamp );
+  if( !room ){
+    de&&bug( "Weird call to set_facebook for unknow room", room_id );
+    return;
+  }
+  
+  name = name.trim();
+  
+  room.facebook = name || "";
+  
+  Inseme.debounce( room, "facebook", function(){
+    $("#inseme_facebook").empty();
+    if( !name )return;
+    var idx = name.indexOf( "#" );
+    if( idx !== -1 ){
+      name = name.substring( 0, idx );
+    }
+    var config = {
+      "data-href": name,
+      "data-width": "560"
+    };
+    var what_type = "fb-post";
+    if( name.indexOf( "/video" ) !== -1 ){
+      what_type = "fb-video";
+    }
+    if( name.indexOf( "comment_id") !== -1 ){
+      what_type = "fb-comment-embed";
+      config[ "data-include-parent" ] = "true";
+    }
+    if( name === "comments" ){
+      what_type = "fb-comments"
+      config[ "data-href" ] = window.location.href;
+      config[ "data-numposts" ] = "10";
+      config[ "data-order-by"] = "reverse_time";
+    }
+    config[ "class"] = what_type;
+    console.log( "facebook", what_type, config ); 
+    $("#inseme_facebook").append( $( "<div>", config ) );
+    // Update display
+    if( window.FB && window.FB.XFBML ){
+      FB.XFBML.parse( document.getElementById( "inseme_facebook" ) );
     }
   });
   
@@ -2153,6 +2213,7 @@ Inseme.populate_vote_buttons = function(){
   // Show the div
   $('#inseme').removeClass( "hide" );
   $('#inseme_twitter_timeline').removeClass( "hide" );
+  $('#inseme_facebook').removeClass( "hide" );
   $('html, body').animate({ scrollTop: 0 }, 0 );
   
 };
