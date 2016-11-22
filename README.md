@@ -1,6 +1,6 @@
 # inseme - http://inseme.kudocracy.com
 
-## Votes temps réel pour assemblées, façon démocratie directe et liquide
+## Chats et votes pour assemblées, démocratie directe et liquide
 
 Inseme vise à faciliter l'accès à distance à des assemblées organisées dans un lieu déterminé.
 
@@ -13,7 +13,7 @@ Pour participer à une assemblée à distance, deux conditions sont requises.
 
 1/ se connecter
 
-2/ choisir ou créer une assemblée
+2/ choisir une assemblée
 
 3/ chatter en regardant la video live et clicker pour se manifester
 
@@ -160,7 +160,7 @@ Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dan
 - 27 avril, 'inseme modérateur' pour devenir modérateur
 -  5 mai, 'inseme pad un_titre' pour afficher un pad collaboratif
 - 12 mai, 'inseme pad https:xxx' pour utiliser un pad externe, dont framapad
-- 17 novembre, version Suvranu
+- 17 novembre, version Suvranu, pour la Corse
 
 
 ## Aspects techniques
