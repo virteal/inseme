@@ -129,8 +129,6 @@ Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoi
 
 ## Roadmap
 
-Injection des messages dans une chat-room Rocket.chat
-
 Renforcer la modération dans la mesure du nécessaire
 
 Transfer des délégations à l'occasion d'un 'bye'
