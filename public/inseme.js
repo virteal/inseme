@@ -1279,7 +1279,7 @@ Inseme.display_short_results = function(){
   $("#inseme_proposition_text").text( 
     room
     ? ( room.proposition || "Tapez inseme ? proposition" )
-    : "Choisissez une assemblée"
+    : "Choisissez une assemblée d'abord"
   );
   $("#inseme_proposition_results").html( Inseme.get_short_results() );
 };
