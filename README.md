@@ -126,7 +126,7 @@ Cet outil permet de créer des video conférences. Tapez "inseme live https://me
 
 Inseme n'est qu'un outils, au service d'une participation accrue. Différentes manières de l'utiliser sont envisageables.
 
-#### Organiser une assemblée
+### Organiser une assemblée
 
 D'abord créer l'assemblée si ce n'est déjà fait. Il est parfois utile de créer des sous comités, des commissions, etc.
 
@@ -146,11 +146,6 @@ Une fois la réunion terminée, finir la rédaction du compte rendu et le diffus
 
 
 
-### Misc
-
-Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoir des images animées pour chaque geste.
-
-
 ## Roadmap
 
 Renforcer la modération dans la mesure du nécessaire
@@ -160,6 +155,10 @@ Transfer des délégations à l'occasion d'un 'bye'
 Meilleure gestion des participants qui sont partis
 
 Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dans le 'pad'.
+
+### Misc
+
+Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoir des images animées pour chaque geste.
 
 
 ## Historique 2016
