@@ -164,6 +164,8 @@ Pour le "live", utiliser éventuellement Facebook aussi, voir "inseme live" et l
 
 ## Roadmap
 
+Rendre bookmarkable l'assemblée en cours
+
 Renforcer la modération dans la mesure du nécessaire
 
 Transfer des délégations à l'occasion d'un 'bye'
@@ -199,7 +201,7 @@ Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoi
 - 12 mai, 'inseme pad https:xxx' pour utiliser un pad externe, dont framapad
 - 17 novembre, version Suvranu, pour la Corse
 - 22 novembre, 'inseme facebook http:xxx' pour afficher un post
-
+- 23 novembre, les urls deviennent bookmarkable
 
 ## Aspects techniques
 

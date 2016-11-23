@@ -486,19 +486,19 @@ Inseme.login = function( provider, provider_uid, user_id, user_name, room_name )
 
     var found_room = room_name && Inseme.rooms[ room_name ];
 
-    if( found_room ){
-      de&&bug( "Entering room ", found_room.name, found_room.id );
-      Inseme.set_current_room( found_room.id, found_room.name );
-      // Set focus on chat tab for that room
-      if( chatui_api.$messages[ found_room.id ] ){
-        chatui_api.focusTab( found_room.id );
-      }else{
-        chatui_api._chat.enterRoom( found_room.id, found_room.name );
-      }
-    }
-    // Broadcast a "quiet" initial message
     // ToDo: do I need the delay?
     setTimeout( function(){
+      if( found_room ){
+        de&&bug( "Entering room ", found_room.name, found_room.id );
+        Inseme.set_current_room( found_room.id, found_room.name );
+        // Set focus on chat tab for that room
+        if( chatui_api.$messages[ found_room.id ] ){
+          chatui_api.focusTab( found_room.id );
+        }else{
+          chatui_api._chat.enterRoom( found_room.id, found_room.name );
+        }
+      }
+      // Broadcast a "quiet" initial message
       Inseme.change_vote();
     }, 1000 );
   });
@@ -1203,7 +1203,20 @@ Inseme.refresh_display = function(){
   Inseme.debounce_run( room && room.id );
   Inseme.display_short_results();
   Inseme.display_long_results();
-  
+
+  // Make a bookmarkable url
+  var href = window.location.href;
+  var idx = href.indexOf( "?" );
+  if( idx !== -1 ){
+    href = href.substring( 0, idx );
+  }
+  if( room ){
+    href += "?" + room.name;
+    window.history.replaceState( {}, room.name, href );
+  }else{
+    window.history.replaceState( {}, "", href );
+  }
+
 };
 
 
