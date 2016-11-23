@@ -153,9 +153,9 @@ Poster une annonce lors des réunions, éventuellement associée à un événeme
 
 Utiliser la commande "inseme facebook url" afin d'afficher l'annonce sur la page de l'assemblée.
 
-Dans l'annoncer, créer autant de commentaires que de questions à l'ordre du jour ; compléter si des questions nouvelles surgissent durant la réunion.
+Dans l'annonce, créer autant de commentaires que de questions à l'ordre du jour ; compléter si des questions nouvelles surgissent durant la réunion.
 
-Durant la réunion, noter sous forme de réponse les résultats des votes sur les différents éléments de l'ordre du jour.
+Durant la réunion, noter les résultats des votes sur les différents éléments de l'ordre du jour sous forme de réponse aux commentaires.
 
 Ajouter un commentaire final pour le compte rendu.
 
