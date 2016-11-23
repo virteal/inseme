@@ -1850,10 +1850,10 @@ Inseme.set_pad = function( room_id, msg, timestamp ){
     });
   }
   
-  if( msg.substring( 0, 4 ) === "http" ){
+  if( msg.indexOf( "http" !== -1 ){
     // in xxxx to provide a link
     if( msg.substring( 0, 3 ) === "in " ){
-      msg = msg.substring( 4 );
+      msg = msg.substring( 3 );
     }else{
      // Special cases when I can embed in a frame, Framapad
      if( msg.indexOf( "framapad.org" ) !== -1 ){

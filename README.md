@@ -122,6 +122,30 @@ Il y a un décalage temporel entre ce live et la réalité, de l'ordre de 10 sec
 
 Cet outil permet de créer des video conférences. Tapez "inseme live https://meet.jit.si/inseme" (remplacer "inseme", typiquement par le nom de l'assemblée).
 
+### Recettes
+
+Inseme n'est qu'un outils, au service d'une participation accrue. Différentes manières de l'utiliser sont envisageables.
+
+#### Organiser une assemblée
+
+D'abord créer l'assemblée si ce n'est déjà fait. Il est parfois utile de créer des sous comités, des commissions, etc.
+
+Associer un "pad" où trouver et compléter les informations au sujet de la prochaine réunion. Par exemple, la date, le lieux, le thème, l'ordre du jour. Ceci s'effectue avec la commande 'inseme pad titre' où l'on indique le titre, par exemple en utilisant le nom de l'assemblée ou bien un titre plus spécifique comme le thème abordé. Utiliser la commande "inseme pad url" si le pad est hébergé ailleurs.
+
+Associer éventuellement un agenda pour informer les participants au sujet des réunions futures de l'assemblée. Utiliser la commande "inseme agenda nom" pour désigner un agenda hébergé sur openagenda.com ou bien "inseme agenda url" si l'agenda est hébergé ailleurs.
+
+Lorsque l'assemblèe se réunie, mettre en place le moyen de diffusion vidéo ou audio. Ceci afin que les participants distants puissent voir/entendre les débats. Utiliser la commande "inseme live" documentée ailleurs.
+
+Désigner une ou plusieurs personnes "relai" qui devront se faire l'écho local des interventions distantes.
+
+Lorsque vient le moment de prendre une décision, utiliser la commande "inseme ? la question" pour fixer le libellé de la proposition soumise aux votes. Précéder éventuellement par la commande "inseme !" pour remettre les compteurs d'accord/pas d'accord à zéro.
+
+Noter les résultats dans le pad dans une section "compte rendu".
+
+Une fois la réunion terminée, finir la rédaction du compte rendu et le diffuser aux membres de l'assemblée. Annoncer à cette occasion la prochaine réunion.
+
+
+
 ### Misc
 
 Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoir des images animées pour chaque geste.
