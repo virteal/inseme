@@ -134,7 +134,7 @@ Associer un "pad" où trouver et compléter les informations au sujet de la proc
 
 Associer éventuellement un agenda pour informer les participants au sujet des réunions futures de l'assemblée. Utiliser la commande "inseme agenda nom" pour désigner un agenda hébergé sur openagenda.com ou bien "inseme agenda url" si l'agenda est hébergé ailleurs.
 
-Lorsque l'assemblèe se réunie, mettre en place le moyen de diffusion vidéo ou audio. Ceci afin que les participants distants puissent voir/entendre les débats. Utiliser la commande "inseme live" documentée ailleurs.
+Lorsque l'assemblée se réunie, mettre en place le moyen de diffusion vidéo ou audio. Ceci afin que les participants distants puissent voir/entendre les débats. Utiliser la commande "inseme live" documentée ailleurs.
 
 Désigner une ou plusieurs personnes "relai" qui devront se faire l'écho local des interventions distantes.
 
