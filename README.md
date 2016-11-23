@@ -145,6 +145,22 @@ Noter les résultats dans le pad dans une section "compte rendu".
 Une fois la réunion terminée, finir la rédaction du compte rendu et le diffuser aux membres de l'assemblée. Annoncer à cette occasion la prochaine réunion.
 
 
+### Présence sur Facebook
+
+Créer une page ou un groupe Facebook si ce n'est déjà fait.
+
+Poster une annonce lors des réunions, éventuellement associée à un événement à créer en plus.
+
+Utiliser la commande "inseme facebook url" afin d'afficher l'annonce sur la page de l'assemblée.
+
+Dans l'annoncer, créer autant de commentaires que de questions à l'ordre du jour ; compléter si des questions nouvelles surgissent durant la réunion.
+
+Durant la réunion, noter sous forme de réponse les résultats des votes sur les différents éléments de l'ordre du jour.
+
+Ajouter un commentaire final pour le compte rendu.
+
+Pour le "live", utiliser éventuellement Facebook aussi, voir "inseme live" et la documentation Facebook.
+
 
 ## Roadmap
 
