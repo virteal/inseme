@@ -122,7 +122,7 @@ Il y a un décalage temporel entre ce live et la réalité, de l'ordre de 10 sec
 
 Cet outil permet de créer des video conférences. Tapez "inseme live https://meet.jit.si/inseme" (remplacer "inseme", typiquement par le nom de l'assemblée).
 
-### Recettes
+## Recettes
 
 Inseme n'est qu'un outils, au service d'une participation accrue. Différentes manières de l'utiliser sont envisageables.
 
