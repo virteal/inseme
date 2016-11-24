@@ -2098,7 +2098,7 @@ Inseme.set_live = function( room_id, url, timestamp ){
             "https://livestream.com/" 
             + tmp
             + "/events/" + id
-            + "/player?width=640&height=360&autoPlay=true&mute=false"
+            + "/player?&autoPlay=true&mute=true"
           );
         }
       }
