@@ -93,12 +93,13 @@ A noter : dès que la personne revient et s'exprime, le logiciel cesse les copie
 
 ## Live
 
-Diverses sources de "live" sont possibles dont celles de periscope, youtube, facebook, bambuser.com (video) et mixlr.com (radio).
+Diverses sources de "live" sont possibles dont celles de periscope, youtube, facebook, livestream, bambuser.com (video) et mixlr.com (radio).
 
 Exemple :
 
 - inseme live https://www.periscope.tv/w/1ynJOmElDalKR
 - inseme live https://www.facebook.com/lenouvelobservateur/videos/10156868107940037/
+- inseme live https://livestream.com/accounts/4256572/events/2374488
 - inseme live https://embed.bambuser.com/broadcast/6209824
 - inseme live http://mixlr.com/radiodebout/
 - inseme live in http://nuitdebout.fr
@@ -121,6 +122,7 @@ Il y a un décalage temporel entre ce live et la réalité, de l'ordre de 10 sec
 ### jit.si
 
 Cet outil permet de créer des video conférences. Tapez "inseme live https://meet.jit.si/inseme" (remplacer "inseme", typiquement par le nom de l'assemblée).
+
 
 ## Recettes
 
@@ -202,6 +204,7 @@ Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoi
 - 17 novembre, version Suvranu, pour la Corse
 - 22 novembre, 'inseme facebook http:xxx' pour afficher un post
 - 23 novembre, les urls deviennent bookmarkable
+- 24 novembre, intégration des vidéos live de livestream
 
 ## Aspects techniques
 

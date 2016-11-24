@@ -2082,6 +2082,29 @@ Inseme.set_live = function( room_id, url, timestamp ){
       return;
     }
   }
+  
+  // Livesteam case
+  if( id && url.indexOf( "livestream.com" ) > 0 ){
+    // https://livestream.com/accounts/4256572/events/2374488
+    id = "" + ( parseInt( id, 10 ) || "" );
+    var idx = url.indexOf( ".com/" );
+    if( id && idx !== -1 ){
+      tmp = url.substring( idx + ".com/".length );
+      idx = tmp.indexOf( "/event" );
+      if( idx !== -1 ){
+        tmp = tmp.substring( 0, idx );
+        if( tmp ){
+          use_iframe( 
+            "https://livestream.com/" 
+            + tmp
+            + "/events/" + id
+            + "/player?width=640&height=360&autoPlay=true&mute=false"
+          );
+        }
+      }
+    }
+    return;
+  }
 
   // Use iframe if "http" starts the input
   if( url.indexOf( "http" ) === 0 ){
