@@ -205,6 +205,7 @@ Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoi
 - 22 novembre, 'inseme facebook http:xxx' pour afficher un post
 - 23 novembre, les urls deviennent bookmarkable
 - 24 novembre, intégration des vidéos live de livestream
+- 26 novembre, refonte de l'interface utilisateur
 
 ## Aspects techniques
 

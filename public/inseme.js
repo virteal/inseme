@@ -118,10 +118,10 @@ var Inseme = {
         html: '<i class="inseme_sprite inseme_sprite-silence"></i>',
       },
       
-      "help": {
+      /*"help": {
         text: "Aide",
         html: '<i class="material-icons">help</i>'
-      }
+      }*/
     }
   }
 
@@ -324,10 +324,10 @@ Inseme.connect = function( chatref, authdata ){
         function(){
           Inseme.refresh_display();
         },
-        1 // Enough time to process previous 'inseme' messages
+        300 // Enough time to process previous 'inseme' messages
       );
     },
-    1 // Enought time to reload previous chat messages
+    300 // Enought time to reload previous chat messages
   );
 };
 
@@ -629,7 +629,7 @@ Inseme.change_vote = function( vote ){
     Inseme.firechat._chat.sendMessage( 
       room.id,
       "inseme "
-      + ( user.is_anymous ? "" : user.provider + " " + user.provider_uid + " " )
+      + ( user.is_anonymous ? "" : user.provider + " " + user.provider_uid + " " )
       + ( Inseme.config.choices[ vote ].text || vote )
       + ( proxied_users.length
         ? " => " + proxied_users.join( "," )
@@ -872,23 +872,6 @@ Inseme.on_firechat_message_add = function( room_id, message ){
   // Skip not inseme related messages
   if( !is_command )return;
   
-  // Remove some messages after a while to improve signal/noise
-  var to_be_removed = true;
-  var delay = (3 * 1000) - age;
-  if( delay <= 0 || vote === "quiet" ){ delay = 1; }
-  setTimeout( 
-    function(){
-      if( !to_be_removed )return;
-      // chat/room-messages/room_id/msg_id
-      var msg_id = message.id;
-      // var ref = "room_messages/" + room_id + "/" + msg_id;
-      // var msg_ref = Inseme.chatRef.child( ref );
-      // msg_ref.remove();
-      Inseme.firechat.removeMessage( room_id, msg_id );
-    },
-    delay
-  );
-  
   // Never proxy a talking user
   delete Inseme.proxied_users[ user_name ];
   
@@ -923,6 +906,23 @@ Inseme.on_firechat_message_add = function( room_id, message ){
       found = true;
     });
   }
+  
+  // Remove some messages after a while to improve signal/noise
+  var to_be_removed = true;
+  var delay = (3 * 1000) - age;
+  if( delay <= 0 || vote === "quiet" ){ delay = 1; }
+  setTimeout( 
+    function(){
+      if( !to_be_removed )return;
+      // chat/room-messages/room_id/msg_id
+      var msg_id = message.id;
+      // var ref = "room_messages/" + room_id + "/" + msg_id;
+      // var msg_ref = Inseme.chatRef.child( ref );
+      // msg_ref.remove();
+      Inseme.firechat.removeMessage( room_id, msg_id );
+    },
+    delay
+  );
   
   // Handle special actions
   if( !found ){
@@ -1030,12 +1030,18 @@ Inseme.on_firechat_message_add = function( room_id, message ){
                 Inseme.interval = null;
               }
               $('#inseme_countdown').text( "" ).addClass( "hide" );
+              $('#inseme_action_countdown').text( "" ).addClass( "hide" );
               // Broadcast a "quiet" state
               // ToDo: avoid excessive "quiet" msg, signal/noise
               Inseme.change_vote();
               Inseme.refresh_display();
             }else{
               $('#inseme_countdown')
+              .text( Inseme.countdown )
+              .removeClass( Inseme.countdown >  5 ? "red-text" : "grey-text" )
+              .addClass(    Inseme.countdown <= 5 ? "red-text" : "grey-text" )
+              .removeClass( "hide" );
+              $('#inseme_action_countdown')
               .text( Inseme.countdown )
               .removeClass( Inseme.countdown >  5 ? "red-text" : "grey-text" )
               .addClass(    Inseme.countdown <= 5 ? "red-text" : "grey-text" )
@@ -1174,6 +1180,8 @@ Inseme.push_vote = function( room_id, name, user_id, vote, timestamp, proxy ){
 
 
 Inseme.refresh_display = function(){
+// This funtion is called every second and it redraw parts of the
+// display that change according to time and user actions.
   
   if( !Inseme.interval_refresh_display ){
     Inseme.interval_refresh_display 
@@ -1183,6 +1191,7 @@ Inseme.refresh_display = function(){
   var room = Inseme.room;
   var user = Inseme.user;
   
+  // Show/hide the action buttons
   if( !room ){
     $("#inseme_actions").addClass( "hide" );
   }else{
@@ -1193,7 +1202,7 @@ Inseme.refresh_display = function(){
   if( room 
   &&  user
   &&  room.votes_by_user_id[ user.id ]
-  &&  room.votes_by_user_id[ user.id ].state !== "quiet"
+  // &&  room.votes_by_user_id[ user.id ].state !== "quiet"
   ){
     $("#inseme_vote_button_quiet").removeClass( "hide" );
   }else{
@@ -1210,6 +1219,8 @@ Inseme.refresh_display = function(){
   if( idx !== -1 ){
     href = href.substring( 0, idx );
   }
+  
+  // ToDo: detect changes and use pushState()
   if( room ){
     href += "?" + room.name;
     window.history.replaceState( {}, room.name, href );
@@ -1261,6 +1272,7 @@ Inseme.user_link = function( n ){
 
 
 Inseme.get_short_results = function(){
+// Short results are a one liner with synthetic results.
   
   var room = Inseme.room;
   if( !room )return "";
@@ -1288,13 +1300,56 @@ Inseme.get_short_results = function(){
 
 
 Inseme.display_short_results = function(){
+  
   var room = Inseme.room;
+  
   $("#inseme_proposition_text").text( 
     room
     ? ( room.proposition || "Tapez inseme ? proposition" )
     : "Choisissez une assemblée d'abord"
   );
-  $("#inseme_proposition_results").html( Inseme.get_short_results() );
+  
+  if( !room ){
+    $("#inseme_proposition_results").html( "" );
+    return;
+  }
+  
+  var results = room.results;
+  var msg = "";
+  var orientation;
+  var count;
+  
+  for( orientation in results ){
+    
+    count = results[ orientation ].count;
+    
+    if( !count ){
+      $( "#inseme_proposition_result_" + orientation ).html( "" );
+      continue;
+    }
+    
+    var who_first = results[ orientation ].who_first;
+    
+    var tmp = "" + count;
+    if( count === 1 && who_first ){
+      tmp = "" + ( Inseme.user_link( who_first ) || count );
+    }
+    msg +=  " "
+    + Inseme.config.choices[ orientation ].text
+    + " " + tmp + ".";
+    
+    if( orientation !== "quiet" ){
+      if( who_first && who_first === Inseme.user.name && Inseme.countdown ){
+        tmp += '<div id="inseme_action_countdown">' 
+        + Inseme.countdown + '</div>';
+      }
+      $( "#inseme_proposition_result_" + orientation ).html( tmp );
+    }
+    
+  }
+  
+  $("#inseme_proposition_results").html( msg );
+  
 };
 
 
@@ -1479,6 +1534,10 @@ Inseme.display_long_results = function(){
     });
 
     msg += '<table id="inseme_results">';
+    
+    if( room.proposition ){
+      msg += "<tr><td colspan=2>" + room.proposition + "</td></tr>";
+    }
 
     orientations.forEach( function( orientation ){
       msg += "<tr><td>" 
@@ -2012,7 +2071,9 @@ Inseme.set_live = function( room_id, url, timestamp ){
   
   function use_iframe( url, height ){
     
+    // ToDo: compute aspect ratio to match 16/9?
     var frame_height = "600";
+    
     var frame_template = ""
     + '<iframe id="inseme_live_frame" '
     + ' src="SRC"'
@@ -2172,7 +2233,7 @@ Inseme.populate_vote_buttons = function(){
   
   var $vote_buttons = $("#inseme_vote_buttons");
   
-  var html = '<ul id="#inseme_vote_button_ul">';
+  var html = '<ul id="inseme_vote_button_ul">';
   //+ '<tr class="inseme_vote_button_tr">'
   
   Inseme.each_choice( function( c ){
@@ -2195,6 +2256,7 @@ Inseme.populate_vote_buttons = function(){
     + '>'
     + html_label
     + '</a>'
+    + '<div id="inseme_proposition_result_' + c + '"></div>'
     + '</li>'
     //+ '</tr>'
     ;
