@@ -126,13 +126,13 @@ Cet outil permet de créer des video conférences. Tapez "inseme live https://me
 
 ## Recettes
 
-Inseme n'est qu'un outils, au service d'une participation accrue. Différentes manières de l'utiliser sont envisageables.
+Inseme n'est qu'un outil, au service d'une participation accrue. Différentes manières de l'utiliser sont envisageables.
 
 ### Organiser une assemblée
 
 D'abord créer l'assemblée si ce n'est déjà fait. Il est parfois utile de créer des sous comités, des commissions, etc.
 
-Associer un "pad" où trouver et compléter les informations au sujet de la prochaine réunion. Par exemple, la date, le lieux, le thème, l'ordre du jour. Ceci s'effectue avec la commande 'inseme pad titre' où l'on indique le titre, par exemple en utilisant le nom de l'assemblée ou bien un titre plus spécifique comme le thème abordé. Utiliser la commande "inseme pad url" si le pad est hébergé ailleurs.
+Associer un "pad" où trouver et compléter les informations au sujet de la prochaine réunion. Par exemple, la date, le lieu, le thème, l'ordre du jour. Ceci s'effectue avec la commande 'inseme pad titre' où l'on indique le titre, par exemple en utilisant le nom de l'assemblée ou bien un titre plus spécifique comme le thème abordé. Utiliser la commande "inseme pad url" si le pad est hébergé ailleurs.
 
 Associer éventuellement un agenda pour informer les participants au sujet des réunions futures de l'assemblée. Utiliser la commande "inseme agenda nom" pour désigner un agenda hébergé sur openagenda.com ou bien "inseme agenda url" si l'agenda est hébergé ailleurs.
 
@@ -166,8 +166,6 @@ Pour le "live", utiliser éventuellement Facebook aussi, voir "inseme live" et l
 
 ## Roadmap
 
-Rendre bookmarkable l'assemblée en cours
-
 Renforcer la modération dans la mesure du nécessaire
 
 Transfer des délégations à l'occasion d'un 'bye'
@@ -175,8 +173,6 @@ Transfer des délégations à l'occasion d'un 'bye'
 Meilleure gestion des participants qui sont partis
 
 Pour faire des suggestions, merci de me contacter via github et/ou d'écrire dans le 'pad'.
-
-### Misc
 
 Pour mieux former les participants à la gestuelle d'intervention j'aimerai avoir des images animées pour chaque geste.
 
