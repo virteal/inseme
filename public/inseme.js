@@ -1440,9 +1440,19 @@ Inseme.display_long_results = function(){
     
     // Is there a vote from that user in the current room?
     if( !user || !user.is_there )return;
+    
     var votes_by_user_id = room.votes_by_user_id;
     var vote = votes_by_user_id[ user.id ]
     if( !vote )return;
+    
+    // Still there? Not if quiet for more than 24 hours
+    if( user.is_there && vote === "quiet" ){
+      if( now - user.timestamp > 24 * 60 * 60 * 1000 ){
+        // ToDo: Process user disconnect
+        user.is_there = false;
+        return;
+      }
+    }
     
     // Ignore vote if too old, ie before last reset
     if( room.reset_timestamp
