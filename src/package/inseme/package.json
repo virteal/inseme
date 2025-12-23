@@ -1,0 +1,30 @@
+{
+    "name": "@inseme/core",
+    "version": "1.0.0",
+    "description": "Direct and Liquid Democracy Assembly Room Components",
+    "main": "index.jsx",
+    "module": "index.jsx",
+    "dependencies": {
+        "lucide-react": "^0.294.0",
+        "react-markdown": "^9.0.1",
+        "remark-gfm": "^4.0.0"
+    },
+    "peerDependencies": {
+        "react": ">=18.0.0",
+        "react-dom": ">=18.0.0",
+        "@supabase/supabase-js": ">=2.0.0",
+        "@jitsi/react-sdk": ">=1.0.0"
+    },
+    "keywords": [
+        "democracy",
+        "liquid-democracy",
+        "assembly",
+        "voting",
+        "realtime",
+        "supabase",
+        "ai",
+        "mediation"
+    ],
+    "author": "Jean Hugues Noël Robert",
+    "license": "MIT"
+}
