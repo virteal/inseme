@@ -22,7 +22,20 @@ Inseme permet aux participants distants de :
 - **Backend Realtime** : [Supabase](https://supabase.com/) (PostgreSQL, Realtime, Auth)
 - **AI Agent** : OpenAI GPT-4o & TTS-1 orchestrés via **Netlify Edge Functions** (Deno).
 - **Media** : [Jitsi Meet SDK](https://jitsi.org/) pour la vidéo temps réel.
+- **Stockage SaaS** : Cloudflare R2 (compatible S3) pour l'archivage volumineux, avec fallback Supabase Storage.
 - **Documentation** : [Configuration d'Ophélia](./docs/ophelia.md)
+
+---
+
+## ☁️ Déploiement SaaS & Stockage R2
+
+Inseme supporte désormais une architecture SaaS multi-tenant avec stockage hybride :
+
+1. **Dashboard SaaS** : Gérez vos propres assemblées, configurez Ophélia et accédez à vos archives.
+2. **Cloudflare R2** : Utilisé pour les enregistrements vocaux et les archives de session. 
+   - Configurez `VITE_USE_R2=true` dans votre `.env`.
+   - Les fichiers sont automatiquement synchronisés via les Edge Functions Netlify.
+3. **Trigger Invité** : Un système robuste de gestion des profils (public.users) gère automatiquement les identités des invités et des IA.
 
 ---
 

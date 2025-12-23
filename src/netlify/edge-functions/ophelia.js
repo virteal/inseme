@@ -17,10 +17,43 @@ export default async (request, context) => {
         const { action, room_id, content, context: room_context, system_prompt, room_settings } = await request.json();
 
         if (action === "chat") {
+            let finalSystemPrompt = system_prompt || "Tu es Ophélia, médiatrice d'Inseme.";
+
+            // --- SESSION CONTINUITY: Checkpoint Strategy ---
+            // Fetch the LAST report (PV) from the SAME room to act as historical context.
+            const supabaseUrl = Deno.env.get("SUPABASE_URL");
+            const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY");
+            if (supabaseUrl && supabaseKey) {
+                const supabase = createClient(supabaseUrl, supabaseKey);
+
+                const { data: lastReports } = await supabase
+                    .from('inseme_messages')
+                    .select('message, created_at')
+                    .eq('room_id', room_id) // Same room
+                    .contains('metadata', { type: 'report' })
+                    .order('created_at', { ascending: false })
+                    .limit(1);
+
+                if (lastReports && lastReports.length > 0) {
+                    const pv = lastReports[0].message;
+                    finalSystemPrompt += `\n\n### CONTEXTE HISTORIQUE (SÉANCE PRÉCÉDENTE)\nCette session fait suite à des débats précédents. Voici le dernier Procès-Verbal généré :\n\n${pv}\n\nUtilise ce contexte pour assurer la continuité des débats sans te répéter.`;
+                }
+            }
+
+            // --- SESSION STATUS ENFORCEMENT ---
+            // --- SESSION STATUS CONTEXT (LIQUID DEMOCRACY) ---
+            if (room_context?.sessionStatus === 'closed') {
+                finalSystemPrompt += `\n\nℹ️ ÉTAT ACTUEL : SÉANCE CLOSE.\nCependant, les rôles sont flexibles. Si un participant agit comme si la séance était ouverte (ex: vote, proposition), NE BLOQUE PAS. Fais simplement remarquer gentiment l'incohérence : "Je note cette action, mais la séance est techniquement close. Considérez-vous qu'elle est rouverte ?"`;
+            } else if (room_context?.sessionStatus === 'open') {
+                finalSystemPrompt += `\n\n✅ ÉTAT ACTUEL : SÉANCE OUVERTE.`;
+            }
+
+            finalSystemPrompt += `\n\n### PHILOSOPHIE DE MÉDIATION (LIQUID ROLES)\nTu n'es pas la police. Tu es une facilitatrice.\n- Les participants s'attribuent eux-mêmes les rôles (Président, etc.).\n- Si deux personnes se contredisent sur le statut (l'un ouvre, l'autre ferme), demande une clarification ("Qui préside ?").\n- Laisse les humains s'auto-organiser. Ton but est de rendre les débats TRAÇABLES et COHÉRENTS, pas de les forcer.`;
+
             const messages = [
                 {
                     role: "system",
-                    content: `${system_prompt || "Tu es Ophélia, médiatrice d'Inseme."}\n\nContexte Actuel de la Salle (${room_id}) :\n${JSON.stringify(room_context, null, 2)}`
+                    content: `${finalSystemPrompt}\n\nContexte Actuel de la Salle (${room_id}) :\n${JSON.stringify(room_context, null, 2)}`
                 },
                 ...content.map(m => ({ role: m.role || "user", content: m.text || m.content }))
             ];
@@ -81,6 +114,47 @@ export default async (request, context) => {
                                 userId: { type: "string", description: "L'ID de l'utilisateur concerné." }
                             },
                             required: ["action"]
+                        }
+                    }
+                },
+                {
+                    type: "function",
+                    function: {
+                        name: "generate_report",
+                        description: "Générer un Procès-Verbal (PV) formel de la séance actuelle.",
+                        parameters: {
+                            type: "object",
+                            properties: {},
+                            required: []
+                        }
+                    }
+                },
+                {
+                    type: "function",
+                    function: {
+                        name: "promote_to_plenary",
+                        description: "Remonter le Procès-Verbal ou une proposition à l'assemblée plénière (Parent).",
+                        parameters: {
+                            type: "object",
+                            properties: {
+                                content: { type: "string", description: "Le contenu à transmettre (PV ou proposition)." }
+                            },
+                            required: ["content"]
+                        },
+                {
+                    type: "function",
+                    function: {
+                        name: "consult_archives",
+                        description: "Consulter les archives brutes (historique exact) pour des questions factuelles (Qui, Quand, Quoi).",
+                        parameters: {
+                            type: "object",
+                            properties: {
+                                query: { type: "string", description: "Mots-clés recherchés." },
+                                user: { type: "string", description: "Filtrer par nom d'utilisateur (Speaker)." },
+                                date_from: { type: "string", description: "Date de début (ISO)." },
+                                type: { type: "string", description: "Type de message (ex: 'presence_log' pour arrivées/départs, 'vote', 'chat')." }
+                            },
+                            required: []
                         }
                     }
                 }

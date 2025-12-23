@@ -11,3 +11,19 @@
 [[edge_functions]]
   path = "/api/ophelia"
   function = "ophelia"
+
+[[edge_functions]]
+  path = "/api/transcribe"
+  function = "transcribe"
+
+[[edge_functions]]
+  path = "/api/report"
+  function = "report"
+
+[[edge_functions]]
+  path = "/api/translate"
+  function = "translate"
+
+[[edge_functions]]
+  path = "/api/vector-search"
+  function = "vector-search"

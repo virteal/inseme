@@ -1,5 +1,7 @@
+// src/components/SaaS/LandingPage.jsx
+
 import React, { useState } from 'react';
-import { submitLead } from '../lib/leads';
+import { submitLead } from '../../lib/leads';
 import { ArrowRight, Bot, Users, Vote, Shield, MessageSquare, Sparkles } from 'lucide-react';
 
 export function LandingPage({ onLogin }) {
@@ -41,47 +43,47 @@ export function LandingPage({ onLogin }) {
                 <div className="absolute bottom-0 left-0 w-[700px] h-[700px] bg-rose-600/5 blur-[180px] -z-10 rounded-full"></div>
 
                 <div className="max-w-5xl mx-auto text-center space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-xs font-bold tracking-widest uppercase">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-rose-500/10 border border-rose-500/20 rounded-full text-rose-300 text-xs font-bold tracking-widest uppercase">
                         <Sparkles className="w-3 h-3" />
-                        Démocratie Liquide v3.0
+                        Démocratie Organique v3.0
                     </div>
 
                     <h1 className="text-7xl md:text-9xl font-black tracking-tighter leading-[0.8] text-white">
-                        L’ASSEMBLÉE<br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-indigo-600">AUGMENTÉE.</span>
+                        L’AGORA<br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-300 to-indigo-400">VIVANTE.</span>
                     </h1>
 
                     <p className="text-xl md:text-2xl text-white/50 max-w-2xl mx-auto font-medium leading-relaxed">
-                        Inseme transforme vos débats en décisions collectives fluides, propulsées par une IA médiatrice et le vote liquide.
+                        Redonnez le pouvoir aux humains. Une assemblée sans bureaucratie, guidée par une IA médiatrice qui observe, conseille, mais ne commande jamais.
                     </p>
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-8">
                         <button
                             onClick={onLogin}
-                            className="w-full md:w-auto px-10 py-5 bg-white text-black text-lg font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-indigo-50 transition-all active:scale-95 shadow-2xl shadow-white/10"
+                            className="w-full md:w-auto px-10 py-5 bg-white text-black text-lg font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-rose-50 transition-all active:scale-95 shadow-2xl shadow-white/10"
                         >
-                            DÉCOUVRIR L'ASSEMBLÉE
+                            ENTRER DANS L'AGORA
                             <ArrowRight className="w-5 h-5" />
                         </button>
 
                         <div className="w-full md:w-auto group">
-                            <form onSubmit={handleSubmit} className="flex gap-2 p-1.5 bg-white/5 border border-white/10 rounded-2xl focus-within:ring-2 focus-within:ring-indigo-500/50 transition-all">
+                            <form onSubmit={handleSubmit} className="flex gap-2 p-1.5 bg-white/5 border border-white/10 rounded-2xl focus-within:ring-2 focus-within:ring-rose-500/50 transition-all">
                                 <input
                                     type="email"
                                     required
-                                    placeholder="Lancez votre propre instance..."
+                                    placeholder="Créez votre espace..."
                                     value={email}
                                     onChange={e => setEmail(e.target.value)}
                                     className="bg-transparent px-4 py-3 outline-none w-full md:w-64 text-sm font-medium"
                                 />
                                 <button
                                     disabled={isSubmitting || isSuccess}
-                                    className="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 disabled:bg-white/10 disabled:text-white/40 text-white rounded-xl font-bold transition-all text-sm whitespace-nowrap"
+                                    className="px-6 py-3 bg-rose-600 hover:bg-rose-700 disabled:bg-white/10 disabled:text-white/40 text-white rounded-xl font-bold transition-all text-sm whitespace-nowrap"
                                 >
-                                    {isSuccess ? 'REÇU !' : (isSubmitting ? '...' : 'DEMANDER L\'ESSAI')}
+                                    {isSuccess ? 'REÇU !' : (isSubmitting ? '...' : 'CRÉER')}
                                 </button>
                             </form>
-                            {isSuccess && <p className="text-[10px] text-indigo-400 font-bold mt-2 uppercase tracking-widest text-center">On vous recontacte très vite.</p>}
+                            {isSuccess && <p className="text-[10px] text-rose-400 font-bold mt-2 uppercase tracking-widest text-center">On vous recontacte très vite.</p>}
                         </div>
                     </div>
                 </div>
@@ -90,25 +92,31 @@ export function LandingPage({ onLogin }) {
             {/* Features Preview */}
             <div className="max-w-7xl mx-auto px-8 py-40 grid grid-cols-1 md:grid-cols-3 gap-12">
                 <div className="space-y-6 group">
-                    <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-center group-hover:border-indigo-500/50 group-hover:bg-indigo-500/10 transition-all duration-500">
-                        <Bot className="w-8 h-8 text-indigo-400" />
+                    <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-center group-hover:border-rose-500/50 group-hover:bg-rose-500/10 transition-all duration-500">
+                        <Bot className="w-8 h-8 text-rose-300" />
                     </div>
-                    <h3 className="text-2xl font-black tracking-tight">Ophélia AI</h3>
-                    <p className="text-white/40 leading-relaxed font-medium">Une IA médiatrice qui gère la file d'attente, résume les débats et facilite le consensus en temps réel.</p>
+                    <h3 className="text-2xl font-black tracking-tight">Ophélia Médiatrice</h3>
+                    <p className="text-white/40 leading-relaxed font-medium">
+                        Ni police, ni juge. Ophélia facilite les débats, détecte les conflits et documente l'histoire. Elle rationalise vos échanges sans jamais imposer sa loi.
+                    </p>
                 </div>
                 <div className="space-y-6 group">
-                    <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-center group-hover:border-indigo-500/50 group-hover:bg-indigo-500/10 transition-all duration-500">
-                        <Vote className="w-8 h-8 text-indigo-400" />
+                    <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-center group-hover:border-rose-500/50 group-hover:bg-rose-500/10 transition-all duration-500">
+                        <Users className="w-8 h-8 text-rose-300" />
                     </div>
-                    <h3 className="text-2xl font-black tracking-tight">Vote Liquide</h3>
-                    <p className="text-white/40 leading-relaxed font-medium">La puissance de la démocratie déléguée. Transférez votre voix à des experts thématiques en un clic.</p>
+                    <h3 className="text-2xl font-black tracking-tight">Rôles Liquides</h3>
+                    <p className="text-white/40 leading-relaxed font-medium">
+                        Oubliez les permissions rigides. Chacun peut ouvrir la séance ou proposer un vote. Le système s'adapte à votre confiance, du Conseil Municipal à la réunion de quartier.
+                    </p>
                 </div>
                 <div className="space-y-6 group">
-                    <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-center group-hover:border-indigo-500/50 group-hover:bg-indigo-500/10 transition-all duration-500">
-                        <Shield className="w-8 h-8 text-indigo-400" />
+                    <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-center group-hover:border-rose-500/50 group-hover:bg-rose-500/10 transition-all duration-500">
+                        <MessageSquare className="w-8 h-8 text-rose-300" />
                     </div>
-                    <h3 className="text-2xl font-black tracking-tight">Souveraineté SaaS</h3>
-                    <p className="text-white/40 leading-relaxed font-medium">Instance dédiée ou plateforme partagée. Gardez le contrôle total sur vos données et votre agora.</p>
+                    <h3 className="text-2xl font-black tracking-tight">Mémoire Vivante</h3>
+                    <p className="text-white/40 leading-relaxed font-medium">
+                        Tout est archivé, rien n'est perdu. Reprenez une séance exactement là où elle s'est arrêtée, avec un contexte parfait et des décisions traçables.
+                    </p>
                 </div>
             </div>
 

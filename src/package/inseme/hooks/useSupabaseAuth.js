@@ -1,3 +1,5 @@
+// src/package/inseme/hooks/useSupabaseAuth.js
+
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabaseClient'
 

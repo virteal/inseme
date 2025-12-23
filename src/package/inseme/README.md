@@ -1,15 +1,23 @@
 # @inseme/core
 
-**Inseme Core** is a suite of React components and hooks for direct and liquid democracy. It provides a real-time assembly room with AI-powered mediation, video conferencing integration, and advanced voting mechanisms.
+**Inseme Core** is the "Organic Assembly" protocol. It provides a real-time democratic space where roles are performed, not assigned.
+
+Designed for **Liquid Democracy**, it replaces rigid permissions with AI-assisted mediation, allowing any group—from Municipal Councils to Co-ownerships—to self-organize, debate, and trace decisions without bureaucracy.
+
+## Philosophy
+
+- **Human-First**: No hard-coded permissions. Anyone can open a session. The group decides legitimacy.
+- **AI as Mirror**: Ophélia (the AI) observes, validates coherence, and archives history, but never commands.
+- **Traceability**: Every action (Vote, Speech, Presence) is logged to build an unalterable history ("The Living Record").
 
 ## Features
 
 - **InsemeRoom**: A full-featured assembly room component.
-- **AI Mediation (Ophélia)**: Proactive, voice-enabled AI mediator (OpenAI GPT-4o & TTS).
+- **Liquid Roles**: Conflict detection instead of permission denial.
+- **AI Oracle (Ophélia)**: Can answer "Who was here yesterday?" or "What was the decision on X?".
+- **Deep History**: Full-text search on raw logs + Official Report generation.
 - **Video Conferencing**: Native Jitsi Meet integration.
-- **Liquid Democracy**: Dynamic vote delegation (`bye` command).
-- **Real-time Synchronization**: Powered by Supabase.
-- **Markdown Support**: Rich text for chat and propositions.
+- **Liquid Voting**: Dynamic vote delegation (`bye` command).
 
 ## Installation
 
@@ -47,6 +55,7 @@ function App() {
 Detailed documentation is available in the `docs/` folder:
 - [Packaging & Integration](./docs/packaging.md)
 - [Ophélia Configuration](./docs/ophelia.md)
+- [SaaS & R2 Deployment](./docs/saas-deployment.md)
 
 ## License
 

@@ -1,16 +1,24 @@
+// src/components/SaaS/SaaSDashboard.jsx
+
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Plus, Settings, Play, Trash2, Bot, Layout, Globe, ArrowLeft, Save, Sparkles } from 'lucide-react';
+import { Plus, Settings, Play, Trash2, Bot, Layout, Globe, ArrowLeft, Save, Sparkles, Users, CheckCircle2, Loader2 } from 'lucide-react';
 
 export function SaaSDashboard({ user, onSelectRoom }) {
     const [rooms, setRooms] = useState([]);
+    const [participatedRooms, setParticipatedRooms] = useState([]);
     const [view, setView] = useState('list'); // 'list', 'edit'
     const [isCreating, setIsCreating] = useState(false);
+    const [isJoining, setIsJoining] = useState(false);
+    const [joinSlug, setJoinSlug] = useState('');
     const [newRoom, setNewRoom] = useState({ name: '', slug: '' });
     const [editingRoom, setEditingRoom] = useState(null);
 
     useEffect(() => {
-        fetchRooms();
+        if (user) {
+            fetchRooms();
+            fetchParticipatedRooms();
+        }
     }, [user]);
 
     const fetchRooms = async () => {
@@ -23,29 +31,133 @@ export function SaaSDashboard({ user, onSelectRoom }) {
         if (!error) setRooms(data);
     };
 
+    const fetchParticipatedRooms = async () => {
+        // Find rooms where user has sent messages, but doesn't own
+        const { data: messages, error: msgError } = await supabase
+            .from('inseme_messages')
+            .select('room_id')
+            .eq('user_id', user.id)
+            .limit(100);
+
+        if (msgError || !messages) return;
+
+        const roomIds = [...new Set(messages.map(m => m.room_id))];
+        if (roomIds.length === 0) return;
+
+        const { data: foundRooms, error: roomsError } = await supabase
+            .from('inseme_rooms')
+            .select('*')
+            .in('slug', roomIds.filter(id => typeof id === 'string')) // Filter out UUIDs if stored as such
+            .not('owner_id', 'eq', user.id);
+
+        if (!roomsError && foundRooms) {
+            setParticipatedRooms(foundRooms);
+        }
+    };
+
+    const handleJoin = async (e) => {
+        e.preventDefault();
+        const slug = joinSlug.trim().toLowerCase();
+        if (!slug) return;
+
+        setIsJoining(true);
+        try {
+            // Check if room exists
+            const { data, error } = await supabase
+                .from('inseme_rooms')
+                .select('slug')
+                .eq('slug', slug)
+                .maybeSingle();
+
+            if (error) throw error;
+
+            if (data) {
+                onSelectRoom(slug);
+            } else {
+                alert(`La salle "${slug}" n'existe pas.`);
+            }
+        } catch (err) {
+            console.error('Error joining room:', err);
+            alert("Erreur lors de la vérification de la salle.");
+        } finally {
+            setIsJoining(false);
+        }
+    };
+
     const handleCreate = async (e) => {
         e.preventDefault();
+        
+        // 1. Sanitize base slug
+        let baseSlug = newRoom.slug || newRoom.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        if (!baseSlug) baseSlug = 'salle';
+
+        // 2. Check if user already owns a room with the exact same name
+        const { data: nameMatch } = await supabase
+            .from('inseme_rooms')
+            .select('slug, name')
+            .eq('owner_id', user.id)
+            .eq('name', newRoom.name.trim())
+            .maybeSingle();
+        
+        if (nameMatch) {
+            const proceed = window.confirm(`Vous possédez déjà une assemblée nommée "${nameMatch.name}". \n\nVoulez-vous en créer une nouvelle (avec un identifiant différent) ou rejoindre l'existante ?\n\n[OK] Créer une nouvelle\n[Annuler] Rejoindre l'existante`);
+            if (!proceed) {
+                onSelectRoom(nameMatch.slug);
+                setIsCreating(false);
+                return;
+            }
+        }
+
+        // 3. Find a unique slug (auto-increment if collision)
+        let slug = baseSlug;
+        let counter = 0;
+        let isUnique = false;
+
+        while (!isUnique) {
+            const { data: existing } = await supabase
+                .from('inseme_rooms')
+                .select('id')
+                .eq('slug', slug)
+                .maybeSingle();
+            
+            if (!existing) {
+                isUnique = true;
+            } else {
+                counter++;
+                slug = `${baseSlug}-${counter}`;
+            }
+        }
+
+        // 4. Create the room
         const { data, error } = await supabase
             .from('inseme_rooms')
             .insert([{
-                name: newRoom.name,
-                slug: newRoom.slug || newRoom.name.toLowerCase().replace(/\s+/g, '-'),
+                name: newRoom.name.trim(),
+                slug: slug,
                 owner_id: user.id,
                 settings: {
                     ophelia: {
                         voice: 'nova',
-                        prompt: 'Tu es Ophélia, une médiatrice experte...'
+                        prompt: 'Tu es Ophélia, une médiatrice experte. Ton rôle est de faciliter les échanges, de résumer les débats et de veiller au respect du protocole Inseme.'
                     }
                 }
             }])
             .select();
 
-        if (!error) {
-            setRooms([data[0], ...rooms]);
-            setIsCreating(false);
-            setNewRoom({ name: '', slug: '' });
-        } else {
-            alert("Erreur lors de la création de la salle: " + error.message);
+        if (!error && data) {
+                setRooms([data[0], ...rooms]);
+                setIsCreating(false);
+                setNewRoom({ name: '', slug: '' });
+                
+                // Redirect immediately to the new room
+                onSelectRoom(slug);
+                
+                // Optional: notify user if slug was changed
+                if (slug !== baseSlug) {
+                    alert(`Note : L'identifiant "${baseSlug}" était déjà pris. Votre salle a été créée avec l'identifiant "${slug}".`);
+                }
+            } else {
+            alert("Erreur lors de la création de la salle : " + (error?.message || "Erreur inconnue"));
         }
     };
 
@@ -100,6 +212,40 @@ export function SaaSDashboard({ user, onSelectRoom }) {
                                         onChange={e => setEditingRoom({ ...editingRoom, name: e.target.value })}
                                         className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all"
                                     />
+                                </div>
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] px-1">Salle Parente (Plénière)</label>
+                                    <input
+                                        type="text"
+                                        value={editingRoom.settings?.parent_slug || ''}
+                                        onChange={e => setEditingRoom({
+                                            ...editingRoom,
+                                            settings: {
+                                                ...editingRoom.settings,
+                                                parent_slug: e.target.value
+                                            }
+                                        })}
+                                        placeholder="ex: assemblee-generale (laisser vide si racine)"
+                                        className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all"
+                                    />
+                                    <p className="text-[9px] text-white/20 italic">Définir un parent transforme cette salle en Commission. Les PV pourront être remontés à la plénière.</p>
+                                </div>
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] px-1">Bucket de Documents (Stockage)</label>
+                                    <input
+                                        type="text"
+                                        value={editingRoom.settings?.storage_bucket || 'public-documents'}
+                                        onChange={e => setEditingRoom({
+                                            ...editingRoom,
+                                            settings: {
+                                                ...editingRoom.settings,
+                                                storage_bucket: e.target.value
+                                            }
+                                        })}
+                                        placeholder="ex: public-documents"
+                                        className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all font-mono text-sm"
+                                    />
+                                    <p className="text-[9px] text-white/20 italic">Nom du bucket Supabase pour l'archivage des PV (défaut: public-documents).</p>
                                 </div>
                             </div>
 
@@ -177,13 +323,32 @@ export function SaaSDashboard({ user, onSelectRoom }) {
                     <h1 className="text-4xl font-black text-white tracking-tighter mb-2">Mon Hub <span className="text-indigo-500">Inseme</span></h1>
                     <p className="text-white/40 font-bold uppercase tracking-widest text-[10px]">Gestion SaaS des Assemblées</p>
                 </div>
-                <button
-                    onClick={() => setIsCreating(true)}
-                    className="flex items-center gap-2 px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-2xl font-bold transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
-                >
-                    <Plus className="w-5 h-5" />
-                    NOUVELLE SALLE
-                </button>
+                <div className="flex items-center gap-4">
+                    <form onSubmit={handleJoin} className="relative group">
+                        <input
+                            type="text"
+                            disabled={isJoining}
+                            value={joinSlug}
+                            onChange={e => setJoinSlug(e.target.value)}
+                            placeholder="Rejoindre un ID..."
+                            className="bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-sm text-white focus:ring-2 focus:ring-indigo-500/50 outline-none w-48 focus:w-64 transition-all disabled:opacity-50"
+                        />
+                        <button 
+                            type="submit" 
+                            disabled={isJoining}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-white/20 group-hover:text-white transition-colors disabled:opacity-50"
+                        >
+                            {isJoining ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
+                        </button>
+                    </form>
+                    <button
+                        onClick={() => setIsCreating(true)}
+                        className="flex items-center gap-2 px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-2xl font-bold transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
+                    >
+                        <Plus className="w-5 h-5" />
+                        NOUVELLE SALLE
+                    </button>
+                </div>
             </div>
 
             {/* Creation Modal/Form */}
@@ -231,73 +396,116 @@ export function SaaSDashboard({ user, onSelectRoom }) {
             )}
 
             {/* Rooms Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {rooms.map(room => (
-                    <div key={room.id} className="bg-neutral-900/40 border border-white/5 hover:border-indigo-500/30 rounded-3xl p-6 transition-all group relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500 opacity-20 group-hover:opacity-100 transition-opacity"></div>
-
-                        <div className="flex justify-between items-start mb-6">
-                            <div className="p-3 bg-white/5 rounded-2xl">
-                                <Globe className="w-5 h-5 text-indigo-400" />
-                            </div>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => { setEditingRoom(room); setView('edit'); }}
-                                    className="p-2 text-white/20 hover:text-white/60 transition-colors"
-                                >
-                                    <Settings className="w-4 h-4" />
-                                </button>
-                                <button
-                                    onClick={async () => {
-                                        if (confirm("Supprimer cette salle ? Toutes les données seront perdues.")) {
-                                            const { error } = await supabase.from('inseme_rooms').delete().eq('id', room.id);
-                                            if (!error) setRooms(rooms.filter(r => r.id !== room.id));
-                                        }
-                                    }}
-                                    className="p-2 text-white/20 hover:text-rose-500 transition-colors"
-                                >
-                                    <Trash2 className="w-4 h-4" />
-                                </button>
-                            </div>
-                        </div>
-
-                        <h3 className="text-xl font-bold text-white mb-2">{room.name}</h3>
-                        <p className="text-xs text-white/30 font-mono mb-8">/{room.slug}</p>
-
-                        <div className="flex items-center gap-4 py-4 border-t border-white/5 mb-6">
-                            <div className="flex items-center gap-2">
-                                <Bot className="w-3 h-3 text-indigo-400" />
-                                <span className="text-[10px] font-bold text-white/60 uppercase">Ophélia Active</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Layout className="w-3 h-3 text-white/30" />
-                                <span className="text-[10px] font-bold text-white/60 uppercase">Standard UI</span>
-                            </div>
-                        </div>
-
-                        <button
-                            onClick={() => onSelectRoom(room.slug)}
-                            className="w-full flex items-center justify-center gap-2 py-4 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 rounded-2xl font-bold transition-all border border-indigo-500/20 active:scale-95"
-                        >
-                            <Play className="w-4 h-4" />
-                            REJOINDRE
-                        </button>
+            <div className="space-y-12">
+                {/* Owned Rooms */}
+                <section>
+                    <div className="flex items-center gap-3 mb-6">
+                        <Layout className="w-5 h-5 text-indigo-400" />
+                        <h2 className="text-sm font-black text-white/40 uppercase tracking-widest">Mes Assemblées</h2>
                     </div>
-                ))}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {rooms.map(room => (
+                            <RoomCard 
+                                key={room.id} 
+                                room={room} 
+                                onSelect={onSelectRoom} 
+                                onEdit={(r) => { setEditingRoom(r); setView('edit'); }}
+                                onDelete={async (id) => {
+                                    if (confirm("Supprimer cette salle ? Toutes les données seront perdues.")) {
+                                        const { error } = await supabase.from('inseme_rooms').delete().eq('id', id);
+                                        if (!error) setRooms(rooms.filter(r => r.id !== id));
+                                    }
+                                }}
+                                isOwner={true}
+                            />
+                        ))}
+                        {rooms.length === 0 && !isCreating && (
+                            <div className="col-span-full py-12 border-2 border-dashed border-white/5 rounded-3xl flex flex-col items-center justify-center text-white/20">
+                                <p className="font-bold uppercase tracking-widest text-[10px]">Aucune salle créée</p>
+                            </div>
+                        )}
+                    </div>
+                </section>
 
-                {rooms.length === 0 && !isCreating && (
-                    <div className="col-span-full py-20 border-2 border-dashed border-white/5 rounded-3xl flex flex-col items-center justify-center text-white/20 space-y-4">
-                        <Plus className="w-12 h-12 opacity-10" />
-                        <p className="font-bold uppercase tracking-widest text-sm">Aucune salle active</p>
+                {/* Participated Rooms */}
+                <section>
+                    <div className="flex items-center gap-3 mb-6">
+                        <Users className="w-5 h-5 text-indigo-400" />
+                        <h2 className="text-sm font-black text-white/40 uppercase tracking-widest">Assemblées rejointes</h2>
+                    </div>
+                    {participatedRooms.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {participatedRooms.map(room => (
+                                <RoomCard 
+                                    key={room.id} 
+                                    room={room} 
+                                    onSelect={onSelectRoom}
+                                    isOwner={false}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="py-12 border-2 border-dashed border-white/5 rounded-3xl flex flex-col items-center justify-center text-white/20">
+                            <p className="font-bold uppercase tracking-widest text-[10px]">Aucune assemblée rejointe récemment</p>
+                            <p className="text-[9px] mt-2 italic opacity-50">Participez à des débats pour les voir apparaître ici.</p>
+                        </div>
+                    )}
+                </section>
+            </div>
+        </div>
+    );
+}
+
+function RoomCard({ room, onSelect, onEdit, onDelete, isOwner }) {
+    return (
+        <div className="bg-neutral-900/40 border border-white/5 hover:border-indigo-500/30 rounded-3xl p-6 transition-all group relative overflow-hidden">
+            <div className={`absolute top-0 left-0 w-1 h-full transition-opacity ${isOwner ? 'bg-indigo-500 opacity-20 group-hover:opacity-100' : 'bg-emerald-500 opacity-10 group-hover:opacity-50'}`}></div>
+
+            <div className="flex justify-between items-start mb-6">
+                <div className="p-3 bg-white/5 rounded-2xl">
+                    <Globe className="w-5 h-5 text-indigo-400" />
+                </div>
+                {isOwner && (
+                    <div className="flex gap-2">
                         <button
-                            onClick={() => setIsCreating(true)}
-                            className="text-xs text-indigo-400/60 hover:text-indigo-400 underline transition-colors"
+                            onClick={() => onEdit(room)}
+                            className="p-2 text-white/20 hover:text-white/60 transition-colors"
                         >
-                            Créez votre première assemblée maintenant
+                            <Settings className="w-4 h-4" />
+                        </button>
+                        <button
+                            onClick={() => onDelete(room.id)}
+                            className="p-2 text-white/20 hover:text-rose-500 transition-colors"
+                        >
+                            <Trash2 className="w-4 h-4" />
                         </button>
                     </div>
                 )}
             </div>
+
+            <h3 className="text-xl font-bold text-white mb-2">{room.name}</h3>
+            <p className="text-xs text-white/30 font-mono mb-8">/{room.slug}</p>
+
+            <div className="flex items-center gap-4 py-4 border-t border-white/5 mb-6">
+                <div className="flex items-center gap-2">
+                    <Bot className="w-3 h-3 text-indigo-400" />
+                    <span className="text-[10px] font-bold text-white/60 uppercase">Ophélia Active</span>
+                </div>
+                {!isOwner && (
+                    <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                        <span className="text-[10px] font-bold text-white/60 uppercase">Membre</span>
+                    </div>
+                )}
+            </div>
+
+            <button
+                onClick={() => onSelect(room.slug)}
+                className="w-full flex items-center justify-center gap-2 py-4 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 rounded-2xl font-bold transition-all border border-indigo-500/20 active:scale-95"
+            >
+                <Play className="w-4 h-4" />
+                REJOINDRE
+            </button>
         </div>
     );
 }

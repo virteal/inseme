@@ -72,9 +72,43 @@ function CustomUI() {
 | `user` | `object` | Objet utilisateur Supabase. |
 | `supabase` | `object` | Instance du client Supabase. |
 | `config` | `object` | Configuration Jitsi, Ophélia, etc. |
+| `config.profileTable` | `string` | Nom de la table de profils (défaut: `users`). |
 | `slots` | `object` | Overrides de composants UI. |
 
-## 5. Dépendances de Style
+## 5. Adaptation du Schéma Database
+
+Inseme s'adapte à votre infrastructure existante. Par défaut, il s'attend à ce que les profils utilisateurs soient dans une table nommée `users`. Si votre application utilise une table `profiles`, configurez-la ainsi :
+
+```jsx
+<InsemeRoom 
+  roomName="MaSalle"
+  config={{
+    profileTable: 'profiles'
+  }}
+/>
+```
+
+### Identité d'Ophélia (AI)
+Pour qu'Ophélia puisse exister et être tracée dans vos archives, vous devez insérer son identité dans votre table de profils. Voici un exemple de migration SQL :
+
+```sql
+-- 1. Autoriser le rôle 'ai' si vous avez une contrainte de rôle
+ALTER TABLE public.profiles DROP CONSTRAINT IF EXISTS profiles_role_check;
+ALTER TABLE public.profiles ADD CONSTRAINT profiles_role_check 
+CHECK (role = ANY (ARRAY['user', 'moderator', 'admin', 'ai']));
+
+-- 2. Insérer l'identité fixe d'Ophélia
+INSERT INTO public.profiles (id, display_name, role, avatar_url)
+VALUES (
+    '00000000-0000-0000-0000-000000000001', 
+    'Ophélia', 
+    'ai', 
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Ophelia'
+)
+ON CONFLICT (id) DO NOTHING;
+```
+
+## 6. Dépendances de Style
 Les composants Inseme utilisent **Tailwind CSS**. Assurez-vous que votre projet hôte configure Tailwind pour scanner le répertoire des composants Inseme :
 
 ```javascript

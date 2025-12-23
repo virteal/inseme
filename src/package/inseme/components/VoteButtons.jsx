@@ -4,9 +4,11 @@ import { useInsemeContext } from '../InsemeContext';
 
 export function VoteButtons(props) {
     const context = useInsemeContext();
-    const { castVote, setMedia, setProposition, resetVotes } = { ...context, ...props };
+    const { user, castVote, setMedia, setProposition, resetVotes } = { ...context, ...props };
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    if (!user) return null; // Spectators don't see interaction buttons
 
     const mainButtons = [
         { id: 'ok', label: 'D\'accord', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20', icon: CheckCircle2 },
