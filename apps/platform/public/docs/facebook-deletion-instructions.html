@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Instructions de suppression des données — Facebook</title>
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          "Helvetica Neue",
+          Arial;
+        margin: 0;
+        padding: 24px;
+        background: #fff;
+        color: #111;
+      }
+      .wrap {
+        max-width: 780px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+      p,
+      li {
+        line-height: 1.6;
+      }
+      .muted {
+        color: #666;
+      }
+      a {
+        color: #0b66ff;
+      }
+      .card {
+        border: 1px solid #eee;
+        padding: 16px;
+        background: #fafafa;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Instructions pour la suppression des données (Facebook)</h1>
+      <p class="muted">Page publique</p>
+
+      <div class="card" style="margin-top: 12px">
+        <p>
+          Si vous souhaitez demander la suppression des données liées à votre compte Facebook,
+          suivez ces étapes :
+        </p>
+        <ol>
+          <li>
+            Dans Facebook, utilisez l'outil de confidentialité pour demander la suppression des
+            données de l'application.
+          </li>
+          <li>
+            Facebook enverra alors une requête à notre serveur. Nous générerons un code de
+            confirmation et mettrons à jour le statut de la demande.
+          </li>
+          <li>
+            Pour vérifier le statut : ouvrez
+            <a href="/oauth/facebook/deletion-status">/oauth/facebook/deletion-status</a>
+            et ajoutez le paramètre <code>?code=VOTRE_CODE</code> fourni par Facebook.
+          </li>
+        </ol>
+
+        <p>
+          Exemple :
+          <br />
+          <code>/oauth/facebook/deletion-status?code=012345abcdef</code>
+        </p>
+
+        <p>
+          Si vous ne recevez pas de code ou avez besoin d'aide,
+          <a href="contact">contactez-nous</a>.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,90 @@
+/* ==========================================================================
+   BAUHAUS MIGRATION LAYER
+   WARNING: This file is for backward compatibility only.
+   Do NOT use these classes in new components. Use semantic tokens instead.
+   ========================================================================== */
+
+/* Backgrounds */
+.bg-bauhaus-black {
+  background-color: var(--palette-black);
+}
+
+.bg-bauhaus-white {
+  background-color: var(--palette-white);
+}
+
+.bg-bauhaus-blue {
+  background-color: var(--palette-blue);
+}
+
+.bg-bauhaus-red {
+  background-color: var(--palette-red);
+}
+
+.bg-bauhaus-yellow {
+  background-color: var(--palette-yellow);
+}
+
+.bg-bauhaus-green {
+  background-color: var(--palette-success);
+}
+
+/* Text Colors */
+.text-bauhaus-black {
+  color: var(--palette-black);
+}
+
+.text-bauhaus-white {
+  color: var(--palette-white);
+}
+
+.text-bauhaus-blue {
+  color: var(--palette-blue);
+}
+
+.text-bauhaus-red {
+  color: var(--palette-red);
+}
+
+.text-bauhaus-yellow {
+  color: var(--palette-yellow);
+}
+
+/* Border Colors */
+.border-bauhaus-black {
+  border-color: var(--palette-black);
+}
+
+.border-bauhaus-white {
+  border-color: var(--palette-white);
+}
+
+.border-bauhaus-blue {
+  border-color: var(--palette-blue);
+}
+
+.border-bauhaus-red {
+  border-color: var(--palette-red);
+}
+
+.border-bauhaus-yellow {
+  border-color: var(--palette-yellow);
+}
+
+/* Fonts */
+.font-bauhaus {
+  font-family: var(--font-display);
+}
+
+/* Shadows */
+.shadow-bauhaus {
+  box-shadow: 4px 4px 0 0 var(--palette-black);
+}
+
+.shadow-bauhaus-sm {
+  box-shadow: 2px 2px 0 0 var(--palette-black);
+}
+
+.shadow-bauhaus-lg {
+  box-shadow: 8px 8px 0 0 var(--palette-black);
+}

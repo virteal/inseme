@@ -1,0 +1,296 @@
+/* ==========================================================================
+   PROVIDER STATUS
+   AI Provider status display component.
+   Uses ONLY semantic tokens from variables.css.
+   ========================================================================== */
+
+.provider-status {
+  background: var(--color-surface-primary);
+  border: 1px solid var(--color-border-default);
+  font-size: 0.8125rem;
+  transition: all var(--duration-normal) ease;
+}
+
+/* Display Modes */
+.provider-status--hidden {
+  display: none;
+}
+
+.provider-status--compact {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.provider-status--detailed {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Header */
+.provider-status__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  user-select: none;
+  background: var(--color-surface-secondary);
+  border-bottom: 1px solid var(--color-border-default);
+  min-height: 44px;
+
+  /* Touch target */
+}
+
+.provider-status__header:hover {
+  background: var(--color-surface-hover);
+}
+
+.provider-status__title {
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  color: var(--color-content-secondary);
+}
+
+.provider-status__toggle {
+  background: none;
+  border: none;
+  color: var(--color-content-secondary);
+  cursor: pointer;
+  font-size: 0.625rem;
+  padding: var(--space-1);
+  opacity: 0.7;
+  transition: opacity var(--duration-normal);
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.provider-status__toggle:hover {
+  opacity: 1;
+}
+
+/* List */
+.provider-status__list {
+  padding: var(--space-1);
+}
+
+/* Provider Item */
+.provider-item {
+  margin-bottom: var(--space-1);
+  overflow: hidden;
+  border: 1px solid transparent;
+  transition: border-color var(--duration-normal);
+}
+
+.provider-item:hover {
+  border-color: var(--color-border-strong);
+}
+
+.provider-item__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  background: var(--color-surface-primary);
+  transition: background var(--duration-normal);
+  min-height: 44px;
+}
+
+.provider-item__header:hover {
+  background: var(--color-surface-hover);
+}
+
+.provider-item__icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.provider-item__name {
+  font-weight: 500;
+  flex-grow: 1;
+  text-transform: capitalize;
+  color: var(--color-content-primary);
+}
+
+.provider-item__quick-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.6875rem;
+  color: var(--color-content-secondary);
+}
+
+.provider-item__expand {
+  background: none;
+  border: none;
+  color: var(--color-content-secondary);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 var(--space-1);
+  opacity: 0.6;
+  transition: opacity var(--duration-normal);
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.provider-item__expand:hover {
+  opacity: 1;
+}
+
+/* Not Configured */
+.provider-item__not-configured {
+  padding: var(--space-1) var(--space-3) var(--space-2) calc(var(--space-3) * 2);
+  font-size: 0.6875rem;
+  color: var(--color-content-tertiary);
+  font-style: italic;
+}
+
+/* Models List */
+.provider-item__models {
+  padding: var(--space-1) 0 var(--space-1) var(--space-6);
+  background: var(--color-surface-tertiary);
+  border-top: 1px solid var(--color-border-default);
+}
+
+/* Model Item */
+.model-item {
+  padding: var(--space-2) var(--space-3);
+  margin: var(--space-1) 0;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all var(--duration-normal);
+}
+
+.model-item:hover {
+  background: var(--color-surface-hover);
+}
+
+/* Model Status Colors */
+.model-item--available {
+  border-left-color: var(--color-status-success);
+}
+
+.model-item--rate_limited {
+  border-left-color: var(--color-action-highlight);
+}
+
+.model-item--error,
+.model-item--quota_exceeded {
+  border-left-color: var(--color-status-error);
+  opacity: 0.7;
+}
+
+.model-item--unknown {
+  border-left-color: var(--color-content-tertiary);
+  opacity: 0.6;
+}
+
+.model-item--recent {
+  background: color-mix(in srgb, var(--color-action-highlight), transparent 90%);
+}
+
+.model-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-1);
+}
+
+.model-item__name {
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+  color: var(--color-content-primary);
+}
+
+.model-item__badge {
+  font-size: 0.75rem;
+}
+
+.model-item__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: 0.6875rem;
+}
+
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-surface-hover);
+  white-space: nowrap;
+}
+
+.stat--time {
+  color: #64b5f6;
+}
+
+.stat--success {
+  color: var(--color-status-success);
+}
+
+.stat--retry {
+  color: var(--color-action-highlight);
+}
+
+.stat--errors {
+  color: var(--color-status-error);
+}
+
+/* Scrollbar */
+.provider-status--compact::-webkit-scrollbar,
+.provider-status--detailed::-webkit-scrollbar {
+  width: 6px;
+}
+
+.provider-status--compact::-webkit-scrollbar-track,
+.provider-status--detailed::-webkit-scrollbar-track {
+  background: var(--color-surface-primary);
+}
+
+.provider-status--compact::-webkit-scrollbar-thumb,
+.provider-status--detailed::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+}
+
+.provider-status--compact::-webkit-scrollbar-thumb:hover,
+.provider-status--detailed::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
+}
+
+/* Inline metrics helper used by several provider components */
+.provider-metrics-inline {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Mobile Optimizations */
+@media (width <= 768px) {
+  .provider-status {
+    font-size: 0.75rem;
+  }
+
+  .provider-status--compact {
+    max-height: 150px;
+  }
+
+  .provider-status--detailed {
+    max-height: 300px;
+  }
+}
+
+@media (width <= 480px) {
+  .provider-item__quick-stats .stat {
+    display: none;
+  }
+
+  .provider-item__quick-stats :first-child {
+    display: inline-flex;
+  }
+}

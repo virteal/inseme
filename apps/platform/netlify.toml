@@ -1,0 +1,138 @@
+[build]
+  publish = "dist"
+  command = "npm run build"
+  functions = "src/netlify/functions"
+  edge_functions = "src/netlify/edge-functions"
+
+[dev]
+  command = "npm run dev"
+  functions = "src/netlify/functions"
+
+[functions]
+  directory = "src/netlify/functions"
+  node_bundler = "esbuild"
+
+[functions.public_browser]
+  included_files = ["public/**"]
+
+# ============================================================================
+# EDGE FUNCTIONS
+# ============================================================================
+
+# Instance resolver - Doit être AVANT root-redirect pour intercepter les sous-domaines
+[[edge_functions]]
+  path = "/*"
+  function = "instance-resolver"
+  excludedPath = ["/assets/*", "/images/*", "/fonts/*", "/_next/*", "/api/*"]
+
+[[edge_functions]]
+  path = "/*"
+  function = "root-redirect"
+
+[[edge_functions]]
+  path = "/api/config"
+  function = "config"
+
+[[edge_functions]]
+  path = "/api/chat-stream"
+  function = "rag_chatbot.v3"
+
+[[edge_functions]]
+  path = "/api/fil/items"
+  function = "fil-create-item"
+
+[[edge_functions]]
+  path = "/api/fil/vote"
+  function = "fil-vote"
+
+[[edge_functions]]
+  path = "/api/fil/stories"
+  function = "fil-stories"
+
+[[edge_functions]]
+  path = "/api/fil/item/*"
+  function = "fil-item"
+
+[[edge_functions]]
+  path = "/api/rag/ingest"
+  function = "rag-ingest"
+
+[[edge_functions]]
+  path = "/api/feed/*"
+  function = "feed-endpoints"
+
+[[edge_functions]]
+  path = "/api/tally/*"
+  function = "proposition-tally"
+
+[[edge_functions]]
+  path = "/api/cafe/*"
+  function = "cafe-api"
+
+[[edge_functions]]
+  path = "/api/municipal/*"
+  function = "api_municipal_data"
+
+[[edge_functions]]
+  path = "/api/actes/*"
+  function = "actes-api"
+
+[[edge_functions]]
+  path = "/api/demandes/*"
+  function = "demandes-api"
+
+[[edge_functions]]
+  path = "/api/update-deadlines"
+  function = "update-deadlines-cron"
+
+[[edge_functions]]
+  path = "/test-sql-agent"
+  function = "test-sql-agent"
+
+[[edge_functions]]
+  path = "/api/cafe/sse"
+  function = "cafe-sse"
+
+[[redirects]]
+  from = "/api/instances"
+  to = "/.netlify/functions/instances-list"
+  status = 200
+
+[[redirects]]
+  from = "/docs/*"
+  to = "/docs/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/prompts/*"
+  to = "/prompts/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/images/*"
+  to = "/images/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/public/*"
+  to = "/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    # Exposer les headers d'instance au JavaScript
+    Access-Control-Expose-Headers = "X-Ophelia-Instance, X-Ophelia-Instance-Name, X-Ophelia-Supabase-URL, X-Ophelia-Supabase-Anon-Key"
+    Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' *.netlify.app *.google.com *.googleusercontent.com *.facebook.com https://cdn.tailwindcss.com fonts.googleapis.com fonts.gstatic.com *.w3.org data:; img-src 'self' data: https://platform-lookaside.fbsbx.com https://*.fbx.com https://*.facebook.com https://*.tile.openstreetmap.org https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.facebook.com connect.facebook.net; connect-src 'self' *.google.com *.googleusercontent.com https://script.googleusercontent.com https://script.google.com *.supabase.co wss://*.supabase.co *.facebook.com https://nominatim.openstreetmap.org; frame-src 'self' *.facebook.com connect.facebook.net"

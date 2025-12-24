@@ -1,0 +1,4 @@
+# Node and build outputs
+node_modules/**
+dist/**
+build/**

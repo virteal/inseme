@@ -1,0 +1,80 @@
+/* ==========================================================================
+   WIKI
+   Styles specific to the Wiki section.
+   ========================================================================== */
+
+.wiki-container {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: var(--space-6);
+  min-height: calc(100vh - 80px);
+
+  /* Adjust based on header/footer */
+}
+
+.wiki-sidebar {
+  background: var(--color-surface-secondary);
+  padding: var(--space-4);
+  border-right: 1px solid var(--color-border-subtle);
+  overflow-y: auto;
+}
+
+.wiki-content {
+  padding: var(--space-4);
+  max-width: 800px;
+}
+
+.wiki-page-title {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-2);
+  color: var(--color-content-primary);
+}
+
+.wiki-meta {
+  color: var(--color-content-tertiary);
+  font-size: 0.9rem;
+  margin-bottom: var(--space-6);
+  display: flex;
+  gap: var(--space-4);
+}
+
+/* Wiki Card (Grid View) */
+.wiki-card {
+  background: var(--color-surface-primary);
+  border: 1px solid var(--color-border-default);
+  padding: var(--space-4);
+  transition:
+    transform var(--duration-fast) var(--ease-smooth),
+    box-shadow var(--duration-fast) var(--ease-smooth);
+}
+
+.wiki-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-action-primary);
+}
+
+.wiki-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: var(--space-2);
+}
+
+.wiki-card p {
+  color: var(--color-content-secondary);
+  font-size: 0.95rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (width <= 768px) {
+  .wiki-container {
+    grid-template-columns: 1fr;
+  }
+
+  .wiki-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+}

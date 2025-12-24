@@ -1,0 +1,83 @@
+{
+  "key": "7a33829375570374a8ce2947b88af51e7d4361fe99386608d42a357630a6a06c",
+  "meta": {
+    "kind": "DELIB",
+    "model": "gpt-5-thinking",
+    "promptVersion": "v1",
+    "date": null,
+    "sourceUrl": null,
+    "ts": 1762763951778
+  },
+  "value": [
+    {
+      "order": 1,
+      "title": "25-10/075 — Plan de financement requalification du Centre ancien",
+      "topic": "Approbation projet et plan de financement Centre ancien",
+      "action": "adoption",
+      "domain": "finances",
+      "raw": "25-10/075 — LE CONSEIL, Après en avoir délibéré, à l’unanimité des membres présents et représentés, Décide: D’APPROUVER le projet de requalification du Centre Ancien de Corte pour un montant total de 7 500 000 € HT, tel que présenté; D’ADOPTER le plan de financement ci-dessus; D’AUTORISER le Maire à solliciter les subventions de l’État (PTIC 3 073 316 €) et de l’Union Européenne (FEDER 2 720 000 €).",
+      "keywords": [
+        "unanimité",
+        "7 500 000 € HT",
+        "PTIC 3 073 316 €",
+        "FEDER 2 720 000 €",
+        "autofinancement 1 706 684 €",
+        "plan de financement",
+        "Centre Ancien",
+        "ORT-PVD"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "25-10/076 — Plan de financement aménagement espace LOGIREM",
+      "topic": "Approbation projet et plan de financement LOGIREM",
+      "action": "adoption",
+      "domain": "finances",
+      "raw": "25-10/076 — LE CONSEIL, Après en avoir délibéré, à l’unanimité des membres présents et représentés, Décide: D’APPROUVER le projet d’aménagement de l’espace LOGIREM pour un montant total de 1 325 800 € HT (phase I 2026: 770 350,58 €; phase II 2027: 555 449,42 €); D’ADOPTER le plan de financement; D’AUTORISER le Maire à solliciter la DETR 2026 (441 873,09 €) et 2027 (318 605,79 €) et à signer tous actes nécessaires.",
+      "keywords": [
+        "unanimité",
+        "1 325 800 € HT",
+        "DETR",
+        "FEDER 300 000 €",
+        "phase I 2026 770 350,58 €",
+        "phase II 2027 555 449,42 €",
+        "LOGIREM",
+        "ITI"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "25-10/077 — Conditions de location logements Pianuccia (AD 106-109)",
+      "topic": "Précisions conditions de location logements sociaux",
+      "action": "adoption",
+      "domain": "social",
+      "raw": "25-10/077 — LE CONSEIL, Après en avoir délibéré, à l’unanimité des membres présents et représentés, APPROUVE la proposition, DÉCIDE: Article 1: les logements construits sur les parcelles AD 106, 107, 108 et 109 (Cité Pianuccia) seront loués pour 9 ans, à titre de résidence principale, avec loyers encadrés de type logement social. Article 2: transmission au Président du Conseil Exécutif de Corse.",
+      "keywords": [
+        "unanimité",
+        "Cité Pianuccia",
+        "parcelles AD 106-109",
+        "location 9 ans",
+        "loyers encadrés",
+        "25-07/048",
+        "Conseil Exécutif de Corse"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "25-10/078 — OPAH: individualisation d’aide à Mme Pozzo di Borgo",
+      "topic": "Individualisation d’une subvention OPAH propriétaire",
+      "action": "subvention",
+      "domain": "social",
+      "raw": "25-10/078 — LE MAIRE propose d’autoriser l’individualisation d’une aide municipale, conformément à la convention OPAH du 26/04/2021, au profit de Mme POZZO DI BORGO Lucienne (propriétaire occupant) à hauteur de 5 766,00 €, pour des travaux lourds (travaux subventionnables retenus: 38 440,00 €). Le Maire invite le Conseil à délibérer.",
+      "keywords": [
+        "OPAH",
+        "5 766,00 €",
+        "38 440,00 €",
+        "ANAH",
+        "Pozzo di Borgo Lucienne",
+        "propriétaire occupant très modeste",
+        "convention 26/04/2021"
+      ]
+    }
+  ]
+}

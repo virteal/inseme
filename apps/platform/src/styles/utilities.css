@@ -1,0 +1,136 @@
+/* ==========================================================================
+   UTILITIES
+   Generic helper classes.
+   ========================================================================== */
+
+/* Layout */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+/* Spacing */
+.m-0 {
+  margin: 0;
+}
+
+.p-0 {
+  padding: 0;
+}
+
+/* Typography */
+.text-center {
+  text-align: center;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+/* Visibility */
+.hidden {
+  display: none;
+}
+
+.block {
+  display: block;
+}
+
+/* Screen Reader Only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus Visible (Accessibility) */
+:focus-visible {
+  outline: 2px solid var(--color-action-primary);
+  outline-offset: 2px;
+}
+
+/* Backgrounds */
+.bg-light {
+  background-color: var(--palette-white);
+}
+
+.bg-primary {
+  background-color: var(--color-action-primary);
+}
+
+.bg-accent {
+  background-color: var(--color-action-accent);
+}
+
+.bg-highlight {
+  background-color: var(--color-action-highlight);
+}
+
+.text-light {
+  color: var(--palette-white);
+}
+
+.border-accent {
+  border-color: var(--color-action-accent);
+}
+
+.text-dark {
+  color: var(--palette-black);
+}
+
+.bg-dark {
+  background-color: var(--palette-black);
+}
+
+.border-light {
+  border-color: var(--palette-white);
+}
+
+.text-primary {
+  color: var(--color-action-primary);
+}
+
+.text-accent {
+  color: var(--color-action-accent);
+}

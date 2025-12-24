@@ -1,0 +1,49 @@
+/* src/styles/index.css */
+
+/* ==========================================================================
+   MAIN ENTRY POINT
+   Imports all modules in the correct order.
+   ========================================================================== */
+
+/* 1. Foundation (Variables & Tokens) */
+@import url("./variables.css");
+
+/* 2. Migration Layer (Bauhaus Compatibility) */
+@import url("./bauhaus.css");
+
+/* 3. Global Utilities */
+@import url("./utilities.css");
+
+/* src/styles/index.css */
+
+/* ==========================================================================
+   MAIN ENTRY POINT
+   Imports all modules in the correct order.
+   ========================================================================== */
+
+/* 1. Foundation (Variables & Tokens) */
+@import url("./variables.css");
+
+/* 2. Migration Layer (Bauhaus Compatibility) */
+@import url("./bauhaus.css");
+
+/* 3. Global Utilities */
+@import url("./utilities.css");
+
+/* 4. Modules */
+@import url("./base.css");
+@import url("./typography.css");
+@import url("./buttons.css");
+@import url("./forms.css");
+@import url("./layout.css");
+@import url("./wiki.css");
+@import url("./landing.css");
+@import url("./footer.css");
+@import url("./ui-components.css");
+@import url("./modals.css");
+@import url("./chat.css");
+@import url("./provider-status.css");
+@import url("./survey-extras.css");
+@import url("./kanban.css");
+
+@import "tailwindcss";

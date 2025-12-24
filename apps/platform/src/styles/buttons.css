@@ -1,0 +1,147 @@
+/* ==========================================================================
+   BUTTONS
+   Button styles and variants.
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-width: 140px;
+  padding: 0.6rem 1.25rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    transform var(--duration-fast) var(--ease-smooth),
+    box-shadow var(--duration-fast) var(--ease-smooth),
+    opacity var(--duration-fast) var(--ease-smooth);
+  font-family: var(--font-display);
+  font-size: 1rem;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Primary Button */
+.btn-primary {
+  letter-spacing: 0.05em;
+  background: var(--color-action-primary);
+  color: var(--color-content-inverted);
+  box-shadow: 4px 4px 0 0 var(--color-bg-app);
+  border: 2px solid var(--color-bg-app);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+  background: var(--color-action-primary-hover);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  letter-spacing: 0.05em;
+  background: var(--color-bg-app);
+  color: var(--color-content-primary);
+  border: 2px solid var(--color-content-primary);
+  box-shadow: 4px 4px 0 0 var(--color-content-primary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+/* Success Button */
+.btn-success {
+  letter-spacing: 0.05em;
+  background: var(--color-status-success);
+  color: var(--color-content-inverted);
+  border: 2px solid var(--color-bg-app);
+  box-shadow: 4px 4px 0 0 var(--color-bg-app);
+}
+
+.btn-success:hover:not(:disabled) {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-action-highlight);
+}
+
+/* Ghost Button */
+.btn-ghost {
+  letter-spacing: 0.05em;
+  background: transparent;
+  color: var(--color-content-primary);
+  border: 2px solid var(--color-border-default);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+/* Action Buttons (Smaller) */
+.btn-secondary-action,
+.btn-tertiary-action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid var(--palette-white);
+  background: var(--palette-black);
+  color: var(--palette-white);
+  transition:
+    transform var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease;
+}
+
+.btn-secondary-action:hover,
+.btn-tertiary-action:hover {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+  background: var(--color-surface-hover);
+}
+
+/* Button outline danger variant */
+.btn-outline-danger {
+  background: transparent;
+  color: var(--color-content-primary);
+  border: 2px solid var(--color-content-primary);
+  padding: var(--space-2) var(--space-3);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+  text-align: center;
+  display: inline-block;
+}
+
+.btn-outline-danger:hover {
+  background: var(--color-action-accent);
+  color: var(--color-bg-app);
+  border-color: var(--color-action-accent);
+  transform: translateY(-2px);
+}
+
+/* Small modifiers used by ChatWindow */
+.btn-publish-wiki {
+  margin-left: 0.5rem;
+  padding: 0.5rem 0.9rem;
+}
+
+/* Compatibility: map lightweight send button to primary button styles */
+.send-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+}
+.send-btn-icon svg {
+  display: block;
+}

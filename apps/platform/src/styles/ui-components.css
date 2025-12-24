@@ -1,0 +1,204 @@
+/* ==========================================================================
+   UI COMPONENTS
+   Reusable UI components (Cards, Tabs, Accordions, etc.).
+   ========================================================================== */
+
+/* Theme Card (Bauhaus Style) */
+.theme-card {
+  background: var(--color-surface-primary);
+  border: 2px solid var(--color-border-strong);
+  box-shadow: 4px 4px 0 0 var(--color-border-strong);
+  transition:
+    transform var(--duration-normal) var(--ease-smooth),
+    box-shadow var(--duration-normal) var(--ease-smooth);
+  padding: var(--space-6);
+}
+
+.theme-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--color-border-strong);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--color-action-highlight);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Icon Rotated State */
+.icon-rotated {
+  transform: rotate(180deg);
+  transition: transform var(--duration-normal) var(--ease-smooth);
+}
+
+/* Success Message Box */
+.success-message {
+  border: 2px solid var(--color-status-success);
+  box-shadow: 8px 8px 0 0 var(--color-status-success);
+  color: var(--color-status-success);
+  padding: var(--space-6);
+  background: var(--color-bg-app);
+}
+
+.success-message h2 {
+  color: var(--color-status-success);
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.success-message p {
+  color: var(--color-content-primary);
+}
+
+/* Bordered Section */
+.bordered-section {
+  border: 2px solid var(--color-border-default);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.bordered-section-primary {
+  border-color: var(--color-action-primary);
+}
+
+.bordered-section-accent {
+  border-color: var(--color-action-accent);
+}
+
+/* Avatar Components */
+.avatar-container {
+  width: 128px;
+  height: 128px;
+  overflow: hidden;
+  background: var(--color-surface-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-placeholder {
+  width: 128px;
+  height: 128px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-content-tertiary);
+  font-size: 3rem;
+}
+
+.avatar-image {
+  object-fit: cover;
+  width: 128px;
+  height: 128px;
+}
+
+/* Tab Navigation */
+.tabs-nav {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  border-bottom: 2px solid var(--color-border-default);
+  padding-bottom: var(--space-2);
+}
+
+.tab-item {
+  padding: var(--space-3) var(--space-5);
+  font-weight: 600;
+  font-family: var(--font-display);
+  background: transparent;
+  color: var(--color-content-secondary);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition:
+    color var(--duration-fast) var(--ease-smooth),
+    border-color var(--duration-fast) var(--ease-smooth),
+    transform var(--duration-fast) var(--ease-smooth);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+}
+
+.tab-item:hover {
+  color: var(--color-content-primary);
+  border-bottom-color: var(--color-action-highlight);
+}
+
+.tab-item.active {
+  color: var(--color-action-primary);
+  border-bottom-color: var(--color-action-primary);
+  background: var(--color-surface-primary);
+}
+
+/* Filter Chips */
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: var(--font-display);
+  background: var(--color-surface-secondary);
+  color: var(--color-content-primary);
+  border: 2px solid var(--color-border-default);
+  cursor: pointer;
+  transition:
+    transform var(--duration-fast) var(--ease-smooth),
+    background var(--duration-fast) var(--ease-smooth),
+    border-color var(--duration-fast) var(--ease-smooth),
+    box-shadow var(--duration-fast) var(--ease-smooth);
+}
+
+.filter-chip:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 0 var(--color-border-strong);
+}
+
+.filter-chip.active {
+  background: var(--color-action-primary);
+  color: var(--color-content-inverted);
+  border-color: var(--color-action-primary);
+  box-shadow: 3px 3px 0 0 var(--color-border-strong);
+}
+
+/* Filter Chip Color Variants */
+.filter-chip--blue {
+  border-color: var(--palette-blue);
+}
+
+.filter-chip--blue.active {
+  background: var(--palette-blue);
+  box-shadow: 3px 3px 0 0 var(--palette-blue);
+}
+
+.filter-chip--yellow {
+  border-color: var(--palette-yellow);
+}
+
+.filter-chip--yellow.active {
+  background: var(--palette-yellow);
+  color: var(--palette-black);
+  box-shadow: 3px 3px 0 0 var(--palette-yellow);
+}
+
+.filter-chip--red {
+  border-color: var(--palette-red);
+}
+
+.filter-chip--red.active {
+  background: var(--palette-red);
+  box-shadow: 3px 3px 0 0 var(--palette-red);
+}

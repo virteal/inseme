@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Instance Configuration",
+  "description": "Configuration pour une instance Ophélia",
+  "type": "object",
+  "required": [
+    "subdomain",
+    "community_name",
+    "community_type",
+    "supabase_url",
+    "supabase_anon_key",
+    "contact_email"
+  ],
+  "properties": {
+    "subdomain": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "maxLength": 20,
+      "description": "Sous-domaine unique (ex: corte, universita)"
+    },
+    "community_name": {
+      "type": "string",
+      "description": "Nom officiel de la communauté"
+    },
+    "community_type": {
+      "type": "string",
+      "enum": ["municipality", "intercommunality", "university", "association", "region"],
+      "description": "Type de communauté"
+    },
+    "city_name": {
+      "type": "string",
+      "description": "Ville/Localisation"
+    },
+    "insee_code": {
+      "type": "string",
+      "description": "Code INSEE ou UAI"
+    },
+    "region_code": {
+      "type": "string",
+      "default": "COR",
+      "description": "Code région"
+    },
+    "region_name": {
+      "type": "string",
+      "default": "Corse",
+      "description": "Nom de la région"
+    },
+    "contact_email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email de l'administrateur"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Nom du contact pilote"
+    },
+    "map_center": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2,
+      "default": [42.3084, 9.1505],
+      "description": "Centre de la carte [lat, lon]"
+    },
+    "supabase_url": {
+      "type": "string",
+      "pattern": "^https://[a-z0-9]+\\.supabase\\.co$",
+      "description": "URL du projet Supabase"
+    },
+    "supabase_anon_key": {
+      "type": "string",
+      "pattern": "^eyJ",
+      "description": "Clé anon publique Supabase"
+    },
+    "hub_url": {
+      "type": "string",
+      "description": "URL du hub pour la fédération (optionnel)"
+    }
+  }
+}

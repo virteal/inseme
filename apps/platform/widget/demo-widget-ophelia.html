@@ -1,0 +1,63 @@
+<!-- widget/demo-widget-ophelia.html -->
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Démo Widget Ophélia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f7fafc;
+      }
+      .container {
+        max-width: 600px;
+        margin: 40px auto;
+        background: #fff;
+        box-shadow: 0 4px 24px #0001;
+        padding: 32px;
+      }
+      h1 {
+        color: #3182ce;
+      }
+      code {
+        background: #f1f5f9;
+        padding: 2px 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Démo Widget Ophélia</h1>
+      <p>
+        Ce widget permet d’intégrer un chatbot Ophélia sur n’importe quel site web, en toute
+        simplicité.
+      </p>
+      <h2>Intégration rapide</h2>
+      <p>Ajoutez simplement ce script à la fin de votre page HTML :</p>
+      <pre><code>&lt;script src="/widget/ophelia-widget.js"&gt;&lt;/script&gt;</code></pre>
+      <h2>Démo live</h2>
+      <p>Le widget apparaît en bas à droite de cette page. Posez une question !</p>
+      <h2>Personnalisation</h2>
+      <ul>
+        <li>Couleurs, logo, position : <em>à venir</em></li>
+        <li>Clé API personnalisée : <em>à venir</em></li>
+        <li>Historique conversationnel : <em>à venir</em></li>
+      </ul>
+      <h2>Sécurité</h2>
+      <ul>
+        <li>Le widget utilise l’API REST centrale (<code>/api/ophelia</code>).</li>
+        <li>Clé API de démo : <code>dev-demo-key</code> (à changer en production).</li>
+        <li>Configurer CORS côté API pour autoriser votre domaine.</li>
+      </ul>
+      <h2>Documentation</h2>
+      <ul>
+        <li><a href="README.md">README du widget</a></li>
+        <li><a href="../docs/API-OPHELIA.md">Documentation API REST</a></li>
+      </ul>
+    </div>
+    <script src="ophelia-widget.js"></script>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+Source Code Line Count + Velocity Report
+Generated: 2025-11-24 04:05:19
+Project: C:\tweesic\survey
+
+SUMMARY BY FILE TYPE:
+Type  Files   Lines
+.jsx     73  16,845
+.js      20   2,863
+.css     15   1,766
+
+TOTALS:
+Total Files: 108
+Total Lines: 21,474
+
+VELOCITY METRICS:
+First Commit:     2025-10-20
+Days Since Start: 35 days
+Total Commits:    199
+Contributors:     3
+Velocity:         613.54 lines/day
+Lines/Commit:     107.91 lines/commit
+Commits/Day:      5.69 commits/day
+
+TOP 10 LARGEST FILES:
+File                    Type  Lines
+ChatWindow.jsx          .jsx  2,208
+App.jsx                 .jsx    854
+Transparence.jsx        .jsx    564
+GlobalDashboard.jsx     .jsx    546
+Wiki.jsx                .jsx    519
+CommentSection.jsx      .jsx    433
+DocumentManagement.jsx  .jsx    386
+pdfToMarkdown.js        .js     384
+SiteFooter.jsx          .jsx    383
+chat.css                .css    380

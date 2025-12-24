@@ -1,0 +1,33 @@
+{
+  "name": "cop-kernel",
+  "version": "0.2.0",
+  "description": "Cognitive Orchestration Protocol v0.2 kernel implementation (runtime helpers, registries, node/agent utilities) built on top of cop-core.",
+  "type": "module",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "scripts": {
+    "lint": "eslint src || echo \"no eslint configured\"",
+    "test": "node --test src/storage-implementations/__tests__/*.test.js test/*.test.js",
+    "build": "echo \"cop-kernel: no build step (pure JS ES modules).\""
+  },
+  "keywords": [
+    "cop",
+    "kernel",
+    "orchestration",
+    "agents",
+    "supabase",
+    "runtime"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0",
+    "cop-core": "file:../cop-core",
+    "mysql2": "^3.15.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

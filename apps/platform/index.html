@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="page-title">Consultation Citoyenne</title>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://*.tile.openstreetmap.org https://cdnjs.cloudflare.com https://platform-lookaside.fbsbx.com https://*.fbx.com https://*.facebook.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.openai.com https://api.anthropic.com https://api.mistral.ai https://api.edenai.run https://api.search.brave.com https://nominatim.openstreetmap.org https://script.google.com https://script.googleusercontent.com; frame-src 'self' https://www.facebook.com https://connect.facebook.net;"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.svg" />
+
+    <!-- Métadonnées SEO et partage social -->
+    <meta
+      name="description"
+      id="page-description"
+      content="Plateforme de consultation citoyenne incluant un wiki collaboratif et un système de propositions citoyennes."
+    />
+    <meta property="og:title" id="og-title" content="Consultation Citoyenne" />
+    <meta
+      property="og:description"
+      id="og-description"
+      content="Participez à la démocratie locale avec notre plateforme de consultation citoyenne."
+    />
+    <meta property="og:type" content="website" />
+    <!-- Explicit og:url and fb:app_id required for Facebook sharing/debugger -->
+    <meta property="og:url" id="og-url" content="%VITE_APP_URL%" />
+    <meta property="fb:app_id" id="fb-app-id" content="%VITE_FACEBOOK_APP_ID%" />
+    <!-- Explicit og:image required by Facebook Debugger; replace with your public image URL -->
+    <meta property="og:image" id="og-image" content="%VITE_APP_URL%/images/og-image.png" />
+    <meta name="twitter:image" id="twitter-image" content="%VITE_APP_URL%/images/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Police Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Script pour dynamiser les métadonnées (external file to avoid Vite html-proxy issues) -->
+    <script type="module" src="/meta-init.js"></script>
+
+    <!-- Facebook SDK -->
+    <script>
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: "%VITE_FACEBOOK_APP_ID%",
+          cookie: true,
+          xfbml: true,
+          version: "v21.0",
+        });
+
+        FB.AppEvents.logPageView();
+
+        // Check login status only on secure contexts (required by Facebook SDK)
+        if (window.location.protocol === "https:") {
+          FB.getLoginStatus(function (response) {
+            console.log("Facebook login status:", response);
+            if (response.status === "connected") {
+              console.log("User is logged in to Facebook and your app");
+            } else if (response.status === "not_authorized") {
+              console.log("User is logged in to Facebook but not your app");
+            } else {
+              console.log("User is not logged in to Facebook");
+            }
+          });
+        } else {
+          // Warning unless localhost
+          if (window.location.hostname !== "localhost") {
+            console.warn("Skipping FB.getLoginStatus: HTTPS required by Facebook Login.");
+          }
+        }
+      };
+
+      (function (d, s, id) {
+        var js,
+          fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+          return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      })(document, "script", "facebook-jssdk");
+    </script>
+  </body>
+</html>

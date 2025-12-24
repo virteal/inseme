@@ -1,0 +1,263 @@
+/* ==========================================================================
+   FOOTER
+   Site footer styles.
+   ========================================================================== */
+
+footer {
+  margin-top: var(--space-8);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border-subtle);
+  text-align: center;
+  background: var(--color-surface-primary);
+  padding-bottom: var(--space-8);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.footer-links {
+  display: flex;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-link {
+  color: var(--color-content-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color var(--duration-fast) ease;
+}
+
+.footer-link:hover {
+  color: var(--color-action-primary);
+}
+
+.footer-copyright {
+  color: var(--color-content-tertiary);
+  font-size: 0.85rem;
+}
+
+/* Theme Toggle in Footer */
+.theme-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--color-border-default);
+  color: var(--color-content-secondary);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: all var(--duration-fast) ease;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-content-primary);
+}
+
+/* ==========================================================================
+   SITE FOOTER
+   Collapsible footer with auth status, navigation, and legal links
+   ========================================================================== */
+
+.site-footer {
+  position: relative;
+  width: 100%;
+  background: var(--color-bg-app);
+  border-top: 3px solid var(--color-border-strong);
+  transition: transform var(--duration-normal) var(--ease-smooth);
+  margin-top: auto;
+
+  /* Push to bottom if in flex container */
+}
+
+.site-footer--hidden {
+  transform: translateY(100%);
+}
+
+/* Toggle button */
+.site-footer-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-secondary);
+  border: none;
+  border-bottom: 2px solid var(--color-border-medium);
+  cursor: pointer;
+  transition: background var(--duration-fast) ease;
+}
+
+.site-footer-toggle:hover {
+  background: var(--color-surface-hover);
+}
+
+.site-footer-toggle-label {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-content-primary);
+  font-family: var(--font-display);
+}
+
+.site-footer-toggle-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--color-content-primary);
+  transition: transform var(--duration-normal) var(--ease-smooth);
+}
+
+/* Collapsible panel */
+.site-footer-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--duration-normal) var(--ease-smooth);
+}
+
+.site-footer-panel--collapsed {
+  max-height: 0;
+}
+
+.site-footer-panel--expanded {
+  max-height: 600px;
+}
+
+.site-footer-inner {
+  padding: var(--space-4) var(--space-4) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Auth section */
+.site-footer-auth {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-surface-tertiary);
+  border: 2px solid var(--color-border-medium);
+}
+
+.site-footer-auth-main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.site-footer-auth-user {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.site-footer-auth-name {
+  font-weight: 600;
+  color: var(--color-content-primary);
+}
+
+.site-footer-auth-neighborhood {
+  font-size: 0.9rem;
+  color: var(--color-content-secondary);
+}
+
+.site-footer-auth-button {
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--color-border-strong);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.site-footer-auth-button--primary {
+  background: var(--color-action-primary);
+  color: var(--color-bg-app);
+  border-color: var(--color-border-strong);
+}
+
+.site-footer-auth-button--primary:hover {
+  background: var(--color-action-accent);
+  transform: translateY(-2px);
+}
+
+.site-footer-auth-button--danger {
+  background: transparent;
+  color: var(--color-content-primary);
+  border-color: var(--color-content-primary);
+}
+
+.site-footer-auth-button--danger:hover {
+  background: var(--color-action-accent);
+  color: var(--color-bg-app);
+  border-color: var(--color-action-accent);
+}
+
+/* Navigation links */
+.site-footer-meta-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-content-secondary);
+  margin-bottom: var(--space-1);
+}
+
+.site-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem; /* or less */
+  margin: 0.5rem 0;
+}
+
+.site-footer-link {
+  color: var(--color-content-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.2em 0.6em;
+  font-size: 0.95em;
+  line-height: 1.2;
+}
+
+.site-footer-link:hover {
+  border-bottom-color: var(--color-action-primary);
+}
+
+/* Version & Legal */
+.site-footer-version {
+  font-size: 0.5rem;
+  color: var(--color-content-secondary);
+  padding: var(--space-2);
+  text-align: center;
+}
+
+.site-footer-legal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border-medium);
+  font-size: 0.9rem;
+  color: var(--color-content-secondary);
+}
+
+.site-footer-legal span {
+  color: var(--color-content-secondary);
+}
+
+.site-footer-auth,
+.site-footer-version,
+.site-footer-legal {
+  margin: 0 0;
+}

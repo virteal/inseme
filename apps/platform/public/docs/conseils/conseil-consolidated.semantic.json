@@ -1,0 +1,4898 @@
+[
+  {
+    "date": "2025-11-14",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "Jean Dupont (Maire)",
+        "Marie Curie (Adjointe aux finances)",
+        "Paul Martin (Conseiller municipal)"
+      ],
+      "absents_excuses": [
+        "Lucie Bernard (Conseillère municipale)"
+      ],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2024-01",
+        "titre": "Approbation du budget municipal 2024",
+        "rapporteur": "Marie Curie",
+        "vote": {
+          "pour": 15,
+          "contre": 3,
+          "abstention": 2,
+          "detail_vote": "Vote nominatif des conseillers sur le budget"
+        },
+        "budget_euros": 5000000,
+        "echeance": "2024-12-31",
+        "resume": "Le budget municipal pour l'année 2024 a été présenté et approuvé avec une majorité.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-02",
+        "titre": "Modification du plan local d'urbanisme",
+        "rapporteur": "Paul Martin",
+        "vote": {
+          "pour": 12,
+          "contre": 6,
+          "abstention": 2,
+          "detail_vote": "Vote sur la modification du PLU"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "La modification du plan local d'urbanisme a été débattue et votée.",
+        "importance": "moyenne"
+      }
+    ],
+    "debats": [
+      {
+        "sujet": "Aménagement des espaces publics",
+        "intervenants": [
+          {
+            "nom": "Jean Dupont",
+            "position": "Maire"
+          },
+          {
+            "nom": "Marie Curie",
+            "position": "Adjointe aux finances"
+          },
+          {
+            "nom": "Paul Martin",
+            "position": "Conseiller municipal"
+          }
+        ],
+        "decision": "Un groupe de travail sera constitué pour étudier les propositions d'aménagement."
+      }
+    ],
+    "informations": [
+      "Le prochain conseil municipal se tiendra le 15 décembre 2025.",
+      "Les travaux de la nouvelle école débuteront en janvier 2026."
+    ]
+  },
+  {
+    "date": "2025-10-28",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "U Merre (Maire)"
+      ],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2025-01",
+        "titre": "Finances Communales : Plan de financement Requalification du Centre Ancien",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption de plans de financement pour la requalification du Centre Ancien et l'Espace Logirem.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-02",
+        "titre": "Régie de l’Eau « Cort’Acqua » : Admission de créances éteintes en non-valeur",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Admission de créances éteintes en non-valeur.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-03",
+        "titre": "Marchés publics : Autorisation à donner au maire de signer le marché de Maitrise d’Œuvre pour la construction d’une passerelle piétons et cycles",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Autorisation pour signer le marché de maîtrise d'œuvre pour la construction d'une passerelle.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-04",
+        "titre": "Gestion des Ressources Humaines : Encadrement et paiement des heures supplémentaires",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Encadrement et paiement des heures supplémentaires pour la Ville de Corte.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-05",
+        "titre": "Gestion du Domaine Communal : Approbation de l’Aménagement de la Forêt Communale de CORTE",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Approbation de l'aménagement de la forêt communale.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-06",
+        "titre": "Divers : Dérogation à la règle du repos dominical pour l’année 2026",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Dérogation à la règle du repos dominical pour l'année 2026.",
+        "importance": "basse"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Compte-rendu de la réunion du Conseil Municipal du 01 juillet 2025",
+      "Liste des marchés et avenants ratifiés entre le 30 juin 2025 et le 28 octobre 2025"
+    ]
+  },
+  {
+    "date": "2025-10-28",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "Xavier POLI (Maire)",
+        "Marie ALBERTINI",
+        "Martine BARRIELE",
+        "Vanina BORROMEÏ",
+        "Jeannine CAMPANA",
+        "Marie-Luce CASTELLI",
+        "Valérie CERUTTI",
+        "Frédéric DEMUYNCK",
+        "Christiane FRANCESCHINI",
+        "Philippe GHIONGA",
+        "Angèle GRIMALDI-OSTIENSI",
+        "Marc-Marie GUGLIELMI",
+        "Michelle LUCIANI",
+        "Marie-Josée MALLERONI",
+        "Philippe MAROSELLI",
+        "Jean-François ORSATELLI",
+        "Joseph ORSATELLI",
+        "Nathalie PULICANT",
+        "Paula RINIERI",
+        "Philippe SINDALI"
+      ],
+      "absents_excuses": [],
+      "absents": [
+        "Jean-Toussaint ALBERTINI",
+        "Elodie BAGHIONI",
+        "Fabien LUCIANI",
+        "Joseph SABIANTI",
+        "Antoine ORSINI",
+        "Blandine-Françoise RUGGERI",
+        "Marcel SIMEONI"
+      ]
+    },
+    "deliberations": [
+      {
+        "numero": "2024-01",
+        "titre": "Finances Communales : Plan de financement Requalification du Centre Ancien",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 20,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Vote à l'unanimité"
+        },
+        "budget_euros": 7500000,
+        "echeance": "2025-10-30",
+        "resume": "Le projet de requalification du Centre Ancien de Corte a été approuvé pour un montant total de 7 500 000 € HT.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-02",
+        "titre": "Finances Communales : Plan de financement Espace Logirem",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 20,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Vote à l'unanimité"
+        },
+        "budget_euros": 1325800,
+        "echeance": "2025-10-30",
+        "resume": "Le projet d'aménagement de l'espace Logirem a été approuvé pour un montant total de 1 325 800 € HT.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-03",
+        "titre": "Finances Communales : Modification du Plan de financement acquisition des parcelles AD 106 à AD 109",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 20,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Vote à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Les conditions de location des biens édifiés sur les parcelles AD 106 à AD 109 ont été précisées.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-04",
+        "titre": "Finances Communales : OPAH Individualisations POZZO DI BORGO Lucienne",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 20,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Vote à l'unanimité"
+        },
+        "budget_euros": 5766,
+        "echeance": null,
+        "resume": "Une aide municipale a été accordée à Madame POZZO DI BORGO pour des travaux d'autonomie.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-05",
+        "titre": "Finances Communales : OPAH Individualisations BARTOLOZZI Marie",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 20,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Vote à l'unanimité"
+        },
+        "budget_euros": 968,
+        "echeance": null,
+        "resume": "Une aide municipale a été accordée à Madame BARTOLOZZI pour des travaux d'autonomie.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-06",
+        "titre": "Finances Communales : OPAH Individualisations ROCCHI François",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 20,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Vote à l'unanimité"
+        },
+        "budget_euros": 1725,
+        "echeance": null,
+        "resume": "Une aide municipale a été accordée à Monsieur ROCCHI pour des travaux d'autonomie.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-07",
+        "titre": "Finances Communales : Délibération Modificative n° 2 — Budget Général",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 20,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Vote à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "La délibération modificative n° 2 du budget général a été adoptée.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-08",
+        "titre": "Finances Communales : Autorisation à donner au Maire de ratifier la convention ORT avec la Collectivité de Corse",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 20,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Vote à l'unanimité"
+        },
+        "budget_euros": 236425.08,
+        "echeance": null,
+        "resume": "Le Maire a été autorisé à signer la convention ORT pour l'aménagement de la Route du Calvaire.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-09",
+        "titre": "Finances Communales : Création d’un pôle régional dédié aux activités de rugby",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 20,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Vote à l'unanimité"
+        },
+        "budget_euros": 1800000,
+        "echeance": null,
+        "resume": "Le principe de création d'un pôle régional dédié aux activités de rugby a été approuvé.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-10",
+        "titre": "Finances Communales : Clôture de la Régie ayant pour objet l’encaissement des recettes des droits de transport",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 20,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Vote à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "La régie d'encaissement des droits de transport a été clôturée.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-11",
+        "titre": "Finances Communales : Création d’un pôle régional dédié aux activités de rugby",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 20,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Vote à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le principe de création d'un pôle régional dédié aux activités de rugby a été approuvé.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-12",
+        "titre": "Finances Communales : Modification du montant maximum de l’Autorisation de Programme",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 20,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Vote à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le montant maximum de l'Autorisation de Programme a été modifié.",
+        "importance": "haute"
+      }
+    ],
+    "debats": [],
+    "informations": []
+  },
+  {
+    "date": "2025-07-01",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "U Merre (Maire)",
+        "Docteur Xavier POLI (Maire)"
+      ],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2025-01",
+        "titre": "Délibération Modificative n° 1 — Budget Général",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification du budget général de la commune.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-02",
+        "titre": "Ajustement des AP/CP",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Ajustement des autorisations de programme et de crédit.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-03",
+        "titre": "Attribution de subventions aux Associations",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Attribution de subventions aux associations locales.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-04",
+        "titre": "Adoption de plans de financement",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption de plusieurs plans de financement pour des projets.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-05",
+        "titre": "Créances admises en non-valeurs",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Validation des créances considérées comme non-valeurs.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-06",
+        "titre": "Adoption d’un plan de financement pour la Régie de l’Eau « Cort’Acqua »",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption d'un plan de financement pour la régie de l'eau.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-07",
+        "titre": "Adoption du R. P. Q. S. 2024",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du Règlement de Protection de la Qualité de Service pour 2024.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-08",
+        "titre": "Autorisation à donner au Maire de signer le marché de maitrise d’œuvre Espace Chabriéres",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Autorisation pour la signature d'un marché de maîtrise d'œuvre.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-09",
+        "titre": "Autorisation à donner au Maire de signer le marché de « Débroussaillage » - 4 lots",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Autorisation pour la signature d'un marché de débroussaillage.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-10",
+        "titre": "Création d’un poste de catégorie B — Auxiliaire de puéricultrice de classe supérieure",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Création d'un nouveau poste d'auxiliaire de puéricultrice.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-11",
+        "titre": "Modification de la délibération n° 2010-88 du 22 décembre 2010 créant un poste d’Ingénieur Territorial",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification d'une délibération antérieure concernant un poste d'ingénieur.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-12",
+        "titre": "Adoption d’un plan de formation des agents publics de la ville de Corte pour la période 2025-2027",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption d'un plan de formation pour les agents publics.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-13",
+        "titre": "Approbation du nouveau tableau de classement de la voirie communale",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Approbation d'un nouveau classement de la voirie communale.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-14",
+        "titre": "Acquisition des parcelles Section AD n° 106/107/108/109",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Acquisition de parcelles pour la commune.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-15",
+        "titre": "Autorisation à donner au Maire d’acquérir un Kiosque au prix de 10 000 € et de verser 1428 € de frais au liquidateur",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": 10000,
+        "echeance": null,
+        "resume": "Autorisation d'acquisition d'un kiosque.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-16",
+        "titre": "Ratification de la convention cadre 2025/2027 entre la Ville de Corte et OEC",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Ratification d'une convention cadre pour un programme d'étude.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-17",
+        "titre": "Désinscription d’un chemin de randonnée du PTIPR de la CdC",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Désinscription d'un chemin de randonnée.",
+        "importance": "basse"
+      },
+      {
+        "numero": "2025-18",
+        "titre": "Inscription d’Itinéraires de randonnée au PTIPR de la CdC",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Inscription de nouveaux itinéraires de randonnée.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-19",
+        "titre": "Installation de pièges photographiques pour lutter contre l’incivisme",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Installation de dispositifs pour lutter contre l'incivisme.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-20",
+        "titre": "Modification des tarifications des installations sportives et de la Maison du Temps Libre",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification des tarifs des installations sportives.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-21",
+        "titre": "Adoption de la carte scolaire rentrée 2025-2026",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption de la carte scolaire pour la rentrée 2025-2026.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-22",
+        "titre": "Adoption du Projet Educatif Territorial",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption d'un projet éducatif territorial.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-23",
+        "titre": "Modification de la Régie de Recettes de la Cantine Scolaire",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification de la régie de recettes de la cantine scolaire.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-24",
+        "titre": "Rapport de suivi de recommandations de la CRC sur la gestion de la commune",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Suivi des recommandations de la CRC.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-25",
+        "titre": "Complément de dénomination de voies communales — Validation des Odonymes",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Validation des dénominations de voies communales.",
+        "importance": "moyenne"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Compte-rendu de la réunion du Conseil Municipal du 8 avril 2025",
+      "Liste des marchés et avenants ratifiés entre le 18 mars 2025 et le 30 juin 2025",
+      "Liste des marchés et avenants ratifiés en 2024"
+    ]
+  },
+  {
+    "date": "2025-07-01",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "Xavier POLI (Maire)",
+        "Jean-Toussaint ALBERTINI (Conseiller)",
+        "Martine BARRIELE (Conseillère)",
+        "Jeannine CAMPANA (Conseillère)",
+        "Valérie CERUTTI (Conseillère)",
+        "Frédéric DEMUYNCK (Conseiller)",
+        "Christiane FRANCESCHINI (Conseillère)",
+        "Philippe GHIONGA (Conseiller)",
+        "Angèle GRIMALDI-OSTIENSI (Conseillère)",
+        "Marceau GUGLIELMI (Conseiller)",
+        "Philippe MAROSELLI (Conseiller)",
+        "Ange Julien NICOLINI (Conseiller)",
+        "Jean-François ORSATELLI (Conseiller)",
+        "Antoine ORSINI (Conseiller)",
+        "Nathalie PULICANI (Conseillère)",
+        "Blandine Françoise RUGGERI (Conseillère)",
+        "Joseph SABIANI (Conseiller)",
+        "Marcel SIMEONI (Conseiller)",
+        "Philippe SINDALI (Conseiller)"
+      ],
+      "absents_excuses": [
+        "Vanina BORROMEI (Procuration à Marceau SIMEONI)",
+        "Fabien LUCIANI (Procuration à Mare-Marie GUGLIELMI)",
+        "Jean-François ORSATELLI (Procuration à Xavier POLI)",
+        "Paula RINIERI (Procuration à Frédéric DEMUYNCK)",
+        "Marie-Cécile RUIZ (Procuration à Jeannine CAMPANA)"
+      ],
+      "absents": [
+        "Jean-Toussaint ALBERTINI",
+        "Elodie BAGHIONI",
+        "Marie-Luce CASTELLI",
+        "Michelle LUCIANI",
+        "Marie-Josée MALLERONI"
+      ]
+    },
+    "deliberations": [
+      {
+        "numero": "2025-01",
+        "titre": "Délibération Modificative n° 1 — Budget Général",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 19,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": 341101,
+        "echeance": "2025-07-03",
+        "resume": "Adoption de la Délibération Modificative n° 1 du Budget Général pour faire face à des charges nouvelles.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-02",
+        "titre": "Révision des Autorisations de Programme et des Crédits de Paiement (AP/CP)",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 19,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Révision des Autorisations de Programme et des Crédits de Paiement pour tenir compte de l'avancement des projets.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2025-03",
+        "titre": "Attribution de subvention aux Associations",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 19,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": 7700,
+        "echeance": null,
+        "resume": "Attribution de subventions supplémentaires à plusieurs associations.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-04",
+        "titre": "Adoption d’un plan de financement : Transition Numérique Ville de Corte",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 19,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": 180000,
+        "echeance": null,
+        "resume": "Adoption d'un plan de financement pour la transition numérique de la Ville de Corte.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-05",
+        "titre": "Adoption d’un plan de financement : Acquisition Foncière du terrain Pianuccia",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 19,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": 210000,
+        "echeance": null,
+        "resume": "Adoption d'un plan de financement pour l'acquisition foncière du terrain Pianuccia.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-06",
+        "titre": "Adoption d’un plan de financement : OPAH - Individualisation de crédits «Travaux Lourds»",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 19,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": 3461,
+        "echeance": null,
+        "resume": "Adoption d'un plan de financement pour l'individualisation de crédits pour des travaux lourds.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2025-07",
+        "titre": "Admission en non-valeurs pour l’exercice 2025",
+        "rapporteur": "Xavier POLI",
+        "vote": {
+          "pour": 19,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": 39400.48,
+        "echeance": null,
+        "resume": "Admission en non-valeurs de créances irrécouvrables pour l'exercice 2025.",
+        "importance": "haute"
+      }
+    ],
+    "debats": [],
+    "informations": []
+  },
+  {
+    "date": "2024-12-23",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "U Merre (Maire)",
+        "Docteur Xavier POLI (Conseiller Municipal)"
+      ],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2024-01",
+        "titre": "Régie du Parking « Restonica-Grotelle » : Délibération Modificative n° 2",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification de la régie du parking Restonica-Grotelle.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-02",
+        "titre": "Régie de l’Eau : Modification des redevances de l’Agence de l’Eau à compter du 01 janvier 2025",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": "2025-01-01",
+        "resume": "Modification des redevances de l'Agence de l'Eau.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-03",
+        "titre": "Ressources Humaines : Création d’un poste de Chargé de projet pour la refonte du système informatique de la Commune de Corte pour une durée de 6 ans maximum de catégorie A (Ingénieur Territorial)",
+        "rapporteur": "U Merre",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Création d'un poste pour la refonte du système informatique.",
+        "importance": "haute"
+      }
+    ],
+    "debats": [
+      {
+        "sujet": "Compte-rendu du Conseil Municipal du 09 décembre 2024",
+        "intervenants": [
+          {
+            "nom": "U Merre",
+            "position": "Maire"
+          }
+        ],
+        "decision": "Prise en compte du compte-rendu."
+      }
+    ],
+    "informations": [
+      "Réunion à la Maison du Temps Libre à 17h30."
+    ]
+  },
+  {
+    "date": "2024-12-23",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "Marie-Luce CASTELLI (Conseillère)",
+        "Fabien LUCIANI (Conseiller)",
+        "Ange-Julien NICOLINI (Conseiller)",
+        "Blandine-Françoise RUGGERI (Conseillère)",
+        "Marie-Cécile RUIZ (Conseillère)",
+        "Marc-Marie GUGLIELMI (Maire)"
+      ],
+      "absents_excuses": [],
+      "absents": [
+        "Jean-Toussaint ALBERTINI",
+        "Elodie BAGHIONI",
+        "Martine BARRIELE",
+        "Vanina BORROMEÏ",
+        "Nathalie PULICANI",
+        "Marcel SIMEONI"
+      ]
+    },
+    "deliberations": [
+      {
+        "numero": "2024-126",
+        "titre": "Budget Annexe : Délibération Modificative n° 2",
+        "rapporteur": "Marc-Marie GUGLIELMI",
+        "vote": {
+          "pour": 23,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil a approuvé la Décision Modificative n° 2 du Budget Annexe du Parking « Restonica-Grotelle ».",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-127",
+        "titre": "Modification des redevances de l’Agence de l’Eau au 01 janvier 2025",
+        "rapporteur": "Marc-Marie GUGLIELMI",
+        "vote": {
+          "pour": 23,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": "2025-01-01",
+        "resume": "Le Conseil a adopté les nouvelles redevances de l’Agence de l’Eau à compter du 01 janvier 2025.",
+        "importance": "haute"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Les taux des redevances ont été adoptés par le Conseil d’Administration du 04 octobre 2024.",
+      "Les redevances ont été publiées au Journal Officiel n° 0253 du 24 octobre 2024."
+    ]
+  },
+  {
+    "date": "2024-12-16",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "U Merre (Maire)",
+        "Docteur Xavier POLI (Maire)"
+      ],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [],
+    "debats": [
+      {
+        "sujet": "Rapports de la Chambre Régionale des Comptes",
+        "intervenants": [
+          {
+            "nom": "U Merre",
+            "position": "Maire"
+          },
+          {
+            "nom": "Docteur Xavier POLI",
+            "position": "Maire"
+          }
+        ],
+        "decision": "Débat sur la gestion de la Commune de Corte pour les exercices 2018 et suivants et la gestion de la Commune de Corte et de la Caisse des Ecoles pour les exercices 2019 et suivants."
+      }
+    ],
+    "informations": [
+      "Réunion à la Maison du Temps Libre à 17h30",
+      "Convocation envoyée le 09 décembre 2024"
+    ]
+  },
+  {
+    "date": "2024-12-16",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "Frédéric DEMUYNCK (Procuration)",
+        "Philippe GHIONGA (Procuration)",
+        "Ange-Julien NICOLINI (Procuration)",
+        "Marie-Cécile RUIZ (Procuration)",
+        "Marc-Marie GUGLIELMI (Maire)",
+        "Xavier POLI (Secrétaire de Séance)"
+      ],
+      "absents_excuses": [],
+      "absents": [
+        "Jean-Toussaint ALBERTINI",
+        "Elodie BAGHIONI",
+        "Vanina BORROMEÏ",
+        "Fabien LUCIANI",
+        "Blandine-Françoise RUGGERI"
+      ]
+    },
+    "deliberations": [
+      {
+        "numero": "24-12/123",
+        "titre": "Délibération modificative à la délibération n° 20-06/011 du 22 juin 2020",
+        "rapporteur": "Marc-Marie GUGLIELMI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil autorise le Maire à modifier la délibération n° 20-06/011 en désignant Docteur Xavier POLI comme membre titulaire et Monsieur Philippe MAROSELLI comme membre suppléant au Conseil d’Administration de l’Université de Corse.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-12/124",
+        "titre": "Rapport d’Observations Définitives de la Chambre Régionale des Comptes de Corse concernant la Gestion de la Commune de Corte pour les exercices 2018 et suivants",
+        "rapporteur": "Marc-Marie GUGLIELMI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Prise d'acte"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil prend acte de la communication du Rapport d’Observations Définitives sur la gestion de la Commune de Corte pour les exercices 2018 et suivants.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-12/125",
+        "titre": "Rapport d’Observations Définitives de la Chambre Régionale des Comptes de Corse concernant la Gestion de la Commune de Corte et de la Caisse des Ecoles pour les exercices 2019 et suivants",
+        "rapporteur": "Marc-Marie GUGLIELMI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Prise d'acte"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil prend acte de la communication du Rapport d’Observations Définitives sur la gestion de la Commune de Corte et de la Caisse des Ecoles pour les exercices 2019 et suivants.",
+        "importance": "moyenne"
+      }
+    ],
+    "debats": [],
+    "informations": []
+  },
+  {
+    "date": "2024-12-09",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [],
+    "debats": [],
+    "informations": []
+  },
+  {
+    "date": "2024-10-28",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2024-01",
+        "titre": "Budget Annexe « Restonica-Grotelle » : Délibération Modificative n° 1",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification du budget annexe pour le projet Restonica-Grotelle.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-02",
+        "titre": "Autorisation à donner au Maire de signer l’avenant à la convention de partenariat et de financement passée avec le Conservatoire Henri Tomasi",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Signature d'un avenant pour le partenariat avec le Conservatoire.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-03",
+        "titre": "Adoption d’un plan de financement : Individualisation de crédit OPAH au profit de Madame Marie-Françoise RINIERI",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Plan de financement pour le projet OPAH au profit de Marie-Françoise RINIERI.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-04",
+        "titre": "Autorisation à donner au Maire de céder un bien mobilier",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Cession d'un bien mobilier par le Maire.",
+        "importance": "basse"
+      },
+      {
+        "numero": "2024-05",
+        "titre": "Autorisation donnée au Maire de signer le marché de « Fournitures et gestion de Titres Restaurant pour le personnel de la ville de Corte »",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Signature d'un marché pour la gestion des titres restaurant.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-06",
+        "titre": "Autorisation donnée au Maire de signer le marché de mission de maitrise d’œuvre en vue de l’aménagement de l’espace Logirem-Restonica",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Marché pour la maîtrise d'œuvre de l'aménagement de Logirem-Restonica.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-07",
+        "titre": "Création d’un poste d’Informaticien de la Ville de CORTE, Catégorie « A »",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Création d'un nouveau poste d'informaticien.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-08",
+        "titre": "Adoption du R. S. U. 2023",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du Règlement de Service Universel pour 2023.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-09",
+        "titre": "Cession du fonds de commerce Camping « Alivetu » : Autorisation donnée au Maire pour le transfert du Bail Commercial au profit de la SAS DESTINATION CORTE CENTRE CORSE en lieu et place de la Famille DEBAIN",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Cession du fonds de commerce du camping Alivetu.",
+        "importance": "haute"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Compte-rendu de la réunion du Conseil Municipal du 23 septembre 2024",
+      "Liste des marchés et avenants notifiés depuis fin juillet"
+    ]
+  },
+  {
+    "date": "2024-10-28",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "Dr. Xavier POLI (Maire)",
+        "Marc-Marie GUGLIELMI (Secrétaire de Séance)"
+      ],
+      "absents_excuses": [
+        "Michelle LUCIANI (Procuration)",
+        "Marie-Cécile RUIZ (Procuration)"
+      ],
+      "absents": [
+        "Jean-Toussaint ALBERTINI",
+        "Elodie BAGHIONI",
+        "Martine BARRIELE",
+        "Marie-Luce CASTELLI",
+        "Frédéric DEMUYNCK",
+        "Fabien LUCIANI",
+        "Ange-Julien NICOLINI",
+        "Paula RINIERI",
+        "Marcel SIMEONI"
+      ]
+    },
+    "deliberations": [
+      {
+        "numero": "24-10/094",
+        "titre": "Budget Annexe du « Parking Restonica-Grotelle » : Délibération Modificative n° 1",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": 18,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil adopte la DM n° du Budget Annexe pour réajuster des écritures comptables.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-10/095",
+        "titre": "Autorisation à donner au Maire en vue de signer l’avenant à la Convention de Partenariat 2024-2025",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": 18,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": 50000,
+        "echeance": null,
+        "resume": "Le Conseil autorise le Maire à signer l'avenant de reconduction avec le Conservatoire de Musique.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-10/096",
+        "titre": "OPAH: Individualisation de crédits Propriétaire « Occupant — Travaux d’Autonomie de la Personne »",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": 18,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": 1568,
+        "echeance": null,
+        "resume": "Le Conseil autorise une aide municipale pour des travaux d'autonomie au profit de Madame Marie-Françoise RINIERI.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-10/097",
+        "titre": "Autorisation à donner au Maire en vue de céder un bien mobilier",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": 18,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": 6600,
+        "echeance": null,
+        "resume": "Le Conseil autorise la vente d'un véhicule immatriculé FX-906-ET.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-10/098",
+        "titre": "Marchés Publics : Autorisation donnée au Maire de signer le marché de « Fournitures et Gestion de Titres Restaurant »",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": 18,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil autorise le Maire à signer le marché avec l'entreprise SWILE.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-10/099",
+        "titre": "Marchés Publics : Autorisation donnée au Maire de signer le marché de « Maîtrise d’œuvre »",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": 18,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil autorise le Maire à signer le marché de maîtrise d'œuvre avec le Groupement Egis Villes et Transports SAS / ST.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-10/100",
+        "titre": "Gestion des Ressources Humaines: Création d’un emploi permanent au grade d’Ingénieur Territorial",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": 18,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": "2025-01-01",
+        "resume": "Le Conseil décide de créer un emploi permanent d'Informaticien à compter du 1er janvier 2025.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-10/101",
+        "titre": "Gestion des Ressources Humaines : Adoption du Rapport Social Unique 2023 (RSU)",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": 18,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil prend acte du Rapport Social Unique 2023 de la Commune.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-10/102",
+        "titre": "Cession du Fonds de Commerce Camping Alivetu — Transfert de Bail Communal",
+        "rapporteur": "Non spécifié",
+        "vote": {
+          "pour": 18,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": 2500,
+        "echeance": null,
+        "resume": "Le Conseil autorise le transfert du Bail Commercial au profit de la Société « Destination Corte Centre Corse ».",
+        "importance": "haute"
+      }
+    ],
+    "debats": [],
+    "informations": []
+  },
+  {
+    "date": "2024-07-01",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2024-01",
+        "titre": "Délibération Modificative n° 1",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification des finances communales.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-02",
+        "titre": "Instauration d’un mécanisme de provisionnement pour risques et charges de fonctionnement du Compte Epargne Temps des Agents Municipaux",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Mise en place d'un mécanisme de provisionnement.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-03",
+        "titre": "Attribution de subventions",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Attribution de subventions aux projets locaux.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-04",
+        "titre": "Participation à l’appel à candidature « ITI » : Investissement Territoriaux Intégrés du Programme Corse FEDER-FSE + 2021-2027",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Participation à un programme d'investissement territorial.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-05",
+        "titre": "Individualisation des aides « Travaux lourds »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Individualisation des aides pour les travaux lourds.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-06",
+        "titre": "Mise en place d’un réglement d’aide « Etat Descriptif de Division » (EDD)",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Réglementation pour l'aide EDD.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-07",
+        "titre": "Individualisation d’aide EDD - copropriété 5, Quartier des 4 Fontaines",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Aide individualisée pour la copropriété.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-08",
+        "titre": "Signature de l’Avenant n° 1 du marché de Main d’Œuvre « Voie Douce »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Signature d'un avenant pour le marché de la voie douce.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-09",
+        "titre": "Création d’un poste d’Animateur Principal de Première Classe par voie d’avancement",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Création d'un nouveau poste dans les ressources humaines.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-10",
+        "titre": "Ratification de la Convention Triennale relative à la Tarification des Cantines Scolaires",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Ratification d'une convention pour les cantines scolaires.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-11",
+        "titre": "Dérogation à la règle du repos dominical - Année 2024",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Dérogation pour le repos dominical.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-12",
+        "titre": "Adressage communal - Validation des Odonymes",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Validation des noms de rues.",
+        "importance": "moyenne"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Compte-rendu des réunions du Conseil Municipal des 08 et 22 avril 2024.",
+      "Communication de la délibération arrêtant le P. L. U, Conseil Municipal du 22 avril 2024.",
+      "Rescrit Administratif — substitution à des copropriétaires défaillants pour la réalisation de travaux urgents de l’immeuble sis au 5, Quartier des Quatre Fontaines, (art. L2121-13 du CGCT).",
+      "Liste des marchés et des avenants notifiés entre le 01/02/2024 et 30/06/2024, dans le cadre des délégations accordées au Maire par le Conseil Municipal (article L.2122-22 du CGCT)."
+    ]
+  },
+  {
+    "date": "2024-07-01",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "Dr. Xavier POLI (Maire)",
+        "Marc-Marie GUGLIELMI (Secrétaire de Séance)",
+        "Paula RINIERI",
+        "Jeannine CAMPANA",
+        "Marie-Josée MALLERONI",
+        "Christian FRANCESCHINI",
+        "Michelle LUCIANI",
+        "Ange-Julien NICOLINI"
+      ],
+      "absents_excuses": [],
+      "absents": [
+        "Jean-Toussaint ALBERTINI",
+        "Elodie BAGHIONI",
+        "Martine BARRIELE",
+        "Fabien LUCIANI",
+        "Jean-Francois ORSATELLI",
+        "Marie-Cécile RUIZ",
+        "Joseph SABIANI"
+      ]
+    },
+    "deliberations": [
+      {
+        "numero": "24-07/059",
+        "titre": "Délibération Modificative n° 1",
+        "rapporteur": "Paula RINIERI",
+        "vote": {
+          "pour": 21,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Madame Paula RINIERI ne prenant pas part au vote"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Permettre budgétairement de substituer la Commune à quatre propriétaires défaillants dans l'immeuble situé 5, Quartier des Quatre Fontaines à CORTE.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-07/060",
+        "titre": "Instauration d’un mécanisme de provisionnement pour risques et charges de fonctionnement du Compte Epargne Temps des Agents Municipaux",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 21,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": 5250,
+        "echeance": "2024-01-01",
+        "resume": "Autorise le Maire à constituer des provisions pour risques et charges sur les budgets Général et du CCAS.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-07/061",
+        "titre": "Attribution de subventions",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 21,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Décide d’attribuer des subventions à plusieurs associations.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-07/062",
+        "titre": "Participation à l’appel à candidature « ITI »",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 21,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": 700000,
+        "echeance": "2024-09-13",
+        "resume": "Autorise le Maire à répondre à l’appel à candidatures ITI.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-07/063",
+        "titre": "Individualisation de crédits Propriétaire « Occupant » au profit de Mme Jeanne-Marie VIGNOLI",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 21,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": 1124,
+        "echeance": null,
+        "resume": "Autorise le Maire à individualiser une aide municipale pour des travaux lourds.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-07/064",
+        "titre": "Individualisation de crédits Propriétaire « Bailleur » au profit de Mme Lesia DERDERIAN",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 21,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": 38067,
+        "echeance": null,
+        "resume": "Autorise le Maire à individualiser une aide pour des travaux lourds.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-07/065",
+        "titre": "Individualisation de crédits Propriétaire « Bailleur » au profit de Mme Lesia DERDERIAN",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 21,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": 37290,
+        "echeance": null,
+        "resume": "Autorise le Maire à individualiser une aide pour des travaux lourds.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-07/066",
+        "titre": "Individualisation de crédits Propriétaire « Bailleur » au profit de Mme Lesia DERDERIAN",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 21,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": 38785,
+        "echeance": null,
+        "resume": "Autorise le Maire à individualiser une aide pour des travaux lourds.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-07/067",
+        "titre": "Mise en place d’un règlement d’aide « Etat Descriptif de Division » (EDD)",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 21,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": 100,
+        "echeance": null,
+        "resume": "Approuve la proposition d'aide pour l'établissement d'un État Descriptif de Division.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-07/068",
+        "titre": "Individualisation d’aide EDD — Copropriété 5, Quartier des 4 Fontaines",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 18,
+          "contre": 0,
+          "abstention": 4,
+          "detail_vote": "Mesdames Paula RINIERI, Jeannine CAMPANA, Marie-Josée MALLERONI et Monsieur Marc-Marie GUGLIELMI ne prenant pas part au vote"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Autorise le Maire à verser une prime pour la réalisation d’un État Descriptif de Division.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-07/069",
+        "titre": "Signature de l’avenant n° 2 du marché de Main d’Œuvre « Voie Douce »",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 22,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": 326538.75,
+        "echeance": null,
+        "resume": "Autorise le Maire à signer l’avenant n° 2 de Maitrise d’Œuvre pour la création d’une « Voie Douce ».",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-07/070",
+        "titre": "Création d’un poste d’Animateur Principal de Première Classe par voie d’avancement",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 22,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": "2024-07-01",
+        "resume": "Décide de créer un poste d’Animateur Principal de 1 Classe à temps complet.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-07/071",
+        "titre": "Données du Rapport Social Unique 2022",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 21,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Prend acte du Rapport Social Unique 2022 de la Commune.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-07/072",
+        "titre": "Ratification de la Convention Triennale relative à la Tarification Sociale des Cantines Scolaires",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 21,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Approuve la Convention Triennale pour la Tarification Sociale des Cantines Scolaires.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-07/073",
+        "titre": "Dérogation à la règle du repos dominical pour l’année 2024",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 21,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Décide d’émettre un avis favorable à la liste des dimanches de l’année 2024 pour dérogation au repos dominical.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "24-07/074",
+        "titre": "Adressage Communal — Validation des Odonymes",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 21,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Approuve la validation des noms attribués à l'ensemble des voies communales.",
+        "importance": "moyenne"
+      }
+    ],
+    "debats": [],
+    "informations": []
+  },
+  {
+    "date": "2024-04-22",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2024-01",
+        "titre": "Plan Local d’Urbanisme : Arrêté du P. L. U.",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Discussion sur l'arrêté du Plan Local d'Urbanisme.",
+        "importance": "haute"
+      }
+    ],
+    "debats": [],
+    "informations": []
+  },
+  {
+    "date": "2024-04-22",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "Dr. Xavier POLI (Maire)",
+        "Marc-Marie GUGLIELMI (Secrétaire de Séance)",
+        "Vanina BORROMEÏ",
+        "Marie-Luce CASTELLI",
+        "Frédéric DEMUYNCK",
+        "Paula RINIERI",
+        "Marcel SIMEOND"
+      ],
+      "absents_excuses": [],
+      "absents": [
+        "J.T. ALBERTINI",
+        "E. BAGHIONI",
+        "F. LUCIANI",
+        "A. ORSINI",
+        "N. PULICAND"
+      ]
+    },
+    "deliberations": [
+      {
+        "numero": "2024-058",
+        "titre": "Arrêt du Projet de Révision du Plan Local d’Urbanisme (P. L. U.) & Bilan de la Concertation Publique",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 19,
+          "contre": 0,
+          "abstention": 5,
+          "detail_vote": "Abstention de l'Opposition"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil a validé le Bilan de la Concertation et arrêté le Projet de Révision du Plan Local d’Urbanisme.",
+        "importance": "haute"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Affichage durant un mois en Mairie."
+    ]
+  },
+  {
+    "date": "2024-04-08",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2024-01",
+        "titre": "Affectation du Résultat 2023",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Affectation du résultat de l'année 2023.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-02",
+        "titre": "Vote des taux d’imposition et des taxes directes locales 2024",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Vote des taux d'imposition pour l'année 2024.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-03",
+        "titre": "Ajustements AP/CP 2024/2027",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Ajustements des autorisations de programme et crédits de paiement pour la période 2024-2027.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-04",
+        "titre": "Adoption du Budget Primitif 2024",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du budget primitif pour l'année 2024.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-05",
+        "titre": "Attribution de subventions aux Associations",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Attribution de subventions aux associations selon la liste présentée.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-06",
+        "titre": "Adoption de plans de financement",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption des plans de financement pour la restauration du patrimoine et le rééquipement des sites d'escalade.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-07",
+        "titre": "Affectation du Résultat 2023 - Régie de l'Eau « Cort’ Acqua »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Affectation du résultat de l'année 2023 pour la régie de l'eau.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-08",
+        "titre": "Adoption du Budget Primitif 2024 - Régie de l'Eau « Cort’ Acqua »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du budget primitif pour la régie de l'eau pour l'année 2024.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-09",
+        "titre": "Affectation du Résultat 2023 - Régie du Parking Municipal Tuffelli",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Affectation du résultat de l'année 2023 pour la régie du parking municipal Tuffelli.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-10",
+        "titre": "Adoption du Budget Primitif 2024 - Régie du Parking Municipal Tuffelli",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du budget primitif pour la régie du parking municipal Tuffelli pour l'année 2024.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-11",
+        "titre": "Affectation du Résultat 2023 - Régie du Parking « Restonica-Grotelle »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Affectation du résultat de l'année 2023 pour la régie du parking Restonica-Grotelle.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-12",
+        "titre": "Adoption du Budget Primitif 2024 - Régie du Parking « Restonica-Grotelle »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du budget primitif pour la régie du parking Restonica-Grotelle pour l'année 2024.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-13",
+        "titre": "Création d’un poste d’« Educateur Territorial de Jeunes Enfants »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Création d'un nouveau poste d'éducateur territorial de jeunes enfants.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-14",
+        "titre": "Lancement d’une procédure de passation d’une DSP aéroportuaire",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Lancement d'une procédure pour la passation d'une délégation de service public pour l'aérodrome de Corte.",
+        "importance": "moyenne"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Compte-rendu de la réunion du Conseil Municipal du 25 mars 2024."
+    ]
+  },
+  {
+    "date": "2024-04-08",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "Dr. Xavier POLI (Maire)",
+        "Marc-Marie GUGLIELMI (Secrétaire de Séance)",
+        "V. BORROMEÏ",
+        "M. L. CASTELLI",
+        "F. DEMUYNCK",
+        "P. RINIERI",
+        "M. SIMEON",
+        "C. FRANCESCHINI",
+        "F. LUCIANI",
+        "N. PULICANI",
+        "M.C. RUIZ"
+      ],
+      "absents_excuses": [
+        "J.T. ALBERTINI",
+        "E. BAGHIONI",
+        "MJ MALLERONI",
+        "A. ORSIND"
+      ],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "24-04/043",
+        "titre": "Affectation du Résultat 2023 de la Commune",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Affectation à l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil affecte le résultat de fonctionnement de l'exercice 2023.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/044",
+        "titre": "Vote des taux d’imposition et des taxes directes locales 2024",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Vote à l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil décide d'appliquer les taux d'imposition pour l'année 2024.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/045",
+        "titre": "Ajustements AP /CP 2024/2027",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Décision à l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil procède aux réajustements des AP/CP pour les années 2024/2027.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/046",
+        "titre": "Adoption du Budget Primitif 2024",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 20,
+          "contre": 0,
+          "abstention": 5,
+          "detail_vote": "Adopté par 20 voix Pour, 5 Abstentions"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Budget Primitif 2024 est adopté en Dépenses et en Recettes.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/047",
+        "titre": "Attribution de subventions aux Associations",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Décision à l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": 256500,
+        "echeance": null,
+        "resume": "Le Conseil attribue 256 500 € aux associations.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/048",
+        "titre": "Adoption d’un plan de financement pour la restauration du patrimoine mobilier des Eglises de Corte",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Décision à l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": 50000,
+        "echeance": null,
+        "resume": "Adoption du plan de financement pour la restauration du patrimoine mobilier.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/049",
+        "titre": "Adoption d’un plan de financement pour le rééquipement des sites d’escalade dans la Vallée de la Restonica",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Décision à l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": 32200,
+        "echeance": null,
+        "resume": "Adoption du plan de financement pour le rééquipement des sites d'escalade.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/050",
+        "titre": "Affectation du Résultat 2023 de la Régie de l’Eau",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Affectation à l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil affecte le résultat de fonctionnement de l'exercice 2023.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/051",
+        "titre": "Adoption du Budget Primitif 2024 de la Régie de l’Eau",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Budget Primitif 2024 de la Régie de l'Eau est adopté.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/052",
+        "titre": "Affectation du Résultat 2023 de la Régie du Parking Tuffelli",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Affectation à l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil affecte le résultat de fonctionnement de l'exercice 2023.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/053",
+        "titre": "Adoption du Budget Primitif 2024 de la Régie du Parking Tuffelli",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Budget Primitif 2024 de la Régie du Parking Tuffelli est adopté.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/054",
+        "titre": "Affectation du Résultat 2023 de la Régie du Parking Restonica-Grotelle",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Mme Marie-Luce CASTELLI ne prenant pas part au vote"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil affecte le résultat de fonctionnement de l'exercice 2023.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/055",
+        "titre": "Adoption du Budget Primitif 2024 de la Régie du Parking Restonica-Grotelle",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Mme Marie-Luce CASTELLI ne prenant pas part au vote"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Budget Primitif 2024 de la Régie du Parking Restonica-Grotelle est adopté.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/056",
+        "titre": "Création d’un poste d’Educateur Territorial Jeunes Enfants",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Décision à l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": null,
+        "echeance": "2024-06-01",
+        "resume": "Création d'un poste d'Educateur Territorial Jeunes Enfants à compter du 01 juin 2024.",
+        "importance": "haute"
+      },
+      {
+        "numero": "24-04/057",
+        "titre": "Lancement d’une procédure de passation d’une DSP aéroportuaire pour l’aérodrome de Corte",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Décision à l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Lancement de la procédure de passation de la convention de DSP aéroportuaire.",
+        "importance": "haute"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Séance levée à 19h30."
+    ]
+  },
+  {
+    "date": "2024-02-12",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "Docteur Xavier POLI (Maire)"
+      ],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2024-01",
+        "titre": "Admission en non-valeurs",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Admission en non-valeurs des créances irrécouvrables.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-02",
+        "titre": "Rapport des Orientations Budgétaires 2024",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Présentation des orientations budgétaires pour l'année 2024.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-03",
+        "titre": "Adoption de plans de financement",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption des plans de financement pour divers projets.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-04",
+        "titre": "Individualisation de crédits OPAH - Propriétaires Occupants",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Individualisation des crédits pour l'OPAH.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-05",
+        "titre": "Ratification de la convention ANTAI",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Ratification de la convention avec l'ANTAI.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-06",
+        "titre": "Ratification de la convention de partenariat pour la Flamme Olympique « Olymp’in Corti »",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Ratification de la convention pour la Flamme Olympique.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-07",
+        "titre": "Ratification de la convention OPH 2C",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Ratification de la convention pour la réservation de logements.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-08",
+        "titre": "Ratification de la convention EDF — Transition Energétique",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Ratification de la convention avec EDF pour la transition énergétique.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-09",
+        "titre": "Ratification de la convention EDF — Concession pour le Service Public",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Ratification de la convention EDF pour le service public.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-10",
+        "titre": "Rapport des Orientations Budgétaires 2024 - Régie de l’Eau",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Présentation des orientations budgétaires pour la régie de l'eau.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-11",
+        "titre": "Rapport des Orientations Budgétaires 2024 - Régie du Parking Municipal « Tuffelli »",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Présentation des orientations budgétaires pour le parking Tuffelli.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-12",
+        "titre": "Rapport des Orientations Budgétaires 2024 - Régie du Parking « Restonica-Grotelle »",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Présentation des orientations budgétaires pour le parking Restonica-Grotelle.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2024-13",
+        "titre": "Autorisation à donner au Maire en vue de ratifier l’avenant n° 1 du marché de maîtrise d’œuvre",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Autorisation pour ratifier l'avenant n° 1 du marché de maîtrise d'œuvre.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-14",
+        "titre": "Gestion du Personnel - Emplois saisonniers",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Discussion sur les emplois saisonniers.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-15",
+        "titre": "Renouvellement de la délibération n° 21-10/112 du 04/10/2021",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Renouvellement de la délibération pour la création de 5 postes de vacataires.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-16",
+        "titre": "Création d’un poste de vacataire « Maître-nageur-sauveteur »",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Création d'un poste de vacataire pour maître-nageur-sauveteur.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-17",
+        "titre": "Remboursement des frais de déplacement dans la Fonction Publique Territoriale",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Discussion sur le remboursement des frais de déplacement.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-18",
+        "titre": "Autorisation à donner au Maire en vue d’acquérir la parcelle Section AI n° 308",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Autorisation pour l'acquisition d'une parcelle.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-19",
+        "titre": "Renouvellement de la délibération autorisant la mise à disposition des véhicules communaux",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Renouvellement de la délibération sur la mise à disposition des véhicules.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2024-20",
+        "titre": "Approbation du Règlement de Fonctionnement de la Crèche « A Casuccia »",
+        "rapporteur": "Docteur Xavier POLI",
+        "vote": {
+          "pour": 0,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Approbation du règlement de fonctionnement de la crèche.",
+        "importance": "moyenne"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Montant des indemnités brutes perçues par les élus de l’exécutif municipal — Article L.2123-24-1-1 du CGCT.",
+      "Liste des marchés et avenants notifiés du 01/01/2023 au 31/01/2024 dans le cadre de l’article L.2122-22 du CGCT.",
+      "Compte-rendu de la réunion du Conseil Municipal du 20 novembre 2023."
+    ]
+  },
+  {
+    "date": "2023-11-20",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "U Merre (Maire)"
+      ],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [],
+    "debats": [
+      {
+        "sujet": "Bilan, dégâts, conséquences, suite aux tempêtes des 2 et 4 Novembre 2023",
+        "intervenants": [],
+        "decision": "À déterminer lors de la réunion"
+      }
+    ],
+    "informations": [
+      "Réunion à la Maison du Temps libre à 17H30"
+    ]
+  },
+  {
+    "date": "2023-10-30",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2023-01",
+        "titre": "Autorisation à donner au Maire de signer une modification contractuelle des lots 5 et 8 du marché N°22S0008 de fourniture de produits alimentaires.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification contractuelle des lots 5 et 8 du marché de fourniture de produits alimentaires.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-02",
+        "titre": "Décision Modificative N° 2 - Budget Général.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification du budget général.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-03",
+        "titre": "Attribution de subventions aux Associations.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Attribution de subventions aux associations locales.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-04",
+        "titre": "Adoption de plans prévisionnels de financements pour divers projets.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption de plans de financements pour la construction de logements et la rénovation des éclairages.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-05",
+        "titre": "Revitalisation des commerces du centre-ville: renouvellement de l’opération « Bons au profit des personnels communaux » durant la période de Noël.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Renouvellement de l'opération de bons pour les personnels communaux.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-06",
+        "titre": "Référentiel M 57 — Application de la fongibilité des crédits à partir du 1er janvier 2024.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": "2024-01-01",
+        "resume": "Application de la fongibilité des crédits.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-07",
+        "titre": "Régularisation d’erreurs d’imputations budgétaires.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Régularisation des erreurs d'imputations budgétaires.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-08",
+        "titre": "Admissions en non-valeurs.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Admissions en non-valeurs.",
+        "importance": "basse"
+      },
+      {
+        "numero": "2023-09",
+        "titre": "Augmentation de la participation de l'employeur pour la protection complémentaire SANTE dans les contrats labellisés à compter du 1er janvier 2024.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": "2024-01-01",
+        "resume": "Augmentation de la participation de l'employeur pour la santé.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-10",
+        "titre": "Décision Modificative N°2 - Régie de l’Eau « Cort’Acqua ».",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification budgétaire pour la régie de l'eau.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-11",
+        "titre": "Adoption du plan de financement pour la réfection des réseaux AEP du Cours Paoli.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Plan de financement pour la réfection des réseaux d'eau.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-12",
+        "titre": "Adoption du plan de financement pour la réfection des réseaux AEP du Faubourg Scarafaglie.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Plan de financement pour la réfection des réseaux d'eau.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-13",
+        "titre": "Adoption du plan de financement pour la réfection des réseaux AEP du Lotissement Communal RT 50.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Plan de financement pour la réfection des réseaux d'eau.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-14",
+        "titre": "Création d’une prime de pouvoir d’achat exceptionnelle pour les agents de la Commune.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Création d'une prime exceptionnelle pour les agents.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-15",
+        "titre": "Création de l’observatoire territorial du logement des étudiants de Corse.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Création d'un observatoire pour le logement des étudiants.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-16",
+        "titre": "Débat et adoption des orientations générales du projet d’aménagement et de développement durables (PADD) dans le cadre de la révision du Plan Local d’Urbanisme (PLU).",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption des orientations du PADD.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-17",
+        "titre": "Vente du bâtiment de l’Institut National de Recherche pour l’Agriculture, l’Alimentation et Environnement (INRAE) au profit de l'Université de Corse.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Vente d'un bâtiment à l'Université de Corse.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-18",
+        "titre": "Autorisation à donner au Maire de signer avec la LOGIREM la « convention de gestion en flux des droits de réservation ».",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Signature d'une convention avec LOGIREM.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-19",
+        "titre": "Mise à disposition de la Maison du Temps Libre : Modification de la grille tarifaire.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification de la grille tarifaire pour la Maison du Temps Libre.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-20",
+        "titre": "Charte d’occupation du Domaine Public : Modification de l’intitulé d’un droit de stationnement sur la voie publique.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification de l'intitulé d'un droit de stationnement.",
+        "importance": "basse"
+      },
+      {
+        "numero": "2023-21",
+        "titre": "Modification de l’acte constitutif portant création de la régie municipale du marché de la Place Padoue.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification de l'acte constitutif de la régie municipale.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-22",
+        "titre": "Adoption de la nouvelle tarification pour le marché de la Place Padoue.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption de la nouvelle tarification pour le marché.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-23",
+        "titre": "Adoption du règlement général du Marché de la Place Padoue.",
+        "rapporteur": "Maire",
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du règlement général du marché.",
+        "importance": "moyenne"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Information aux élus du Conseil Municipal.",
+      "Procès-verbal du Conseil Municipal du 24 juillet 2023."
+    ]
+  },
+  {
+    "date": "2023-07-24",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2023-01",
+        "titre": "Autorisation à donner au Maire pour organiser le concours de Maitrise d'Œuvre pour la construction d'une salle polyvalente, de locaux pour les besoins des associations et des services techniques « Espace Chabrières »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Autorisation donnée au Maire pour organiser un concours de Maitrise d'Œuvre.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-02",
+        "titre": "Autorisation à donner au Maire pour organiser le concours restreint de Maitrise d’œuvre pour la réalisation d’une passerelle dédiée aux piétons et aux cycles à Corte",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Autorisation donnée au Maire pour organiser un concours restreint de Maitrise d’œuvre.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-03",
+        "titre": "Création d’une voie douce et réhabilitation du centre ancien : Autorisations à donner au Maire pour lancer des marchés sous la forme d’appels d’offres ouverts et de les signer par anticipation",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Autorisation donnée au Maire pour lancer des marchés pour la création d'une voie douce.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-04",
+        "titre": "Autorisation à donner au Maire de signer une convention de délégation de maîtrise d’ouvrage avec l'Université de Corse",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Convention de délégation de maîtrise d’ouvrage signée avec l'Université de Corse.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-05",
+        "titre": "Autorisation à donner au Maire de signer une convention de partenariat et de financement avec le Conservatoire de Musique de Corse, en vue de créer une antenne du Conservatoire à Corte",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Partenariat avec le Conservatoire de Musique de Corse pour créer une antenne à Corte.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-06",
+        "titre": "Décision Modificative N° 1 - Budget Général",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification du budget général.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-07",
+        "titre": "Amortissement des études non suivies de réalisations et reprise des subventions ayant servi à les financer",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Amortissement des études non réalisées.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-08",
+        "titre": "Attribution de subventions aux Associations",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Subventions attribuées aux associations.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-09",
+        "titre": "Adoption de plans de financement pour l'assistance à maîtrise d’ouvrage pour la construction de logements pour les besoins des Services Publics Locaux",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Plans de financement adoptés pour la construction de logements.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-10",
+        "titre": "Adoption de plans de financement pour la rénovation des locaux de la Police Municipale",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Plans de financement adoptés pour la rénovation des locaux de la Police Municipale.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-11",
+        "titre": "Répartition des dépenses exécutées à partir de 2001 au titre du Chapitre 23 : « travaux en cours » pour valoriser les inventaires des écoles Porette et Sandreschi",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Répartition des dépenses pour valoriser les inventaires des écoles.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-12",
+        "titre": "Individualisation de crédits O.P.A.H. au profit de Madame GIANNOTTI Michèle",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Individualisation de crédits O.P.A.H. pour Madame GIANNOTTI Michèle.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-13",
+        "titre": "Décision Modificative N° 1 - Budget Eau « CORT’ACQUA »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification du budget eau.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-14",
+        "titre": "Adoption d’un plan d’actions de la Régie « CortAcqua » pour l’amélioration du rendement et la réduction des pertes",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Plan d'actions adopté pour améliorer le rendement de la Régie.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-15",
+        "titre": "Création d’emplois pour favoriser l'avancement de grade des agents communaux de catégorie « C »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Création d'emplois pour l'avancement de grade des agents communaux.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-16",
+        "titre": "Modification de la délibération N°0911/053 du 27 septembre 2011 portant création d’un emploi permanent d’infirmier(e) territorial(e) en soins généraux, à temps complet",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification de la délibération concernant l'emploi d'infirmier(e) territorial(e).",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-17",
+        "titre": "Autorisation à donner au Maire en vue de céder une parcelle de terre au profit des consorts RABAZZANI",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Cession d'une parcelle de terre au profit des consorts RABAZZANI.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-18",
+        "titre": "Autorisation à donner au Maire en vue de céder une emprise foncière au profit de la Société ERILIA",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Cession d'une emprise foncière au profit de la Société ERILIA.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-19",
+        "titre": "Mise en conformité des baux : Autorisation à donner au Maire de signer un nouveau bail commercial avec la famille de feu DEBAIN Daniel",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Mise en conformité des baux avec la famille DEBAIN.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-20",
+        "titre": "Approbation de la Charte d’Occupation du Domaine Public 2023",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Approbation de la Charte d’Occupation du Domaine Public.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-21",
+        "titre": "Installation de ralentisseurs : Déplacement d’un panneau d’agglomération sur la RD 623, route de la Restonica",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Installation de ralentisseurs et déplacement d'un panneau d'agglomération.",
+        "importance": "basse"
+      },
+      {
+        "numero": "2023-22",
+        "titre": "Compte rendu des Conseils Municipaux des 11 avril 2023 et 20 Mars 2023",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Compte rendu des conseils municipaux précédents.",
+        "importance": "basse"
+      },
+      {
+        "numero": "2023-23",
+        "titre": "Désignation de l’équipe de Maitrise d’œuvre du projet « création d’une voie douce », suite à la délibération du Conseil Municipal en date du 4 octobre 2021 (21-10/106)",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Désignation de l’équipe de Maitrise d’œuvre pour le projet de voie douce.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-24",
+        "titre": "Désignation de l’équipe de Maitrise d’œuvre du projet de requalification urbaine du Cours Paoli, des avenues Pierucci et Luciani, des rues Gambini et Fontanarosa, des parkings et espaces publics de la Traverse et du secteur Fontanarosa, suite à la délibération du Conseil Municipal en date du 19 décembre 2022 (22-12/121)",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Désignation de l’équipe de Maitrise d’œuvre pour le projet de requalification urbaine.",
+        "importance": "moyenne"
+      }
+    ],
+    "debats": [],
+    "informations": []
+  },
+  {
+    "date": "2023-04-11",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2023-01",
+        "titre": "Création de trois autorisations de programme",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Création de trois autorisations de programme pour les finances communales.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-02",
+        "titre": "Affectation du Résultat 2022",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Affectation du résultat de l'année 2022.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-03",
+        "titre": "Vote des taux d’imposition et des taxes directes locales 2023",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Vote des taux d'imposition et des taxes directes locales pour l'année 2023.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-04",
+        "titre": "Adoption du Budget Primitif 2023",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du budget primitif pour l'année 2023.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-05",
+        "titre": "Attribution de subventions aux Associations",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Attribution de subventions aux associations selon la liste présentée.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-06",
+        "titre": "Affectation du Résultat 2022 - Régie de l’Eau",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Affectation du résultat de l'année 2022 pour la régie de l'eau.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-07",
+        "titre": "Adoption du Budget Primitif 2023 - Régie de l’Eau",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du budget primitif pour la régie de l'eau pour l'année 2023.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-08",
+        "titre": "Autorisation d’Emprunt - Régie de l’Eau",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Autorisation d'emprunt pour la régie de l'eau.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-09",
+        "titre": "Affectation du Résultat 2022 - Régie du Parking Municipal « Tuffelli »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Affectation du résultat de l'année 2022 pour la régie du parking municipal Tuffelli.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-10",
+        "titre": "Adoption du Budget Primitif 2023 - Régie du Parking Municipal « Tuffelli »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du budget primitif pour la régie du parking municipal Tuffelli pour l'année 2023.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-11",
+        "titre": "Affectation du Résultat 2022 - Régie du Parking « Restonica-Grotelle »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Affectation du résultat de l'année 2022 pour la régie du parking Restonica-Grotelle.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-12",
+        "titre": "Adoption du Budget Primitif 2023 - Régie du Parking « Restonica-Grotelle »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du budget primitif pour la régie du parking Restonica-Grotelle pour l'année 2023.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-13",
+        "titre": "Clôture du Budget Annexe « Furnaccia »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Clôture du budget annexe pour le lotissement Furnaccia.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-14",
+        "titre": "Affectation du Résultat 2022 - Régie du Lotissement « Furnaccia »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Affectation du résultat de l'année 2022 pour la régie du lotissement Furnaccia.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-15",
+        "titre": "Adoption du Budget Primitif 2023 - Régie du Lotissement « Furnaccia »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du budget primitif pour la régie du lotissement Furnaccia pour l'année 2023.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-16",
+        "titre": "Autorisation à donner au Maire en vue de signer l’avenant n° 1 au marché de services « Etude Urbaine »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Autorisation donnée au Maire pour signer l'avenant n° 1 au marché de services pour l'étude urbaine.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-17",
+        "titre": "Création d’une régie de recettes pour le domaine public de la Commune",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Création d'une régie de recettes pour le domaine public de la commune.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-18",
+        "titre": "Modification des actes constitutifs des régies créées",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification des actes constitutifs des régies pour les droits de stationnement, les activités périscolaires, les droits de place sur les foires et marchés, et la piscine municipale.",
+        "importance": "moyenne"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Compte-rendu de la réunion du Conseil Municipal du 20 mars 2023."
+    ]
+  },
+  {
+    "date": "2023-04-11",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "Dr. Xavier POLI (Maire)",
+        "Marc-Marie GUGLIELMI (Secrétaire de Séance)",
+        "F. Ruggeri (Procuration)",
+        "MC Ruiz (Procuration)",
+        "M. Simeoni (Procuration)"
+      ],
+      "absents_excuses": [],
+      "absents": [
+        "J.T. Albertini",
+        "E. Baghioni",
+        "F. Luciani",
+        "M.J. Malleroni",
+        "J. Sabiani"
+      ]
+    },
+    "deliberations": [
+      {
+        "numero": "2023-023",
+        "titre": "Création de trois autorisations de programme",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": 1500000,
+        "echeance": null,
+        "resume": "Création d'autorisations de programme pour divers projets d'infrastructure.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-024",
+        "titre": "Affectation du Résultat 2022",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Affecté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Affectation du résultat de fonctionnement de l'exercice 2022.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-025",
+        "titre": "Vote des taux d’imposition et des taxes directes locales 2022",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 19,
+          "contre": 0,
+          "abstention": 5,
+          "detail_vote": "V. BORROMEÏ, ML CASTELLI, F. DEMUYNCK, P. RINIERI, M. SIMEONI"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Application des taux d'imposition pour l'année 2023.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-027",
+        "titre": "Attribution de subventions aux associations",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Attribution à l'unanimité"
+        },
+        "budget_euros": 215800,
+        "echeance": null,
+        "resume": "Attribution de 215 800 € aux 52 associations.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-029",
+        "titre": "Adoption du Budget Primitif 2023 de la Régie de l’Eau",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du budget primitif 2023 pour la Régie de l'Eau.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-030",
+        "titre": "Autorisation d’emprunt",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Autorisé à l'unanimité"
+        },
+        "budget_euros": 500000,
+        "echeance": null,
+        "resume": "Autorisation pour le Maire de contracter un emprunt de 500 000 €.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-031",
+        "titre": "Affectation du Résultat 2022 du Parking Municipal Tuffelli",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Affecté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Affectation du résultat de fonctionnement du Parking Municipal Tuffelli pour l'année 2022.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-032",
+        "titre": "Adoption du Budget Primitif 2023 du Parking Municipal Tuffelli",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du budget primitif 2023 pour le Parking Municipal Tuffelli.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-033",
+        "titre": "Affectation du Résultat 2022 du Parking Restonica-Grotelle",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 23,
+          "contre": 0,
+          "abstention": 1,
+          "detail_vote": "Madame Marie-Luce CASTELLI ne prenant pas part au vote"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Affectation du résultat de la Régie du Parking Restonica-Grotelle pour l'année 2022.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-034",
+        "titre": "Adoption du Budget Primitif 2023 du Parking Restonica-Grotelle",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 23,
+          "contre": 0,
+          "abstention": 1,
+          "detail_vote": "Madame Marie-Luce CASTELLI ne prenant pas part au vote"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du budget primitif 2023 pour le Parking Restonica-Grotelle.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-035",
+        "titre": "Clôture et Prévisions Budgétaires pour 2023 du Lotissement Furnaccia",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Décidé à l'unanimité"
+        },
+        "budget_euros": 6611.84,
+        "echeance": null,
+        "resume": "Clôture du Budget Annexe du Lotissement Furnaccia et reversement de l'excédent au Budget Principal.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-036",
+        "titre": "Affectation du Résultat 2022 du Lotissement Furnaccia",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Affecté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Affectation du résultat de fonctionnement du Lotissement Furnaccia pour l'année 2022.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-037",
+        "titre": "Adoption du Budget Primitif 2023 du Lotissement Furnaccia",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du budget primitif 2023 pour le Lotissement Furnaccia.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-038",
+        "titre": "Autorisation à donner au Maire en vue de signer l’avenant n° 1 au marché de services « Etude Urbaine »",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Autorisé à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Autorisation pour le Maire de signer l'avenant n° 1 au marché de services.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-039",
+        "titre": "Modification de la date d’installation des planchons",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption de la proposition de modification des dates d'installation des planchons.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-040",
+        "titre": "Autorisation à donner au Maire en vue de signer l’avenant n° 1 au marché de services « Etude Urbaine »",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Autorisation pour le Maire de modifier les actes constitutifs des régies.",
+        "importance": "moyenne"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Le compte-rendu de la réunion du dernier Conseil Municipal du 20 mars 2023 a été communiqué."
+    ]
+  },
+  {
+    "date": "2023-03-20",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2023-01",
+        "titre": "Adoption du Compte Administratif 2022 et Approbation du Compte de Gestion 2022",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption et approbation des comptes administratifs et de gestion pour l'année 2022.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-02",
+        "titre": "Adoption du Compte Administratif 2022 et Approbation du Compte de Gestion 2022 pour la Régie de l’Eau",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption et approbation des comptes administratifs et de gestion pour la régie de l'eau pour l'année 2022.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-03",
+        "titre": "Rapport des Orientations Budgétaires 2023",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Présentation des orientations budgétaires pour l'année 2023.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-04",
+        "titre": "Rapport Annuel sur le Prix et la Qualité du Service Public de l’Eau Potable 2022",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Présentation du rapport annuel concernant le prix et la qualité du service public de l'eau potable pour l'année 2022.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-05",
+        "titre": "Adoption du Compte Administratif 2022 pour la Régie du Parking Municipal « Tuffelli »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du compte administratif pour la régie du parking municipal Tuffelli pour l'année 2022.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-06",
+        "titre": "Approbation du Compte de Gestion 2022 pour la Régie du Parking Municipal « Tuffelli »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Approbation du compte de gestion pour la régie du parking municipal Tuffelli pour l'année 2022.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-07",
+        "titre": "Adoption du Compte Administratif 2022 pour la Régie du Parking « Restonica-Grotelle »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du compte administratif pour la régie du parking Restonica-Grotelle pour l'année 2022.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-08",
+        "titre": "Approbation du Compte de Gestion 2022 pour la Régie du Parking « Restonica-Grotelle »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Approbation du compte de gestion pour la régie du parking Restonica-Grotelle pour l'année 2022.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-09",
+        "titre": "Adoption du Compte Administratif 2022 pour la Régie du Lotissement « Furnaccia »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption du compte administratif pour la régie du lotissement Furnaccia pour l'année 2022.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-10",
+        "titre": "Approbation du Compte de Gestion 2022 pour la Régie du Lotissement « Furnaccia »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Approbation du compte de gestion pour la régie du lotissement Furnaccia pour l'année 2022.",
+        "importance": "haute"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Compte-rendu de la réunion du Conseil Municipal 13 février 2023"
+    ]
+  },
+  {
+    "date": "2023-03-20",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "Dr. Xavier POLI (Maire)",
+        "Marc-Marie GUGLIELMI (Secrétaire de Séance)",
+        "Monsieur Maroselli (1er adjoint délégué aux finances)"
+      ],
+      "absents_excuses": [],
+      "absents": [
+        "JT Albertini",
+        "V. Borromeï",
+        "F. Luciani",
+        "JF Orsatelli"
+      ]
+    },
+    "deliberations": [
+      {
+        "numero": "23-03/011",
+        "titre": "Adoption du Compte Administratif 2022 de la Commune",
+        "rapporteur": "Monsieur Maroselli",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Compte Administratif 2022 de la Commune a été adopté à l'unanimité.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-03/012",
+        "titre": "Approbation du Compte de Gestion 2022",
+        "rapporteur": null,
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Approuvé à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Compte de Gestion 2022 a été approuvé à l'unanimité.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-03/013",
+        "titre": "Adoption du Compte Administratif 2022 de la Régie de l’Eau",
+        "rapporteur": "Monsieur Maroselli",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Compte Administratif 2022 de la Régie de l’Eau a été adopté à l'unanimité.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-03/014",
+        "titre": "Approbation du Compte de Gestion 2022 de la Régie de l’Eau",
+        "rapporteur": null,
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Approuvé à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Compte de Gestion 2022 de la Régie de l’Eau a été approuvé à l'unanimité.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-03/015",
+        "titre": "Rapport d’Orientations Budgétaires 2023",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Acte pris à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil a pris acte du Rapport sur les Orientations Budgétaires 2023 de la Régie l’Eau.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "23-03/016",
+        "titre": "Rapport Annuel sur le Prix et la qualité du Service Public de l’Eau Potable 2022",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Approuvé à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Rapport Annuel sur le Prix et la qualité du Service Public de l’Eau Potable 2022 a été approuvé à l'unanimité.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-03/017",
+        "titre": "Adoption du Compte Administratif 2022 du Parking Municipal Tuffelli",
+        "rapporteur": "Monsieur Maroselli",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Compte Administratif 2022 du Parking Municipal Tuffelli a été adopté à l'unanimité.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-03/018",
+        "titre": "Approbation du Compte de Gestion 2022 du Parking Municipal Tuffelli",
+        "rapporteur": null,
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Approuvé à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Compte de Gestion 2022 du Parking Municipal Tuffelli a été approuvé à l'unanimité.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-03/019",
+        "titre": "Adoption du Compte Administratif 2022 du Parking Restonica-Grotelle",
+        "rapporteur": "Monsieur Maroselli",
+        "vote": {
+          "pour": 23,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Compte Administratif 2022 du Parking Restonica-Grotelle a été adopté à l'unanimité.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-03/020",
+        "titre": "Approbation du Compte de Gestion 2022 du Parking Restonica-Grotelle",
+        "rapporteur": null,
+        "vote": {
+          "pour": 23,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Approuvé à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Compte de Gestion 2022 du Parking Restonica-Grotelle a été approuvé à l'unanimité.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-03/021",
+        "titre": "Adoption du Compte Administratif 2022 du Lotissement Furnaccia",
+        "rapporteur": "Monsieur Maroselli",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adopté à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Compte Administratif 2022 du Lotissement Furnaccia a été adopté à l'unanimité.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-03/022",
+        "titre": "Approbation du Compte de Gestion 2022 du Lotissement Furnaccia",
+        "rapporteur": null,
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Approuvé à l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Compte de Gestion 2022 du Lotissement Furnaccia a été approuvé à l'unanimité.",
+        "importance": "haute"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Le compte-rendu de la réunion du dernier Conseil Municipal du 13 février 2023 a été communiqué."
+    ]
+  },
+  {
+    "date": "2023-02-13",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [],
+      "absents_excuses": [],
+      "absents": []
+    },
+    "deliberations": [
+      {
+        "numero": "2023-01",
+        "titre": "Rapport d’Orientations Budgétaires 2023",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Présentation des orientations budgétaires pour l'année 2023.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-02",
+        "titre": "Adoption de plans de financement : Gestion des Flux dans la Vallée de la Restonica",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption des plans de financement pour la gestion des flux dans la vallée.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-03",
+        "titre": "Adoption de plans de financement : Vidéo Surveillance Ville de Corte",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption des plans de financement pour la vidéo surveillance.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-04",
+        "titre": "Rapport d’Orientations Budgétaires 2023 - Régie du Parking Municipal « Tuffelli »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Présentation des orientations budgétaires pour la régie du parking Tuffelli.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-05",
+        "titre": "Approbation du Règlement Intérieur du Parc de Stationnement Tuffelli",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Approbation du règlement intérieur pour le parc de stationnement Tuffelli.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-06",
+        "titre": "Rapport d’Orientations Budgétaires 2023 - Régie du Parking « Restonica-Grotelle »",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Présentation des orientations budgétaires pour la régie du parking Restonica-Grotelle.",
+        "importance": "haute"
+      },
+      {
+        "numero": "2023-07",
+        "titre": "Création d’emplois saisonniers",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Création d'emplois saisonniers pour la commune.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-08",
+        "titre": "Indemnités pour travaux dangereux, insalubres, incommodes ou salissants",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Discussion sur les indemnités pour les travaux difficiles.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-09",
+        "titre": "Renouvellement de la délibération autorisant la mise à disposition de véhicules communaux",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Renouvellement de la délibération pour la mise à disposition de véhicules.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-10",
+        "titre": "SIS 2B: Modification de la délibération n ° 21-12/130 du 06 décembre 2022",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification de la délibération concernant la cession à l'Euro symbolique.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "2023-11",
+        "titre": "Adoption de la Convention de partenariat entre la Commune de CORTE et la Société CORTE AUTO",
+        "rapporteur": null,
+        "vote": {
+          "pour": null,
+          "contre": null,
+          "abstention": null,
+          "detail_vote": null
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption d'une convention de partenariat pour la fourrière automobile.",
+        "importance": "moyenne"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Compte-rendu de la réunion du Conseil Municipal 19 décembre 2022",
+      "Indemnités du Maire et des Adjoints 2022",
+      "Relevé de décisions du Conseil Communautaire du 20 décembre 2022",
+      "Liste des marchés passés en 2022"
+    ]
+  },
+  {
+    "date": "2023-02-13",
+    "type": "conseil municipal",
+    "participants": {
+      "presents": [
+        "Dr. Xavier POLI (Maire)",
+        "Marc-Marie GUGLIELMI (Secrétaire de Séance)",
+        "ML Castelli (Conseillère)",
+        "M. Luciani (Conseiller)",
+        "JF Orsatelli (Conseiller)",
+        "J. Orsatelli (Conseiller)",
+        "A. Orsini (Conseiller)",
+        "F. Ruggeri (Conseiller)",
+        "MC Ruiz (Conseillère)"
+      ],
+      "absents_excuses": [],
+      "absents": [
+        "JT Albertini",
+        "E. Baghioni",
+        "F. Luciani",
+        "AJ Nicolini"
+      ]
+    },
+    "deliberations": [
+      {
+        "numero": "23-02/001",
+        "titre": "Rapport d’Orientations Budgétaires 2023",
+        "rapporteur": "Monsieur Maroselli",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "À l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil prend acte du Rapport sur les Orientations Budgétaires 2023 de la Commune.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-02/002",
+        "titre": "Adoption d’un plan de financement pour un système de caméras de vidéo protection",
+        "rapporteur": "Monsieur Maroselli",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "Adoption à l’unanimité"
+        },
+        "budget_euros": 413500,
+        "echeance": null,
+        "resume": "Adoption d'un plan de financement pour un système de caméras de vidéo protection.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-02/003",
+        "titre": "Rapport d’Orientations Budgétaires 2023 de la Régie du Parking Tuffelli",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "À l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil prend acte du Rapport sur les Orientations Budgétaires 2023 de la Régie du Parking Tuffelli.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-02/004",
+        "titre": "Adoption du Réglement Intérieur du Parking Municipal « TUFFELLI »",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "À l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil approuve le Réglement Intérieur du Parking Municipal après modification.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-02/005",
+        "titre": "Rapport d’Orientations Budgétaires 2023 de la Régie du Parking Restonica-Grotelle",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "À l'unanimité des membres présents et représentés"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Le Conseil prend acte du Rapport sur les Orientations Budgétaires 2023 de la Régie du Parking Restonica-Grotelle.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-02/006",
+        "titre": "Création d’Emplois Saisonniers",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 24,
+          "contre": 0,
+          "abstention": 1,
+          "detail_vote": "Madame Marie-Luce CASTELLI-CRISTIANI ne prenant pas part au vote"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Création de postes saisonniers pour l'année 2023.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "23-02/007",
+        "titre": "Indemnité pour travaux dangereux, insalubres, incommodes ou salissants",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "À l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": "2023-02-13",
+        "resume": "Instauration d'une indemnité annuelle pour travaux dangereux.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-02/008",
+        "titre": "Renouvellement de la délibération actant la mise à disposition des véhicules de la Commune de Corte",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "À l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Renouvellement de la délibération pour la mise à disposition des véhicules.",
+        "importance": "haute"
+      },
+      {
+        "numero": "23-02/009",
+        "titre": "Modification de la délibération n° 21-12/130 du 06 décembre 2021",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 22,
+          "contre": 0,
+          "abstention": 3,
+          "detail_vote": "Non participations au vote de Nathalie PULICANI, Jean-Francois ORSATELLI et Philippe SINDALD"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Modification de la délibération concernant la cession à l'euro symbolique.",
+        "importance": "moyenne"
+      },
+      {
+        "numero": "23-02/010",
+        "titre": "Adoption de la Convention de Partenariat entre la Commune de CORTE et la Société CORTE AUTO",
+        "rapporteur": "Dr. Xavier POLI",
+        "vote": {
+          "pour": 25,
+          "contre": 0,
+          "abstention": 0,
+          "detail_vote": "À l'unanimité"
+        },
+        "budget_euros": null,
+        "echeance": null,
+        "resume": "Adoption de la convention de partenariat pour l'enlèvement des véhicules abandonnés.",
+        "importance": "haute"
+      }
+    ],
+    "debats": [],
+    "informations": [
+      "Compte-rendu de la réunion du dernier Conseil Municipal du 19 décembre 2022",
+      "Liste des marchés notifiés entre le 01 janvier 2022 au 31 décembre 2022",
+      "Indemnités des Elus",
+      "Relevé de décisions du Conseil Communautaire du 20 décembre 2022",
+      "Liste des marchés passés en 2022"
+    ]
+  }
+]

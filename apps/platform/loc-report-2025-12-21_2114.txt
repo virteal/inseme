@@ -1,0 +1,35 @@
+Source Code Line Count + Velocity Report
+Generated: 2025-12-21 21:14:24
+Project: C:\tweesic\survey
+
+SUMMARY BY FILE TYPE:
+Type  Files   Lines
+.jsx    206  52,692
+.js     140  31,444
+.css     22   5,867
+
+TOTALS:
+Total Files: 368
+Total Lines: 90,003
+
+VELOCITY METRICS:
+First Commit:     2025-10-20
+Days Since Start: 63 days
+Total Commits:    644
+Contributors:     3
+Velocity:         1428.62 lines/day
+Lines/Commit:     139.76 lines/commit
+Commits/Day:      10.22 commits/day
+
+TOP 10 LARGEST FILES:
+File                       Type  Lines
+rag_chatbot.js             .js   3,471
+rag_chatbot.v3.js          .js   2,720
+chat-v2.css                .css  2,138
+useChatLogic.js            .js   1,449
+consultations.js           .js   1,363
+TransparenceLanding.jsx    .jsx  1,285
+CopAdmin.jsx               .jsx  1,188
+SaasAdmin.jsx              .jsx  1,139
+actes-api.js               .js   1,007
+ConsultationQuasquara.jsx  .jsx    948

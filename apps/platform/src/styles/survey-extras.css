@@ -1,0 +1,26 @@
+/* Missing CSS Classes for App.jsx Survey Form */
+
+/* Emphasized form label variant - for important labels like "Quartier" */
+.form-label--emphasis {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  color: var(--color-action-accent);
+  font-size: 1.1rem;
+}
+
+/* Helper text - inline explanatory text in lighter weight */
+.helper-text {
+  font-size: 0.9em;
+  font-weight: 400;
+  color: var(--color-content-secondary);
+  font-style: italic;
+}
+
+/* Info box - Container for contact/participation sections */
+.info-box {
+  background: var(--color-surface-secondary);
+  border: 2px solid var(--color-border-medium);
+  padding: var(--space-4);
+  margin-top: var(--space-4);
+}

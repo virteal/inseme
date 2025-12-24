@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "../cop-chat/src/types.ts"
+  ]
+}

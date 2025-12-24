@@ -1,0 +1,630 @@
+{
+  "commune": "Corte",
+  "period": {
+    "start": "2023-02-13",
+    "end": "2025-10-28"
+  },
+  "generated_europe_paris": "2025-11-06 18:11:34",
+  "legal_rules": {
+    "convoc_jours_francs_min": 5,
+    "delib_max_jours_calendaires": 7,
+    "pv_max_jours_calendaires_apres_seance_arret": 7
+  },
+  "seances_connues": [
+    {
+      "date": "2023-02-13"
+    },
+    {
+      "date": "2023-03-20"
+    },
+    {
+      "date": "2023-04-11"
+    },
+    {
+      "date": "2023-07-24"
+    },
+    {
+      "date": "2023-10-30"
+    },
+    {
+      "date": "2023-11-20"
+    },
+    {
+      "date": "2024-02-12"
+    },
+    {
+      "date": "2024-03-25"
+    },
+    {
+      "date": "2024-04-08"
+    },
+    {
+      "date": "2024-04-22"
+    },
+    {
+      "date": "2024-07-01"
+    },
+    {
+      "date": "2024-09-23"
+    },
+    {
+      "date": "2024-10-28"
+    },
+    {
+      "date": "2024-12-09"
+    },
+    {
+      "date": "2024-12-16"
+    },
+    {
+      "date": "2024-12-23"
+    },
+    {
+      "date": "2025-03-18"
+    },
+    {
+      "date": "2025-04-08"
+    },
+    {
+      "date": "2025-07-01"
+    },
+    {
+      "date": "2025-10-28"
+    }
+  ],
+  "summary_by_category": {
+    "CONVOCATION": {
+      "total": 20,
+      "CONFORME": 2,
+      "NON_CONFORME": 2,
+      "TARDIF": 0,
+      "POSTERIEUR": 16,
+      "ANTICIPEE": 0,
+      "INDETERMINABLE": 0
+    },
+    "DELIB_LISTE": {
+      "total": 4,
+      "CONFORME": 1,
+      "NON_CONFORME": 0,
+      "TARDIF": 3,
+      "POSTERIEUR": 0,
+      "ANTICIPEE": 0,
+      "INDETERMINABLE": 0
+    },
+    "DELIB_REGISTRE": {
+      "total": 6,
+      "CONFORME": 0,
+      "NON_CONFORME": 0,
+      "TARDIF": 0,
+      "POSTERIEUR": 0,
+      "ANTICIPEE": 0,
+      "INDETERMINABLE": 0,
+      "INDICATEUR_SEUL": 6
+    },
+    "PV": {
+      "total": 18,
+      "CONFORME": 5,
+      "NON_CONFORME": 0,
+      "TARDIF": 12,
+      "POSTERIEUR": 0,
+      "ANTICIPEE": 1,
+      "INDETERMINABLE": 0
+    }
+  },
+  "rows": [
+    {
+      "category": "CONVOCATION",
+      "label": "ODJ 13/02/2023",
+      "date_seance": "2023-02-13",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1599",
+      "last_modified": "Wed, 25 Oct 2023 08:29:22 GMT",
+      "publication_paris_datetime": "2023-10-25 10:29:22",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "ODJ 20/03/2023",
+      "date_seance": "2023-03-20",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1600",
+      "last_modified": "Wed, 25 Oct 2023 08:29:38 GMT",
+      "publication_paris_datetime": "2023-10-25 10:29:38",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "ODJ 11/04/2023",
+      "date_seance": "2023-04-11",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1597",
+      "last_modified": "Wed, 25 Oct 2023 07:55:07 GMT",
+      "publication_paris_datetime": "2023-10-25 09:55:07",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "ODJ 24/07/2023",
+      "date_seance": "2023-07-24",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1596",
+      "last_modified": "Wed, 25 Oct 2023 07:54:29 GMT",
+      "publication_paris_datetime": "2023-10-25 09:54:29",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "ODJ 30/10/2023",
+      "date_seance": "2023-10-30",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1592",
+      "last_modified": "Mon, 23 Oct 2023 12:57:30 GMT",
+      "publication_paris_datetime": "2023-10-23 14:57:30",
+      "jours_francs": 6,
+      "verdict": "CONFORME"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "ODJ 20/11/2023",
+      "date_seance": "2023-11-20",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1615",
+      "last_modified": "Thu, 16 Nov 2023 09:19:57 GMT",
+      "publication_paris_datetime": "2023-11-16 10:19:57",
+      "jours_francs": 3,
+      "verdict": "NON_CONFORME"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "ODJ 12/02/2024",
+      "date_seance": "2024-02-12",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1642",
+      "last_modified": "Mon, 05 Feb 2024 15:20:44 GMT",
+      "publication_paris_datetime": "2024-02-05 16:20:44",
+      "jours_francs": 6,
+      "verdict": "CONFORME"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "ODJ 25/03/2024",
+      "date_seance": "2024-03-25",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1719",
+      "last_modified": "Mon, 08 Jul 2024 09:44:38 GMT",
+      "publication_paris_datetime": "2024-07-08 11:44:38",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "ODJ 08/04/2024",
+      "date_seance": "2024-04-08",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1718",
+      "last_modified": "Mon, 08 Jul 2024 09:32:03 GMT",
+      "publication_paris_datetime": "2024-07-08 11:32:03",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "ODJ 22/04/2024",
+      "date_seance": "2024-04-22",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1717",
+      "last_modified": "Mon, 08 Jul 2024 09:29:27 GMT",
+      "publication_paris_datetime": "2024-07-08 11:29:27",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "ODJ 01/07/2024",
+      "date_seance": "2024-07-01",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1753",
+      "last_modified": "Wed, 18 Sep 2024 13:28:46 GMT",
+      "publication_paris_datetime": "2024-09-18 15:28:46",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "ODJ 23/09/2024",
+      "date_seance": "2024-09-23",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1751",
+      "last_modified": "Wed, 18 Sep 2024 09:14:47 GMT",
+      "publication_paris_datetime": "2024-09-18 11:14:47",
+      "jours_francs": 4,
+      "verdict": "NON_CONFORME"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "ODJ 28/10/2024",
+      "date_seance": "2024-10-28",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1772",
+      "last_modified": "Thu, 31 Oct 2024 13:52:47 GMT",
+      "publication_paris_datetime": "2024-10-31 14:52:47",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "Convocation/ODJ 09/12/2024",
+      "date_seance": "2024-12-09",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1917",
+      "last_modified": "Thu, 30 Oct 2025 14:32:52 GMT",
+      "publication_paris_datetime": "2025-10-30 15:32:52",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "Convocation/ODJ 16/12/2024",
+      "date_seance": "2024-12-16",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1916",
+      "last_modified": "Thu, 30 Oct 2025 14:31:52 GMT",
+      "publication_paris_datetime": "2025-10-30 15:31:52",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "Convocation/ODJ 23/12/2024",
+      "date_seance": "2024-12-23",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1915",
+      "last_modified": "Thu, 30 Oct 2025 14:29:20 GMT",
+      "publication_paris_datetime": "2025-10-30 15:29:20",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "Convocation/ODJ 18/03/2025",
+      "date_seance": "2025-03-18",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1914",
+      "last_modified": "Thu, 30 Oct 2025 14:27:34 GMT",
+      "publication_paris_datetime": "2025-10-30 15:27:34",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "Convocation/ODJ 08/04/2025",
+      "date_seance": "2025-04-08",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1913",
+      "last_modified": "Thu, 30 Oct 2025 14:26:13 GMT",
+      "publication_paris_datetime": "2025-10-30 15:26:13",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "Convocation/ODJ 01/07/2025",
+      "date_seance": "2025-07-01",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1912",
+      "last_modified": "Thu, 30 Oct 2025 14:23:31 GMT",
+      "publication_paris_datetime": "2025-10-30 15:23:31",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "CONVOCATION",
+      "label": "Convocation/ODJ 28/10/2025",
+      "date_seance": "2025-10-28",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1910",
+      "last_modified": "Thu, 30 Oct 2025 14:20:21 GMT",
+      "publication_paris_datetime": "2025-10-30 15:20:21",
+      "jours_francs": null,
+      "verdict": "POSTERIEUR"
+    },
+    {
+      "category": "DELIB_LISTE",
+      "label": "Délibérations 28/10/2025",
+      "date_seance": "2025-10-28",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1909",
+      "last_modified": "Thu, 30 Oct 2025 14:14:43 GMT",
+      "publication_paris_datetime": "2025-10-30 15:14:43",
+      "jours_calendaires_depuis_seance": 2,
+      "verdict": "CONFORME",
+      "note": ""
+    },
+    {
+      "category": "DELIB_LISTE",
+      "label": "Délibérations 01/07/2025",
+      "date_seance": "2025-07-01",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1919",
+      "last_modified": "Thu, 30 Oct 2025 14:41:51 GMT",
+      "publication_paris_datetime": "2025-10-30 15:41:51",
+      "jours_calendaires_depuis_seance": 121,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "DELIB_LISTE",
+      "label": "Délibérations 08/04/2025",
+      "date_seance": "2025-04-08",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1921",
+      "last_modified": "Thu, 30 Oct 2025 14:52:46 GMT",
+      "publication_paris_datetime": "2025-10-30 15:52:46",
+      "jours_calendaires_depuis_seance": 205,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "DELIB_LISTE",
+      "label": "Délibérations 18/03/2025",
+      "date_seance": "2025-03-18",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1925",
+      "last_modified": "Thu, 30 Oct 2025 15:40:37 GMT",
+      "publication_paris_datetime": "2025-10-30 16:40:37",
+      "jours_calendaires_depuis_seance": 226,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "DELIB_REGISTRE",
+      "label": "Registre 2024 T4",
+      "date_seance": "",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1932",
+      "last_modified": "Mon, 03 Nov 2025 09:45:57 GMT",
+      "publication_paris_datetime": "2025-11-03 10:45:57",
+      "verdict": "INDICATEUR_SEUL"
+    },
+    {
+      "category": "DELIB_REGISTRE",
+      "label": "Registre 2024 T3",
+      "date_seance": "",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1931",
+      "last_modified": "Mon, 03 Nov 2025 09:38:52 GMT",
+      "publication_paris_datetime": "2025-11-03 10:38:52",
+      "verdict": "INDICATEUR_SEUL"
+    },
+    {
+      "category": "DELIB_REGISTRE",
+      "label": "Registre 2024 T2",
+      "date_seance": "",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1930",
+      "last_modified": "Mon, 03 Nov 2025 09:30:56 GMT",
+      "publication_paris_datetime": "2025-11-03 10:30:56",
+      "verdict": "INDICATEUR_SEUL"
+    },
+    {
+      "category": "DELIB_REGISTRE",
+      "label": "Registre 2024 T1",
+      "date_seance": "",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1929",
+      "last_modified": "Mon, 03 Nov 2025 09:21:15 GMT",
+      "publication_paris_datetime": "2025-11-03 10:21:15",
+      "verdict": "INDICATEUR_SEUL"
+    },
+    {
+      "category": "DELIB_REGISTRE",
+      "label": "Registre 2023 T2",
+      "date_seance": "",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1756",
+      "last_modified": "",
+      "publication_paris_datetime": "",
+      "verdict": "INDICATEUR_SEUL"
+    },
+    {
+      "category": "DELIB_REGISTRE",
+      "label": "Registre 2023 T1",
+      "date_seance": "",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1754",
+      "last_modified": "Thu, 19 Sep 2024 08:57:04 GMT",
+      "publication_paris_datetime": "2024-09-19 10:57:04",
+      "verdict": "INDICATEUR_SEUL"
+    },
+    {
+      "category": "PV",
+      "label": "PV 13/02/2023",
+      "date_seance": "2023-02-13",
+      "date_seance_suivante": "2023-03-20",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1598",
+      "last_modified": "Wed, 25 Oct 2023 08:28:56 GMT",
+      "publication_paris_datetime": "2023-10-25 10:28:56",
+      "jours_calendaires_apres_seance_suivante": 219,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 20/03/2023",
+      "date_seance": "2023-03-20",
+      "date_seance_suivante": "2023-04-11",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1593",
+      "last_modified": "Wed, 25 Oct 2023 07:44:17 GMT",
+      "publication_paris_datetime": "2023-10-25 09:44:17",
+      "jours_calendaires_apres_seance_suivante": 197,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 11/04/2023",
+      "date_seance": "2023-04-11",
+      "date_seance_suivante": "2023-07-24",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1594",
+      "last_modified": "Wed, 25 Oct 2023 07:44:57 GMT",
+      "publication_paris_datetime": "2023-10-25 09:44:57",
+      "jours_calendaires_apres_seance_suivante": 93,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 24/07/2023",
+      "date_seance": "2023-07-24",
+      "date_seance_suivante": "2023-10-30",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1604",
+      "last_modified": "Tue, 31 Oct 2023 08:40:04 GMT",
+      "publication_paris_datetime": "2023-10-31 09:40:04",
+      "jours_calendaires_apres_seance_suivante": 1,
+      "verdict": "CONFORME",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 30/10/2023",
+      "date_seance": "2023-10-30",
+      "date_seance_suivante": "2023-11-20",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1617",
+      "last_modified": "Thu, 23 Nov 2023 12:53:54 GMT",
+      "publication_paris_datetime": "2023-11-23 13:53:54",
+      "jours_calendaires_apres_seance_suivante": 3,
+      "verdict": "CONFORME",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 20/11/2023",
+      "date_seance": "2023-11-20",
+      "date_seance_suivante": "2024-02-12",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1716",
+      "last_modified": "Mon, 08 Jul 2024 09:27:41 GMT",
+      "publication_paris_datetime": "2024-07-08 11:27:41",
+      "jours_calendaires_apres_seance_suivante": 147,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 13/02/2024",
+      "date_seance": "2024-02-13",
+      "date_seance_suivante": "2024-03-25",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1712",
+      "last_modified": "Mon, 08 Jul 2024 08:54:41 GMT",
+      "publication_paris_datetime": "2024-07-08 10:54:41",
+      "jours_calendaires_apres_seance_suivante": 105,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 25/03/2024",
+      "date_seance": "2024-03-25",
+      "date_seance_suivante": "2024-04-08",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1715",
+      "last_modified": "Mon, 08 Jul 2024 08:58:14 GMT",
+      "publication_paris_datetime": "2024-07-08 10:58:14",
+      "jours_calendaires_apres_seance_suivante": 91,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 08/04/2024",
+      "date_seance": "2024-04-08",
+      "date_seance_suivante": "2024-04-22",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1713",
+      "last_modified": "Mon, 08 Jul 2024 08:55:59 GMT",
+      "publication_paris_datetime": "2024-07-08 10:55:59",
+      "jours_calendaires_apres_seance_suivante": 77,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 22/04/2024",
+      "date_seance": "2024-04-22",
+      "date_seance_suivante": "2024-07-01",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1714",
+      "last_modified": "Mon, 08 Jul 2024 08:57:26 GMT",
+      "publication_paris_datetime": "2024-07-08 10:57:26",
+      "jours_calendaires_apres_seance_suivante": 7,
+      "verdict": "CONFORME",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 01/07/2024",
+      "date_seance": "2024-07-01",
+      "date_seance_suivante": "2024-09-23",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1752",
+      "last_modified": "Wed, 18 Sep 2024 09:17:43 GMT",
+      "publication_paris_datetime": "2024-09-18 11:17:43",
+      "jours_calendaires_apres_seance_suivante": -5,
+      "verdict": "ANTICIPEE",
+      "note": "publiée avant séance d’arrêt"
+    },
+    {
+      "category": "PV",
+      "label": "PV 23/09/2024",
+      "date_seance": "2024-09-23",
+      "date_seance_suivante": "2024-10-28",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1771",
+      "last_modified": "Thu, 31 Oct 2024 13:50:53 GMT",
+      "publication_paris_datetime": "2024-10-31 14:50:53",
+      "jours_calendaires_apres_seance_suivante": 3,
+      "verdict": "CONFORME",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 28/10/2024",
+      "date_seance": "2024-10-28",
+      "date_seance_suivante": "2024-12-09",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1928",
+      "last_modified": "Thu, 30 Oct 2025 16:10:08 GMT",
+      "publication_paris_datetime": "2025-10-30 17:10:08",
+      "jours_calendaires_apres_seance_suivante": 325,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 09/12/2024",
+      "date_seance": "2024-12-09",
+      "date_seance_suivante": "2024-12-16",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1918",
+      "last_modified": "Thu, 30 Oct 2025 14:34:43 GMT",
+      "publication_paris_datetime": "2025-10-30 15:34:43",
+      "jours_calendaires_apres_seance_suivante": 318,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 16/12/2024",
+      "date_seance": "2024-12-16",
+      "date_seance_suivante": "2024-12-23",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1924",
+      "last_modified": "Thu, 30 Oct 2025 15:50:13 GMT",
+      "publication_paris_datetime": "2025-10-30 16:50:13",
+      "jours_calendaires_apres_seance_suivante": 311,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 23/12/2024",
+      "date_seance": "2024-12-23",
+      "date_seance_suivante": "2025-03-18",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1923",
+      "last_modified": "Thu, 30 Oct 2025 15:47:47 GMT",
+      "publication_paris_datetime": "2025-10-30 16:47:47",
+      "jours_calendaires_apres_seance_suivante": 226,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 08/04/2025",
+      "date_seance": "2025-04-08",
+      "date_seance_suivante": "2025-07-01",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1920",
+      "last_modified": "Thu, 30 Oct 2025 14:45:14 GMT",
+      "publication_paris_datetime": "2025-10-30 15:45:14",
+      "jours_calendaires_apres_seance_suivante": 121,
+      "verdict": "TARDIF",
+      "note": ""
+    },
+    {
+      "category": "PV",
+      "label": "PV 01/07/2025",
+      "date_seance": "2025-07-01",
+      "date_seance_suivante": "2025-10-28",
+      "url": "https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1911",
+      "last_modified": "Thu, 30 Oct 2025 14:21:44 GMT",
+      "publication_paris_datetime": "2025-10-30 15:21:44",
+      "jours_calendaires_apres_seance_suivante": 2,
+      "verdict": "CONFORME",
+      "note": ""
+    }
+  ]
+}

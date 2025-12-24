@@ -1,0 +1,499 @@
+/* ==========================================================================
+   FORMS
+   Input fields, labels, and form layouts.
+   ========================================================================== */
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--color-content-primary);
+  background: var(--color-bg-app);
+  border: 2px solid var(--color-content-primary);
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  transition:
+    border-color var(--duration-fast) var(--ease-smooth),
+    box-shadow var(--duration-fast) var(--ease-smooth);
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-color: var(--color-action-primary);
+  box-shadow: 0 0 0 2px var(--shadow-glow-primary);
+}
+
+/* Proposition Form Specifics (Migrated) */
+.proposition-form {
+  max-width: 520px;
+  width: 100%;
+  background: var(--color-bg-app);
+  box-shadow: 8px 8px 0 0 var(--color-border-strong);
+  padding: 1.75rem 2rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.form-header .close-btn:hover {
+  background: var(--color-action-accent);
+  color: var(--color-bg-app);
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.proposition-form .form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: var(--color-content-primary);
+}
+
+.proposition-form .form-input,
+.proposition-form .form-textarea {
+  width: 100%;
+  border: 2px solid var(--color-content-primary);
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  background: var(--color-bg-app);
+  color: var(--color-content-primary);
+  transition: all var(--duration-fast) ease;
+  box-shadow: 4px 4px 0 0 var(--color-surface-tertiary);
+}
+
+.proposition-form .form-input:focus,
+.proposition-form .form-textarea:focus {
+  border-color: var(--color-action-primary);
+  box-shadow: 4px 4px 0 0 var(--color-action-primary);
+  outline: none;
+  background: var(--color-bg-app);
+}
+
+.tags-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* Survey Form Elements */
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+  color: var(--color-content-primary);
+  font-size: 1.05rem;
+}
+
+.choice-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.choice-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  padding: var(--space-2);
+  transition: background var(--duration-fast) ease;
+}
+
+.choice-label:hover {
+  background: var(--color-surface-hover);
+}
+
+.choice-label input[type="radio"],
+.choice-label input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+/* ==========================================================================
+   CONSULTATION BANNERS & VALIDATION
+   ========================================================================== */
+
+.consultation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.consultation-header .page-title {
+  margin: 0;
+  flex: 1;
+}
+
+.consultation-info-banner {
+  background: var(--color-surface-success, #e8f5e9);
+  border: 2px solid var(--color-success, #4caf50);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.consultation-info-banner p {
+  margin: 0.25rem 0;
+}
+
+.consultation-error-banner {
+  background: var(--color-surface-error, #ffebee);
+  border: 2px solid var(--color-error, #f44336);
+  color: var(--color-error, #c62828);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.consultation-draft-banner {
+  background: var(--color-surface-warning, #fff8e1);
+  border: 2px solid var(--color-warning, #ff9800);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.draft-clear-btn {
+  background: transparent;
+  border: 1px solid var(--color-content-secondary);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background var(--duration-fast) ease;
+}
+
+.draft-clear-btn:hover {
+  background: var(--color-surface-hover);
+}
+
+.consultation-autosave-indicator {
+  color: var(--color-content-secondary);
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+  text-align: right;
+}
+
+/* Validation error styling */
+.field-error {
+  color: var(--color-error, #c62828);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.field-invalid input,
+.field-invalid select,
+.field-invalid textarea {
+  border-color: var(--color-error, #f44336);
+}
+
+/* ==========================================================================
+   FEDERATED CONSULTATION - National Hub & Comparison
+   ========================================================================== */
+
+.consultation-hub-banner {
+  background: linear-gradient(
+    135deg,
+    var(--color-action-primary) 0%,
+    var(--color-action-accent) 100%
+  );
+  color: var(--color-bg-app);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 4px 4px 0 0 var(--color-surface-tertiary);
+}
+
+.consultation-federated-banner {
+  background: var(--color-surface-secondary);
+  border: 2px dashed var(--color-action-primary);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: var(--color-content-secondary);
+}
+
+/* Section headers */
+.section-header {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-content-primary);
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-content-primary);
+}
+
+.section-optional .section-header {
+  color: var(--color-content-secondary);
+  border-bottom-style: dashed;
+}
+
+.section-optional .section-header::after {
+  content: " (optionnel)";
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+/* Scale input (1-5, 1-10) */
+.scale-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.scale-option {
+  position: relative;
+}
+
+.scale-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.scale-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid var(--color-content-primary);
+  background: var(--color-bg-app);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+}
+
+.scale-option input:checked + .scale-value {
+  background: var(--color-action-primary);
+  color: var(--color-bg-app);
+  box-shadow: 4px 4px 0 0 var(--color-surface-tertiary);
+}
+
+.scale-option input:focus-visible + .scale-value {
+  outline: 2px solid var(--color-action-accent);
+  outline-offset: 2px;
+}
+
+.scale-value:hover {
+  background: var(--color-surface-hover);
+}
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--color-content-secondary);
+  margin-top: 0.25rem;
+}
+
+/* Results toggle */
+.results-toggle {
+  margin: 2rem 0 1rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.results-toggle button {
+  background: var(--color-surface-secondary);
+  border: 2px solid var(--color-content-primary);
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+}
+
+.results-toggle button:hover {
+  background: var(--color-surface-hover);
+}
+
+.results-toggle button.active {
+  background: var(--color-content-primary);
+  color: var(--color-bg-app);
+}
+
+/* Comparison table (local vs national) */
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.comparison-table th,
+.comparison-table td {
+  border: 2px solid var(--color-content-primary);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.comparison-table th {
+  background: var(--color-content-primary);
+  color: var(--color-bg-app);
+  font-weight: 600;
+}
+
+.comparison-table tr:nth-child(even) {
+  background: var(--color-surface-secondary);
+}
+
+.comparison-table .positive {
+  color: var(--color-success, #2e7d32);
+  font-weight: 600;
+}
+
+.comparison-table .negative {
+  color: var(--color-error, #c62828);
+  font-weight: 600;
+}
+
+.comparison-table .neutral {
+  color: var(--color-content-secondary);
+}
+
+/* Commune list (ranking) */
+.commune-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.commune-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 2px solid transparent;
+  border-bottom: 1px solid var(--color-border-muted);
+  transition: background var(--duration-fast) ease;
+}
+
+.commune-list li:hover {
+  background: var(--color-surface-hover);
+}
+
+.commune-list li.current {
+  background: var(--color-surface-success, #e8f5e9);
+  border: 2px solid var(--color-success, #4caf50);
+  font-weight: 600;
+}
+
+.commune-list .rank {
+  font-weight: 700;
+  color: var(--color-action-primary);
+  min-width: 2rem;
+}
+
+.commune-list .commune-name {
+  flex: 1;
+}
+
+.commune-list .response-count {
+  color: var(--color-content-secondary);
+  font-size: 0.9rem;
+}
+
+/* Stats cards for federated consultations */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.stat-card {
+  background: var(--color-surface-secondary);
+  border: 2px solid var(--color-content-primary);
+  padding: 1.25rem;
+  text-align: center;
+  box-shadow: 4px 4px 0 0 var(--color-surface-tertiary);
+}
+
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-action-primary);
+}
+
+.stat-card .stat-label {
+  font-size: 0.9rem;
+  color: var(--color-content-secondary);
+  margin-top: 0.25rem;
+}
+
+.stat-card.highlight {
+  background: var(--color-action-primary);
+  color: var(--color-bg-app);
+}
+
+.stat-card.highlight .stat-value,
+.stat-card.highlight .stat-label {
+  color: inherit;
+}
+
+/* Additional utility classes for consultations */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-content-secondary);
+  font-style: italic;
+}
+
+.results-container {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--color-border-muted);
+}
+
+.stats-summary {
+  color: var(--color-content-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.no-results {
+  text-align: center;
+  color: var(--color-content-secondary);
+  padding: 2rem;
+  font-style: italic;
+}
+
+.national-comparison {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--color-surface-secondary);
+  border: 2px solid var(--color-content-primary);
+}
+
+.toggle-btn {
+  background: var(--color-surface-secondary);
+  border: 2px solid var(--color-content-primary);
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+  margin-bottom: 1rem;
+}
+
+.toggle-btn:hover {
+  background: var(--color-surface-hover);
+}
+
+.commune-count {
+  color: var(--color-content-secondary);
+  font-size: 0.875rem;
+}
+
+.submit-btn {
+  margin-top: 1.5rem;
+}

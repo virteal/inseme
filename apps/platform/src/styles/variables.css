@@ -1,0 +1,111 @@
+/* ==========================================================================
+   VARIABLES & TOKENS
+   Layer 1: Primitives (The "Style")
+   Layer 2: Semantics (The "Interface")
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------------
+     LAYER 1: PRIMITIVES
+     Raw values defining the visual identity.
+     ------------------------------------------------------------------------ */
+
+  /* Color Palette */
+  --palette-red: #b35a4a;
+  --palette-blue: #3b4e6b;
+  --palette-yellow: #c1a05a;
+  --palette-white: #d0c1aa;
+  --palette-black: #101013;
+
+  /* Grayscale (Contrast Scale) */
+  --palette-gray-50: rgb(26 24 22 / 90%);
+  --palette-gray-100: rgb(40 36 32 / 90%);
+  --palette-gray-200: rgb(60 56 52 / 90%);
+  --palette-gray-300: rgb(84 78 72 / 90%);
+  --palette-gray-400: rgb(112 104 96 / 92%);
+  --palette-gray-500: rgb(140 130 120 / 94%);
+  --palette-gray-600: rgb(170 158 144 / 95%);
+  --palette-gray-700: rgb(198 186 168 / 96%);
+  --palette-gray-800: rgb(224 214 192 / 97%);
+  --palette-gray-900: rgb(248 242 230 / 99%);
+
+  /* Functional Colors */
+  --palette-success: #22c55e;
+  --palette-success-soft: #4ade80;
+  --palette-error: #ef4444;
+
+  /* Fonts */
+  --font-family-sans: "Outfit", sans-serif;
+  --font-family-mono: "Fira Code", monospace;
+  --font-family-display: "Inter", sans-serif;
+
+  /* ------------------------------------------------------------------------
+     LAYER 2: SEMANTICS
+     Generic, reusable functional tokens mapped to primitives.
+     Naming: [Property]-[Role]-[Prominence/State]
+     ------------------------------------------------------------------------ */
+
+  /* --- Typography --- */
+  --font-body: var(--font-family-sans);
+  --font-code: var(--font-family-mono);
+  --font-display: var(--font-family-display);
+
+  /* --- Colors: Backgrounds / Surfaces --- */
+  --color-bg-app: var(--palette-black) !important;
+  --color-surface-primary: rgb(248 242 230 / 6%) !important;
+  --color-surface-secondary: rgb(248 242 230 / 10%) !important;
+  --color-surface-tertiary: rgb(248 242 230 / 14%) !important;
+  --color-surface-hover: rgb(248 242 230 / 18%) !important;
+  --color-surface-active: rgb(248 242 230 / 22%) !important;
+
+  /* --- Colors: Content (Text & Icons) --- */
+  --color-content-primary: var(--palette-gray-900) !important;
+  --color-content-secondary: var(--palette-gray-500) !important;
+  --color-content-tertiary: var(--palette-gray-400) !important;
+  --color-content-inverted: var(--palette-black) !important;
+
+  /* --- Colors: Actions & Brand --- */
+  --color-action-primary: var(--palette-blue) !important;
+  --color-action-primary-hover: #2d3f54 !important;
+  --color-action-accent: var(--palette-red) !important;
+  --color-action-highlight: var(--palette-yellow) !important;
+  --color-status-success: var(--palette-success) !important;
+  --color-status-error: var(--palette-error) !important;
+
+  /* --- Borders --- */
+  --color-border-subtle: rgb(224 214 192 / 25%) !important;
+  --color-border-default: rgb(224 214 192 / 35%) !important;
+  --color-border-strong: rgb(224 214 192 / 55%) !important;
+  --color-border-focus: var(--color-action-primary) !important;
+
+  /* --- Spacing & Layout --- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --radius-full: 9999px;
+
+  /* --- Motion & Depth --- */
+  --z-negative: -1;
+  --z-elevated: 10;
+  --z-sticky: 100;
+  --z-overlay: 1000;
+  --z-modal: 2000;
+  --z-toast: 3000;
+  --duration-fast: 0.15s;
+  --duration-normal: 0.25s;
+  --duration-slow: 0.4s;
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 5%);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -2px rgb(0 0 0 / 5%);
+  --shadow-glow-primary: 0 0 15px rgb(59 78 107 / 30%);
+}

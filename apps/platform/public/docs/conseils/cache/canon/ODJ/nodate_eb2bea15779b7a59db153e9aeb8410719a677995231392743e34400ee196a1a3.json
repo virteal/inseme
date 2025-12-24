@@ -1,0 +1,429 @@
+{
+  "key": "eb2bea15779b7a59db153e9aeb8410719a677995231392743e34400ee196a1a3",
+  "meta": {
+    "kind": "ODJ",
+    "model": "gpt-5-thinking",
+    "promptVersion": "v1",
+    "date": null,
+    "sourceUrl": null,
+    "ts": 1762763400833
+  },
+  "value": [
+    {
+      "order": 1,
+      "title": "Plan de financement — Requalification du Centre Ancien",
+      "topic": "Plan de financement du Centre Ancien",
+      "action": "budget",
+      "domain": "finances",
+      "raw": "Plan de financement Requalification du Centre Ancien",
+      "keywords": [
+        "plan de financement",
+        "Requalification du Centre Ancien",
+        "finances communales"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Plan de financement — Espace Logirem",
+      "topic": "Plan de financement Espace Logirem",
+      "action": "budget",
+      "domain": "finances",
+      "raw": "Plan de financement Espace Logirem",
+      "keywords": [
+        "plan de financement",
+        "Espace Logirem",
+        "finances communales"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Modification du plan de financement — Parcelles AD 106 à 109",
+      "topic": "Modification du plan de financement foncier",
+      "action": "budget",
+      "domain": "finances",
+      "raw": "Modification du plan de financement — Acquisition des parcelles AD 106/107/108 et 109",
+      "keywords": [
+        "modification",
+        "plan de financement",
+        "acquisition",
+        "AD 106",
+        "AD 107",
+        "AD 108",
+        "AD 109"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "OPAH — Individualisations de crédits Travaux Lourds",
+      "topic": "Crédits OPAH pour travaux lourds",
+      "action": "subvention",
+      "domain": "urbanisme",
+      "raw": "OPAH : Individualisations de crédits pour Travaux Lourds au profit de : Madame Lucienne POZZO DI BORGO ; Madame Marie BARTOLOZZI ; Monsieur François ROCCHI",
+      "keywords": [
+        "OPAH",
+        "individualisation de crédits",
+        "travaux lourds",
+        "Lucienne Pozzo di Borgo",
+        "Marie Bartolozzi",
+        "François Rocchi"
+      ]
+    },
+    {
+      "order": 5,
+      "title": "DM n°2 — Budget général",
+      "topic": "Décision modificative du budget général",
+      "action": "DM",
+      "domain": "finances",
+      "raw": "B — DM n°2 Budget général",
+      "keywords": [
+        "DM n°2",
+        "budget général",
+        "finances communales"
+      ]
+    },
+    {
+      "order": 6,
+      "title": "Convention ORT — Route du Calvaire (ratification)",
+      "topic": "Ratification de la convention ORT",
+      "action": "convention",
+      "domain": "urbanisme",
+      "raw": "C — Autorisation à donner au Maire de ratifier la convention ORT — Aménagement de la Route du Calvaire — avec le Président du Conseil Exécutif de Corse",
+      "keywords": [
+        "ORT",
+        "Route du Calvaire",
+        "ratification",
+        "Président du Conseil Exécutif de Corse"
+      ]
+    },
+    {
+      "order": 7,
+      "title": "Renouvellement — Opération « Bons pour Noël 2025 »",
+      "topic": "Renouvellement des bons de Noël 2025",
+      "action": "adoption",
+      "domain": "social",
+      "raw": "D — Renouvellement de l’opération « Bons pour Noël 2025 »",
+      "keywords": [
+        "renouvellement",
+        "Bons pour Noël 2025",
+        "opération municipale"
+      ]
+    },
+    {
+      "order": 8,
+      "title": "Autorisation — Dépenses d’investissement début 2026",
+      "topic": "Autoriser dépenses d’investissement avant budget",
+      "action": "budget",
+      "domain": "finances",
+      "raw": "E — Autorisation à donner au Maire à engager, liquider et mandater les dépenses d’investissement entre le 01 janvier 2026 et le vote du budget 2026",
+      "keywords": [
+        "engager",
+        "liquider",
+        "mandater",
+        "dépenses d’investissement",
+        "01/01/2026",
+        "budget 2026"
+      ]
+    },
+    {
+      "order": 9,
+      "title": "Création — Pôle régional Rugby à Chabrières",
+      "topic": "Création d’un pôle régional rugby",
+      "action": "adoption",
+      "domain": "sport",
+      "raw": "F — Création d’un Pôle régional Rugby dans le parc d’attractivité de Chabrières",
+      "keywords": [
+        "pôle régional rugby",
+        "parc d’attractivité de Chabrières",
+        "création"
+      ]
+    },
+    {
+      "order": 10,
+      "title": "Création AP/CP n°2025.01 — Espace Logirem",
+      "topic": "Créer AP/CP pour Espace Logirem",
+      "action": "budget",
+      "domain": "finances",
+      "raw": "G — Création AP/CP n°2025.01 : Aménagement Espace Logirem",
+      "keywords": [
+        "AP/CP n°2025.01",
+        "aménagement",
+        "Espace Logirem"
+      ]
+    },
+    {
+      "order": 11,
+      "title": "Modification AP/CP n°2023-02 — Centre Ancien",
+      "topic": "Modifier AP/CP de la requalification urbaine",
+      "action": "budget",
+      "domain": "finances",
+      "raw": "H — Modification AP/CP n°2023-02 — Requalification Centre Ancien, Cours Paoli, avenues X Luciani, Pierucci et Fontanarosa",
+      "keywords": [
+        "AP/CP n°2023-02",
+        "Requalification Centre Ancien",
+        "Cours Paoli",
+        "avenues Luciani",
+        "Pierucci",
+        "Fontanarosa"
+      ]
+    },
+    {
+      "order": 12,
+      "title": "Convention de délégation de MOA — Citadella XXI",
+      "topic": "Délégation de maîtrise d’ouvrage Citadella XXI",
+      "action": "convention",
+      "domain": "patrimoine",
+      "raw": "I — Autorisation à donner au Maire de signer une convention de délégation de maîtrise d’ouvrage avec le Président du Conseil Exécutif de Corse dans le cadre du projet Citadella XXI",
+      "keywords": [
+        "délégation de maîtrise d’ouvrage",
+        "Citadella XXI",
+        "Président du Conseil Exécutif de Corse",
+        "convention"
+      ]
+    },
+    {
+      "order": 13,
+      "title": "DM n°1 — Régie de l’Eau « Cort’Acqua »",
+      "topic": "Décision modificative de la régie de l’eau",
+      "action": "DM",
+      "domain": "eau-assainissement",
+      "raw": "2 — Régie de l’Eau « Cort’Acqua » — A — DM n°1",
+      "keywords": [
+        "Cort’Acqua",
+        "DM n°1",
+        "régie de l’eau"
+      ]
+    },
+    {
+      "order": 14,
+      "title": "Admission en non-valeur — Régie de l’Eau",
+      "topic": "Admission de créances éteintes Cort’Acqua",
+      "action": "budget",
+      "domain": "eau-assainissement",
+      "raw": "2 — Régie de l’Eau « Cort’Acqua » — B — Admission de créances éteintes en non-valeur",
+      "keywords": [
+        "créances éteintes",
+        "non-valeur",
+        "Cort’Acqua",
+        "régie de l’eau"
+      ]
+    },
+    {
+      "order": 15,
+      "title": "Marché de maîtrise d’œuvre — Passerelle piétons/cycles",
+      "topic": "Signature du marché de maîtrise d’œuvre",
+      "action": "marché",
+      "domain": "marchés publics",
+      "raw": "3 — Marchés publics — A — Autorisation à donner au Maire de signer le marché de maîtrise d’œuvre pour la construction d’une passerelle piétons et cycles",
+      "keywords": [
+        "maîtrise d’œuvre",
+        "passerelle piétons et cycles",
+        "autorisation de signer"
+      ]
+    },
+    {
+      "order": 16,
+      "title": "Marchés de travaux — Requalification Centre Ancien",
+      "topic": "Lancer et attribuer marchés de travaux",
+      "action": "marché",
+      "domain": "marchés publics",
+      "raw": "3 — Marchés publics — B — Autorisation à donner au Maire de lancer et d’attribuer par anticipation les marchés de travaux pour la requalification du Centre Ancien",
+      "keywords": [
+        "marchés de travaux",
+        "requalification Centre Ancien",
+        "attribution anticipée",
+        "autorisation"
+      ]
+    },
+    {
+      "order": 17,
+      "title": "Marché de fournitures — Pierres et bordures (Centre Ancien)",
+      "topic": "Lancer marché de fournitures urbaines",
+      "action": "marché",
+      "domain": "marchés publics",
+      "raw": "3 — Marchés publics — C — Autorisation à donner au Maire de lancer et d’attribuer par anticipation le marché de fournitures des pierres et des bordures pour la requalification urbaine du Centre Ancien",
+      "keywords": [
+        "marché de fournitures",
+        "pierres",
+        "bordures",
+        "requalification urbaine",
+        "Centre Ancien"
+      ]
+    },
+    {
+      "order": 18,
+      "title": "Marchés d’assurances 2026-2030",
+      "topic": "Signer et exécuter marchés d’assurances",
+      "action": "marché",
+      "domain": "marchés publics",
+      "raw": "3 — Marchés publics — D — Autorisation à donner au Maire de signer et d’exécuter les marchés relatifs aux prestations d’assurances pour la période 2026-2030",
+      "keywords": [
+        "assurances",
+        "2026-2030",
+        "autorisation de signer",
+        "exécution des marchés"
+      ]
+    },
+    {
+      "order": 19,
+      "title": "Marché de vidéoprotection",
+      "topic": "Signer et exécuter marché vidéoprotection",
+      "action": "marché",
+      "domain": "marchés publics",
+      "raw": "3 — Marchés publics — E — Autorisation à donner au Maire de signer et d’exécuter le marché de Vidéo Protection",
+      "keywords": [
+        "vidéoprotection",
+        "autorisation de signer",
+        "exécution du marché"
+      ]
+    },
+    {
+      "order": 20,
+      "title": "Avenant n°2 — MŒ Requalification Centre Ancien",
+      "topic": "Avenant au marché de maîtrise d’œuvre",
+      "action": "avenant",
+      "domain": "marchés publics",
+      "raw": "3 — Marchés publics — F — Autorisation à donner au Maire de signer l’avenant n°2 au marché de maîtrise d’œuvre Requalification du Centre Ancien",
+      "keywords": [
+        "avenant n°2",
+        "maîtrise d’œuvre",
+        "Requalification Centre Ancien",
+        "marché public"
+      ]
+    },
+    {
+      "order": 21,
+      "title": "Avenant n°1 — MŒ Création Espace Chabrières",
+      "topic": "Avenant au marché de maîtrise d’œuvre",
+      "action": "avenant",
+      "domain": "marchés publics",
+      "raw": "3 — Marchés publics — G — Autorisation à donner au Maire de signer l’avenant n°1 au marché de maîtrise d’œuvre Création Espace Chabrières",
+      "keywords": [
+        "avenant n°1",
+        "maîtrise d’œuvre",
+        "Espace Chabrières",
+        "marché public"
+      ]
+    },
+    {
+      "order": 22,
+      "title": "IHTS — Encadrement et paiement (Ville de Corte)",
+      "topic": "Encadrer et payer les IHTS",
+      "action": "adoption",
+      "domain": "ressources humaines",
+      "raw": "4 — Gestion des Ressources Humaines — A — Encadrement et paiement des heures supplémentaires (IHTS) — Ville de Corte — Budgets « principal » et « annexes »",
+      "keywords": [
+        "IHTS",
+        "heures supplémentaires",
+        "budgets principal et annexes",
+        "Ville de Corte"
+      ]
+    },
+    {
+      "order": 23,
+      "title": "Emplois saisonniers 2026",
+      "topic": "Programme d’emplois saisonniers 2026",
+      "action": "adoption",
+      "domain": "ressources humaines",
+      "raw": "4 — Gestion des Ressources Humaines — B — Emplois saisonniers 2026",
+      "keywords": [
+        "emplois saisonniers",
+        "2026",
+        "ressources humaines"
+      ]
+    },
+    {
+      "order": 24,
+      "title": "Approbation — Aménagement de la Forêt Communale",
+      "topic": "Approbation de l’aménagement forestier",
+      "action": "approbation",
+      "domain": "environnement",
+      "raw": "5 — Gestion du Domaine Communal — A — Approbation de l’aménagement de la Forêt Communale de Corte",
+      "keywords": [
+        "forêt communale",
+        "aménagement",
+        "Corte",
+        "approbation"
+      ]
+    },
+    {
+      "order": 25,
+      "title": "Avenant n°1 — Charte d’occupation du domaine public",
+      "topic": "Avenant à la charte du domaine public",
+      "action": "avenant",
+      "domain": "patrimoine",
+      "raw": "5 — Gestion du Domaine Communal — B — Avenant n°1 à la charte d’occupation du domaine public",
+      "keywords": [
+        "avenant n°1",
+        "charte",
+        "occupation du domaine public"
+      ]
+    },
+    {
+      "order": 26,
+      "title": "Dérogation — Repos dominical 2026",
+      "topic": "Dérogation au repos dominical 2026",
+      "action": "adoption",
+      "domain": "autre",
+      "raw": "6 — Divers — A — Dérogation à la règle du repos dominical pour l’année 2026",
+      "keywords": [
+        "dérogation",
+        "repos dominical",
+        "2026"
+      ]
+    },
+    {
+      "order": 27,
+      "title": "Adhésion — Conservatoire Henri Tomasi",
+      "topic": "Adhésion au conservatoire Henri Tomasi",
+      "action": "adoption",
+      "domain": "culture",
+      "raw": "6 — Divers — B — Adhésion et intégration au Conservatoire Henri Tomasi",
+      "keywords": [
+        "adhésion",
+        "intégration",
+        "Conservatoire Henri Tomasi"
+      ]
+    },
+    {
+      "order": 28,
+      "title": "Clôture — Régie de Recettes (transport Restonica)",
+      "topic": "Clôturer la régie des recettes transport",
+      "action": "budget",
+      "domain": "mobilité",
+      "raw": "6 — Divers — C — Clôture de la Régie de Recettes d’encaissement des droits de transport dans la Vallée de la Restonica",
+      "keywords": [
+        "régie de recettes",
+        "droits de transport",
+        "Vallée de la Restonica",
+        "clôture"
+      ]
+    },
+    {
+      "order": 29,
+      "title": "Communication — Compte-rendu du Conseil du 01/07/2025",
+      "topic": "Information sur le compte-rendu du 01/07/2025",
+      "action": "information",
+      "domain": "autre",
+      "raw": "En communication — Compte-rendu de la réunion du Conseil Municipal du 01 juillet 2025",
+      "keywords": [
+        "communication",
+        "compte-rendu",
+        "01/07/2025"
+      ]
+    },
+    {
+      "order": 30,
+      "title": "Communication — Liste des marchés et avenants ratifiés",
+      "topic": "Information sur marchés et avenants ratifiés",
+      "action": "information",
+      "domain": "marchés publics",
+      "raw": "En communication — Liste des marchés et avenants ratifiés entre le 30 juin 2025 et le 28 octobre 2025",
+      "keywords": [
+        "liste des marchés",
+        "avenants ratifiés",
+        "30/06/2025",
+        "28/10/2025"
+      ]
+    }
+  ]
+}

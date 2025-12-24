@@ -1,0 +1,57 @@
+{
+  "deno.enable": true,
+  "deno.enablePaths": ["netlify/edge-functions"],
+  "deno.unstable": true,
+  "deno.importMap": ".netlify/edge-functions-import-map.json",
+  "deno.path": "C:\\Users\\admin\\AppData\\Roaming\\netlify\\Config\\deno-cli\\deno.exe",
+
+  // Prettier - Format on Save
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // Disable format on save for specific file types (if needed)
+  "[markdown]": {
+    "editor.formatOnSave": false  // Optional: don't auto-format markdown
+  },
+
+  // Disable Prettier for Deno files (use Deno's formatter instead)
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno",
+    "editor.formatOnSave": true
+  },
+
+  // Additional useful settings
+  "files.eol": "\n",  // Use LF line endings (matches .editorconfig)
+  "files.insertFinalNewline": true,  // Add newline at end of file
+  "files.trimTrailingWhitespace": true,  // Remove trailing spaces
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"  // Auto-fix ESLint issues on save
+  }
+  // Tailwind CSS IntelliSense (project aware)
+  ,
+  "tailwindCSS.includeLanguages": {
+    "javascript": "javascript",
+    "javascriptreact": "javascriptreact",
+    "typescript": "typescript",
+    "typescriptreact": "typescriptreact"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    "className\\s*=\\s*\"([^\"]+)\"",
+    "className\\s*=\\s*\\{`([^`]+)`\\}"
+  ],
+  "python-envs.defaultEnvManager": "ms-python.python:system",
+  "python-envs.pythonProjects": [],
+  "servers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=opnotbjrbphwcezaqgim"
+    }
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
+}
+

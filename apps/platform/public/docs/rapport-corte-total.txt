@@ -1,0 +1,71 @@
+Objet : Commune de Corte — Délais de convocation, délibérations et PV — Rapport automatisé
+Période couverte : du 2023-02-13 au 2025-10-28
+Généré : 2025-11-06 18:11:34 (Europe/Paris)
+
+Base juridique (rappel synthétique) :
+- Convocations : 5 jours francs minimum (urgence possible ≥ 1 jour franc, à motiver).
+- Listes des délibérations : publication « dans la semaine » suivant la séance.
+- Procès-verbal : publication « dans la semaine » suivant la séance où il est arrêté (séance suivante).
+- La date de publication est estimée via l’en-tête HTTP Last-Modified des PDF finaux.
+
+Synthèse chiffrée :
+- CONVOCATION : total=20, conforme=2, non_conforme=2, tardif=0, postérieur=16, anticipée=0, indéterminable=0
+- DELIB_LISTE : total=4, conforme=1, non_conforme=0, tardif=3, postérieur=0, anticipée=0, indéterminable=0
+- DELIB_REGISTRE : total=6, conforme=0, non_conforme=0, tardif=0, postérieur=0, anticipée=0, indéterminable=0
+- PV : total=18, conforme=5, non_conforme=0, tardif=12, postérieur=0, anticipée=1, indéterminable=0
+
+Détail par dossier (publication [Europe/Paris] | métrique | verdict | URL) :
+- [CONVOCATION] ODJ 13/02/2023 | 2023-10-25 10:29:22 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1599
+- [CONVOCATION] ODJ 20/03/2023 | 2023-10-25 10:29:38 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1600
+- [CONVOCATION] ODJ 11/04/2023 | 2023-10-25 09:55:07 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1597
+- [CONVOCATION] ODJ 24/07/2023 | 2023-10-25 09:54:29 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1596
+- [CONVOCATION] ODJ 30/10/2023 | 2023-10-23 14:57:30 | 6 jf | CONFORME | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1592
+- [CONVOCATION] ODJ 20/11/2023 | 2023-11-16 10:19:57 | 3 jf | NON_CONFORME | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1615
+- [CONVOCATION] ODJ 12/02/2024 | 2024-02-05 16:20:44 | 6 jf | CONFORME | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1642
+- [CONVOCATION] ODJ 25/03/2024 | 2024-07-08 11:44:38 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1719
+- [CONVOCATION] ODJ 08/04/2024 | 2024-07-08 11:32:03 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1718
+- [CONVOCATION] ODJ 22/04/2024 | 2024-07-08 11:29:27 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1717
+- [CONVOCATION] ODJ 01/07/2024 | 2024-09-18 15:28:46 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1753
+- [CONVOCATION] ODJ 23/09/2024 | 2024-09-18 11:14:47 | 4 jf | NON_CONFORME | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1751
+- [CONVOCATION] ODJ 28/10/2024 | 2024-10-31 14:52:47 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1772
+- [CONVOCATION] Convocation/ODJ 09/12/2024 | 2025-10-30 15:32:52 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1917
+- [CONVOCATION] Convocation/ODJ 16/12/2024 | 2025-10-30 15:31:52 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1916
+- [CONVOCATION] Convocation/ODJ 23/12/2024 | 2025-10-30 15:29:20 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1915
+- [CONVOCATION] Convocation/ODJ 18/03/2025 | 2025-10-30 15:27:34 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1914
+- [CONVOCATION] Convocation/ODJ 08/04/2025 | 2025-10-30 15:26:13 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1913
+- [CONVOCATION] Convocation/ODJ 01/07/2025 | 2025-10-30 15:23:31 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1912
+- [CONVOCATION] Convocation/ODJ 28/10/2025 | 2025-10-30 15:20:21 | — jf | POSTERIEUR | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1910
+- [DELIB_LISTE] Délibérations 28/10/2025 | 2025-10-30 15:14:43 | 2 j | CONFORME | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1909
+- [DELIB_LISTE] Délibérations 01/07/2025 | 2025-10-30 15:41:51 | 121 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1919
+- [DELIB_LISTE] Délibérations 08/04/2025 | 2025-10-30 15:52:46 | 205 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1921
+- [DELIB_LISTE] Délibérations 18/03/2025 | 2025-10-30 16:40:37 | 226 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1925
+- [DELIB_REGISTRE] Registre 2024 T4 | 2025-11-03 10:45:57 | — | INDICATEUR_SEUL | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1932
+- [DELIB_REGISTRE] Registre 2024 T3 | 2025-11-03 10:38:52 | — | INDICATEUR_SEUL | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1931
+- [DELIB_REGISTRE] Registre 2024 T2 | 2025-11-03 10:30:56 | — | INDICATEUR_SEUL | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1930
+- [DELIB_REGISTRE] Registre 2024 T1 | 2025-11-03 10:21:15 | — | INDICATEUR_SEUL | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1929
+- [DELIB_REGISTRE] Registre 2023 T2 | indéterminable | — | INDICATEUR_SEUL | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1756
+- [DELIB_REGISTRE] Registre 2023 T1 | 2024-09-19 10:57:04 | — | INDICATEUR_SEUL | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1754
+- [PV] PV 13/02/2023 | 2023-10-25 10:28:56 | 219 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1598
+- [PV] PV 20/03/2023 | 2023-10-25 09:44:17 | 197 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1593
+- [PV] PV 11/04/2023 | 2023-10-25 09:44:57 | 93 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1594
+- [PV] PV 24/07/2023 | 2023-10-31 09:40:04 | 1 j | CONFORME | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1604
+- [PV] PV 30/10/2023 | 2023-11-23 13:53:54 | 3 j | CONFORME | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1617
+- [PV] PV 20/11/2023 | 2024-07-08 11:27:41 | 147 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1716
+- [PV] PV 13/02/2024 | 2024-07-08 10:54:41 | 105 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1712
+- [PV] PV 25/03/2024 | 2024-07-08 10:58:14 | 91 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1715
+- [PV] PV 08/04/2024 | 2024-07-08 10:55:59 | 77 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1713
+- [PV] PV 22/04/2024 | 2024-07-08 10:57:26 | 7 j | CONFORME | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1714
+- [PV] PV 01/07/2024 | 2024-09-18 11:17:43 | -5 j | ANTICIPEE | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1752
+  note : publiée avant séance d’arrêt
+- [PV] PV 23/09/2024 | 2024-10-31 14:50:53 | 3 j | CONFORME | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1771
+- [PV] PV 28/10/2024 | 2025-10-30 17:10:08 | 325 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1928
+- [PV] PV 09/12/2024 | 2025-10-30 15:34:43 | 318 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1918
+- [PV] PV 16/12/2024 | 2025-10-30 16:50:13 | 311 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1924
+- [PV] PV 23/12/2024 | 2025-10-30 16:47:47 | 226 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1923
+- [PV] PV 08/04/2025 | 2025-10-30 15:45:14 | 121 j | TARDIF | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1920
+- [PV] PV 01/07/2025 | 2025-10-30 15:21:44 | 2 j | CONFORME | https://www.mairie-corte.fr/modules.php?name=Downloads&d_op=getit&lid=1911
+
+Observations probatoires :
+- La « date de publication » correspond à Last-Modified ; elle peut diverger d’un affichage papier ou d’un envoi.
+- Pour les PV, la contrainte court à partir de la séance d’arrêt ; ici, on suppose qu’il s’agit de la séance suivante connue.
+- Les registres/tomes sont traités comme indicateurs (hors délai « dans la semaine »).

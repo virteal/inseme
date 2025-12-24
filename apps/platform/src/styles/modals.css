@@ -1,0 +1,49 @@
+/* ==========================================================================
+   MODALS
+   Modal dialogs and overlays.
+   ========================================================================== */
+
+/* Consent Modal */
+.consent-modal {
+  max-width: 480px;
+  width: 90%;
+  padding: 2rem;
+  text-align: center;
+  background: var(--color-surface-primary);
+  border: 2px solid var(--color-border-strong);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  z-index: var(--z-modal);
+}
+
+.consent-modal h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-content-primary);
+  margin-bottom: 0.75rem;
+}
+
+.consent-modal p {
+  color: var(--color-content-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.45;
+}
+
+.consent-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-bg-app);
+  opacity: 0.8;
+  z-index: var(--z-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}

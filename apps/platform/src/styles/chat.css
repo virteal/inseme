@@ -1,0 +1,15 @@
+/* chat.css — placeholder for truly shared chat utilities
+   Most chat-specific styles have been migrated to component-local
+   `src/components/bob/v2/chat-v2.css` as part of the componentization migration.
+
+   Keep this file minimal and only include classes that are reused
+   across multiple pages/components (if any).
+*/
+
+/* Shared scrollbar utility used in multiple components */
+.shared-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.shared-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+}

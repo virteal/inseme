@@ -1,0 +1,8 @@
+{
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "exclude": [
+      "./src/storage-implementations/fileBasedStorage.js"
+    ]
+  }
+}

@@ -1,0 +1,658 @@
+/* ==========================================================================
+   CONSULTATIONS HOME
+   Page d'accueil principale de la plateforme
+   ========================================================================== */
+
+.consultations-home {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* ==========================================================================
+   HOME HERO
+   En-tête principal avec hashtag et ville
+   ========================================================================== */
+
+.home-hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding: 2rem 0;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero-hashtag {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--color-action-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.hero-divider {
+  width: 100%;
+  max-width: 300px;
+  height: 4px;
+  background: var(--color-highlight, var(--color-action-accent));
+  margin: 0.5rem 0;
+}
+
+.hero-city {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-content-primary);
+  line-height: 1.2;
+}
+
+.hero-tagline {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--color-content-secondary);
+}
+
+/* ==========================================================================
+   NEWS SECTION
+   Fil d'actualités
+   ========================================================================== */
+
+.news-section {
+  margin-bottom: 2.5rem;
+}
+
+/* ==========================================================================
+   CONSULTATION SECTION (FOLDABLE)
+   Section repliable des consultations
+   ========================================================================== */
+
+.consultation-section {
+  margin-bottom: 2.5rem;
+  background: var(--color-bg-app);
+  border: 2px solid var(--color-content-primary);
+  box-shadow: 4px 4px 0 0 var(--color-surface-tertiary);
+}
+
+.section-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: var(--color-surface-secondary);
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-content-primary);
+  transition: background var(--duration-fast) ease;
+}
+
+.section-toggle:hover {
+  background: var(--color-surface-tertiary);
+}
+
+.toggle-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  transition: transform var(--duration-fast) ease;
+  flex-shrink: 0;
+}
+
+.toggle-icon.open {
+  transform: rotate(180deg);
+}
+
+.consultation-content {
+  padding: 1.5rem;
+  border-top: 1px solid var(--color-border-muted);
+}
+
+.subsection-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-content-secondary);
+  margin: 0 0 1rem 0;
+}
+
+/* ==========================================================================
+   QUICK ACCESS SECTION
+   Accès rapides vers les autres fonctionnalités
+   ========================================================================== */
+
+.quick-access-section {
+  margin-bottom: 2.5rem;
+}
+
+.quick-access-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.quick-access-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.25rem 1rem;
+  background: var(--color-bg-app);
+  border: 2px solid var(--color-content-primary);
+  box-shadow: 4px 4px 0 0 var(--color-surface-tertiary);
+  text-decoration: none;
+  transition: all var(--duration-fast) ease;
+  text-align: center;
+}
+
+.quick-access-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--color-surface-tertiary);
+  background: var(--color-surface-secondary);
+}
+
+.quick-access-icon {
+  font-size: 2rem;
+}
+
+.quick-access-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-content-primary);
+}
+
+.quick-access-desc {
+  font-size: 0.85rem;
+  color: var(--color-content-secondary);
+  line-height: 1.3;
+}
+
+/* Section labels */
+.section-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-content-secondary);
+  margin: 0 0 1rem 0;
+}
+
+/* Loading */
+.loading-container {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--color-content-secondary);
+}
+
+/* ==========================================================================
+   FEATURED CONSULTATION
+   ========================================================================== */
+
+.featured-section {
+  margin-bottom: 3rem;
+}
+
+.featured-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  background: var(--color-bg-app);
+  border: 3px solid var(--color-content-primary);
+  padding: 2rem;
+  box-shadow: 8px 8px 0 0 var(--color-surface-tertiary);
+  transition:
+    transform var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease;
+}
+
+.featured-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 10px 10px 0 0 var(--color-surface-tertiary);
+}
+
+.featured-card.responded {
+  border-color: var(--color-success, #4caf50);
+}
+
+.featured-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.featured-badges {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.scope-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+}
+
+.scope-badge.small {
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+}
+
+.responded-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--color-success, #4caf50);
+  color: white;
+}
+
+.featured-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-content-primary);
+  margin: 0;
+}
+
+.featured-description {
+  color: var(--color-content-secondary);
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.featured-stats {
+  font-size: 0.9rem;
+  color: var(--color-content-secondary);
+  margin: 0;
+}
+
+.featured-cta {
+  display: inline-block;
+  background: var(--color-action-primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid var(--color-action-primary);
+  transition: all var(--duration-fast) ease;
+  align-self: flex-start;
+  margin-top: 0.5rem;
+}
+
+.featured-cta:hover {
+  background: var(--color-action-accent);
+  border-color: var(--color-action-accent);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 0 var(--color-surface-tertiary);
+}
+
+.featured-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.visual-placeholder {
+  width: 120px;
+  height: 120px;
+  background: var(--color-surface-secondary);
+  border: 2px solid var(--color-border-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.visual-icon {
+  font-size: 3rem;
+}
+
+/* ==========================================================================
+   CONSULTATIONS GRID
+   ========================================================================== */
+
+.other-section {
+  margin-bottom: 3rem;
+}
+
+.consultations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.consultation-card {
+  background: var(--color-bg-app);
+  border: 2px solid var(--color-content-primary);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all var(--duration-fast) ease;
+  box-shadow: 4px 4px 0 0 var(--color-surface-tertiary);
+}
+
+.consultation-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--color-surface-tertiary);
+}
+
+.consultation-card.responded {
+  border-color: var(--color-success, #4caf50);
+  background: var(--color-surface-success, #f1f8e9);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.responded-indicator {
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--color-success, #4caf50);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-content-primary);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.card-description {
+  font-size: 0.9rem;
+  color: var(--color-content-secondary);
+  margin: 0;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.card-stats {
+  font-size: 0.8rem;
+  color: var(--color-content-secondary);
+  margin: 0;
+}
+
+.card-link {
+  font-weight: 600;
+  color: var(--color-action-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  align-self: flex-start;
+}
+
+.card-link:hover {
+  color: var(--color-action-accent);
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   INFO SECTION
+   ========================================================================== */
+
+.info-section {
+  background: var(--color-surface-secondary);
+  border: 2px solid var(--color-border-muted);
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.info-content p {
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+  color: var(--color-content-secondary);
+}
+
+.scope-legend {
+  margin-top: 1rem;
+}
+
+.scope-legend h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  color: var(--color-content-primary);
+}
+
+.scope-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.scope-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.scope-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 0.9rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   PETITIONS LINKS
+   Liens vers les pétitions citoyennes associées
+   ========================================================================== */
+
+/* Section pétitions (version complète pour featured card) */
+.petitions-section {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border-muted);
+}
+
+.petitions-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-content-secondary);
+  margin: 0 0 0.75rem 0;
+}
+
+.petitions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.petition-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-surface-secondary);
+  border: 1px solid var(--color-border-muted);
+  text-decoration: none;
+  transition: all var(--duration-fast) ease;
+}
+
+.petition-link:hover {
+  background: var(--color-surface-tertiary);
+  border-color: var(--color-action-primary);
+  transform: translateX(4px);
+}
+
+.petition-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.petition-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.petition-scope {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-content-secondary);
+}
+
+.petition-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-content-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.petition-platform {
+  font-size: 0.75rem;
+  color: var(--color-content-secondary);
+  font-style: italic;
+}
+
+.petition-arrow {
+  font-size: 1rem;
+  color: var(--color-action-primary);
+  flex-shrink: 0;
+}
+
+/* Couleurs par scope */
+.petition-local .petition-scope {
+  color: #4caf50;
+}
+.petition-regional .petition-scope {
+  color: #ff9800;
+}
+.petition-national .petition-scope {
+  color: #2196f3;
+}
+
+.petition-local:hover {
+  border-color: #4caf50;
+}
+.petition-regional:hover {
+  border-color: #ff9800;
+}
+.petition-national:hover {
+  border-color: #2196f3;
+}
+
+/* Version compacte pour les cartes de grille */
+.petitions-compact {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border-muted);
+}
+
+.petitions-label {
+  font-size: 0.8rem;
+  color: var(--color-content-secondary);
+}
+
+.petition-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 1rem;
+  background: var(--color-surface-secondary);
+  border: 1px solid var(--color-border-muted);
+  text-decoration: none;
+  transition: all var(--duration-fast) ease;
+}
+
+.petition-icon-link:hover {
+  background: var(--color-surface-tertiary);
+  border-color: var(--color-action-primary);
+  transform: scale(1.1);
+}
+
+/* ==========================================================================
+   NO CONSULTATIONS
+   ========================================================================== */
+
+.no-consultations {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--color-surface-secondary);
+  border: 2px dashed var(--color-border-muted);
+}
+
+.no-consultations p {
+  margin: 0.5rem 0;
+  color: var(--color-content-secondary);
+}
+
+.no-consultations .hint {
+  font-style: italic;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  .consultations-home {
+    padding: 1rem;
+  }
+
+  .consultations-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .featured-card {
+    grid-template-columns: 1fr;
+    padding: 1.25rem;
+  }
+
+  .featured-visual {
+    display: none;
+  }
+
+  .featured-title {
+    font-size: 1.25rem;
+  }
+
+  .consultations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scope-legend ul {
+    gap: 0.75rem;
+  }
+
+  .scope-legend li {
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "ophelia",
+  "version": "0.1.0",
+  "description": "Client npm pour l’API REST Ophélia (RAG civic-tech)",
+  "main": "index.js",
+  "type": "module",
+  "author": "Jean-Hugues Robert",
+  "license": "MIT",
+  "keywords": [
+    "rag",
+    "civic-tech",
+    "llm",
+    "ophelia",
+    "api",
+    "chatbot"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JeanHuguesRobert/survey"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,571 @@
+openapi: 3.0.0
+info:
+  title: Platform API
+  description: Comprehensive API for platform operations including posts, groups, propositions, and interactions
+  version: 1.0.0
+  contact:
+    name: API Support
+
+servers:
+  - url: /api/v1
+    description: Production API
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase authentication token
+
+  schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        author_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+          properties:
+            type:
+              type: string
+              enum: [post, task]
+            groupId:
+              type: string
+              format: uuid
+            tags:
+              type: array
+              items:
+                type: string
+            status:
+              type: string
+              enum: [todo, in_progress, done, blocked]
+            priority:
+              type: string
+              enum: [low, medium, high]
+            assigneeId:
+              type: string
+              format: uuid
+
+    Group:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        created_by:
+          type: string
+          format: uuid
+        metadata:
+          type: object
+          properties:
+            type:
+              type: string
+              enum: [group, mission]
+            location:
+              type: string
+            status:
+              type: string
+              enum: [active, completed, archived]
+
+    Proposition:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [active, closed, draft]
+        author_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
+paths:
+  /posts:
+    get:
+      summary: List posts
+      tags:
+        - Posts
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [post, task]
+          description: Filter by post type
+        - name: groupId
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by group ID
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+          description: Maximum number of results
+      responses:
+        '200':
+          description: List of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Create a new post
+      tags:
+        - Posts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                type:
+                  type: string
+                  enum: [post, task]
+                  default: post
+                groupId:
+                  type: string
+                  format: uuid
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Post created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /posts/{id}:
+    put:
+      summary: Update a post
+      tags:
+        - Posts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+      responses:
+        '200':
+          description: Post updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Post not found
+
+  /groups:
+    get:
+      summary: List groups
+      tags:
+        - Groups
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [group, mission]
+          description: Filter by group type
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of groups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+
+    post:
+      summary: Create a new group
+      tags:
+        - Groups
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                type:
+                  type: string
+                  enum: [group, mission]
+                  default: group
+                location:
+                  type: string
+      responses:
+        '201':
+          description: Group created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+
+  /groups/{id}:
+    put:
+      summary: Update a group
+      tags:
+        - Groups
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                location:
+                  type: string
+                status:
+                  type: string
+                  enum: [active, completed, archived]
+      responses:
+        '200':
+          description: Group updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+
+  /groups/{id}/join:
+    post:
+      summary: Join a group
+      tags:
+        - Groups
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successfully joined group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+  /groups/{id}/leave:
+    post:
+      summary: Leave a group
+      tags:
+        - Groups
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successfully left group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+  /propositions:
+    get:
+      summary: List propositions
+      tags:
+        - Propositions
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, closed, draft]
+            default: active
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of propositions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Proposition'
+
+    post:
+      summary: Create a new proposition
+      tags:
+        - Propositions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Proposition created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proposition'
+
+  /propositions/{id}:
+    put:
+      summary: Update a proposition
+      tags:
+        - Propositions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                status:
+                  type: string
+                  enum: [active, closed, draft]
+      responses:
+        '200':
+          description: Proposition updated successfully
+
+  /votes:
+    post:
+      summary: Vote on a proposition
+      tags:
+        - Interactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - proposition_id
+                - value
+              properties:
+                proposition_id:
+                  type: string
+                  format: uuid
+                value:
+                  type: integer
+                  enum: [1, -1, 0]
+                  description: "1 = FOR, -1 = AGAINST, 0 = REMOVE"
+      responses:
+        '200':
+          description: Vote registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+  /reactions:
+    post:
+      summary: Add a reaction to a post
+      tags:
+        - Interactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - post_id
+                - emoji
+              properties:
+                post_id:
+                  type: string
+                  format: uuid
+                emoji:
+                  type: string
+                  description: "Emoji character (e.g., 👍, ❤️)"
+      responses:
+        '200':
+          description: Reaction added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+  /comments:
+    post:
+      summary: Add a comment to a post
+      tags:
+        - Interactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - post_id
+                - content
+              properties:
+                post_id:
+                  type: string
+                  format: uuid
+                content:
+                  type: string
+      responses:
+        '201':
+          description: Comment created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  post_id:
+                    type: string
+                    format: uuid
+                  user_id:
+                    type: string
+                    format: uuid
+                  content:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+
+tags:
+  - name: Posts
+    description: Post and task management
+  - name: Groups
+    description: Groups and missions management
+  - name: Propositions
+    description: Proposition management and voting
+  - name: Interactions
+    description: Reactions, comments, and votes

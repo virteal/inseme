@@ -1,0 +1,95 @@
+/* Styles for ChatWindow providers panel and header toggle */
+.providers-toggle {
+  position: relative;
+  padding-right: 28px;
+}
+.providers-indicator {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 10px;
+  height: 10px;
+  background: #ffb86b;
+  box-shadow: 0 0 0 3px rgba(255, 184, 107, 0.12);
+}
+
+.providers-panel {
+  position: fixed;
+  top: 84px;
+  right: 20px;
+  z-index: 1202;
+  width: 320px;
+  max-height: 70vh;
+  overflow: auto;
+  background: var(--color-surface-primary, #fff);
+  border: 1px solid var(--color-border-default, #e6e9ef);
+  padding: 12px;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.35);
+  backdrop-filter: blur(6px);
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease;
+}
+.providers-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.providers-close {
+  font-size: 13px;
+  padding: 6px 10px;
+}
+.providers-panel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.provider-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: var(--color-surface-secondary, #fbfdff);
+  border: 1px solid rgba(15, 23, 42, 0.03);
+}
+.provider-info {
+  display: flex;
+  flex-direction: column;
+}
+.provider-name {
+  font-weight: 700;
+}
+.provider-status {
+  font-size: 12px;
+  color: var(--color-content-secondary, #6b7280);
+  margin-top: 2px;
+}
+.provider-metrics {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--color-content-secondary, #6b7280);
+}
+.metric-time {
+  color: var(--metric-time-color, #0b2f66);
+}
+.metric-rate {
+  color: var(--metric-rate-color, #08660d);
+}
+
+@media (max-width: 640px) {
+  .providers-panel {
+    right: 12px;
+    left: 12px;
+    width: auto;
+    top: 70px;
+  }
+}
+
+/* Small polish for modals used in ChatWindow */
+.bob-modal-dialog {
+  box-shadow: 0 20px 50px rgba(6, 12, 34, 0.45);
+}

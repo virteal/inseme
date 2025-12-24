@@ -1,0 +1,15 @@
+{
+  "subdomain": "universita",
+  "community_name": "Università di Corsica",
+  "community_type": "university",
+  "city_name": "Corte",
+  "insee_code": "0200042H",
+  "region_code": "COR",
+  "region_name": "Corse",
+  "contact_email": "dsi@univ-corse.fr",
+  "contact_name": "DSI Université",
+  "map_center": [42.3084, 9.1505],
+  "supabase_url": "https://REMPLACER.supabase.co",
+  "supabase_anon_key": "eyJ_REMPLACER",
+  "hub_url": "https://HUB_CORTE.supabase.co"
+}
