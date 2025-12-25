@@ -6,6 +6,9 @@
     "author": "Jean Hugues Noël Robert <jean_hugues_robert@yahoo.com>",
     "license": "MIT",
     "homepage": "https://LePP.fr/inseme",
+    "engines": {
+      "node": ">=24 <25"
+    },
     "scripts": {
         "dev": "vite",
         "build": "vite build",
