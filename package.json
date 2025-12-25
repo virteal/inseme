@@ -1,6 +1,6 @@
 {
   "name": "inseme-monorepo",
-  "private": true,
+  "private": false,
   "version": "1.0.0",
   "description": "Monorepo for Inseme and Platform Citoyenne",
   "workspaces": [
@@ -15,5 +15,8 @@
   },
   "devDependencies": {
     "turbo": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }
