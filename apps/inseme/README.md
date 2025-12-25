@@ -3,6 +3,7 @@
 **Inseme** est une plateforme facilitant la participation à distance à des assemblées physiques, inspiré par les principes de la démocratie directe et liquide. Cette version modernisée intègre l'intelligence artificielle et des technologies WebRTC de pointe pour une expérience fluide et proactive.
 
 Déployé sur : [https://LePP.fr/inseme](https://LePP.fr/inseme)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/dfaef2a1-e96d-45fe-9e5d-ecdfb02067fe/deploy-status)](https://app.netlify.com/projects/inseme/deploys)
 
 ---
 
