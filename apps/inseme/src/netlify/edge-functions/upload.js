@@ -1,6 +1,6 @@
 // src/netlify/edge-functions/upload.js
 import { S3Client, PutObjectCommand } from "https://esm.sh/@aws-sdk/client-s3";
-import { defineEdgeFunction } from "../../../../packages/cop-host/src/runtime/edge.js";
+import { defineEdgeFunction } from "../../../../../packages/cop-host/src/runtime/edge.js";
 
 export default defineEdgeFunction(async (request, runtime, context) => {
     const { getConfig, json, error } = runtime;

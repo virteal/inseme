@@ -1,5 +1,5 @@
 import OpenAI from "https://esm.sh/openai@4";
-import { defineEdgeFunction } from "../../../../packages/cop-host/src/runtime/edge.js";
+import { defineEdgeFunction } from "../../../../../packages/cop-host/src/runtime/edge.js";
 
 export default defineEdgeFunction(async (request, runtime, context) => {
     const { getConfig, json, error } = runtime;
