@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 
 import { storage } from '../../../lib/storage'
-import { getConfig, loadInstanceConfig } from '../../../../../../packages/cop-host/src/config/instanceConfig.client.js'
+import { getConfig, loadInstanceConfig } from '../../../../../../packages/cop-host/src/config/instanceConfig.client'
 
 export const OPHELIA_ID = '00000000-0000-0000-0000-000000000001';
 

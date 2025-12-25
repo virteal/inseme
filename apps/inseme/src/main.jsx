@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
-import { initializeInstance, loadInstanceConfig } from '../../../packages/cop-host/src/config/instanceConfig.client.js'
+import { initializeInstance, loadInstanceConfig } from '@inseme/cop-host/config/instanceConfig.client'
 
 // Initialisation asynchrone de la configuration (Vault)
 const init = async () => {
