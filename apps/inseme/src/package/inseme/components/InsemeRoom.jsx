@@ -14,7 +14,7 @@ import { ModernMediaLayer } from './ModernMediaLayer';
  * @param {object} config - Configuration object (jitsi, ophelia, prompts).
  * @param {object} slots - Custom component overrides { Chat, Results, VoteButtons, MediaLayer }.
  */
-export function InsemeRoom({ roomName, user, supabase, config = {}, slots = {} }) {
+export function InsemeRoom({ roomName, user, supabase, config = {}, slots = {}, isSpectator = false }) {
     const ChatComponent = slots.Chat || Chat;
     const ResultsComponent = slots.Results || Results;
     const VoteButtonsComponent = slots.VoteButtons || VoteButtons;
@@ -23,7 +23,7 @@ export function InsemeRoom({ roomName, user, supabase, config = {}, slots = {} }
     const [isBoardOpen, setIsBoardOpen] = React.useState(true);
 
     return (
-        <InsemeProvider roomName={roomName} user={user} supabase={supabase} config={config}>
+        <InsemeProvider roomName={roomName} user={user} supabase={supabase} config={config} isSpectator={isSpectator}>
             <div className="min-h-screen bg-[#0a0a0c] text-white selection:bg-indigo-500/30 overflow-x-hidden">
                 <div className="max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8 flex flex-col h-screen">
                     

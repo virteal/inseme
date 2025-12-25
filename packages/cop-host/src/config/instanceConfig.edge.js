@@ -8,7 +8,25 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
 
 // Function to get env var in Netlify Edge
 function getenv(key) {
-  return Deno.env.get(key) || Deno.env.get(`VITE_${key}`) || Deno.env.get(`VITE_${key.toUpperCase()}`);
+  let val = undefined;
+  
+  // 1. Try Netlify.env (Netlify Edge standard)
+  try {
+    if (typeof Netlify !== "undefined" && Netlify.env && typeof Netlify.env.get === "function") {
+      val = Netlify.env.get(key) || Netlify.env.get(`VITE_${key}`) || Netlify.env.get(`VITE_${key.toUpperCase()}`);
+    }
+  } catch (_e) { /* ignore */ }
+
+  // 2. Fallback to Deno.env
+  if (!val) {
+    try {
+      if (typeof Deno !== "undefined" && Deno.env && typeof Deno.env.get === "function") {
+        val = Deno.env.get(key) || Deno.env.get(`VITE_${key}`) || Deno.env.get(`VITE_${key.toUpperCase()}`);
+      }
+    } catch (_e) { /* ignore */ }
+  }
+
+  return val;
 }
 
 // Fonction pour créer une instance Supabase côté Deno Edge

@@ -7,7 +7,7 @@ import { getConfig, loadInstanceConfig } from '../../../../../../packages/cop-ho
 
 export const OPHELIA_ID = '00000000-0000-0000-0000-000000000001';
 
-export function useInseme(roomName, user, supabase, config = {}) {
+export function useInseme(roomName, user, supabase, config = {}, isSpectator = false) {
     // Merge Vault configuration (optional)
     const vaultConfig = {
         opheliaUrl: getConfig('OPHELIA_URL'),
@@ -380,7 +380,7 @@ export function useInseme(roomName, user, supabase, config = {}) {
     }
 
     const sendMessage = async (text, metadata = {}) => {
-        if (!user) return; // Spectators can't send messages
+        if (!user || isSpectator) return; // Spectators can't send messages
         if (!text?.trim() && !metadata.type) return;
         if (!supabase) return
 
@@ -816,6 +816,8 @@ export function useInseme(roomName, user, supabase, config = {}) {
 
     return {
         roomName,
+        user,
+        isSpectator,
         messages,
         ephemeralThoughts,
         roomData,

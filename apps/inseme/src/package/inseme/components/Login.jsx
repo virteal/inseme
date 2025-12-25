@@ -19,6 +19,12 @@ export default function Login({
     const [nickname, setNickname] = useState('')
     const [isPublic, setIsPublic] = useState(false)
 
+    React.useEffect(() => {
+        if (initialMode) {
+            setMode(initialMode)
+        }
+    }, [initialMode])
+
     const handleSubmit = (e) => {
         e.preventDefault()
         if (mode === 'signin') {
@@ -46,10 +52,10 @@ export default function Login({
             )}
             <div className="text-center space-y-2 mb-8">
                 <h2 className="text-3xl font-black text-gray-900 tracking-tight">
-                    {isUpgrading ? 'Sauvegarder mon compte' : (mode === 'signup' ? 'Créer un compte' : (mode === 'anonymous' ? 'Accès Invité' : 'Bienvenue'))}
+                    {mode === 'signup' ? (isUpgrading ? 'Devenir Membre' : 'Créer un compte') : (mode === 'anonymous' ? 'Accès Invité' : 'Bienvenue')}
                 </h2>
                 <p className="text-gray-500 text-sm font-medium">
-                    {isUpgrading ? 'Enregistrez-vous pour conserver votre historique' : (mode === 'signup' ? 'Rejoignez la communauté Inseme' : (mode === 'anonymous' ? 'Participez aux débats instantanément' : 'Connectez-vous pour participer'))}
+                    {mode === 'signup' ? (isUpgrading ? 'Enregistrez-vous pour conserver votre historique' : 'Rejoignez la communauté Inseme') : (mode === 'anonymous' ? 'Participez aux débats instantanément' : 'Connectez-vous pour participer')}
                 </p>
             </div>
 
@@ -131,9 +137,8 @@ export default function Login({
             </form>
 
             {/* Mode Toggles */}
-            {!isUpgrading && (
-                <div className="mt-8 flex flex-col gap-3 w-full">
-                    {mode !== 'anonymous' && (
+            <div className="mt-8 flex flex-col gap-3 w-full">
+                {mode !== 'anonymous' && !isUpgrading && (
                         <>
                             <div className="relative flex items-center gap-4">
                                 <div className="h-px bg-gray-200 flex-1"></div>
@@ -183,8 +188,7 @@ export default function Login({
                             </div>
                         )}
                     </div>
-                </div>
-            )}
+            </div>
         </div>
     )
 }

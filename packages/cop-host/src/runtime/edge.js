@@ -49,8 +49,18 @@ export function defineEdgeFunction(handler) {
                     headers: { ...CORS_HEADERS, "Content-Type": "application/json" }
                 }),
 
-                // Accès direct aux variables d'environnement (Deno.env)
-                env: Deno.env
+                // Accès aux variables d'environnement (Netlify.env ou Deno.env)
+                env: {
+                    get: (key) => {
+                        try {
+                            if (typeof Netlify !== "undefined" && Netlify.env) return Netlify.env.get(key);
+                        } catch (_e) {}
+                        try {
+                            if (typeof Deno !== "undefined" && Deno.env) return Deno.env.get(key);
+                        } catch (_e) {}
+                        return undefined;
+                    }
+                }
             };
 
             // 3. Exécution de la logique métier

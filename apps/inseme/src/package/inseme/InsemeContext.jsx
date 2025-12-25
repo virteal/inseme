@@ -3,8 +3,8 @@ import { useInseme } from './hooks/useInseme';
 
 const InsemeContext = createContext(null);
 
-export function InsemeProvider({ children, roomName, user, supabase, config = {} }) {
-    const inseme = useInseme(roomName, user, supabase, config);
+export function InsemeProvider({ children, roomName, user, supabase, config = {}, isSpectator = false }) {
+    const inseme = useInseme(roomName, user, supabase, config, isSpectator);
 
     return (
         <InsemeContext.Provider value={inseme}>

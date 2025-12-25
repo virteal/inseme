@@ -27,6 +27,13 @@ const MATURITY_LEVELS = [
   { level: 4, icon: "🏆", name: "Exemplaire" },
 ];
 
+const LEAD_SOURCES = {
+  landing_page: { label: "Platform", icon: "🌐" },
+  inseme_landing: { label: "Inseme", icon: "🧬" },
+  referral: { label: "Referral", icon: "🔗" },
+  social: { label: "Social", icon: "📱" },
+};
+
 export default function LeadsAdmin() {
   const [leads, setLeads] = useState([]);
   const [stats, setStats] = useState(null);
@@ -36,6 +43,7 @@ export default function LeadsAdmin() {
     type: "",
     status: "",
     maturity: "",
+    source: "",
     search: "",
   });
 
@@ -54,6 +62,7 @@ export default function LeadsAdmin() {
       if (filters.type) query = query.eq("lead_type", filters.type);
       if (filters.status) query = query.eq("status", filters.status);
       if (filters.maturity) query = query.eq("maturity_level", parseInt(filters.maturity));
+      if (filters.source) query = query.eq("source", filters.source);
       if (filters.search) {
         query = query.or(
           `name.ilike.%${filters.search}%,email.ilike.%${filters.search}%,commune_name.ilike.%${filters.search}%`
@@ -72,11 +81,22 @@ export default function LeadsAdmin() {
 
   async function loadStats() {
     try {
-      const { data, error } = await getSupabase()
+      const { data: dashboardData, error: dashboardError } = await getSupabase()
         .from("transparency_leads_dashboard")
         .select("*")
         .single();
-      if (!error) setStats(data);
+      
+      const { count: insemeCount, error: insemeError } = await getSupabase()
+        .from("transparency_leads")
+        .select("*", { count: 'exact', head: true })
+        .eq("source", "inseme_landing");
+
+      if (!dashboardError) {
+        setStats({
+          ...dashboardData,
+          inseme_leads: insemeCount || 0
+        });
+      }
     } catch (err) {
       console.error("Erreur stats:", err);
     }
@@ -170,6 +190,10 @@ export default function LeadsAdmin() {
               <div className="text-3xl font-bold text-orange-600">{stats.communes_couvertes}</div>
               <div className="text-gray-500 text-sm">Communes</div>
             </div>
+            <div className="bg-white rounded-xl p-4 shadow-sm border-2 border-rose-100">
+              <div className="text-3xl font-bold text-rose-600">{stats.inseme_leads}</div>
+              <div className="text-gray-500 text-sm">Leads Inseme</div>
+            </div>
           </div>
         )}
 
@@ -253,8 +277,20 @@ export default function LeadsAdmin() {
                 </option>
               ))}
             </select>
+            <select
+              value={filters.source}
+              onChange={(e) => setFilters((f) => ({ ...f, source: e.target.value }))}
+              className="px-4 py-2 border rounded-lg"
+            >
+              <option value="">Toutes les sources</option>
+              {Object.entries(LEAD_SOURCES).map(([key, val]) => (
+                <option key={key} value={key}>
+                  {val.icon} {val.label}
+                </option>
+              ))}
+            </select>
             <button
-              onClick={() => setFilters({ type: "", status: "", maturity: "", search: "" })}
+              onClick={() => setFilters({ type: "", status: "", maturity: "", source: "", search: "" })}
               className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200"
             >
               Réinitialiser
@@ -281,6 +317,7 @@ export default function LeadsAdmin() {
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Charte</th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Statut</th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Date</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Source</th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
                 </tr>
               </thead>
@@ -289,6 +326,7 @@ export default function LeadsAdmin() {
                   const typeInfo = LEAD_TYPES[lead.lead_type] || {};
                   const maturity = MATURITY_LEVELS[lead.maturity_level - 1] || {};
                   const status = STATUS_OPTIONS.find((s) => s.value === lead.status) || {};
+                  const sourceInfo = LEAD_SOURCES[lead.source] || { label: lead.source, icon: "❓" };
 
                   return (
                     <tr key={lead.id} className="hover:bg-gray-50">
@@ -347,6 +385,11 @@ export default function LeadsAdmin() {
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-500">
                         {new Date(lead.created_at).toLocaleDateString("fr-FR")}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="flex items-center gap-1 text-sm text-gray-600" title={sourceInfo.label}>
+                          {sourceInfo.icon} {sourceInfo.label}
+                        </span>
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex gap-2">

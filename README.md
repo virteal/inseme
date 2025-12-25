@@ -1,28 +1,112 @@
-# Inseme Monorepo
+# 🗳️ Inseme Monorepo - Écosystème Citoyen & Démocratie Liquide
 
-Ce dépôt regroupe les différentes applications et packages du projet Inseme et de la Plateforme Citoyenne.
+Bienvenue dans le dépôt **Inseme**, une infrastructure numérique **open source** et **neutre** dédiée à la participation citoyenne, à la délibération augmentée et à la transparence démocratique.
 
-## Structure
+Ce projet regroupe les outils du mouvement citoyen **#PERTITELLU** (Corte, Corse) et vise à fournir des solutions libres pour redonner le pouvoir aux citoyens.
 
-- `apps/inseme` : L'application principale Inseme (React 18, Vite 5).
-- `apps/platform` : La Plateforme Citoyenne (anciennement Survey, React 19, Vite 7).
-- `apps/platform/packages/*` : Packages partagés et utilitaires de la plateforme.
+---
 
-## Développement
+## 🏛️ Structure du Dépôt
 
-Pour lancer les applications en mode développement :
+Le projet est organisé en monorepo (Turbo) pour faciliter le partage de code entre les différentes briques de l'écosystème :
 
-```bash
-# Inseme
-npm run inseme:dev
+### 📱 Applications (`/apps`)
 
-# Plateforme Citoyenne
-npm run platform:dev
-```
+- **`apps/platform` (Kudocracy.Survey)** : La plateforme de consultation et d'engagement.
+  - **Focus** : Consultations, Wiki collaboratif, Gazette citoyenne, Café social.
+  - **Architecture** : Multi-instances (Corte, Bastia, Università di Corsica, etc.).
+  - **Stack** : React 19, Vite 7, Tailwind CSS 4, Supabase.
 
-## Déploiement
+- **`apps/inseme` (L'Agora)** : Outil de démocratie directe et liquide.
+  - **Focus** : Assemblées physiques/distantes, vote instantané, gestuelle digitale.
+  - **IA** : Ophélia (Médiatrice IA) intégrée via Edge Functions.
+  - **Stack** : React 18, Vite 5, Tailwind CSS, Supabase.
 
-Chaque application peut être déployée indépendamment sur Netlify.
-Dans la configuration Netlify :
-- **Application Inseme** : Base directory = `apps/inseme`
-- **Plateforme Citoyenne** : Base directory = `apps/platform`
+### 📦 Packages (`/packages`)
+
+- **`packages/cop-core`** : Logique métier partagée (Cognitive Orchestration Protocol).
+- **`packages/ophelia`** : Cœur de l'intelligence artificielle médiatrice.
+
+---
+
+## 🎯 À quoi ça sert ?
+
+L'écosystème Inseme rassemble plusieurs espaces complémentaires pour le quotidien citoyen :
+
+### 1. 💬 Ophélia — L'IA Médiatrice
+Ophélia est l'IA de la plateforme. Elle répond aux questions, aide à formuler des idées, guide vers les démarches utiles et facilite le consensus lors des débats sans jamais s'imposer.
+
+### 2. ☕ Café & Social — Discuter et s'organiser
+Le Café est un lieu convivial pour créer des groupes par quartier, association ou thème. Tout est pensé pour rendre les échanges lisibles et bienveillants.
+
+### 3. 🗳️ Kudocratie — Débattre et voter (Agora Liquide)
+Permet de déposer des propositions, de voter et de déléguer sa voix à quelqu'un de confiance sur un sujet précis. Inseme (Agora) pousse ce concept plus loin avec une gestuelle digitale temps réel.
+
+### 4. 📖 Wiki collaboratif — La mémoire commune
+Un carnet de bord collectif pour les comptes rendus, fiches pratiques et idées de quartier. La recherche est instantanée et l'interface simple.
+
+### 5. 📊 Consultations & Transparence
+Prendre le pouls de la population via des enquêtes et suivre les engagements des élus via un tableau de bord de transparence (score de transparence automatique).
+
+---
+
+## 🚀 Technologie (Modern Stack)
+
+- **Frontend** : React (v18/v19) + Vite + Tailwind CSS.
+- **Backend Realtime** : Supabase (PostgreSQL, Realtime, Auth).
+- **AI Agent** : OpenAI GPT-4o orchestré via **Netlify Edge Functions** (Deno).
+- **Multi-Instance** : Système de résolution dynamique par sous-domaine pour déployer une instance par commune.
+
+---
+
+## 🛠️ Installation et Développement
+
+### Prérequis
+- Node.js (v20+ recommandé)
+- Netlify CLI (`npm install netlify-cli -g`)
+
+### Setup Rapide
+
+1.  **Clonez le dépôt** :
+    ```bash
+    git clone https://github.com/JeanHuguesRobert/inseme.git
+    cd inseme
+    ```
+
+2.  **Installez les dépendances** :
+    ```bash
+    npm install
+    ```
+
+3.  **Lancez l'application souhaitée** :
+    ```bash
+    # Pour la Plateforme Citoyenne (Survey)
+    npm run platform:dev
+
+    # Pour l'Agora Inseme
+    npm run inseme:dev
+    ```
+
+*Note : Pour le développement avec les Edge Functions, utilisez `netlify dev` dans le dossier de l'application correspondante.*
+
+---
+
+## ⚖️ Neutralité & Engagement
+
+Inseme est une infrastructure **neutre** et **indépendante**. Elle ne finance, ne promeut et ne soutient aucun parti politique, aucune campagne électorale, ni aucun candidat ou liste. Elle fournit des outils numériques utilisables par tout citoyen, collectif ou institution souhaitant renforcer la démocratie locale.
+
+---
+
+## 📜 Licence & Auteur
+
+- **Open Source** : Sous licence **MIT**.
+- **Indépendance** : Porté par l'association loi 1901 **C.O.R.S.I.C.A.** (Corse Organisant la Réunion Sur Internet de Compétences Autonomes).
+- **Made in Corsica** : Co-construit sur le terrain à Corte.
+
+**Auteur : Jean Hugues Noël Robert**
+- GitHub : [@JeanHuguesRobert](https://github.com/JeanHuguesRobert)
+- Projet porté par la communauté [LePP.fr](https://lepp.fr).
+
+---
+
+### #PERTITELLU | CORTI CAPITALE

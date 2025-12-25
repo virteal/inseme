@@ -2,10 +2,23 @@ import { defineEdgeFunction } from "../../../../../packages/cop-host/src/runtime
 
 export default defineEdgeFunction(async (request, runtime, context) => {
     const { getConfig, json, error, getSupabase } = runtime;
+
+    // Test GET handler
+    if (request.method === "GET") {
+        return json({ status: "ok", message: "Sessions API is active" });
+    }
+
     try {
-        const { room_id, gap_threshold = 3600 } = await request.json(); // default 1 hour gap
+        let body = {};
+        try {
+            body = await request.json();
+        } catch (e) {
+            console.warn("[api/sessions] No JSON body found");
+        }
+        const { room_id, gap_threshold = 3600 } = body;
 
         if (!room_id) {
+            console.error("[api/sessions] Missing room_id");
             return error("Room ID is required", 400);
         }
 

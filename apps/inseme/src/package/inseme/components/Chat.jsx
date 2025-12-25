@@ -11,7 +11,7 @@ export function Chat(props) {
     const context = useInsemeContext();
 
     const { 
-        roomName, user, messages, ephemeralThoughts, sendMessage, askOphélia, isOphéliaThinking, isSilent, 
+        roomName, user, isSpectator, messages, ephemeralThoughts, sendMessage, askOphélia, isOphéliaThinking, isSilent, 
         setIsSilent, roomMetadata, archiveReport, roomData, startSession, endSession, 
         updateAgenda, castVote, onParole, onDelegate, sessions, currentSessionId, 
         selectSession, uploadVocal, playVocal, systemPrompt,
@@ -189,11 +189,26 @@ export function Chat(props) {
                 <div className="flex flex-col">
                     <h2 className="text-xl font-bold text-white flex items-center gap-2">
                         {roomMetadata?.name || roomName || 'Discussion'}
-                        {roomMetadata?.settings?.parent_slug && (
-                            <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] uppercase font-bold tracking-widest border border-amber-500/30">
-                                Commission
-                            </span>
-                        )}
+                        <div className="flex items-center gap-1.5">
+                            {roomMetadata?.settings?.parent_slug && (
+                                <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] uppercase font-bold tracking-widest border border-amber-500/30">
+                                    Commission
+                                </span>
+                            )}
+                            {isSpectator ? (
+                                <span className="px-2 py-0.5 rounded-full bg-white/5 text-white/40 text-[10px] uppercase font-bold tracking-widest border border-white/10 flex items-center gap-1">
+                                    <Eye className="w-3 h-3" /> Spectateur
+                                </span>
+                            ) : user?.is_anonymous ? (
+                                <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] uppercase font-bold tracking-widest border border-indigo-500/30 flex items-center gap-1">
+                                    <User className="w-3 h-3" /> Invité
+                                </span>
+                            ) : user ? (
+                                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] uppercase font-bold tracking-widest border border-emerald-500/30 flex items-center gap-1">
+                                    <ShieldCheck className="w-3 h-3" /> Membre
+                                </span>
+                            ) : null}
+                        </div>
                     </h2>
                     <p className="text-[10px] text-white/30 uppercase tracking-tighter">
                         {roomMetadata?.settings?.parent_slug
@@ -754,7 +769,7 @@ export function Chat(props) {
 
     {/* Input Area - Distinction between Spectator and Guest */}
     <div className="relative z-20">
-        {user && (
+        {(!isSpectator && user) && (
             <div className={`absolute bottom-full right-4 mb-4 flex flex-col items-end gap-3 transition-all duration-300 origin-bottom ${showActionHub ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`}>
                 {/* Secondary Actions */}
                 <div className="flex flex-col gap-2 items-end">
@@ -789,7 +804,7 @@ export function Chat(props) {
             </div>
         )}
 
-        {user ? (
+        {(!isSpectator && user) ? (
             <form onSubmit={handleSend} className="p-4 bg-neutral-900/50 backdrop-blur-xl border-t border-white/10 flex flex-col gap-3 relative z-10">
                 {isRecording && (
                     <div className="flex items-center justify-between px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-xl animate-in fade-in slide-in-from-bottom-2">
@@ -874,23 +889,43 @@ export function Chat(props) {
                 </div>
             </form>
         ) : (
-            <div className="p-6 bg-neutral-900/50 backdrop-blur-xl border-t border-white/10 text-center relative z-10 flex flex-col items-center gap-3">
-                <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">
-                    <Eye className="w-3 h-3" />
-                    Mode Spectateur (Lecture Seule)
+            <div className="p-6 bg-neutral-900/50 backdrop-blur-xl border-t border-white/10 text-center relative z-10 flex flex-col items-center gap-4">
+                <div className="flex flex-col items-center gap-1">
+                    <div className="flex items-center gap-2 text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em]">
+                        <Eye className="w-3 h-3" />
+                        Mode Spectateur
+                    </div>
+                    <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Connectez-vous pour participer au débat</p>
                 </div>
-                <button 
-                    onClick={() => window.dispatchEvent(new CustomEvent('inseme-open-auth'))}
-                    className="px-6 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-xs font-bold text-white transition-all active:scale-95"
-                >
-                    Rejoindre la discussion
-                </button>
+                
+                <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
+                    <button 
+                        onClick={() => {
+                            if (user) {
+                                window.dispatchEvent(new CustomEvent('inseme-stop-spectating'));
+                            } else {
+                                window.dispatchEvent(new CustomEvent('inseme-open-auth', { detail: { mode: 'anonymous' } }));
+                            }
+                        }}
+                        className="flex-1 px-4 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-indigo-500/20"
+                    >
+                        {user ? 'Participer' : 'Accès Invité'}
+                    </button>
+                    {!user && (
+                        <button 
+                            onClick={() => window.dispatchEvent(new CustomEvent('inseme-open-auth', { detail: { mode: 'signin' } }))}
+                            className="flex-1 px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-white transition-all active:scale-95"
+                        >
+                            Connexion
+                        </button>
+                    )}
+                </div>
             </div>
         )}
     </div>
 
     {/* Mobile Controls Overlay */}
-    {user && (
+    {(!isSpectator && user) && (
         <MobileControls
             onParole={onParole}
             onVote={castVote}

@@ -18,8 +18,15 @@ function App() {
     const [authInitialMode, setAuthInitialMode] = useState(null)
 
     useEffect(() => {
-        const handleOpenAuth = () => setShowAuth(true);
+        const handleOpenAuth = (e) => {
+            if (e?.detail?.mode) {
+                setAuthInitialMode(e.detail.mode);
+            }
+            setShowAuth(true);
+        };
+        const handleStopSpectating = () => setIsSpectator(false);
         window.addEventListener('inseme-open-auth', handleOpenAuth);
+        window.addEventListener('inseme-stop-spectating', handleStopSpectating);
         
         // Get initial session
         supabase.auth.getSession().then(({ data: { session } }) => {
@@ -42,9 +49,11 @@ function App() {
             if (room) {
                 setRoomName(room)
                 setView('participation')
-                // If no user, default to spectator mode
+                // Default to spectator only if NO user is present at all
                 if (!currentUser) {
                     setIsSpectator(true)
+                } else {
+                    setIsSpectator(false)
                 }
             } else if (currentUser) {
                 setRoomName('Général')
@@ -56,27 +65,35 @@ function App() {
         })
 
         // Listen for auth changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             const currentUser = session?.user ?? null
             setUser(currentUser)
+            
             if (currentUser) {
-                setIsSpectator(false) // Reset spectator if logged in
-                if (view === 'landing') {
+                // If we just signed in (any method), we are no longer a spectator
+                setIsSpectator(false) 
+                
+                if (view === 'landing' || event === 'SIGNED_IN') {
                     // Anonymous guests go straight to the room, members go to dashboard
                     if (currentUser.is_anonymous) {
                         setView('participation')
-                    } else {
+                    } else if (view === 'landing') {
                         setView('dashboard')
                     }
                 }
             } else {
-                setView('landing')
+                // Only go back to landing if we were not already there
+                if (view !== 'landing') {
+                    setView('landing')
+                    setIsSpectator(false)
+                }
             }
         })
 
         return () => {
             subscription.unsubscribe();
             window.removeEventListener('inseme-open-auth', handleOpenAuth);
+            window.removeEventListener('inseme-stop-spectating', handleStopSpectating);
         };
     }, [])
 
@@ -111,8 +128,8 @@ function App() {
 
     // 1. Landing Page (Public)
     if (view === 'landing') {
-        return <LandingPage onLogin={() => {
-            setAuthInitialMode('signin')
+        return <LandingPage onLogin={(mode) => {
+            setAuthInitialMode(mode || 'signin')
             setShowAuth(true)
         }} />
     }
@@ -161,7 +178,8 @@ function App() {
                 <div className="relative h-full w-full">
                     <InsemeRoom
                         roomName={roomName || 'Général'}
-                        user={isSpectator ? null : user}
+                        user={user}
+                        isSpectator={isSpectator}
                         supabase={supabase}
                         config={{
                             promptUrl: '/prompts/inseme.md',
@@ -178,12 +196,16 @@ function App() {
                                 <div className="w-px h-4 bg-white/20 mx-1" />
                                 <button 
                                     onClick={() => {
-                                        setAuthInitialMode('anonymous')
-                                        setShowAuth(true)
+                                        if (user) {
+                                            setIsSpectator(false)
+                                        } else {
+                                            setAuthInitialMode('anonymous')
+                                            setShowAuth(true)
+                                        }
                                     }}
                                     className="text-[10px] font-black text-indigo-400 hover:text-indigo-300 uppercase tracking-tighter transition-colors"
                                 >
-                                    Participer
+                                    {user ? 'Participer' : 'Rejoindre'}
                                 </button>
                             </div>
                         </div>

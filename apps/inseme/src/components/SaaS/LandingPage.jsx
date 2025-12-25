@@ -6,13 +6,20 @@ import { ArrowRight, Bot, Users, Vote, Shield, MessageSquare, Sparkles } from 'l
 
 export function LandingPage({ onLogin }) {
     const [email, setEmail] = useState('');
+    const [leadType, setLeadType] = useState('citoyen_engage');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        const { success } = await submitLead({ email });
+        const { success } = await submitLead({ 
+            email, 
+            lead_type: leadType,
+            metadata: {
+                context: 'inseme_landing_v3'
+            }
+        });
         setIsSubmitting(false);
         if (success) {
             setIsSuccess(true);
@@ -50,37 +57,56 @@ export function LandingPage({ onLogin }) {
 
                     <h1 className="text-7xl md:text-9xl font-black tracking-tighter leading-[0.8] text-white">
                         L’AGORA<br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-300 to-indigo-400">VIVANTE.</span>
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-300 to-indigo-400">PARTICIPATIVE.</span>
                     </h1>
 
                     <p className="text-xl md:text-2xl text-white/50 max-w-2xl mx-auto font-medium leading-relaxed">
-                        Redonnez le pouvoir aux humains. Une assemblée sans bureaucratie, guidée par une IA médiatrice qui observe, conseille, mais ne commande jamais.
+                        Le pouvoir aux citoyens. Une assemblée liquide guidée par Ophélia, votre IA médiatrice qui facilite le consensus sans jamais s'imposer.
                     </p>
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-8">
                         <button
-                            onClick={onLogin}
+                            onClick={() => onLogin('anonymous')}
                             className="w-full md:w-auto px-10 py-5 bg-white text-black text-lg font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-rose-50 transition-all active:scale-95 shadow-2xl shadow-white/10"
                         >
-                            ENTRER DANS L'AGORA
+                            ACCÈS INVITÉ (RAPIDE)
                             <ArrowRight className="w-5 h-5" />
                         </button>
+                        
+                        <button
+                            onClick={() => onLogin('signin')}
+                            className="w-full md:w-auto px-10 py-5 bg-white/5 border border-white/10 text-white text-lg font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-white/10 transition-all active:scale-95"
+                        >
+                            CONNEXION MEMBRE
+                        </button>
+                    </div>
 
-                        <div className="w-full md:w-auto group">
-                            <form onSubmit={handleSubmit} className="flex gap-2 p-1.5 bg-white/5 border border-white/10 rounded-2xl focus-within:ring-2 focus-within:ring-rose-500/50 transition-all">
+                    <div className="max-w-xl mx-auto pt-8">
+                        <div className="group">
+                            <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-2 p-1.5 bg-white/5 border border-white/10 rounded-2xl focus-within:ring-2 focus-within:ring-rose-500/50 transition-all">
+                                <select
+                                    value={leadType}
+                                    onChange={e => setLeadType(e.target.value)}
+                                    className="bg-white/5 text-white/70 px-4 py-3 outline-none rounded-xl text-sm font-medium border border-white/5"
+                                >
+                                    <option value="citoyen_engage">🙋 Citoyen</option>
+                                    <option value="liste_electorale">🗳️ Liste électorale</option>
+                                    <option value="maire_elu">🏛️ Élu / Mairie</option>
+                                    <option value="collectif_citoyen">✊ Collectif / Asso</option>
+                                </select>
                                 <input
                                     type="email"
                                     required
-                                    placeholder="Créez votre espace..."
+                                    placeholder="Votre email..."
                                     value={email}
                                     onChange={e => setEmail(e.target.value)}
-                                    className="bg-transparent px-4 py-3 outline-none w-full md:w-64 text-sm font-medium"
+                                    className="bg-transparent px-4 py-3 outline-none flex-grow text-sm font-medium"
                                 />
                                 <button
                                     disabled={isSubmitting || isSuccess}
                                     className="px-6 py-3 bg-rose-600 hover:bg-rose-700 disabled:bg-white/10 disabled:text-white/40 text-white rounded-xl font-bold transition-all text-sm whitespace-nowrap"
                                 >
-                                    {isSuccess ? 'REÇU !' : (isSubmitting ? '...' : 'CRÉER')}
+                                    {isSuccess ? 'REÇU !' : (isSubmitting ? '...' : 'S\'INSCRIRE')}
                                 </button>
                             </form>
                             {isSuccess && <p className="text-[10px] text-rose-400 font-bold mt-2 uppercase tracking-widest text-center">On vous recontacte très vite.</p>}
