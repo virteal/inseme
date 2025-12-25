@@ -3,7 +3,7 @@
 
 import express from "express";
 import cors from "cors";
-import { ask } from "../packages/ophelia/index.js";
+import { ask } from "../../../packages/ophelia/index.js";
 import copRouter from "./cop/index.js";
 import MCPscheduler from "./scheduler.js";
 import opheliaAgent from "./agents/opheliaAgent.js";

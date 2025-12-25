@@ -1,11 +1,11 @@
 // Dynamic metadata initialization
 // ⚠️ FICHIER GÉNÉRÉ AUTOMATIQUEMENT - NE PAS MODIFIER
 // Généré par scripts/generate-meta-init.js lors du build
-// Dernière génération: 2025-12-21T21:08:38.024Z
+// Dernière génération: 2025-12-25T14:36:09.953Z
 
 const CITY_NAME = "Corte";
 const PARTY_NAME = "Petit Parti";
-const SITE_URL = "https://LePP.fr";
+const SITE_URL = "https://lepp.fr";
 
 // Mise à jour dynamique des métadonnées
 const pageTitle = document.getElementById("page-title");

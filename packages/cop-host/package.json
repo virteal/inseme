@@ -1,0 +1,15 @@
+{
+  "name": "@inseme/cop-host",
+  "version": "1.0.0",
+  "description": "COP Host logic for Inseme monorepo",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "type": "module",
+  "exports": {
+    "./config/*": "./src/config/*.js",
+    "./runtime/*": "./src/runtime/*.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}

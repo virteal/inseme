@@ -10,14 +10,7 @@ import ConsultationLayout, {
 } from "../../components/consultations/ConsultationLayout";
 import { ShareCallToAction, ShareButton } from "../../components/consultations/ShareConsultation";
 import FilNewsFeed from "../../components/fil/FilNewsFeed";
-import {
-  GOOGLE_SCRIPT_URL,
-  CITY_NAME,
-  MOVEMENT_NAME,
-  COMMUNITY_NAME,
-  COMMUNITY_TYPE,
-  getCommunityLabels,
-} from "../../constants";
+import { getDynamicConfig, getCommunityLabels } from "../../constants";
 import {
   getCommunityQuestionnaireModules,
   generateInitialFormState,
@@ -42,7 +35,9 @@ const CONSULTATION_SLUG = "quasquara-2024";
 
 export default function ConsultationQuasquara() {
   const { currentUser } = useCurrentUser();
-  const baseInitialState = generateInitialFormState(COMMUNITY_TYPE);
+  const config = getDynamicConfig();
+  const { cityName, movementName, communityName, communityType } = config;
+  const baseInitialState = generateInitialFormState(communityType);
   const [formData, setFormData] = useState({
     ...baseInitialState,
     satisfactionDemocratie: baseInitialState.satisfactionDemocratie ?? 3,
@@ -70,8 +65,8 @@ export default function ConsultationQuasquara() {
   const [draftInfo, setDraftInfo] = useState(null);
   const [draftRestored, setDraftRestored] = useState(false);
 
-  const isCorte = String(CITY_NAME || "").toLowerCase() === "corte";
-  const modules = getCommunityQuestionnaireModules(COMMUNITY_TYPE);
+  const isCorte = String(cityName || "").toLowerCase() === "corte";
+  const modules = getCommunityQuestionnaireModules(communityType);
 
   // Charger la consultation depuis Supabase
   useEffect(() => {
@@ -398,8 +393,8 @@ export default function ConsultationQuasquara() {
         />
       </div>
       <p className="section-description">
-        Une initiative {MOVEMENT_NAME} pour la {getCommunityLabels().name} de {COMMUNITY_NAME}
-      </p>
+          Une initiative {movementName} pour la {getCommunityLabels().name} de {communityName}
+        </p>
 
       {/* Message de brouillon restauré */}
       {draftRestored && draftInfo && (
@@ -629,7 +624,7 @@ export default function ConsultationQuasquara() {
           </div>
 
           <div className="question-group">
-            <label className="form-label">Pensez-vous que {CITY_NAME} est en déclin ?</label>
+            <label className="form-label">Pensez-vous que {cityName} est en déclin ?</label>
             <div className="md:hidden">
               <select
                 name="declinVille"
@@ -737,39 +732,52 @@ export default function ConsultationQuasquara() {
 
           <div className="question-group">
             <label className="form-label">
-              Êtes-vous inscrit(e) sur les listes électorales à {CITY_NAME} ?
+              Êtes-vous inscrit(e) sur les listes électorales à {cityName} ?
             </label>
             <div className="choice-group">
-              {[
-                "Oui",
-                "Non",
-                "Pas encore mais je compte le faire",
-                "Je ne souhaite pas répondre",
-              ].map((option) => (
-                <label key={option} className="choice-label">
+              {["Oui", "Non", "Pas encore (prochainement)"].map((opt) => (
+                <label key={opt} className="choice-label">
                   <input
                     type="radio"
                     name="inscritListe"
-                    value={option}
-                    checked={formData.inscritListe === option}
+                    value={opt}
+                    checked={formData.inscritListe === opt}
                     onChange={handleInputChange}
                   />
-                  {option}
+                  <span>{opt}</span>
                 </label>
               ))}
             </div>
           </div>
 
           <div className="question-group">
-            <label className="form-label--emphasis">Quartier de {CITY_NAME}</label>
-            <input
-              type="text"
+            <label className="form-label--emphasis">Quartier de {cityName}</label>
+            <select
               name="quartier"
               value={formData.quartier}
               onChange={handleInputChange}
               className="w-full"
-              placeholder="Ex: Centre-ville, Citadelle..."
-            />
+            >
+              <option value="">Sélectionnez votre quartier...</option>
+              {isCorte ? (
+                <>
+                  <option value="Centre-Ville / Haute-Ville">Centre-Ville / Haute-Ville</option>
+                  <option value="Chabrières / Gare">Chabrières / Gare</option>
+                  <option value="Porette / Lubertacce">Porette / Lubertacce</option>
+                  <option value="St Pancrace / Baliri">St Pancrace / Baliri</option>
+                  <option value="Borgu / Faubourg">Borgu / Faubourg</option>
+                  <option value="Hameaux (Restonica, Tavignanu)">
+                    Hameaux (Restonica, Tavignanu)
+                  </option>
+                </>
+              ) : (
+                <>
+                  <option value="Centre">Centre / Cœur de ville</option>
+                  <option value="Périphérie">Périphérie / Nouveaux quartiers</option>
+                  <option value="Hameaux">Hameaux / Écarts</option>
+                </>
+              )}
+            </select>
           </div>
 
           <div className="question-group">
@@ -784,7 +792,7 @@ export default function ConsultationQuasquara() {
           </div>
 
           <div className="question-group">
-            <label className="form-label">Depuis combien de temps habitez-vous {CITY_NAME} ?</label>
+            <label className="form-label">Depuis combien de temps habitez-vous {cityName} ?</label>
             <select
               name="dureeHabitation"
               value={formData.dureeHabitation}
@@ -908,7 +916,7 @@ export default function ConsultationQuasquara() {
       />
 
       <ScoreSection
-        title={`État de ${CITY_NAME}`}
+        title={`État de ${cityName}`}
         value={stats.declinMoyen}
         description="1 = En développement, 5 = En déclin"
       />
@@ -936,7 +944,7 @@ export default function ConsultationQuasquara() {
 
   return (
     <ConsultationLayout
-      title={`Questionnaire citoyen ${MOVEMENT_NAME}`}
+      title={`Questionnaire citoyen ${movementName}`}
       formContent={formContent}
       resultsContent={resultsContent}
       submitted={submitted}

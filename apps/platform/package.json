@@ -1,5 +1,5 @@
 {
-  "name": "survey",
+  "name": "platform",
   "version": "1.0.0",
   "type": "module",
   "engines": {
@@ -32,12 +32,13 @@
     "schema:check": "node scripts/check-schema-versions.js",
     "schema:sync": "node scripts/check-schema-versions.js --sync",
     "schema:update": "node scripts/check-schema-versions.js --update",
-    "cop:cli": "node packages/cop-cli/src/cli.js --help"
+    "cop:cli": "node ../../packages/cop-cli/src/cli.js --help"
   },
   "lint-staged": {
     "*.{js,jsx,css,md}": "prettier --write"
   },
   "dependencies": {
+    "@inseme/cop-host": "*",
     "@anthropic-ai/sdk": "^0.71.2",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",

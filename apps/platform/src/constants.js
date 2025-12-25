@@ -1,7 +1,7 @@
 // centralised app version (single source of truth)
 // hardcoded value is the canonical version; CI/CD can override by setting process.env.APP_VERSION at build time
-export const APP_VERSION = import.meta.env.APP_VERSION ?? "1.5.21";
-export const DEPLOY_DATE = import.meta.env.DEPLOY_DATE ?? "2025-12-21";
+export const APP_VERSION = import.meta.env.APP_VERSION ?? "1.5.25";
+export const DEPLOY_DATE = import.meta.env.DEPLOY_DATE ?? "2025-12-25";
 
 // Palette Bauhaus sombre harmonisée avec le thème CSS
 // Voir src/index.css pour la correspondance exacte
@@ -87,6 +87,7 @@ export const getDynamicConfig = () => ({
   regionName: getConfig("region_name", REGION_NAME),
   regionCode: getConfig("region_code", REGION_CODE),
   contactEmail: getConfig("contact_email", "jean_hugues_robert@yahoo.com"),
+  isNationalHub: getConfig("IS_NATIONAL_HUB", IS_NATIONAL_HUB),
 });
 
 // Niveaux de portée des consultations

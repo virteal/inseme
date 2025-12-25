@@ -6,7 +6,7 @@ import {
   getConfig as getInstanceConfig,
   getAllConfigKeys as getAllInstanceConfigKeys,
   getSupabase as getInstanceSupabase,
-} from "../common/config/instanceConfig.core.js";
+} from "../../../../packages/cop-host/src/config/instanceConfig.core.js";
 
 // ============================================================================
 // SUPABASE DYNAMIQUE MULTI-INSTANCES
@@ -253,3 +253,4 @@ export function getConfig(key) {
 export function getAllConfigKeys() {
   return getAllInstanceConfigKeys();
 }
+

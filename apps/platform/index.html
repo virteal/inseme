@@ -26,11 +26,11 @@
     />
     <meta property="og:type" content="website" />
     <!-- Explicit og:url and fb:app_id required for Facebook sharing/debugger -->
-    <meta property="og:url" id="og-url" content="%VITE_APP_URL%" />
-    <meta property="fb:app_id" id="fb-app-id" content="%VITE_FACEBOOK_APP_ID%" />
+    <meta property="og:url" id="og-url" content="{{ APP_URL }}" />
+    <meta property="fb:app_id" id="fb-app-id" content="{{ FACEBOOK_APP_ID }}" />
     <!-- Explicit og:image required by Facebook Debugger; replace with your public image URL -->
-    <meta property="og:image" id="og-image" content="%VITE_APP_URL%/images/og-image.png" />
-    <meta name="twitter:image" id="twitter-image" content="%VITE_APP_URL%/images/og-image.png" />
+    <meta property="og:image" id="og-image" content="{{ APP_URL }}/images/og-image.png" />
+    <meta name="twitter:image" id="twitter-image" content="{{ APP_URL }}/images/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- Police Google Fonts -->
@@ -53,7 +53,7 @@
     <script>
       window.fbAsyncInit = function () {
         FB.init({
-          appId: "%VITE_FACEBOOK_APP_ID%",
+          appId: "{{ FACEBOOK_APP_ID }}",
           cookie: true,
           xfbml: true,
           version: "v21.0",

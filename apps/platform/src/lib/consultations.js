@@ -6,40 +6,56 @@
 import { getSupabase } from "./supabase";
 import { createClient } from "@supabase/supabase-js";
 import {
-  NATIONAL_API_URL,
-  NATIONAL_API_KEY,
-  COMMUNE_INSEE,
-  COMMUNITY_NAME,
-  IS_NATIONAL_HUB,
-  REGION_NAME,
-  HASHTAG,
+  getConfig,
+  newSupabase as createLocalSupabase,
+} from "../common/config/instanceConfig.client.js";
+
+import { getDynamicConfig } from "../constants";
+
+// Ces imports sont maintenus pour les valeurs par défaut (si non trouvées dans le vault)
+import {
+  NATIONAL_API_URL as DEFAULT_NATIONAL_API_URL,
+  NATIONAL_API_KEY as DEFAULT_NATIONAL_API_KEY,
+  COMMUNE_INSEE as DEFAULT_COMMUNE_INSEE,
+  COMMUNITY_NAME as DEFAULT_COMMUNITY_NAME,
+  IS_NATIONAL_HUB as DEFAULT_IS_NATIONAL_HUB,
+  REGION_NAME as DEFAULT_REGION_NAME,
+  HASHTAG as DEFAULT_HASHTAG,
 } from "../constants";
 
 // Client Supabase pour la base nationale (si configurée et différente de la locale)
 let nationalSupabase = null;
-if (NATIONAL_API_URL && NATIONAL_API_KEY && !IS_NATIONAL_HUB) {
-  try {
-    // create remote client with isolated auth to avoid conflicting GoTrue instances
-    const hostKey = (() => {
-      try {
-        return new URL(NATIONAL_API_URL).host.replace(/[:]/g, "-");
-      } catch (e) {
-        return "national";
-      }
-    })();
 
-    nationalSupabase = createClient(NATIONAL_API_URL, NATIONAL_API_KEY, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-        detectSessionInUrl: false,
-        storageKey: `sb-remote-${hostKey}`,
-        storage: typeof window !== "undefined" ? window.localStorage : undefined,
-      },
-    });
-  } catch (err) {
-    console.warn("Impossible de créer le client national:", err);
+/**
+ * Initialise le client national de manière dynamique
+ * Appelé lors de la première utilisation pour garantir que la config est chargée
+ */
+function getNationalSupabase() {
+  if (nationalSupabase) return nationalSupabase;
+
+  const url = getConfig("NATIONAL_API_URL", DEFAULT_NATIONAL_API_URL);
+  const key = getConfig("NATIONAL_API_KEY", DEFAULT_NATIONAL_API_KEY);
+  
+  // IS_NATIONAL_HUB est maintenant déterminé dynamiquement si possible
+  const isHub = getConfig("IS_NATIONAL_HUB", DEFAULT_IS_NATIONAL_HUB);
+
+  if (url && key && !isHub) {
+    try {
+      const hostKey = new URL(url).host.replace(/[:]/g, "-");
+      nationalSupabase = createClient(url, key, {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+          detectSessionInUrl: false,
+          storageKey: `sb-remote-${hostKey}`,
+          storage: typeof window !== "undefined" ? window.localStorage : undefined,
+        },
+      });
+    } catch (err) {
+      console.warn("Impossible de créer le client national:", err);
+    }
   }
+  return nationalSupabase;
 }
 
 /**
@@ -430,7 +446,7 @@ export async function submitConsultationResponse(consultationId, responses, opti
     // - Consultations nationales hébergées ici: pending si on n'est pas le hub
     const isImported = !!(consultation.source_instance && consultation.source_consultation_id);
     const needsSync =
-      isImported || (syncToNational && nationalSupabase && consultation.scope === "national");
+      isImported || (syncToNational && getNationalSupabase() && consultation.scope === "national");
     const initialSyncStatus = needsSync ? "pending" : "not_applicable";
 
     // Préparer les données locales
@@ -478,7 +494,7 @@ export async function submitConsultationResponse(consultationId, responses, opti
           sessionId,
           source,
         });
-      } else if (syncToNational && nationalSupabase && consultation.slug) {
+      } else if (syncToNational && getNationalSupabase() && consultation.slug) {
         // Consultation nationale hébergée: sync vers le hub national
         await syncResponseToNational(consultation.slug, responses, {
           localResponseId: data.id,
@@ -533,16 +549,18 @@ async function syncResponseToSource(consultation, localResponseId, responses, me
       consultation_id: consultation.source_consultation_id,
       responses: {
         ...responses,
-        _commune: COMMUNITY_NAME,
-        _insee: COMMUNE_INSEE,
+        _commune: getConfig("COMMUNITY_NAME", DEFAULT_COMMUNITY_NAME),
+        _insee: getConfig("COMMUNE_INSEE", DEFAULT_COMMUNE_INSEE),
         _source_instance: typeof window !== "undefined" ? window.location.origin : "",
         _imported_response_id: localResponseId,
       },
       schema_version: consultation.schema?.version || 1,
       is_complete: true,
       user_agent_category: getUserAgentCategory(),
-      source: `federated:${COMMUNITY_NAME}`,
-      session_id: metadata.sessionId ? `${COMMUNE_INSEE}:${metadata.sessionId}` : null,
+      source: `federated:${getConfig("COMMUNITY_NAME", DEFAULT_COMMUNITY_NAME)}`,
+      session_id: metadata.sessionId
+        ? `${getConfig("COMMUNE_INSEE", DEFAULT_COMMUNE_INSEE)}:${metadata.sessionId}`
+        : null,
       completed_at: new Date().toISOString(),
     };
 
@@ -607,11 +625,12 @@ async function syncResponseToSource(consultation, localResponseId, responses, me
  * @param {Object} metadata - Métadonnées
  */
 async function syncResponseToNational(consultationSlug, responses, metadata = {}) {
-  if (!nationalSupabase) return;
+  const nationalSupabaseClient = getNationalSupabase();
+  if (!nationalSupabaseClient) return;
 
   try {
     // Trouver la consultation nationale par son slug
-    const { data: nationalConsultation, error: findError } = await nationalSupabase
+    const { data: nationalConsultation, error: findError } = await nationalSupabaseClient
       .from("consultations")
       .select("id, schema")
       .eq("slug", consultationSlug)
@@ -628,20 +647,22 @@ async function syncResponseToNational(consultationSlug, responses, metadata = {}
       consultation_id: nationalConsultation.id,
       responses: {
         ...responses,
-        _commune: COMMUNITY_NAME,
-        _insee: COMMUNE_INSEE,
+        _commune: getConfig("COMMUNITY_NAME", DEFAULT_COMMUNITY_NAME),
+        _insee: getConfig("COMMUNE_INSEE", DEFAULT_COMMUNE_INSEE),
         _source_instance: window.location.origin,
       },
       schema_version: nationalConsultation.schema?.version || 1,
       is_complete: metadata.isComplete ?? true,
       user_agent_category: getUserAgentCategory(),
-      source: `federated:${COMMUNITY_NAME}`,
-      session_id: metadata.sessionId ? `${COMMUNE_INSEE}:${metadata.sessionId}` : null,
+      source: `federated:${getConfig("COMMUNITY_NAME", DEFAULT_COMMUNITY_NAME)}`,
+      session_id: metadata.sessionId
+        ? `${getConfig("COMMUNE_INSEE", DEFAULT_COMMUNE_INSEE)}:${metadata.sessionId}`
+        : null,
       completed_at: new Date().toISOString(),
     };
 
     // Insérer dans la base nationale
-    const { error: insertError } = await nationalSupabase
+    const { error: insertError } = await nationalSupabaseClient
       .from("consultation_responses")
       .insert(nationalResponseData);
 

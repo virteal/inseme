@@ -9,7 +9,7 @@ import ConsultationLayout, {
   ScoreSection,
 } from "../../components/consultations/ConsultationLayout";
 import { ShareCallToAction, ShareButton } from "../../components/consultations/ShareConsultation";
-import { CITY_NAME, MOVEMENT_NAME, COMMUNITY_NAME, IS_NATIONAL_HUB } from "../../constants";
+import { getDynamicConfig } from "../../constants";
 import {
   getConsultationBySlug,
   submitConsultationResponse,
@@ -30,6 +30,8 @@ const CONSULTATION_SLUG = "democratie-locale-2024";
 
 export default function ConsultationDemocratieLocale() {
   const { currentUser } = useCurrentUser();
+  const config = getDynamicConfig();
+  const { cityName, movementName, communityName, isNationalHub } = config;
 
   // État du formulaire
   const [formData, setFormData] = useState({
@@ -298,13 +300,13 @@ export default function ConsultationDemocratieLocale() {
         />
       </div>
       <p className="section-description">
-        Consultation nationale fédérée — Vos réponses contribuent à {COMMUNITY_NAME} et à la base
-        nationale
+        Consultation nationale fédérée — Vos réponses contribuent à {communityName} et à la base
+        nationale.
       </p>
 
-      {IS_NATIONAL_HUB && (
-        <div className="consultation-hub-banner">
-          🏛️ Cette instance ({COMMUNITY_NAME}) est le hub national qui agrège les réponses de toutes
+      {isNationalHub && (
+        <div className="hub-notice">
+          🏛️ Cette instance ({communityName}) est le hub national qui agrège les réponses de toutes
           les communes.
         </div>
       )}
@@ -377,7 +379,7 @@ export default function ConsultationDemocratieLocale() {
   // Contenu des résultats
   const resultsContent = (
     <div className="results-container">
-      <h2 className="section-title">Résultats — {COMMUNITY_NAME}</h2>
+      <h2 className="section-title">Résultats — {communityName}</h2>
 
       {localStats && localStats.totalResponses > 0 ? (
         <>
@@ -448,7 +450,7 @@ export default function ConsultationDemocratieLocale() {
                 <thead>
                   <tr>
                     <th>Indicateur</th>
-                    <th>{COMMUNITY_NAME}</th>
+                    <th>{communityName}</th>
                     <th>Moyenne nationale</th>
                     <th>Écart</th>
                   </tr>
@@ -513,7 +515,7 @@ export default function ConsultationDemocratieLocale() {
                 {Object.entries(nationalStats.byCommune)
                   .sort((a, b) => b[1].count - a[1].count)
                   .map(([commune, stats]) => (
-                    <li key={commune} className={commune === COMMUNITY_NAME ? "current" : ""}>
+                    <li key={commune} className={commune === communityName ? "current" : ""}>
                       <span className="commune-name">{commune}</span>
                       <span className="commune-count">
                         {stats.count} réponse{stats.count > 1 ? "s" : ""}

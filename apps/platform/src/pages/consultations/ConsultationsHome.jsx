@@ -5,14 +5,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { CONSULTATIONS } from "./index";
-import {
-  CONSULTATION_SCOPES,
-  COMMUNITY_NAME,
-  MOVEMENT_NAME,
-  CITY_NAME,
-  CITY_TAGLINE,
-  HASHTAG,
-} from "../../constants";
+import { getDynamicConfig, CONSULTATION_SCOPES } from "../../constants";
 import { extractPetitionsFromConsultation } from "../../lib/petitions";
 import { PetitionLinks } from "../../components/common/PetitionLink";
 import {
@@ -49,6 +42,8 @@ function QuickAccessCard({ to, icon, title, description }) {
  */
 export default function ConsultationsHome() {
   const { currentUser } = useCurrentUser();
+  const config = getDynamicConfig();
+  const { cityName, movementName, communityName, cityTagline, hashtag } = config;
   const [sessionId] = useState(() => generateSessionId());
 
   // État replié/déplié de la section consultation (persisté)
@@ -185,12 +180,12 @@ export default function ConsultationsHome() {
         {/* En-tête principal avec hashtag */}
         <header className="home-hero">
           <div className="hero-content">
-            <div className="hero-hashtag">{HASHTAG}</div>
+            <div className="hero-hashtag">{hashtag}</div>
             <div className="hero-divider"></div>
             <div className="hero-city">
-              {String(CITY_NAME).toUpperCase()}
+              {String(cityName).toUpperCase()}
               <br />
-              <span className="hero-tagline">{CITY_TAGLINE}</span>
+              <span className="hero-tagline">{cityTagline}</span>
             </div>
           </div>
         </header>
@@ -208,7 +203,7 @@ export default function ConsultationsHome() {
             className="section-toggle"
             aria-expanded={isConsultationOpen}
           >
-            <span>📊 Consultations citoyennes {MOVEMENT_NAME}</span>
+            <span>📊 Consultations citoyennes {movementName}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className={`toggle-icon ${isConsultationOpen ? "open" : ""}`}
@@ -371,7 +366,7 @@ export default function ConsultationsHome() {
                   >
                     {CONSULTATION_SCOPES.local.icon}
                   </span>
-                  <strong>Locale</strong> — Concerne uniquement {COMMUNITY_NAME}
+                  <strong>Locale</strong> — Concerne uniquement {communityName}
                 </li>
                 <li>
                   <span
