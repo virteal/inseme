@@ -1,4 +1,5 @@
 import React from 'react';
+import { BarChart3 } from 'lucide-react';
 import { InsemeProvider } from '../InsemeContext';
 import { Chat } from './Chat';
 import { Results } from './Results';

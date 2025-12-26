@@ -1,36 +1,13 @@
-/* src/styles/index.css */
-
-/* ==========================================================================
-   MAIN ENTRY POINT
-   Imports all modules in the correct order.
-   ========================================================================== */
-
-/* 1. Foundation (Variables & Tokens) */
+/* Foundation (Variables & Tokens) */
 @import url("./variables.css");
 
-/* 2. Migration Layer (Bauhaus Compatibility) */
+/* Migration Layer (Bauhaus Compatibility) */
 @import url("./bauhaus.css");
 
-/* 3. Global Utilities */
+/* Global Utilities */
 @import url("./utilities.css");
 
-/* src/styles/index.css */
-
-/* ==========================================================================
-   MAIN ENTRY POINT
-   Imports all modules in the correct order.
-   ========================================================================== */
-
-/* 1. Foundation (Variables & Tokens) */
-@import url("./variables.css");
-
-/* 2. Migration Layer (Bauhaus Compatibility) */
-@import url("./bauhaus.css");
-
-/* 3. Global Utilities */
-@import url("./utilities.css");
-
-/* 4. Modules */
+/* Modules */
 @import url("./base.css");
 @import url("./typography.css");
 @import url("./buttons.css");
@@ -47,3 +24,4 @@
 @import url("./kanban.css");
 
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";

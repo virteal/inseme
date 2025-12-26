@@ -1,13 +1,14 @@
 [build]
   command = "npm run build"
-  publish = "apps/inseme/dist"
-  edge_functions = "apps/inseme/src/netlify/edge-functions"
+  publish = "dist"
+  edge_functions = "src/netlify/edge-functions"
 
 [dev]
   command = "npm run dev"
   port = 8888
   targetPort = 5173
-  publish = "apps/inseme/dist"
+  publish = "dist"
+  framework = "#custom"
 
 [[edge_functions]]
   path = "/api/sessions"
@@ -27,7 +28,17 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "/api/:splat"
+  to = "/.netlify/edge-functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/src/*"
+  to = "/src/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/node_modules/*"
+  to = "/node_modules/:splat"
   status = 200
 
 [[redirects]]

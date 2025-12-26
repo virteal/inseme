@@ -10,13 +10,28 @@
   "scripts": {
     "inseme:dev": "npm run dev -w inseme",
     "platform:dev": "npm run dev -w platform",
+    "inseme:netlify": "npm run netlify:dev -w inseme",
+    "platform:netlify": "npm run netlify:dev -w platform",
     "inseme:build": "npm run build -w inseme",
     "platform:build": "npm run build -w platform"
   },
   "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4",
     "turbo": "^2.0.0"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "*"
   },
   "engines": {
     "node": ">=24"
+  },
+  "overrides": {
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "dependencies": {
+    "lucide-react": "^0.562.0"
   }
 }

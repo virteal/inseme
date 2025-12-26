@@ -1,16 +1,52 @@
+# --- Core Dependencies & Build Artifacts ---
 node_modules/
-.DS_Store
-*.log
-.env*
-!.env.example
-.env.backup
-**/.env*
-!**/.env.example
-**/.env.backup
+**/node_modules/
 dist/
 build/
 .netlify/
+.cache/
+.parcel-cache/
+.turbo/
+
+# --- Lockfiles Interdits dans les sous-dossiers ---
+# On autorise le lockfile à la racine, mais on ignore ceux des apps
+apps/**/package-lock.json
+packages/**/package-lock.json
+
+# --- Environnement & Secrets ---
+.env*
+!.env.example
+**/.env*
+!**/.env.example
+
+# --- Logs & Debug ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+vite.config.*.timestamp-*
+
+# --- Deno ---
+# On garde généralement les deno.lock pour la sécurité des Edge Functions
+# Mais on ignore les dossiers de cache si Deno en crée
+.deno/
+
+# --- Artefacts de scripts & Caches spécifiques (Inseme/Platform) ---
+public/meta-init.js
+tailwind-dump.txt
+tailwind-classes.json
+css-class-report.*
+.inline-css-map.json
+.classfinder-cache.json
+tmp-tailwind-input.css
+scripts/test-*.js
+
+# --- OS & IDE ---
+.DS_Store
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
 !.vscode/launch.json
+.idea/
+*.bak
+*.tmp
+*.backup
