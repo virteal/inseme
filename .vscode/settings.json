@@ -3,27 +3,28 @@
   // On active Deno uniquement dans les dossiers qui contiennent des Edge Functions
   "deno.enablePaths": [
     "apps/inseme/src/netlify/edge-functions",
-    "apps/platform/src/netlify/edge-functions"
+    "apps/platform/src/netlify/edge-functions",
+    "src/netlify/edge-functions"
   ],
   "deno.enable": true,
   "deno.unstable": true,
   // On pointe vers les import maps générées par Netlify pour l'autocomplétion
-  "deno.importMap": "apps/platform/.netlify/edge-functions-import-map.json",
-
+  "deno.importMap": ".netlify/edge-functions-import-map.json",
   /* --- CONFIGURATION NODE / ESLINT --- */
   // Indispensable pour que ESLint comprenne la structure Monorepo
   "eslint.workingDirectories": [
-    { "pattern": "./apps/*/" },
-    { "pattern": "./packages/*/" }
+    {
+      "pattern": "./apps/*/"
+    },
+    {
+      "pattern": "./packages/*/"
+    }
   ],
-
   /* --- QUALITÉ DE CODE (Commune) --- */
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  
   // On s'assure que Prettier ignore les fichiers de lock pour ne pas ralentir l'éditeur
   "prettier.ignorePath": ".gitignore",
-
   /* --- RECHERCHE --- */
   // On exclut les dossiers de build et les logs de la recherche globale pour plus de clarté
   "search.exclude": {

@@ -1,0 +1,19 @@
+{
+  "name": "@inseme/ui",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./style.css": "./src/index.css",
+    "./components/*": "./src/components/*.js"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "dependencies": {
+    "lucide-react": "^0.469.0"
+  }
+}

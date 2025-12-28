@@ -1,67 +1,41 @@
 [build]
   command = "npm run build"
   publish = "dist"
-  edge_functions = "src/netlify/edge-functions"
+  functions = "apps/inseme/src/netlify/functions"
+  edge_functions = "apps/inseme/src/netlify/edge-functions"
 
 [dev]
   command = "npm run dev"
-  port = 8888
-  targetPort = 5173
-  publish = "dist"
-  framework = "#custom"
+  functions = "apps/inseme/src/netlify/functions"
+  edge_functions = "apps/inseme/src/netlify/edge-functions"
 
-[[edge_functions]]
-  path = "/api/sessions"
-  function = "sessions"
+[functions]
+  directory = "apps/inseme/src/netlify/functions"
+  node_bundler = "esbuild"
 
-[[edge_functions]]
-  path = "/api/history"
-  function = "history"
 
-[[edge_functions]]
-  path = "/api/upload"
-  function = "upload"
-
-[[edge_functions]]
-  path = "/api/cleanup-storage"
-  function = "cleanup-storage"
+# ============================================================================
+# REDIRECTS
+# ============================================================================
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/edge-functions/:splat"
+  from = "/api/config"
+  to = "/.netlify/functions/config"
   status = 200
 
-[[redirects]]
-  from = "/src/*"
-  to = "/src/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/node_modules/*"
-  to = "/node_modules/:splat"
-  status = 200
-
+# Fallback pour le SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-[[edge_functions]]
-  path = "/api/ophelia"
-  function = "ophelia"
+# ============================================================================
+# HEADERS
+# ============================================================================
 
-[[edge_functions]]
-  path = "/api/transcribe"
-  function = "transcribe"
-
-[[edge_functions]]
-  path = "/api/report"
-  function = "report"
-
-[[edge_functions]]
-  path = "/api/translate"
-  function = "translate"
-
-[[edge_functions]]
-  path = "/api/vector-search"
-  function = "vector-search"
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type, Authorization, X-Ophelia-Instance"
+    Access-Control-Expose-Headers = "X-Ophelia-Instance"

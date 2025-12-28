@@ -3,7 +3,7 @@ import { getSupabase } from "../lib/supabase";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import ErrorBoundary from "../components/common/ErrorBoundary";
+import { ErrorBoundary } from "@inseme/ui";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import ShareModal from "../components/wiki/ShareModal";

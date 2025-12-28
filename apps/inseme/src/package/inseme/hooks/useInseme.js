@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 
+import { performWebSearch } from "@inseme/ophelia";
+
 import { storage } from "../../../lib/storage";
 import {
   getConfig,
@@ -17,24 +19,24 @@ export function useInseme(
   config = {},
   isSpectator = false
 ) {
-  // Merge Vault configuration (optional)
-  const vaultConfig = {
-    opheliaUrl: getConfig("OPHELIA_URL"),
-    ophelia: getConfig("OPHELIA_SETTINGS") || {}, // Expected to be a JSON object in vault
-  };
+  // 0. Stabilize Configuration
+  const effectiveConfig = useMemo(() => {
+    const vaultConfig = {
+      opheliaUrl: getConfig("OPHELIA_URL"),
+      ophelia: getConfig("OPHELIA_SETTINGS") || {},
+    };
+    return {
+      ...vaultConfig,
+      ...config,
+      ophelia: {
+        ...vaultConfig.ophelia,
+        ...config.ophelia,
+      },
+      profileTable: config.profileTable || "users",
+    };
+  }, [config]);
 
-  const effectiveConfig = {
-    ...vaultConfig,
-    ...config,
-    ophelia: {
-      ...vaultConfig.ophelia,
-      ...config.ophelia,
-    },
-  };
-
-  // Schema Adaptation: allow the consumer to specify their profile table name
-  // Default to 'users' to match current implementation, but often 'profiles' in other projects.
-  const PROFILE_TABLE = effectiveConfig.profileTable || "users";
+  const PROFILE_TABLE = effectiveConfig.profileTable;
 
   const [messages, setMessages] = useState([]);
   const [roomData, setRoomData] = useState({
@@ -54,7 +56,12 @@ export function useInseme(
   const [nativeLang, setNativeLang] = useState(
     localStorage.getItem("inseme_native_lang") || "fr"
   );
-  const [isSilent, setIsSilent] = useState(false);
+  const [isSilent, setIsSilent] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("inseme_silent") === "true";
+    }
+    return false;
+  });
   const [systemPrompt, setSystemPrompt] = useState("");
   const [roomMetadata, setRoomMetadata] = useState(null);
   const [sessions, setSessions] = useState([]);
@@ -64,6 +71,7 @@ export function useInseme(
   const lastActivityRef = useRef(Date.now());
   const inactivityTimerRef = useRef(null);
   const keepAliveTimeoutRef = useRef(null);
+  const channelRef = useRef(null);
   const sendMessageRef = useRef();
   const triggerOphéliaRef = useRef();
   const setPropositionRef = useRef();
@@ -323,6 +331,7 @@ export function useInseme(
 
     return () => {
       supabase.removeChannel(channel);
+      channelRef.current = null;
       Object.values(timersRef.current).forEach(clearTimeout);
     };
   }, [roomName, supabase, fetchMessages, roomMetadata?.id, user]);
@@ -337,29 +346,28 @@ export function useInseme(
       const connectedCount = roomData.connectedUsers?.length || 0;
 
       // Logic:
-      // - If only 1 person, be more patient (2 mins)
-      // - If group, intervention after 45s of silence
-      const threshold = connectedCount <= 1 ? 120000 : 45000;
+      // - If addressed directly or small talk, response is handled by sendMessage
+      // - If silence:
+      //    - 1 person: respond after 8s (very interactive in 1:1)
+      //    - group: respond after 30-45s (mediation)
+      const threshold = connectedCount <= 1 ? 8000 : 45000;
 
       if (
         idleTime >= threshold &&
         messages.length > 0 &&
-        !keepAliveTimeoutRef.current
+        !keepAliveTimeoutRef.current &&
+        !isOphéliaThinking
       ) {
+        // Only trigger if the last message was NOT from Ophélia
         const lastMsg = messages[messages.length - 1];
-        if (lastMsg && lastMsg.name !== "Ophélia" && !isOphéliaThinking) {
-          // Randomized delay between 2s and 12s to avoid collisions
-          const randomDelay = Math.floor(Math.random() * 10000) + 2000;
-          keepAliveTimeoutRef.current = setTimeout(async () => {
-            // Re-check idle time before sending
-            const reCheckNow = Date.now();
-            if (reCheckNow - lastActivityRef.current >= threshold) {
-              // The sender triggers Ophélia, triggerOphélia will handle broadcasts
-              if (!isOphéliaThinking) {
-                triggerOphélia(
-                  "[SYSTÈME] : Il y a un silence dans la conversation. Interviens pour relancer le débat, poser une question ou faire une synthèse."
-                );
-              }
+        if (lastMsg?.name !== "Ophélia") {
+          // Randomized delay between 1s and 4s to simulate "thinking" or "waiting for a white"
+          const randomDelay = Math.floor(Math.random() * 3000) + 1000;
+          keepAliveTimeoutRef.current = setTimeout(() => {
+            if (Date.now() - lastActivityRef.current >= threshold) {
+              triggerOphélia(
+                "[SYSTÈME] : Il y a un silence dans la conversation. Interviens de manière naturelle pour relancer, synthétiser ou proposer la suite."
+              );
             }
             keepAliveTimeoutRef.current = null;
           }, randomDelay);
@@ -367,7 +375,7 @@ export function useInseme(
       }
     };
 
-    inactivityTimerRef.current = setInterval(checkInactivity, 10000);
+    inactivityTimerRef.current = setInterval(checkInactivity, 5000);
 
     return () => {
       if (inactivityTimerRef.current) clearInterval(inactivityTimerRef.current);
@@ -553,11 +561,33 @@ export function useInseme(
 
   const sendMessage = useCallback(
     async (text, metadata = {}) => {
-      if (!user || isSpectator) return; // Spectators can't send messages
+      if (!metadata.is_ai && (!user || isSpectator)) return; // Only AI can send messages if no user or spectator
       if (!text?.trim() && !metadata.type) return;
       if (!supabase) return;
 
       // Command Parsing for Language Control
+      if (text.startsWith("inseme vocal ")) {
+        const parts = text.split(/\s+/);
+        const mode = parts[2];
+        if (mode === "on" || mode === "off") {
+          const silent = mode === "off";
+          setIsSilent(silent);
+          localStorage.setItem("inseme_silent", silent ? "true" : "false");
+          if (silent) {
+            sendMessageRef.current?.(`Mode vocal désactivé (Texte seul).`, {
+              is_ai: true,
+              type: "system_summary",
+            });
+          } else {
+            sendMessageRef.current?.(`Mode vocal activé (Texte + Vocal).`, {
+              is_ai: true,
+              type: "system_summary",
+            });
+          }
+          return;
+        }
+      }
+
       if (text.startsWith("inseme lang ")) {
         const lang = text.split(" ")[2];
         if (lang) {
@@ -591,7 +621,7 @@ export function useInseme(
 
       let contentObj = {
         room_id: roomMetadata?.id || roomName,
-        user_id: metadata.is_ai ? OPHELIA_ID : user?.id || null,
+        user_id: metadata.is_ai ? null : user?.id || null, // Fix: Use null for AI to bypass strict RLS (auth.uid() check)
         name: metadata.is_ai
           ? "Ophélia"
           : user?.user_metadata?.full_name ||
@@ -655,15 +685,18 @@ export function useInseme(
         });
       }
 
-      // Trigger AI if addressed
+      // Trigger AI if addressed or in 1:1 conversation
       const lowerText = text.toLowerCase();
-      if (
-        lowerText.includes("ophélia") ||
-        lowerText.includes("ophelia") ||
-        lowerText.includes("hello") ||
-        lowerText.includes("bonjour") ||
-        lowerText.includes("salut")
-      ) {
+      const opheliaNames = ["ophélia", "ophelia", "ophé", "ophe"];
+      const greetings = ["hello", "bonjour", "salut", "coucou", "dis-moi"];
+      const connectedCount = roomData.connectedUsers?.length || 0;
+      const isOneOnOne = connectedCount <= 1;
+
+      const isAddressed = opheliaNames.some((name) => lowerText.includes(name));
+      const isGreeting = greetings.some((greet) => lowerText.includes(greet));
+
+      if (isAddressed || (messages.length < 5 && isGreeting) || isOneOnOne) {
+        // Direct address, greeting at start, or 1:1 conversation triggers immediate response
         triggerOphéliaRef.current?.(text);
       }
 
@@ -940,18 +973,37 @@ export function useInseme(
     sendMessageRef.current?.("inseme close");
     generateReportRef.current?.();
   };
-  const updateAgenda = (newAgenda) =>
-    sendMessageRef.current?.(`inseme agenda [Mise à jour de l'ordre du jour]`, {
+  const updateAgenda = (newAgenda) => {
+    const agendaString = Array.isArray(newAgenda)
+      ? newAgenda.map((item, i) => `${i + 1}. ${item.title || item}`).join("\n")
+      : String(newAgenda);
+
+    sendMessageRef.current?.(`inseme agenda\n${agendaString}`, {
       type: "agenda_update",
       agenda: newAgenda,
     });
+  };
   const onParole = () => sendMessageRef.current?.("inseme parole");
   const onDelegate = (target) =>
     sendMessageRef.current?.(`inseme bye ${target}`);
 
   const triggerOphélia = useCallback(
-    async (userIntent = null) => {
-      if (isOphéliaThinking) return;
+    async (userIntent = null, toolResults = []) => {
+      if (isOphéliaThinking && !toolResults.length) return;
+
+      if (!roomName || !supabase || isSpectator) return;
+
+      const connectedCount = roomData.connectedUsers?.length || 0;
+      const isOneOnOne = connectedCount <= 1;
+
+      // "Petit blanc" : délai naturel si c'est une réponse directe ou une relance
+      // BEAUCOUP plus rapide en 1:1 ou si interpellation directe
+      if (userIntent || toolResults.length) {
+        const baseDelay = isOneOnOne ? 400 : 800;
+        const randomExtra = isOneOnOne ? 600 : 2000;
+        const delay = Math.floor(Math.random() * randomExtra) + baseDelay;
+        await new Promise((r) => setTimeout(r, delay));
+      }
 
       // Broadcast that we are starting to think
       channelRef.current?.send({
@@ -986,54 +1038,76 @@ export function useInseme(
                 .join(", ")}`
             : "";
 
-        const history = messages.slice(-100).map((m) => ({
-          role: m.name === "Ophélia" ? "assistant" : "user",
-          content: `${m.name}: ${m.message}${m.metadata?.voice_duration ? ` (Vocal: ${m.metadata.voice_duration}s)` : ""}`,
-        }));
+        const history = messages.slice(-1000).map((m) => {
+          const timestamp = new Date(m.created_at).toLocaleString("fr-FR", {
+            day: "2-digit",
+            month: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          });
+          return {
+            role: m.name === "Ophélia" ? "assistant" : "user",
+            content: `[${timestamp}] ${m.name}: ${m.message}${m.metadata?.voice_duration ? ` (Vocal: ${m.metadata.voice_duration}s)` : ""}`,
+          };
+        });
+
+        // Si on a des résultats d'outils, on les ajoute à l'historique
+        if (toolResults.length > 0) {
+          toolResults.forEach((tr) => {
+            history.push({
+              role: "tool",
+              tool_call_id: tr.id,
+              content: tr.result,
+            });
+          });
+        }
 
         if (userIntent) {
           history.push({
             role: "user",
             content: `Message direct à Ophélia: ${userIntent}${statsContext}`,
           });
-        } else if (statsContext) {
+        } else if (statsContext && !toolResults.length) {
           // If proactive trigger, inject stats in the last message or as a system hint
           const lastMsg = history[history.length - 1];
           if (lastMsg) lastMsg.content += statsContext;
         }
 
-        // Enhanced logic: Ophélia can now trigger flash polls
-        // We inject the tool definition in her context
-        const tools = [
-          { name: "send_message", description: "Send a standard message" },
-          {
-            name: "flash_poll",
-            description: "Trigger a quick Pour/Contre/Abstention poll",
-          },
-          {
-            name: "generate_report",
-            description: "Close session and generate PV",
-          },
-        ];
-
         const opheliaUrl = effectiveConfig.opheliaUrl || "/api/ophelia";
+        const payload = {
+          action: "chat",
+          room_id: roomMetadata?.id || roomName,
+          content: history,
+          agenda: roomData.agenda, // Ajout de l'ordre du jour au contexte
+          context: roomData,
+          system_prompt: systemPrompt,
+          room_settings: {
+            ...roomMetadata?.settings,
+            ophelia: {
+              ...roomMetadata?.settings?.ophelia,
+              ...effectiveConfig.ophelia,
+            },
+          },
+          user_id: user?.id,
+          user_name:
+            user?.user_metadata?.full_name ||
+            user?.email?.split("@")[0] ||
+            "Anonyme",
+          speech_stats: speechStats,
+          pivot_lang: pivotLang,
+          is_silent: isSilent,
+        };
+
+        console.log(
+          "[useInseme] Calling Ophélia Edge Function:",
+          opheliaUrl,
+          payload
+        );
         const response = await fetch(opheliaUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "chat",
-            room_id: roomMetadata?.id || roomName,
-            content: history,
-            context: roomData,
-            system_prompt: systemPrompt,
-            room_settings: {
-              ...roomMetadata?.settings,
-              ophelia: {
-                ...roomMetadata?.settings?.ophelia,
-                ...effectiveConfig.ophelia, // Hook-level overrides (api_url, model, etc)
-              },
-            },
-          }),
+          body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
@@ -1044,88 +1118,92 @@ export function useInseme(
         }
 
         const data = await response.json();
+        console.log("[useInseme] Ophélia response:", data);
         const { actions, text } = data || {};
 
         if (actions && actions.length > 0) {
+          const currentToolResults = [];
           for (const action of actions) {
-            const { tool, args, vocal_payload } = action;
+            const { tool, args, vocal_payload, id } = action;
 
             if (tool === "send_message") {
               await sendMessageRef.current?.(args.text, {
                 is_ai: true,
                 vocal_payload,
               });
+              currentToolResults.push({ id, result: "Message envoyé." });
             } else if (tool === "speak") {
               await sendMessageRef.current?.(args.text, {
                 is_ai: true,
                 vocal_payload,
                 vocal_only: true,
               });
+              currentToolResults.push({ id, result: "Message vocalisé." });
             } else if (tool === "set_proposition") {
               await setPropositionRef.current?.(args.text, true);
+              currentToolResults.push({
+                id,
+                result: "Proposition mise à jour.",
+              });
             } else if (tool === "manage_speech_queue") {
               await sendMessageRef.current?.(
                 `[Médiation] ${args.action === "invite" ? "Invitons" : "Retirons"} ${args.userId} de la liste.`,
                 { is_ai: true }
               );
+              currentToolResults.push({
+                id,
+                result: "File d'attente mise à jour.",
+              });
             } else if (tool === "generate_report") {
               await generateReportRef.current?.();
+              currentToolResults.push({
+                id,
+                result: "Rapport en cours de génération.",
+              });
             } else if (tool === "promote_to_plenary") {
               await promoteToPlenaryRef.current?.(args.content);
+              currentToolResults.push({
+                id,
+                result: "Transmis à la plénière.",
+              });
             } else if (tool === "search_memory") {
               const results = await searchMemoryRef.current?.(args.query);
               await sendMessageRef.current?.(
                 `[Mémoire] Résultats pour "${args.query}" :\n${results}`,
                 { is_ai: true, type: "system_summary" }
               );
-            } else if (tool === "consult_archives") {
+              currentToolResults.push({ id, result: results });
+            } else if (tool === "update_agenda") {
+              await updateAgenda(args.new_agenda);
+              currentToolResults.push({
+                id,
+                result: "Ordre du jour mis à jour.",
+              });
+            } else if (tool === "display_media") {
+              const command = `inseme ${args.type} ${args.url}${args.title ? ` [${args.title}]` : ""}`;
+              await sendMessageRef.current?.(command, { is_ai: true });
+              currentToolResults.push({ id, result: "Média affiché." });
+            } else if (tool === "web_search") {
+              // On utilise la clé Brave de la salle ou une par défaut (Vault/Config)
+              const braveKey =
+                roomMetadata?.settings?.brave_search_api_key ||
+                getConfig("brave_search_api_key");
+
+              const results = await performWebSearch(args.query, {
+                apiKey: braveKey,
+                searchLang: pivotLang,
+              });
               await sendMessageRef.current?.(
-                `🔍 *Je consulte les archives pour "${args.query || "..."}"...*`,
-                { is_ai: true }
+                `[Recherche Web] Résultats pour "${args.query}" :\n${results}`,
+                { is_ai: true, type: "system_summary" }
               );
-              try {
-                const res = await fetch("/api/history", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    query: args.query,
-                    filters: {
-                      room_id: roomMetadata?.id || roomName,
-                      ...args,
-                    },
-                  }),
-                });
-
-                if (!res.ok)
-                  throw new Error(`History API Error: ${res.status}`);
-
-                const data = await res.json();
-                const { results } = data || {};
-
-                const formatted =
-                  results && results.length > 0
-                    ? results
-                        .map(
-                          (r) =>
-                            `- [${new Date(r.created_at).toLocaleString()}] ${r.name} (${r.type}): ${r.message}`
-                        )
-                        .join("\n")
-                    : "Aucun résultat trouvé dans les archives.";
-
-                await sendMessageRef.current?.(
-                  `[ARCHIVES] Résultat de la recherche :\n${formatted}`,
-                  { is_ai: true, type: "system_summary" }
-                );
-              } catch (e) {
-                console.error("Archive Error:", e);
-                await sendMessageRef.current?.(
-                  `[Erreur] Consultation échouée: ${e.message}`,
-                  {
-                    is_ai: true,
-                  }
-                );
-              }
+              currentToolResults.push({ id, result: results });
             }
+          }
+          // Si on a des résultats d'outils, on relance Ophélia pour la réponse finale
+          if (currentToolResults.length > 0) {
+            setIsOphéliaThinking(false); // On libère pour permettre la récursion
+            return triggerOphélia(null, currentToolResults);
           }
         } else if (text) {
           let opheliaMsg = text;
@@ -1205,393 +1283,6 @@ export function useInseme(
     castVote,
   ]);
 
-  const sendMessage = useCallback(
-    async (text, metadata = {}) => {
-      if (!user || isSpectator) return; // Spectators can't send messages
-      if (!text?.trim() && !metadata.type) return;
-      if (!supabase) return;
-
-      // Command Parsing for Language Control
-      if (text.startsWith("inseme lang ")) {
-        const lang = text.split(" ")[2];
-        if (lang) {
-          setNativeLang(lang);
-          localStorage.setItem("inseme_native_lang", lang);
-          // Use optimistic UI or a local system message (not stored in DB)
-          // For now, we just return to avoid sending the command to DB
-          return;
-        }
-      }
-
-      if (text.startsWith("inseme pivot ")) {
-        const lang = text.split(" ")[2];
-        if (lang && roomMetadata) {
-          // Update room settings in DB
-          const newSettings = { ...roomMetadata.settings, pivot_lang: lang };
-          await supabase
-            .from("inseme_rooms")
-            .update({ settings: newSettings })
-            .eq("id", roomMetadata.id);
-          // Optimistic update
-          setRoomMetadata({ ...roomMetadata, settings: newSettings });
-          return;
-        }
-      }
-
-      // Strip large binary data from metadata before DB insertion
-      const dbMetadata = { ...metadata };
-      const localVocalPayload = dbMetadata.vocal_payload;
-      delete dbMetadata.vocal_payload;
-
-      let contentObj = {
-        room_id: roomMetadata?.id || roomName,
-        user_id: metadata.is_ai ? OPHELIA_ID : user?.id || null,
-        name: metadata.is_ai
-          ? "Ophélia"
-          : user?.user_metadata?.full_name ||
-            user?.email?.split("@")[0] ||
-            "Anonyme",
-        message: text,
-        type: metadata.type || "chat",
-        metadata: dbMetadata,
-      };
-
-      // Translation Logic (Translate-on-Write)
-      if (
-        !metadata.is_ai &&
-        nativeLang !== pivotLang &&
-        !text.toLowerCase().startsWith("inseme")
-      ) {
-        try {
-          const response = await fetch("/api/translate", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text, target_lang: pivotLang }),
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            if (data?.translated_text) {
-              contentObj.message = data.translated_text;
-              contentObj.metadata = {
-                ...contentObj.metadata,
-                original: text,
-                lang: nativeLang,
-              };
-            }
-          }
-        } catch (err) {
-          console.error("Translation failed, sending original:", err);
-        }
-      }
-
-      const { data, error } = await supabase
-        .from("inseme_messages")
-        .insert([contentObj])
-        .select()
-        .single();
-
-      if (error) {
-        console.error("Erreur lors de l'envoi du message:", error);
-      }
-
-      // Broadcast vocal payload separately (it's too large for Postgres changes payload)
-      if (localVocalPayload && !error) {
-        if (!isSilent) playVocal(localVocalPayload);
-
-        channelRef.current?.send({
-          type: "broadcast",
-          event: "vocal",
-          payload: {
-            message_id: data.id,
-            vocal_payload: localVocalPayload,
-          },
-        });
-      }
-
-      // Trigger AI if addressed
-      const lowerText = text.toLowerCase();
-      if (
-        lowerText.includes("ophélia") ||
-        lowerText.includes("ophelia") ||
-        lowerText.includes("hello") ||
-        lowerText.includes("bonjour") ||
-        lowerText.includes("salut")
-      ) {
-        triggerOphéliaRef.current?.(text);
-      }
-
-      if (
-        text.startsWith("inseme parole") ||
-        text.startsWith("inseme technical")
-      ) {
-        const userId = user?.id || "Anonyme";
-        if (timersRef.current[userId]) clearTimeout(timersRef.current[userId]);
-        timersRef.current[userId] = setTimeout(() => {
-          castVote("quiet");
-        }, 30000);
-      }
-
-      return { error };
-    },
-    [
-      user,
-      isSpectator,
-      supabase,
-      roomMetadata,
-      roomName,
-      nativeLang,
-      pivotLang,
-      isSilent,
-      setNativeLang,
-      setRoomMetadata,
-      castVote,
-    ]
-  );
-
-  const generateReport = async () => {
-    setIsOphéliaThinking(true);
-    try {
-      await sendMessage("**Édition du Procès-Verbal en cours...**", {
-        is_ai: true,
-      });
-
-      const response = await fetch("/api/report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: messages,
-          room_settings: roomMetadata?.settings,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(
-          `Report API Error (${response.status}): ${errorText || "Unknown error"}`
-        );
-      }
-
-      const data = await response.json();
-      const { report, error } = data || {};
-
-      if (error) throw new Error(error);
-
-      if (report) {
-        const { data, error: insertError } = await supabase
-          .from("inseme_messages")
-          .insert([
-            {
-              room_id: roomMetadata?.id || roomName, // UUID
-              user_id: null,
-              name: "Ophélia",
-              message: report,
-              type: "chat", // Should be 'chat' or custom type? 'chat' ensures visibility.
-              metadata: { type: "report", generated: true },
-            },
-          ])
-          .select();
-
-        if (insertError) throw new Error(insertError.message);
-
-        if (data && data[0]) {
-          // AUTO-EMBED
-          await fetch("/api/vector-search", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              action: "embed",
-              text: report,
-              id: data[0].id,
-            }),
-          });
-
-          // Checkpoint Update (Optional: could notify room settings)
-        }
-
-        await sendMessage("📜 Le Procès-Verbal a été généré et archivé.", {
-          is_ai: true,
-        });
-      }
-    } catch (error) {
-      console.error("Erreur Report:", error);
-      await sendMessage("[Erreur] Génération du rapport échouée.", {
-        is_ai: true,
-      });
-    } finally {
-      setIsOphéliaThinking(false);
-    }
-  };
-
-  const promoteToPlenary = async (content) => {
-    const parentSlug = roomMetadata?.settings?.parent_slug;
-    if (!parentSlug) {
-      await sendMessage(
-        "[Erreur] Impossible de remonter à la plénière : aucune salle parente configurée.",
-        { is_ai: true }
-      );
-      return;
-    }
-
-    setIsOphéliaThinking(true);
-    try {
-      await sendMessage(`**Transmission à la Plénière (${parentSlug})...**`, {
-        is_ai: true,
-      });
-
-      // In a real SaaS, we would use the Edge Function to securely post to another room.
-      // For this implementation, we will simulate it or use a direct Supabase call if we have permissions.
-      // Since we rely on RLS, writing to another room might be restricted unless we are also an owner/member.
-      // Let's assume for now we use a server-side function or the user has rights.
-
-      // NOTE: Ideally, we should create a dedicated Edge Function /api/promote to handle cross-room writes securely.
-      // For now, let's try to write directly using the client if possible, flagging it as a "proposition".
-
-      // To properly resolve the slug to a UUID, we need a lookup.
-      // Since we don't have the parent's UUID easily here without a lookup, we'll implement a simple lookup via Supabase.
-      const { data: parentRoom } = await supabase
-        .from("inseme_rooms")
-        .select("id")
-        .eq("slug", parentSlug)
-        .single();
-
-      if (parentRoom) {
-        const { data: msgData, error: insertError } = await supabase
-          .from("inseme_messages")
-          .insert([
-            {
-              room_id: parentRoom.id, // Using the resolved UUID
-              user_id: user?.id,
-              name: `Commission (${roomMetadata.name})`,
-              message: `**Proposition de la Commission :**\n\n${content}`,
-              type: "proposition",
-              metadata: {
-                source_room: roomMetadata?.id || roomName,
-                promoted: true,
-              },
-            },
-          ])
-          .select();
-
-        if (insertError) throw new Error(insertError.message);
-
-        if (msgData && msgData[0]) {
-          // AUTO-EMBED in Parent Room
-          await fetch("/api/vector-search", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              action: "embed",
-              text: content,
-              id: msgData[0].id,
-            }),
-          });
-        }
-
-        await sendMessage(`✅ Transmis avec succès à la plénière.`, {
-          is_ai: true,
-        });
-      } else {
-        throw new Error("Salle parente introuvable.");
-      }
-    } catch (error) {
-      console.error("Erreur Promotion:", error);
-      await sendMessage(
-        `[Erreur] Échec de la transmission : ${error.message}`,
-        { is_ai: true }
-      );
-    } finally {
-      setIsOphéliaThinking(false);
-    }
-  };
-
-  const searchMemory = async (query) => {
-    try {
-      const res = await fetch("/api/vector-search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "search",
-          text: query,
-          room_id: roomMetadata?.id || roomName,
-        }),
-      });
-      const { documents } = await res.json();
-      if (!documents || documents.length === 0)
-        return "Aucun résultat pertinent trouvé.";
-
-      return documents
-        .map(
-          (d) =>
-            `- [${new Date(d.metadata?.created_at || Date.now()).toLocaleDateString()}] ${d.message.substring(0, 150)}...`
-        )
-        .join("\n");
-    } catch (error) {
-      console.error("Search Error:", error);
-      return "Erreur lors de la recherche mémoire.";
-    }
-  };
-
-  const archiveReport = async (reportText) => {
-    if (!roomMetadata?.id) return;
-    try {
-      const sessionId = currentSessionId || `manual-${Date.now()}`;
-      const fileName = `reports/${roomName}/${sessionId}.md`;
-      const blob = new Blob([reportText], { type: "text/markdown" });
-
-      const { url } = await storage.upload("public-documents", fileName, blob);
-
-      await sendMessage(
-        `📄 **PV Archivé dans le Cloud**\nLien : [Consulter le document](${url})`,
-        {
-          is_ai: true,
-          type: "system_summary",
-          metadata: {
-            type: "archive_link",
-            url,
-          },
-        }
-      );
-      return url;
-    } catch (err) {
-      console.error("Erreur d'archivage:", err);
-      throw err;
-    }
-  };
-
-  const uploadVocal = async (blob, customFileName = null) => {
-    if (!roomMetadata?.id) return null;
-    return storage.uploadVocal(roomMetadata.id, blob, customFileName);
-  };
-
-  const startSession = () => sendMessage("inseme open");
-  const endSession = () => {
-    sendMessage("inseme close");
-    generateReport();
-  };
-  const updateAgenda = (newAgenda) =>
-    sendMessage(`inseme agenda [Mise à jour de l'ordre du jour]`, {
-      type: "agenda_update",
-      agenda: newAgenda,
-    });
-  const castVote = async (option) => {
-    if (!user) return;
-    const userName =
-      user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Anonyme";
-
-    // 1. Send as a system message to trigger real-time updates via subscription
-    await sendMessage(`inseme vote ${option}`, {
-      type: "vote",
-      metadata: {
-        option,
-        user_name: userName,
-        is_flash_poll: true,
-      },
-    });
-  };
-  const onParole = () => sendMessage("inseme parole");
-  const onDelegate = (target) => sendMessage(`inseme bye ${target}`);
-
   return {
     roomName,
     user,
@@ -1607,6 +1298,9 @@ export function useInseme(
     setNativeLang,
     isSilent,
     setIsSilent,
+    setProposition,
+    generateReport,
+    promoteToPlenary,
     archiveReport,
     startSession,
     endSession,

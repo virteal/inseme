@@ -24,4 +24,6 @@
 @import url("./kanban.css");
 
 @import "tailwindcss";
+@import "@inseme/ui/style.css";
+@source "../../../packages/ui/src";
 @plugin "@tailwindcss/typography";

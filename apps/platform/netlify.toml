@@ -1,12 +1,13 @@
 [build]
-  publish = "dist"
   command = "npm run build"
+  publish = "dist"
   functions = "src/netlify/functions"
   edge_functions = "src/netlify/edge-functions"
 
 [dev]
   command = "npm run dev"
   functions = "src/netlify/functions"
+  edge_functions = "src/netlify/edge-functions"
 
 [functions]
   directory = "src/netlify/functions"

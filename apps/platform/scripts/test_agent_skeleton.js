@@ -1,7 +1,8 @@
 // File: scripts/test_agent_skeleton.js
 // Description: Test script to verify the SqlAgent skeleton and AgentExecutorService guardrails.
 
-import { SqlAgent } from "../src/agents/SqlAgent.js";
+// Import the SqlAgent and AgentExecutorService
+import { SqlAgent } from "../src/common/agents/SqlAgent.js";
 
 async function main() {
   console.log("🚀 Starting Agent Skeleton Test...\n");

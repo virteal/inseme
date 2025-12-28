@@ -8,7 +8,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { App } from "./App";
-import ErrorBoundary from "./components/common/ErrorBoundary";
+import { ErrorBoundary } from "@inseme/ui";
 import { SupabaseProvider } from "./contexts/SupabaseContext";
 import { GlobalStatusProvider } from "./contexts/GlobalStatusContext";
 import { CurrentUserProvider } from "./contexts/CurrentUserContext";

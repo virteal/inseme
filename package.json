@@ -3,6 +3,10 @@
   "private": false,
   "version": "1.0.0",
   "description": "Monorepo for Inseme and Platform Citoyenne",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -23,13 +27,6 @@
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "*"
-  },
-  "engines": {
-    "node": ">=24"
-  },
-  "overrides": {
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
   },
   "dependencies": {
     "lucide-react": "^0.562.0"

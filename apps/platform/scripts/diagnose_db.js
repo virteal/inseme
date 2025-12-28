@@ -1,6 +1,6 @@
 // File: scripts/diagnose_db.js
-import { db, client } from "../src/db/client.js";
-import * as schema from "../src/schema/tables.js";
+import { db, client } from "../src/common/db/client.js";
+import * as schema from "../src/common/schema/tables.js";
 import { sql } from "drizzle-orm";
 
 async function main() {

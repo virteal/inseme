@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@inseme/ui/style.css";
+@source "../../packages/ui/src";
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

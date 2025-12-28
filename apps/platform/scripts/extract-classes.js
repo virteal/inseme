@@ -594,9 +594,7 @@ BEHAVIOR
     • use --generate-tailwind-dump to attempt generating a dump via the Tailwind CLI (npx tailwindcss).
   - Inline CSS:
     • the analyzer detects <style> blocks, styled-components tagged templates and style objects in JSX.
-  - Programmatic use:
-    • import { runAll } from './extract-classes.js' and call runAll({ generateTailwindDump: true }) to run programmatically.
-
+  
 EXAMPLES
   # Generate full report
   node scripts/extract-classes.js

@@ -6,5 +6,4 @@ try {
   // dotenv not available or failed to load
 }
 
-export * from "../../../../../packages/cop-host/src/config/instanceConfig.backend.js";
-
+export * from "@inseme/cop-host/config/instanceConfig.backend";

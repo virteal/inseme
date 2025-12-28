@@ -1,6 +1,6 @@
 // src/lib/storage.js
-import { supabase } from './supabase.js'
-import { getConfig } from '@inseme/cop-host/config/instanceConfig.client'
+import { supabase } from "./supabase";
+import { getConfig } from "@inseme/cop-host/config/instanceConfig.client";
 
 /**
  * Storage Utility for Inseme

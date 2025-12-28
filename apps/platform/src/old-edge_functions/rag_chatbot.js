@@ -11,7 +11,7 @@ import postgres from "https://deno.land/x/postgresjs/mod.js";
 import OpenAI from "https://esm.sh/openai@4";
 
 // Import instance config for vault-based configuration
-import { getConfig } from "../../common/config/instanceConfig.edge.js";
+import { getConfig } from "../common/config/instanceConfig.edge.js";
 
 // Import civic acts tools for municipal transparency system
 import {
@@ -19,10 +19,10 @@ import {
   CIVIC_TOOL_HANDLERS,
   mergeCivicTools,
   mergeCivicHandlers,
-} from "../edge-functions/lib/civic-tools.js";
+} from "../netlify/edge-functions/lib/civic-tools.js";
 
 const PROVIDER_META_PREFIX = "__PROVIDER_INFO__";
-import { providerMetrics } from "../edge-functions/lib/utils/provider-metrics.js";
+import { providerMetrics } from "../netlify/edge-functions/lib/utils/provider-metrics.js";
 const PROVIDERS_STATUS_PREFIX = "__PROVIDERS_STATUS__";
 const TOOL_TRACE_PREFIX = "__TOOL_TRACE__";
 

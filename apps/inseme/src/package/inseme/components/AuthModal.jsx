@@ -1,26 +1,17 @@
-
 import React from 'react'
-import { X } from 'lucide-react'
 import { supabase } from '../../../lib/supabase'
-import Login from './Login'
+import { AuthModal as SharedAuthModal } from '@inseme/ui'
 
 export function AuthModal({ onClose, roomName, isUpgrading = false, onSpectator, initialMode = null }) {
     const [loading, setLoading] = React.useState(false)
     const [error, setError] = React.useState(null)
 
-    // 1. ANONYMOUS: Uses nickname as dummy email or metadata if supported
+    // 1. ANONYMOUS
     const handleSignInAnonymously = async (nickname) => {
         setLoading(true)
         setError(null)
         try {
-            // NOTE: signInAnonymously normally doesn't take metadata directly in Supabase JS v2
-            // But we can update the user immediately after if needed, or use a "guest" strategy.
-            // For true anonymous, we just sign in. The nickname handling might need a custom logic 
-            // once connected (e.g. updating profile). 
-            // For now, we assume the user just wants access. 
-            // Ideally, we'd pass options: { data: { full_name: nickname } } if supported.
-
-            const { data, error } = await supabase.auth.signInAnonymously({
+            const { error } = await supabase.auth.signInAnonymously({
                 options: {
                     data: { 
                         full_name: nickname || 'Invité',
@@ -31,7 +22,6 @@ export function AuthModal({ onClose, roomName, isUpgrading = false, onSpectator,
             })
 
             if (error) {
-                // Specific handling for disabled anonymous sign-ins
                 if (error.message.includes('Anonymous sign-ins are disabled')) {
                     throw new Error("L'accès invité est désactivé sur ce serveur Supabase. Veuillez activer 'Anonymous sign-ins' dans Authentication > Providers ou utilisez un compte email.")
                 }
@@ -65,7 +55,7 @@ export function AuthModal({ onClose, roomName, isUpgrading = false, onSpectator,
         }
     }
 
-    // 3. SIGN UP (Create Account)
+    // 3. SIGN UP
     const handleSignUp = async (email, password, nickname) => {
         setLoading(true)
         setError(null)
@@ -75,7 +65,7 @@ export function AuthModal({ onClose, roomName, isUpgrading = false, onSpectator,
                 password,
                 options: {
                     data: {
-                        full_name: nickname, // Store nickname in metadata
+                        full_name: nickname,
                         source: 'inseme',
                         initial_room: roomName
                     }
@@ -114,51 +104,39 @@ export function AuthModal({ onClose, roomName, isUpgrading = false, onSpectator,
         }
     }
 
-    return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="relative w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors z-10"
-                >
-                    <X className="w-6 h-6" />
-                </button>
+    const sidebar = (
+        <div className="w-full bg-indigo-600 p-12 flex flex-col justify-between text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
 
-                <div className="flex h-[600px]">
-                    {/* Left Side - Login Component */}
-                    <div className="w-full md:w-1/2 p-8 md:p-12 overflow-y-auto">
-                        <Login 
-                         onSignInAnonymously={handleSignInAnonymously}
-                         onSignInWithProvider={handleSignInWithProvider}
-                         onSignInWithPassword={handleSignInWithPassword}
-                         onSignUp={handleSignUp}
-                         onSpectator={onSpectator}
-                         loading={loading}
-                         error={error}
-                         roomName={roomName}
-                         isUpgrading={isUpgrading}
-                         initialMode={initialMode}
-                     />
-                    </div>
+            <div className="relative z-10">
+                <h3 className="text-3xl font-black tracking-tight mb-4">L'Assemblée<br />Augmentée.</h3>
+                <p className="text-white/80 font-medium leading-relaxed">
+                    Rejoignez un espace de délibération nouvelle génération. Votez, débattez et construisez le consensus avec l'aide d'Ophélia.
+                </p>
+            </div>
 
-                    {/* Right Side - Visual/Info */}
-                    <div className="hidden md:flex w-1/2 bg-indigo-600 p-12 flex-col justify-between text-white relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
-
-                        <div className="relative z-10">
-                            <h3 className="text-3xl font-black tracking-tight mb-4">L'Assemblée<br />Augmentée.</h3>
-                            <p className="text-white/80 font-medium leading-relaxed">
-                                Rejoignez un espace de délibération nouvelle génération. Votez, débattez et construisez le consensus avec l'aide d'Ophélia.
-                            </p>
-                        </div>
-
-                        <div className="relative z-10 text-xs font-bold uppercase tracking-widest opacity-60">
-                            Inseme v2.0
-                        </div>
-                    </div>
-                </div>
+            <div className="relative z-10 text-xs font-bold uppercase tracking-widest opacity-60">
+                Inseme v2.0
             </div>
         </div>
+    );
+
+    return (
+        <SharedAuthModal 
+            onClose={onClose}
+            onSignInAnonymously={handleSignInAnonymously}
+            onSignInWithProvider={handleSignInWithProvider}
+            onSignInWithPassword={handleSignInWithPassword}
+            onSignUp={handleSignUp}
+            onSpectator={onSpectator}
+            loading={loading}
+            error={error}
+            roomName={roomName}
+            isUpgrading={isUpgrading}
+            initialMode={initialMode}
+            sidebar={sidebar}
+            maxWidth="max-w-4xl"
+        />
     )
 }

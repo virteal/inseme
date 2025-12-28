@@ -1,0 +1,49 @@
+@theme {
+  /* Common animations used in UI components */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes zoom-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes slide-in-from-bottom {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-zoom-in: zoom-in 0.2s ease-out;
+  --animate-slide-in-bottom: slide-in-from-bottom 0.3s ease-out;
+
+  /* Compatibility with existing animate-in utility pattern if needed */
+  --animate-in: fade-in 0.2s ease-out;
+}
+
+/* Utilities for compatibility with existing classes */
+@utility animate-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+@utility fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+@utility zoom-in-95 {
+  animation: zoom-in 0.2s ease-out;
+}

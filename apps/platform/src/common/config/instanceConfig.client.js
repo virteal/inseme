@@ -1,2 +1,2 @@
-export * from "../../../../../packages/cop-host/src/config/instanceConfig.client.js";
+export * from "@inseme/cop-host/config/instanceConfig.client";
 

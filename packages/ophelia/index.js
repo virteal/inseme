@@ -30,4 +30,5 @@ async function ask(question, options = {}) {
   return res.json();
 }
 
+export * from "./websearch.js";
 export { ask };

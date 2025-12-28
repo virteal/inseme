@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getSupabase } from "../lib/supabase";
 import wikiFederation from "../lib/wikiFederation";
-import ErrorBoundary from "../components/common/ErrorBoundary";
+import { ErrorBoundary } from "@inseme/ui";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import ShareModal from "../components/wiki/ShareModal";

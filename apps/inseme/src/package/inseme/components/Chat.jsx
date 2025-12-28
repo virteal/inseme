@@ -65,6 +65,8 @@ function ChatMessage({
   const isTranslated = !!msg.metadata?.original;
   const originalLang = msg.metadata?.lang?.toUpperCase();
 
+  const opheliaAvatar = "https://api.dicebear.com/7.x/bottts/svg?seed=Ophelia";
+
   const handleTranslateToNative = async () => {
     if (translatedContent) {
       setTranslatedContent(null);
@@ -741,7 +743,14 @@ export function Chat(props) {
             </span>
           </button>
           <button
-            onClick={() => setIsSilent(!isSilent)}
+            onClick={() => {
+              const nextSilent = !isSilent;
+              setIsSilent(nextSilent);
+              localStorage.setItem(
+                "inseme_silent",
+                nextSilent ? "true" : "false"
+              );
+            }}
             className={`p-2 rounded-lg transition-all ${isSilent ? "bg-red-500/20 text-red-400" : "bg-white/5 text-white/40 hover:text-white/60"}`}
             title={isSilent ? "Activer l'audio" : "Mode Silencieux"}
           >
@@ -753,7 +762,7 @@ export function Chat(props) {
           </button>
           <button
             onClick={() => askOphélia()}
-            disabled={isOphéliaThinking}
+            disabled={isOphéliaThinking || isSpectator}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-xs font-bold transition-all border border-indigo-500/30 disabled:opacity-50 group"
           >
             <Bot className="w-4 h-4 group-hover:scale-110 transition-transform" />

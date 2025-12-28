@@ -11,12 +11,16 @@ export default class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("Erreur capturée par ErrorBoundary:", error, errorInfo);
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      return <div className="text-red-600">Une erreur est survenue lors du rendu du contenu.</div>;
+      return this.props.fallback || (
+        <div className="p-4 text-red-600 bg-red-50 border border-red-100 rounded-lg">
+          Une erreur est survenue lors du rendu du contenu.
+        </div>
+      );
     }
 
     return this.props.children;

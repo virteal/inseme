@@ -69,7 +69,14 @@ export default async (request, context) => {
     }
 
     if (path === "/posts" && method === "POST") {
-      const body = await request.json();
+      let body = {};
+      try {
+        if (request.body) {
+          body = await request.json();
+        }
+      } catch (e) {
+        console.warn("[API] Malformed JSON or empty body");
+      }
       const { content, title, type = "post", groupId, tags, ...meta } = body;
 
       const { data, error } = await supabase
@@ -89,7 +96,14 @@ export default async (request, context) => {
 
     if (path.startsWith("/posts/") && method === "PUT") {
       const id = path.split("/")[2];
-      const body = await request.json();
+      let body = {};
+      try {
+        if (request.body) {
+          body = await request.json();
+        }
+      } catch (e) {
+        console.warn("[API] Malformed JSON or empty body");
+      }
       const { content, title } = body;
 
       const updates = {};

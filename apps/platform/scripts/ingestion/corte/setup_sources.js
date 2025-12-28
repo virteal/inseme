@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { loadConfig, getConfig } from "../../../lib/config.js";
+import { loadConfig, getConfig } from "../../lib/config.js";
 
 // Load environment variables
 await loadConfig();
