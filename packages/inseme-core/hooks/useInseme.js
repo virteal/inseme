@@ -1,23 +1,20 @@
 // src/package/inseme/hooks/useInseme.js
 
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
-import { useVoiceRecorder } from "./useVoiceRecorder";
+import { useVoiceRecorder } from "./useVoiceRecorder.js";
 
-import { performWebSearch } from "@inseme/ophelia";
-import { safeEval } from "../utils/SafeEval";
+import { performWebSearch } from "../../ophelia/index.js";
+import { safeEval } from "../utils/SafeEval.js";
 
-import { storage } from "../../../lib/storage";
-import {
-  getConfig,
-  loadInstanceConfig,
-  useGroup,
-  useGroupMembers,
-} from "@inseme/cop-host";
+import { getConfig } from "../../cop-host/src/client/supabase.js";
+import { loadInstanceConfig } from "../../cop-host/src/config/instanceConfig.client.js";
+import { useGroup, useGroupMembers } from "../../cop-host/src/lib/useGroup.js";
+import { storage } from "../../cop-host/src/lib/storage.js";
 import {
   GOVERNANCE_MODELS,
   getGovernanceModel,
   calculateResults,
-} from "@inseme/kudocracy";
+} from "../../kudocracy/src/governance.js";
 
 export const OPHELIA_ID = "00000000-0000-0000-0000-000000000001";
 
@@ -259,6 +256,225 @@ RÈGLES D'EXÉCUTION :
   const searchMemoryRef = useRef();
   const castVoteRef = useRef();
 
+  const stopVocal = useCallback(() => {
+    if (currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current = null;
+    }
+    setVocalState("idle");
+  }, []);
+
+  const playVocal = (payload) => {
+    if (isSilent || !payload) return;
+
+    // Stop current vocal if any (barge-in support)
+    stopVocal();
+
+    let audio;
+    if (payload.startsWith("http")) {
+      audio = new Audio(payload);
+    } else {
+      audio = new Audio(`data:audio/mp3;base64,${payload}`);
+    }
+
+    currentAudioRef.current = audio;
+    setVocalState("speaking");
+
+    audio.onended = () => {
+      setVocalState("idle");
+      currentAudioRef.current = null;
+    };
+
+    audio.onerror = () => {
+      setVocalState("idle");
+      currentAudioRef.current = null;
+    };
+
+    audio.play().catch((e) => {
+      console.warn("Auto-play bloqué par le navigateur:", e);
+      setVocalState("idle");
+      currentAudioRef.current = null;
+    });
+  };
+
+  const updateStateWithMsg = useCallback(
+    (state, msg) => {
+      const text = msg.message.trim();
+
+      // Auto-play vocal if present and not already handled by real-time broadcast
+      if (msg.metadata?.vocal_url && msg.user_id !== user?.id) {
+        playVocal(msg.metadata.vocal_url);
+      }
+
+      if (msg.metadata?.vocal_payload) {
+        playVocal(msg.metadata.vocal_payload);
+      }
+
+      // Handle typed messages first
+      if (msg.type === "agenda_update") {
+        state.agenda = msg.metadata?.agenda || [];
+        return;
+      }
+
+      if (msg.type === "ostracism_event") {
+        if (!state.ostracized) state.ostracized = {};
+        const { user_id, status, duration, reason, by } = msg.metadata;
+        if (status === "ostracized") {
+          state.ostracized[user_id] = {
+            since: msg.created_at,
+            duration,
+            reason,
+            by,
+          };
+        } else {
+          delete state.ostracized[user_id];
+        }
+        return;
+      }
+
+      if (!text.toLowerCase().startsWith("inseme")) return;
+
+      const parts = text.split(/\s+/);
+      const command = parts[1]?.toLowerCase();
+      const payload = parts.slice(2).join(" ");
+      const userId = msg.user_id || msg.name;
+
+      // Lifecycle Commands
+      if (command === "open") {
+        state.sessionStatus = "open";
+      } else if (command === "close") {
+        state.sessionStatus = "closed";
+        state.proposition = "Session close.";
+        state.votes = {};
+        state.speechQueue = [];
+      } else if (command === "?") {
+        state.proposition = payload || "Proposition vide.";
+        state.votes = {};
+      } else if (command === "!") {
+        state.votes = {};
+        state.results = {};
+        state.proposition = "Pas de proposition active.";
+      } else if (
+        ["live", "image", "pad", "wiki", "twitter", "facebook"].includes(
+          command
+        )
+      ) {
+        if (!payload || payload === "off" || payload === "-") {
+          state.media = null;
+        } else {
+          state.media = { type: command, url: payload };
+        }
+      } else if (command === "agenda") {
+        try {
+          if (payload.startsWith("[")) {
+            state.agenda = JSON.parse(payload);
+          }
+        } catch (e) {
+          console.warn("Failed to parse agenda command:", e);
+        }
+      } else if (command === "power") {
+        const powerParts = payload.split(/\s+/);
+        const multiplier = parseInt(powerParts[0]);
+        const reason = powerParts.slice(1).join(" ");
+
+        if (!isNaN(multiplier) && multiplier >= 1) {
+          if (!state.userPowers[userId]) {
+            state.userPowers[userId] = { declarations: [] };
+          }
+          const declaration = {
+            multiplier,
+            reason: reason || "Déclaration de pouvoir",
+            timestamp: msg.created_at,
+          };
+          state.userPowers[userId].declarations.push(declaration);
+
+          if (state.votes[userId]) {
+            const baseWeight = state.votes[userId].baseWeight || 1;
+            state.votes[userId].weight = baseWeight * multiplier;
+            state.votes[userId].declaration = declaration;
+          }
+        }
+      } else if (command === "template") {
+        const tid = payload.trim();
+        const model = getGovernanceModel(tid);
+        if (model) {
+          state.template = model;
+        }
+      } else if (command === "bye") {
+        state.votes[userId] = {
+          type: "delegate",
+          target: payload,
+          name: msg.name,
+        };
+      } else if (command === "parole" || command === "technical") {
+        if (!state.speechQueue.find((s) => s.userId === userId)) {
+          // Priorité de parole : les membres passent devant si le template le demande
+          const isUserMember = memberIdsSet.has(userId);
+          const speechRequest = {
+            userId,
+            name: msg.name,
+            type: command,
+            isMember: isUserMember,
+          };
+
+          if (template?.rules?.speech_priority_by_role && isUserMember) {
+            // Insérer avant le premier non-membre
+            const firstNonMemberIndex = state.speechQueue.findIndex(
+              (s) => !s.isMember
+            );
+            if (firstNonMemberIndex !== -1) {
+              state.speechQueue.splice(firstNonMemberIndex, 0, speechRequest);
+            } else {
+              state.speechQueue.push(speechRequest);
+            }
+          } else {
+            state.speechQueue.push(speechRequest);
+          }
+        }
+      } else {
+        const voteType = command || "quiet";
+        if (voteType === "quiet" || voteType === "off") {
+          delete state.votes[userId];
+        } else {
+          const baseWeight = msg.metadata?.voting_power || 1;
+          const dynamicMultiplier =
+            (state.userPowers[userId]?.declarations || []).slice(-1)[0]
+              ?.multiplier || 1;
+
+          state.votes[userId] = {
+            type: voteType,
+            name: msg.name,
+            timestamp: msg.created_at,
+            baseWeight: baseWeight,
+            weight: baseWeight * dynamicMultiplier,
+            role: memberIdsSet.has(userId) ? "member" : "other",
+            declaration: (state.userPowers[userId]?.declarations || []).slice(
+              -1
+            )[0],
+          };
+        }
+      }
+
+      const currentModelId =
+        state.template?.id ||
+        roomMetadata?.settings?.template ||
+        roomMetadata?.settings?.governance_model ||
+        "democratie_directe";
+
+      const currentModel = getGovernanceModel(currentModelId);
+      const userRoles = Object.fromEntries(
+        Object.entries(state.votes).map(([uid, v]) => [uid, v.role])
+      );
+
+      state.results = calculateResults(state.votes, currentModelId, {
+        ostracized: state.ostracized,
+        userRoles,
+        groupByRole: currentModel?.rules?.show_results_by_college,
+      });
+    },
+    [user?.id, memberIdsSet, template, roomMetadata?.settings]
+  );
+
   // Derived state
   const pivotLang = roomMetadata?.settings?.pivot_lang || "fr";
 
@@ -351,6 +567,37 @@ RÈGLES D'EXÉCUTION :
 
     loadConfig();
   }, [roomName, supabase, config.promptUrl]);
+
+  const processMessages = useCallback(
+    (msgs) => {
+      const state = {
+        proposition: "Pas de proposition active.",
+        results: {},
+        votes: {},
+        media: null,
+        speechQueue: [],
+        moderators: [],
+        userPowers: {},
+      };
+      msgs.forEach((msg) => updateStateWithMsg(state, msg));
+
+      // Extract function library from messages
+      const lib = {};
+      msgs.forEach((msg) => {
+        if (msg.type === "function_definition" && msg.metadata?.name) {
+          lib[msg.metadata.name] = {
+            code: msg.metadata.code,
+            args: msg.metadata.args,
+            description: msg.metadata.description,
+          };
+        }
+      });
+      setFunctionLibrary(lib);
+
+      setRoomData(state);
+    },
+    [updateStateWithMsg]
+  );
 
   const fetchMessages = useCallback(
     async (dateFrom = null, dateTo = null) => {
@@ -602,37 +849,6 @@ RÈGLES D'EXÉCUTION :
     user, // Added user to dependencies for sendMessage
   ]);
 
-  const processMessages = useCallback(
-    (msgs) => {
-      const state = {
-        proposition: "Pas de proposition active.",
-        results: {},
-        votes: {},
-        media: null,
-        speechQueue: [],
-        moderators: [],
-        userPowers: {},
-      };
-      msgs.forEach((msg) => updateStateWithMsg(state, msg));
-
-      // Extract function library from messages
-      const lib = {};
-      msgs.forEach((msg) => {
-        if (msg.type === "function_definition" && msg.metadata?.name) {
-          lib[msg.metadata.name] = {
-            code: msg.metadata.code,
-            args: msg.metadata.args,
-            description: msg.metadata.description,
-          };
-        }
-      });
-      setFunctionLibrary(lib);
-
-      setRoomData(state);
-    },
-    [updateStateWithMsg]
-  );
-
   const processMessage = useCallback(
     (msg) => {
       lastActivityRef.current = Date.now();
@@ -660,192 +876,6 @@ RÈGLES D'EXÉCUTION :
     },
     [updateStateWithMsg]
   );
-
-  const updateStateWithMsg = useCallback(
-    (state, msg) => {
-      const text = msg.message.trim();
-
-      // Auto-play vocal if present and not already handled by real-time broadcast
-      if (msg.metadata?.vocal_url && msg.user_id !== user?.id) {
-        playVocal(msg.metadata.vocal_url);
-      }
-
-      if (msg.metadata?.vocal_payload) {
-        playVocal(msg.metadata.vocal_payload);
-      }
-
-      // Handle typed messages first
-      if (msg.type === "agenda_update") {
-        state.agenda = msg.metadata?.agenda || [];
-        return;
-      }
-
-      if (msg.type === "ostracism_event") {
-        if (!state.ostracized) state.ostracized = {};
-        const { user_id, status, duration, reason, by } = msg.metadata;
-        if (status === "ostracized") {
-          state.ostracized[user_id] = {
-            since: msg.created_at,
-            duration,
-            reason,
-            by,
-          };
-        } else {
-          delete state.ostracized[user_id];
-        }
-        return;
-      }
-
-      if (!text.toLowerCase().startsWith("inseme")) return;
-
-      const parts = text.split(/\s+/);
-      const command = parts[1]?.toLowerCase();
-      const payload = parts.slice(2).join(" ");
-      const userId = msg.user_id || msg.name;
-
-      // Lifecycle Commands
-      if (command === "open") {
-        state.sessionStatus = "open";
-      } else if (command === "close") {
-        state.sessionStatus = "closed";
-        state.proposition = "Session close.";
-        state.votes = {};
-        state.speechQueue = [];
-      } else if (command === "?") {
-        state.proposition = payload || "Proposition vide.";
-        state.votes = {};
-      } else if (command === "!") {
-        state.votes = {};
-        state.results = {};
-        state.proposition = "Pas de proposition active.";
-      } else if (
-        ["live", "image", "pad", "wiki", "twitter", "facebook"].includes(
-          command
-        )
-      ) {
-        if (!payload || payload === "off" || payload === "-") {
-          state.media = null;
-        } else {
-          state.media = { type: command, url: payload };
-        }
-      } else if (command === "agenda") {
-        try {
-          if (payload.startsWith("[")) {
-            state.agenda = JSON.parse(payload);
-          }
-        } catch (e) {
-          console.warn("Failed to parse agenda command:", e);
-        }
-      } else if (command === "power") {
-        const powerParts = payload.split(/\s+/);
-        const multiplier = parseInt(powerParts[0]);
-        const reason = powerParts.slice(1).join(" ");
-
-        if (!isNaN(multiplier) && multiplier >= 1) {
-          if (!state.userPowers[userId]) {
-            state.userPowers[userId] = { declarations: [] };
-          }
-          const declaration = {
-            multiplier,
-            reason: reason || "Déclaration de pouvoir",
-            timestamp: msg.created_at,
-          };
-          state.userPowers[userId].declarations.push(declaration);
-
-          if (state.votes[userId]) {
-            const baseWeight = state.votes[userId].baseWeight || 1;
-            state.votes[userId].weight = baseWeight * multiplier;
-            state.votes[userId].declaration = declaration;
-          }
-        }
-      } else if (command === "template") {
-        const tid = payload.trim();
-        const model = getGovernanceModel(tid);
-        if (model) {
-          state.template = model;
-        }
-      } else if (command === "bye") {
-        state.votes[userId] = {
-          type: "delegate",
-          target: payload,
-          name: msg.name,
-        };
-      } else if (command === "parole" || command === "technical") {
-        if (!state.speechQueue.find((s) => s.userId === userId)) {
-          // Priorité de parole : les membres passent devant si le template le demande
-          const isUserMember = memberIdsSet.has(userId);
-          const speechRequest = {
-            userId,
-            name: msg.name,
-            type: command,
-            isMember: isUserMember,
-          };
-
-          if (template?.rules?.speech_priority_by_role && isUserMember) {
-            // Insérer avant le premier non-membre
-            const firstNonMemberIndex = state.speechQueue.findIndex(
-              (s) => !s.isMember
-            );
-            if (firstNonMemberIndex !== -1) {
-              state.speechQueue.splice(firstNonMemberIndex, 0, speechRequest);
-            } else {
-              state.speechQueue.push(speechRequest);
-            }
-          } else {
-            state.speechQueue.push(speechRequest);
-          }
-        }
-      } else {
-        const voteType = command || "quiet";
-        if (voteType === "quiet" || voteType === "off") {
-          delete state.votes[userId];
-        } else {
-          const baseWeight = msg.metadata?.voting_power || 1;
-          const dynamicMultiplier =
-            (state.userPowers[userId]?.declarations || []).slice(-1)[0]
-              ?.multiplier || 1;
-
-          state.votes[userId] = {
-            type: voteType,
-            name: msg.name,
-            timestamp: msg.created_at,
-            baseWeight: baseWeight,
-            weight: baseWeight * dynamicMultiplier,
-            role: memberIdsSet.has(userId) ? "member" : "other",
-            declaration: (state.userPowers[userId]?.declarations || []).slice(
-              -1
-            )[0],
-          };
-        }
-      }
-
-      const currentModelId =
-        state.template?.id ||
-        roomMetadata?.settings?.template ||
-        roomMetadata?.settings?.governance_model ||
-        "democratie_directe";
-
-      const currentModel = getGovernanceModel(currentModelId);
-      const userRoles = Object.fromEntries(
-        Object.entries(state.votes).map(([uid, v]) => [uid, v.role])
-      );
-
-      state.results = calculateResults(state.votes, currentModelId, {
-        ostracized: state.ostracized,
-        userRoles,
-        groupByRole: currentModel?.rules?.show_results_by_college,
-      });
-    },
-    [user?.id, memberIdsSet, template, roomMetadata?.settings]
-  );
-
-  const stopVocal = useCallback(() => {
-    if (currentAudioRef.current) {
-      currentAudioRef.current.pause();
-      currentAudioRef.current = null;
-    }
-    setVocalState("idle");
-  }, []);
 
   // --- TRANSCRIPTION LOGIC ---
 
@@ -878,6 +908,7 @@ RÈGLES D'EXÉCUTION :
     recognition.lang = nativeLang === "fr" ? "fr-FR" : "en-US";
 
     recognition.onstart = () => {
+      window._transcriptionRetryCount = 0; // Reset retries on success
       setTranscriptionStatus((prev) => ({
         ...prev,
         isActive: true,
@@ -942,16 +973,55 @@ RÈGLES D'EXÉCUTION :
 
     recognition.onerror = (event) => {
       console.error("Transcription Error:", event.error);
+
+      // Handle network or aborted errors with a retry mechanism
+      if (event.error === "network" || event.error === "aborted") {
+        const MAX_RETRIES = 3;
+        if (!window._transcriptionRetryCount)
+          window._transcriptionRetryCount = 0;
+
+        if (window._transcriptionRetryCount < MAX_RETRIES) {
+          window._transcriptionRetryCount++;
+          console.log(
+            `Tentative de reconnexion transcription (${window._transcriptionRetryCount}/${MAX_RETRIES})...`
+          );
+          setTimeout(() => {
+            // Re-check if we still have the floor before restarting
+            if (roomData.speechQueue?.[0]?.userId === user?.id) {
+              startLocalTranscription();
+            }
+          }, 2000);
+          return;
+        }
+      }
+
       stopLocalTranscription();
     };
 
     recognition.onend = () => {
       setTranscriptionStatus((prev) => ({ ...prev, isActive: false }));
+      // Auto-restart if we still have the floor and it wasn't a fatal error
+      if (
+        roomData.speechQueue?.[0]?.userId === user?.id &&
+        !recognitionRef.current
+      ) {
+        setTimeout(startLocalTranscription, 1000);
+      }
     };
 
     recognitionRef.current = recognition;
     recognition.start();
-  }, [nativeLang, stopLocalTranscription, userRole]);
+  }, [
+    nativeLang,
+    stopLocalTranscription,
+    userRole,
+    roomData.speechQueue,
+    user?.id,
+    roomMetadata?.id,
+    roomName,
+    supabase,
+    governanceMode,
+  ]);
 
   // Handle Floor Holder Auto-Transcription
   useEffect(() => {
@@ -977,39 +1047,6 @@ RÈGLES D'EXÉCUTION :
     startLocalTranscription,
     stopLocalTranscription,
   ]);
-
-  const playVocal = (payload) => {
-    if (isSilent || !payload) return;
-
-    // Stop current vocal if any (barge-in support)
-    stopVocal();
-
-    let audio;
-    if (payload.startsWith("http")) {
-      audio = new Audio(payload);
-    } else {
-      audio = new Audio(`data:audio/mp3;base64,${payload}`);
-    }
-
-    currentAudioRef.current = audio;
-    setVocalState("speaking");
-
-    audio.onended = () => {
-      setVocalState("idle");
-      currentAudioRef.current = null;
-    };
-
-    audio.onerror = () => {
-      setVocalState("idle");
-      currentAudioRef.current = null;
-    };
-
-    audio.play().catch((e) => {
-      console.warn("Auto-play bloqué par le navigateur:", e);
-      setVocalState("idle");
-      currentAudioRef.current = null;
-    });
-  };
 
   const searchMemory = useCallback(
     async (query) => {
@@ -2281,6 +2318,7 @@ RÈGLES D'EXÉCUTION :
     canInteract,
     isMember,
     messages,
+    activeSpeakers: roomData.connectedUsers,
     ephemeralThoughts,
     roomData,
     roomMetadata,

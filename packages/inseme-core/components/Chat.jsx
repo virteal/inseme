@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { MarkdownViewer } from "@inseme/ui";
+import { MarkdownViewer } from "../../ui/src/index.js";
 import {
   Send,
   Bot,
@@ -30,11 +30,11 @@ import {
   ChevronUp,
   Headphones,
 } from "lucide-react";
-import { useInsemeContext } from "../InsemeContext";
-import { useVoiceRecorder } from "../hooks/useVoiceRecorder";
-import { TalkButton } from "./TalkButton";
-import { AgendaPanel } from "./AgendaPanel";
-import { MobileControls } from "./MobileControls";
+import { useInsemeContext } from "../InsemeContext.jsx";
+import { useVoiceRecorder } from "../hooks/useVoiceRecorder.js";
+import { TalkButton } from "./TalkButton.jsx";
+import { AgendaPanel } from "./AgendaPanel.jsx";
+import { MobileControls } from "./MobileControls.jsx";
 
 function ChatMessage({
   msg,
@@ -530,8 +530,15 @@ export function Chat(props) {
         osc.start();
         osc.stop(ctx.currentTime + 0.1);
       }
+
+      // Close context to avoid memory leaks and browser limits
+      setTimeout(() => {
+        if (ctx.state !== "closed") {
+          ctx.close();
+        }
+      }, 500);
     },
-    [isSilent]
+    [isSilent, isHandsFree]
   );
 
   useEffect(() => {
@@ -564,7 +571,7 @@ export function Chat(props) {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-[600px] bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden relative">
+    <div className="flex flex-col h-full bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden relative">
       {/* {terminology.session} Selector Dropdown */}
       {showSessions && (
         <div className="absolute top-16 left-6 z-50 w-64 bg-[#0f0f12] border border-white/10 rounded-2xl shadow-2xl p-4 animate-in fade-in slide-in-from-top-4">
@@ -977,49 +984,49 @@ export function Chat(props) {
             className="p-4 bg-neutral-900/50 backdrop-blur-xl border-t border-white/10 flex flex-col gap-3 relative z-10"
           >
             {isRecording && (
-              <div className="flex items-center justify-between px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-xl animate-in fade-in slide-in-from-bottom-2">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                    <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">
+              <div className="flex items-center justify-between px-2 py-1 bg-red-500/10 border border-red-500/20 rounded-lg animate-in fade-in slide-in-from-bottom-1">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
+                    <div className="w-1 h-1 rounded-full bg-red-500 animate-pulse" />
+                    <span className="text-[8px] font-bold text-red-500 uppercase tracking-tight">
                       Enregistrement
                     </span>
                   </div>
-                  <div className="flex items-center gap-3 border-l border-white/10 pl-4">
-                    <div className="flex flex-col">
-                      <span className="text-[8px] text-white/40 uppercase font-bold">
-                        Durée
-                      </span>
-                      <span className="text-xs font-mono text-white/80">
-                        {formatTime(duration)}
-                      </span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[8px] text-white/40 uppercase font-bold">
-                        Auto-envoi
-                      </span>
-                      <span
-                        className={`text-xs font-mono ${timeLeft <= 5 ? "text-red-500 animate-bounce" : "text-white/80"}`}
-                      >
-                        {timeLeft}s
-                      </span>
-                    </div>
+                  <div className="flex items-center gap-1.5 border-l border-white/10 pl-2 text-[9px] font-mono">
+                    <span className="text-white/80">
+                      {formatTime(duration)}
+                    </span>
+
+                    {timeLeft <= 10 && (
+                      <div className="flex items-center gap-1 ml-1">
+                        <span className="text-white/40 uppercase text-[7px]">
+                          Envoi
+                        </span>
+                        <span
+                          className={`font-bold ${timeLeft <= 5 ? "text-red-500 animate-pulse" : "text-white/60"}`}
+                        >
+                          {timeLeft}s
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <button
                     type="button"
                     onClick={addTime}
-                    className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 transition-all"
+                    className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-white/60 transition-all cursor-pointer"
+                    title="+30s"
                   >
-                    <Clock className="w-4 h-4" />
+                    <Clock className="w-3.5 h-3.5" />
                   </button>
                   <button
                     type="button"
                     onClick={cancelRecording}
-                    className="p-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-400 transition-all"
+                    className="p-1.5 rounded-md bg-red-500/20 hover:bg-red-500/30 text-red-400 transition-all cursor-pointer"
+                    title="Annuler"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>

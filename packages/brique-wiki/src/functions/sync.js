@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import OpenAI from "openai";
-import { loadInstanceConfig, getConfig } from "@inseme/cop-host";
+import { loadInstanceConfig, getConfig } from "@inseme/cop-host/backend";
 
 // Supabase client initialisé de façon lazy
 let _supabase = null;

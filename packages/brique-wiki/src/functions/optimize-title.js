@@ -1,5 +1,5 @@
 import { OpenAI } from "openai";
-import { loadInstanceConfig, getConfig } from "@inseme/cop-host";
+import { loadInstanceConfig, getConfig } from "@inseme/cop-host/backend";
 
 export default async (req, context) => {
   if (req.method !== "POST") {

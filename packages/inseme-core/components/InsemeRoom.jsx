@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { BarChart3, FileText, Vote, Users } from "lucide-react";
-import { useInsemeContext } from "../InsemeContext";
-import { Chat } from "./Chat";
-import { Results } from "./Results";
-import { VoteButtons } from "./VoteButtons";
-import { ModernMediaLayer } from "./ModernMediaLayer";
-import { BRIQUES, BRIQUE_COMPONENTS } from "../../../brique-registry.gen";
+import { useInsemeContext } from "../InsemeContext.jsx";
+import { Chat } from "./Chat.jsx";
+import { Results } from "./Results.jsx";
+import { VoteButtons } from "./VoteButtons.jsx";
+import { ModernMediaLayer } from "./ModernMediaLayer.jsx";
+import { BRIQUES, BRIQUE_COMPONENTS } from "../brique-registry.gen.js";
 
 // Lazy loading du WikiPage s'il est disponible
 const WikiPage = React.lazy(() => {
@@ -30,7 +30,7 @@ function RoomLayout({
   isSpectator,
   roomName,
 }) {
-  const { terminology, group } = useInsemeContext();
+  const { terminology, group, roomData } = useInsemeContext();
   const [activeTab, setActiveTab] = useState("participation"); // 'participation', 'wiki' or 'group'
 
   // Vérifier si les briques sont disponibles dans le registre
@@ -43,14 +43,16 @@ function RoomLayout({
   const MediaLayerComponent = slots.MediaLayer || ModernMediaLayer;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0c] text-white selection:bg-indigo-500/30 overflow-x-hidden">
-      <div className="max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8 flex flex-col h-screen">
+    <div className="h-full bg-[#0a0a0c] text-white selection:bg-indigo-500/30 overflow-x-hidden">
+      <div className="max-w-[1600px] mx-auto p-2 md:p-6 lg:p-8 flex flex-col h-full">
         {/* Media Layer (Fixed ratio or collapsed) */}
-        <div className="shrink-0 mb-4 lg:mb-6">
-          <MediaLayerComponent />
-        </div>
+        {roomData?.media && (
+          <div className="shrink-0 mb-4 lg:mb-6">
+            <MediaLayerComponent media={roomData.media} />
+          </div>
+        )}
 
-        <div className="flex-1 flex flex-col lg:flex-row gap-6 lg:gap-8 min-h-0 relative">
+        <div className="flex-1 flex flex-col lg:flex-row gap-4 lg:gap-8 min-h-0 relative">
           {/* Discussion Column (Primary) */}
           <div
             className={`flex-1 flex flex-col min-h-0 transition-all duration-500 ease-in-out ${isBoardOpen ? "lg:w-2/3" : "lg:w-full"}`}

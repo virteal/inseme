@@ -1,5 +1,5 @@
 import React from "react";
-import { MarkdownViewer } from "@inseme/ui";
+import { MarkdownViewer } from "../../ui/src/index.js";
 import {
   Users,
   Clock,
@@ -24,8 +24,8 @@ import {
   Volume2,
   VolumeX,
 } from "lucide-react";
-import { TalkButton } from "./TalkButton";
-import { useInsemeContext } from "../InsemeContext";
+import { TalkButton } from "./TalkButton.jsx";
+import { useInsemeContext } from "../InsemeContext.jsx";
 
 // --- Sub-components ---
 

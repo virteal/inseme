@@ -3,11 +3,9 @@
  * Centralisation de la logique d'hébergement et d'infrastructure pour les applications Inseme.
  */
 
-// Backend & Core
-export * from "./config/instanceConfig.backend.js";
+// Core & Common
+export * from "./config/instanceConfig.client.js";
 export * from "./config/instanceConfig.core.js";
-export * from "./runtime/public_storage.js";
-export * from "./runtime/function.js";
 export * from "./constants.js";
 
 // Client-side helpers (exportés via des chemins spécifiques ou ici)
@@ -24,11 +22,7 @@ export {
   getAllConfigKeys,
   getInstance,
 } from "./client/supabase.js";
-export {
-  resolveInstance,
-  getInstance,
-  getSubdomain,
-} from "./client/instanceResolver.js";
+export { resolveInstance, getSubdomain } from "./client/instanceResolver.js";
 
 // Common libs
 export * from "./lib/formatDate.js";

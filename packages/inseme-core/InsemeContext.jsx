@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { useInseme } from './hooks/useInseme';
+import { useInseme } from './hooks/useInseme.js';
 
 const InsemeContext = createContext(null);
 

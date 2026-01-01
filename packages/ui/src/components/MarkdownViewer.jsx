@@ -5,7 +5,7 @@ import {
   substituteVariables,
   getCommonVariables,
   getConfig,
-} from "@inseme/cop-host";
+} from "../../../cop-host/src/index.js";
 
 /**
  * Composant de rendu Markdown sécurisé et extensible.

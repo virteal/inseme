@@ -1,12 +1,12 @@
 // Main Entry Point for Inseme Core Package
-export { InsemeRoom } from './components/InsemeRoom.jsx';
-export { InsemeProvider, useInsemeContext } from './InsemeContext.jsx';
-export { useInseme } from './hooks/useInseme.js';
+export { InsemeRoom } from './components/InsemeRoom';
+export { InsemeProvider, useInsemeContext } from './InsemeContext';
+export { useInseme } from './hooks/useInseme';
 
 // Export individual components for custom layouts
-export { Chat } from './components/Chat.jsx';
-export { Results } from './components/Results.jsx';
-export { VoteButtons } from './components/VoteButtons.jsx';
-export { ModernMediaLayer } from './components/ModernMediaLayer.jsx';
-export { MobileControls } from './components/MobileControls.jsx';
-export { AgendaPanel } from './components/AgendaPanel.jsx';
+export { Chat } from './components/Chat';
+export { Results } from './components/Results';
+export { VoteButtons } from './components/VoteButtons';
+export { ModernMediaLayer } from './components/ModernMediaLayer';
+export { MobileControls } from './components/MobileControls';
+export { AgendaPanel } from './components/AgendaPanel';

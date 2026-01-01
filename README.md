@@ -22,6 +22,11 @@ Le projet est organisé en monorepo (Turbo) pour faciliter le partage de code en
   - **IA** : Ophélia (Médiatrice IA) intégrée via Edge Functions.
   - **Stack** : React 18, Vite 5, Tailwind CSS, Supabase.
 
+- **`apps/cyrnea` (Cyrnea)** : Expérience sociale et gamifiée pour lieux de convivialité.
+  - **Focus** : Animation de bars, quiz, playlists collaboratives, Vibe Monitor.
+  - **Interaction** : Dashboard Barman vs Mini-App Client.
+  - **Stack** : React 18, Vite, Supabase Realtime.
+
 ### 📦 Packages (`/packages`)
 
 - **`packages/cop-core`** : Logique métier partagée (Cognitive Orchestration Protocol).

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import BarmanDashboard from "@inseme/brique-cyrnea/src/pages/BarmanDashboard.jsx";
-import ClientMiniApp from "@inseme/brique-cyrnea/src/pages/ClientMiniApp.jsx";
+import BarmanDashboard from "../../../packages/brique-cyrnea/src/pages/BarmanDashboard";
+import ClientMiniApp from "../../../packages/brique-cyrnea/src/pages/ClientMiniApp";
 
 /**
  * App Cyrnea - Orchestrateur

@@ -1,5 +1,5 @@
 {
-  "name": "ophelia",
+  "name": "@inseme/ophelia",
   "version": "0.1.0",
   "description": "Client npm pour l’API REST Ophélia (RAG civic-tech)",
   "main": "index.js",

@@ -2,7 +2,7 @@
  * packages/brique-cyrnea/src/lib/playlistManager.js
  * Gestion de la playlist participative avec intégration Temps-Réel (Supabase)
  */
-import { supabase } from "@inseme/cop-host";
+import { supabase } from "../../../cop-host/src/index.js";
 
 export async function getPlaylist(roomId) {
   const { data, error } = await supabase

@@ -16,8 +16,13 @@ export function useVoiceRecorder(onTranscription, options = {}) {
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
   const silenceTimerRef = useRef(null);
+  const animationFrameRef = useRef(null);
 
   const stopRecording = useCallback((cancelled = false) => {
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
     if (
       mediaRecorderRef.current &&
       mediaRecorderRef.current.state !== "inactive"
@@ -112,8 +117,7 @@ export function useVoiceRecorder(onTranscription, options = {}) {
             silenceTimerRef.current = null;
           }
         }
-
-        requestAnimationFrame(checkSilence);
+        animationFrameRef.current = requestAnimationFrame(checkSilence);
       };
 
       const mediaRecorder = new MediaRecorder(stream);
@@ -132,6 +136,10 @@ export function useVoiceRecorder(onTranscription, options = {}) {
       };
 
       mediaRecorder.onstop = async () => {
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current);
+          animationFrameRef.current = null;
+        }
         // We don't stop tracks here anymore to allow reuse and avoid flickering
         if (!isCancelledRef.current && chunksRef.current.length > 0) {
           const blob = new Blob(chunksRef.current, { type: "audio/webm" });

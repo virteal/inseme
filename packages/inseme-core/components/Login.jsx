@@ -1,5 +1,5 @@
 import React from 'react'
-import { Login as SharedLogin } from "@inseme/ui"
+import { Login as SharedLogin } from "../../ui/src/index.js"
 
 export default function Login({
     onSignInAnonymously,

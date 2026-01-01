@@ -1,4 +1,4 @@
-import { loadInstanceConfig, newSupabase } from "@inseme/cop-host";
+import { loadInstanceConfig, newSupabase } from "@inseme/cop-host/backend";
 
 export default async (req, context) => {
   await loadInstanceConfig();

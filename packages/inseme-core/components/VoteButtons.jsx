@@ -16,8 +16,8 @@ import {
   BookOpen,
   Cpu,
 } from "lucide-react";
-import { GOVERNANCE_MODELS } from "@inseme/kudocracy";
-import { useInsemeContext } from "../InsemeContext";
+import { GOVERNANCE_MODELS } from "../../kudocracy/src/governance.js";
+import { useInsemeContext } from "../InsemeContext.jsx";
 
 const ICON_MAP = {
   CheckCircle2,

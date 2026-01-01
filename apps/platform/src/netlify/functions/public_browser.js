@@ -1,4 +1,4 @@
-import { PublicStorageService } from "@inseme/cop-host";
+import { PublicStorageService } from "@inseme/cop-host/backend";
 
 /*
   Netlify Function (ESM) - public browser

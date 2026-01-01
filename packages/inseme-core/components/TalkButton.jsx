@@ -62,7 +62,7 @@ export function TalkButton({
       <button
         type="button"
         onClick={() => (isRecording ? stopRecording() : startRecording())}
-        className={`${sizeClasses[size]} rounded-full flex items-center justify-center transition-all active:scale-95 border-2 group relative ${getStyles()}`}
+        className={`${sizeClasses[size]} rounded-full flex items-center justify-center transition-all active:scale-95 border-2 group relative cursor-pointer ${getStyles()}`}
         title={isRecording ? "Arrêter l'enregistrement" : "Cliquer pour parler"}
       >
         {/* Outer Ring Animation for active states */}

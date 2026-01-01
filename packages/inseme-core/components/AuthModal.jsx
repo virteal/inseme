@@ -1,6 +1,6 @@
 import React from "react";
-import { supabase } from "../../../lib/supabase";
-import { AuthModal as SharedAuthModal } from "@inseme/ui";
+import { supabase } from "../supabaseClient.js";
+import { AuthModal as SharedAuthModal } from "../../ui/src/index.js";
 
 export function AuthModal({
   onClose,

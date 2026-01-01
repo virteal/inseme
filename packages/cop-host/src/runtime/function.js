@@ -5,7 +5,7 @@
  * Similar to how Edge Functions handle it, but adapted for the Node.js context.
  */
 
-import { loadInstanceConfig, getInstanceConfig } from '../instanceConfig.js';
+import { loadInstanceConfig, getConfig as getInstanceConfig } from '../config/instanceConfig.backend.js';
 
 /**
  * Resolves the target instance based on the request (Standard Request or Netlify Event).

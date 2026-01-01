@@ -1,21 +1,14 @@
 import React, { useState } from "react";
-import { 
-  Music, 
-  Gamepad2, 
-  MessageSquare, 
-  Mic, 
-  Heart,
-  Plus
-} from "lucide-react";
-import { 
+import { Music, Gamepad2, MessageSquare, Mic, Heart, Plus } from "lucide-react";
+import {
   Badge,
   Tabs,
   TabsList,
   TabsTrigger,
   TabsContent,
-  Button
-} from "@inseme/ui";
-import { InsemeRoom } from "@inseme/core";
+  Button,
+} from "../../../ui/src/index";
+import { InsemeRoom } from "../../../inseme-core/index";
 
 /**
  * ClientMiniApp - Mode "Scan & Play"
@@ -34,73 +27,124 @@ export default function ClientMiniApp({ roomId = "cyrnea-general" }) {
           </div>
           <h1 className="font-bold text-lg tracking-tight">Cyrnea Bar</h1>
         </div>
-        <Badge variant="outline" className="text-[10px] text-slate-500 border-white/10 uppercase tracking-tighter">Table 4</Badge>
+        <Badge
+          variant="outline"
+          className="text-[10px] text-slate-500 border-white/10 uppercase tracking-tighter"
+        >
+          Votre Table
+        </Badge>
       </header>
 
       <main className="flex-1 overflow-hidden flex flex-col p-4">
-        <Tabs defaultValue="music" className="w-full flex-1 flex flex-col" onValueChange={setActiveTab}>
+        <Tabs
+          defaultValue="music"
+          className="w-full flex-1 flex flex-col"
+          onValueChange={setActiveTab}
+        >
           <TabsList className="grid grid-cols-3 bg-slate-900/50 p-1 rounded-2xl border border-white/5 mb-6 flex-shrink-0">
-            <TabsTrigger value="music" className="data-[state=active]:bg-amber-500 data-[state=active]:text-slate-950 rounded-xl py-2">
+            <TabsTrigger
+              value="music"
+              className="data-[state=active]:bg-amber-500 data-[state=active]:text-slate-950 rounded-xl py-2"
+            >
               <Music className="w-4 h-4 mr-2" /> Musique
             </TabsTrigger>
-            <TabsTrigger value="games" className="data-[state=active]:bg-amber-500 data-[state=active]:text-slate-950 rounded-xl py-2">
+            <TabsTrigger
+              value="games"
+              className="data-[state=active]:bg-amber-500 data-[state=active]:text-slate-950 rounded-xl py-2"
+            >
               <Gamepad2 className="w-4 h-4 mr-2" /> Jeux
             </TabsTrigger>
-            <TabsTrigger value="ophelia" className="data-[state=active]:bg-amber-500 data-[state=active]:text-slate-950 rounded-xl py-2">
+            <TabsTrigger
+              value="ophelia"
+              className="data-[state=active]:bg-amber-500 data-[state=active]:text-slate-950 rounded-xl py-2"
+            >
               <Mic className="w-4 h-4 mr-2" /> Ophélia
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="music" className="flex-1 overflow-y-auto space-y-4 animate-in fade-in">
-             {/* Playlist UI (déjà implémentée avant) */}
-             <div className="space-y-3">
+          <TabsContent
+            value="music"
+            className="flex-1 overflow-y-auto space-y-4 animate-in fade-in"
+          >
+            {/* Playlist UI (déjà implémentée avant) */}
+            <div className="space-y-3">
               {[
-                { id: 1, title: "L'Orchestra", artist: "Canta u Populu Corsu", votes: 12 },
+                {
+                  id: 1,
+                  title: "L'Orchestra",
+                  artist: "Canta u Populu Corsu",
+                  votes: 12,
+                },
                 { id: 2, title: "Get Lucky", artist: "Daft Punk", votes: 8 },
               ].map((m) => (
-                <div key={m.id} className="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between">
+                <div
+                  key={m.id}
+                  className="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between"
+                >
                   <div>
                     <p className="font-bold text-slate-200">{m.title}</p>
                     <p className="text-xs text-slate-500">{m.artist}</p>
                   </div>
-                  <Button variant="ghost" size="sm" className="flex flex-col gap-1 h-auto py-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex flex-col gap-1 h-auto py-2"
+                  >
                     <Heart className="w-4 h-4 text-emerald-500" />
-                    <span className="text-[10px] text-slate-400">{m.votes}</span>
+                    <span className="text-[10px] text-slate-400">
+                      {m.votes}
+                    </span>
                   </Button>
                 </div>
               ))}
             </div>
           </TabsContent>
 
-          <TabsContent value="games" className="flex-1 overflow-y-auto space-y-4 animate-in fade-in">
-             <div className="grid grid-cols-2 gap-4">
-                <div className="bg-slate-900/50 p-4 rounded-2xl border border-white/5 text-center">
-                   <p className="text-xs font-bold text-amber-500 mb-2 uppercase">Échecs</p>
-                   <Button variant="outline" className="w-full rounded-xl">Rejoindre</Button>
-                </div>
-                <div className="bg-slate-900/50 p-4 rounded-2xl border border-white/5 text-center">
-                   <p className="text-xs font-bold text-amber-500 mb-2 uppercase">Cartes</p>
-                   <Button variant="outline" className="w-full rounded-xl">Défier</Button>
-                </div>
-             </div>
+          <TabsContent
+            value="games"
+            className="flex-1 overflow-y-auto space-y-4 animate-in fade-in"
+          >
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-slate-900/50 p-4 rounded-2xl border border-white/5 text-center">
+                <p className="text-xs font-bold text-amber-500 mb-2 uppercase">
+                  Échecs
+                </p>
+                <Button variant="outline" className="w-full rounded-xl">
+                  Rejoindre
+                </Button>
+              </div>
+              <div className="bg-slate-900/50 p-4 rounded-2xl border border-white/5 text-center">
+                <p className="text-xs font-bold text-amber-500 mb-2 uppercase">
+                  Cartes
+                </p>
+                <Button variant="outline" className="w-full rounded-xl">
+                  Défier
+                </Button>
+              </div>
+            </div>
           </TabsContent>
 
-          <TabsContent value="ophelia" className="flex-1 flex flex-col animate-in fade-in h-0">
-             {/* Intégration directe de la vocal assembly Inseme */}
-             <div className="flex-1 bg-slate-950/80 rounded-3xl border border-white/5 overflow-hidden flex flex-col relative">
-                <InsemeRoom 
-                  roomName={roomId} 
-                  variant="minimal" 
-                  hideHeader 
-                  hideFooter={false}
-                />
-             </div>
+          <TabsContent
+            value="ophelia"
+            className="flex-1 flex flex-col animate-in fade-in h-0"
+          >
+            {/* Intégration directe de la vocal assembly Inseme */}
+            <div className="flex-1 bg-slate-950/80 rounded-3xl border border-white/5 overflow-hidden flex flex-col relative">
+              <InsemeRoom
+                roomName={roomId}
+                variant="minimal"
+                hideHeader
+                hideFooter={false}
+              />
+            </div>
           </TabsContent>
         </Tabs>
       </main>
 
       <footer className="p-4 bg-slate-950 text-center opacity-30">
-        <p className="text-[8px] uppercase tracking-widest">Powered by Inseme Core</p>
+        <p className="text-[8px] uppercase tracking-widest">
+          Powered by Inseme Core
+        </p>
       </footer>
     </div>
   );
