@@ -1,0 +1,14 @@
+{
+  "name": "@inseme/brique-cyrnea",
+  "version": "1.0.0",
+  "description": "Brique pour la convivialité au bar (jeux, musique, défis)",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "lucide-react": "^0.562.0",
+    "@inseme/ui": "workspace:*",
+    "@inseme/cop-host": "workspace:*"
+  }
+}

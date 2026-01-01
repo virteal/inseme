@@ -19,7 +19,7 @@ const EXPORT_ENTITIES = {
     label: "Actes municipaux",
     description: "Liste complète des actes avec métadonnées",
     emoji: "📋",
-    table: "acte",
+    table: "actes",
     columns: [
       { key: "id", label: "ID" },
       { key: "reference", label: "Référence" },

@@ -23,6 +23,7 @@ import {
   getSupabase,
   getConfig,
 } from "./common/config/instanceConfig.client.js";
+import { updatePageMeta } from "./lib/meta";
 
 // ============================================================================
 // LOADER PENDANT L'INIT
@@ -124,6 +125,9 @@ async function bootstrap() {
     // Initialiser la configuration globale, not admin / no secrets
     await initializeInstance(null, false, instance);
     await loadInstanceConfig();
+
+    // Mettre à jour les métadonnées de la page (titre, SEO)
+    updatePageMeta();
 
     // TODO: handle not default case
     instance.supabase = getSupabase();

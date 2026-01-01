@@ -6,6 +6,7 @@
  * Supports deduplication via content hashing
  */
 
+import { storage } from "@inseme/cop-host";
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -218,48 +219,47 @@ async function uploadDocument(filePath, options) {
   const storagePath = `${timestamp}_${sanitized}`;
 
   const fileBuffer = await fs.readFile(filePath);
-  const { data: uploadData, error: uploadError } = await supabase.storage
-    .from(STORAGE_BUCKET)
-    .upload(storagePath, fileBuffer, {
-      contentType: getMimeType(filename),
-      upsert: false,
-    });
+  try {
+    const { path: uploadedPath, url: publicUrl } = await storage.upload(
+      STORAGE_BUCKET,
+      storagePath,
+      fileBuffer,
+      {
+        contentType: getMimeType(filename),
+      }
+    );
 
-  if (uploadError) {
+    // 6. Insert into database
+    const { data: dbData, error: dbError } = await supabase
+      .from("document_sources")
+      .insert({
+        filename: sanitized,
+        content_hash: contentHash,
+        public_url: publicUrl,
+        file_size_bytes: stats.size,
+        mime_type: getMimeType(filename),
+        metadata: metadata,
+        ingestion_method: "cli_bulk",
+        status: "active",
+      })
+      .select()
+      .single();
+
+    if (dbError) {
+      console.error(`   ❌ Database error:`, dbError.message);
+      // Try to clean up storage
+      await storage.remove(STORAGE_BUCKET, [storagePath]);
+      return { error: dbError.message };
+    }
+
+    console.log(`   ✅ Uploaded successfully! ID: ${dbData.id}`);
+    console.log(`   🔗 URL: ${publicUrl}`);
+
+    return { success: true, documentId: dbData.id };
+  } catch (uploadError) {
     console.error(`   ❌ Upload failed:`, uploadError.message);
     return { error: uploadError.message };
   }
-
-  // 5. Get public URL
-  const { data: urlData } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(storagePath);
-
-  // 6. Insert into database
-  const { data: dbData, error: dbError } = await supabase
-    .from("document_sources")
-    .insert({
-      filename: sanitized,
-      content_hash: contentHash,
-      public_url: urlData.publicUrl,
-      file_size_bytes: stats.size,
-      mime_type: getMimeType(filename),
-      metadata: metadata,
-      ingestion_method: "cli_bulk",
-      status: "active",
-    })
-    .select()
-    .single();
-
-  if (dbError) {
-    console.error(`   ❌ Database error:`, dbError.message);
-    // Try to clean up storage
-    await supabase.storage.from(STORAGE_BUCKET).remove([storagePath]);
-    return { error: dbError.message };
-  }
-
-  console.log(`   ✅ Uploaded successfully! ID: ${dbData.id}`);
-  console.log(`   🔗 URL: ${urlData.publicUrl}`);
-
-  return { success: true, documentId: dbData.id };
 }
 
 // Get MIME type from filename

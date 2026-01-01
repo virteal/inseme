@@ -15,7 +15,7 @@ Questionnaires interactifs avec résultats en temps réel.
 - Navigation intuitive et rendu Markdown
 - Partagez facilement vos contenus
 
-**3️⃣ Kudocratie (Propositions citoyennes)**
+**3️⃣ Kudocracy (Propositions citoyennes)**
 
 - Proposez vos idées pour améliorer Corte
 - Votez ou déléguez votre vote

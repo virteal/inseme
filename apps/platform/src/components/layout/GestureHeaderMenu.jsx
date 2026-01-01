@@ -6,7 +6,9 @@ import { Link } from "react-router-dom";
 import { MOVEMENT_NAME, PARTY_NAME, CITY_NAME } from "../../constants";
 import { useCurrentUser } from "../../lib/useCurrentUser";
 import { getSupabase } from "../../lib/supabase";
+import { isFeatureEnabled, FEATURES } from "../../lib/features";
 import FacebookPagePlugin from "../common/FacebookPagePlugin";
+import { BRIQUES } from "../../brique-registry.gen";
 
 // This component replaces the modal hamburger menu with a gesture-revealed header menu
 // On mobile: disabled auto-trigger, shows a small hamburger button instead
@@ -425,164 +427,45 @@ export default function GestureHeaderMenu({ activeEdges = ["top"] }) {
                   margin: 0,
                   display: "flex",
                   flexDirection: "column",
-                  gap: "8px", // reduced vertical gap
+                  gap: "8px",
                   width: "100%",
                   alignItems: "center",
                 }}
               >
-                <li>
-                  <Link
-                    to="/"
-                    onClick={closeMenu}
-                    style={{
-                      color: "var(--color-content-primary)",
-                      textDecoration: "none",
-                      fontWeight: 500,
-                      fontSize: "0.95em",
-                      padding: "2px 8px",
-                      transition: "background var(--duration-fast) ease",
-                      display: "inline-block",
-                    }}
-                  >
-                    Consultation
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/kudocracy"
-                    onClick={closeMenu}
-                    style={{
-                      color: "var(--color-content-primary)",
-                      textDecoration: "none",
-                      fontWeight: 500,
-                      fontSize: "0.95em",
-                      padding: "2px 8px",
-                      transition: "background var(--duration-fast) ease",
-                      display: "inline-block",
-                    }}
-                  >
-                    Propositions
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/wiki"
-                    onClick={closeMenu}
-                    style={{
-                      color: "var(--color-content-primary)",
-                      textDecoration: "none",
-                      fontWeight: 500,
-                      fontSize: "0.95em",
-                      padding: "2px 8px",
-                      transition: "background var(--duration-fast) ease",
-                      display: "inline-block",
-                    }}
-                  >
-                    Wiki
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/bob"
-                    onClick={closeMenu}
-                    style={{
-                      color: "var(--color-content-primary)",
-                      textDecoration: "none",
-                      fontWeight: 500,
-                      fontSize: "0.95em",
-                      padding: "2px 8px",
-                      transition: "background var(--duration-fast) ease",
-                      display: "inline-block",
-                    }}
-                  >
-                    Ophélia
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/cafe"
-                    onClick={closeMenu}
-                    style={{
-                      color: "var(--color-content-primary)",
-                      textDecoration: "none",
-                      fontWeight: 500,
-                      fontSize: "0.95em",
-                      padding: "2px 8px",
-                      transition: "background var(--duration-fast) ease",
-                      display: "inline-block",
-                    }}
-                  >
-                    Café
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/fil"
-                    onClick={closeMenu}
-                    style={{
-                      color: "var(--color-content-primary)",
-                      textDecoration: "none",
-                      fontWeight: 500,
-                      fontSize: "0.95em",
-                      padding: "2px 8px",
-                      transition: "background var(--duration-fast) ease",
-                      display: "inline-block",
-                    }}
-                  >
-                    Le Fil
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/missions"
-                    onClick={closeMenu}
-                    style={{
-                      color: "var(--color-content-primary)",
-                      textDecoration: "none",
-                      fontWeight: 500,
-                      fontSize: "0.95em",
-                      padding: "2px 8px",
-                      transition: "background var(--duration-fast) ease",
-                      display: "inline-block",
-                    }}
-                  >
-                    Missions
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/civic-network"
-                    onClick={closeMenu}
-                    style={{
-                      color: "var(--color-content-primary)",
-                      textDecoration: "none",
-                      fontWeight: 500,
-                      fontSize: "0.95em",
-                      padding: "2px 8px",
-                      transition: "background var(--duration-fast) ease",
-                      display: "inline-block",
-                    }}
-                  >
-                    Réseau Citoyen
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/fractal-feed"
-                    onClick={closeMenu}
-                    style={{
-                      color: "var(--color-content-primary)",
-                      textDecoration: "none",
-                      fontWeight: 500,
-                      fontSize: "0.95em",
-                      padding: "2px 8px",
-                      transition: "background var(--duration-fast) ease",
-                      display: "inline-block",
-                    }}
-                  >
-                    Flux Fractal
-                  </Link>
-                </li>
+                {[
+                  { to: "/", label: "Consultation", feature: FEATURES.CONSULTATIONS },
+                  { to: "/kudocracy", label: "Propositions", feature: FEATURES.CONSULTATIONS },
+                  { to: "/bob", label: "Ophélia", feature: FEATURES.CHATBOT },
+                  { to: "/transparence", label: "Transparence", feature: FEATURES.TRANSPARENCY },
+                  { to: "/social", label: "Social", feature: FEATURES.SOCIAL },
+                  { to: "/actes", label: "Actes", feature: FEATURES.ACTES },
+                  // Dynamic items from briques
+                  ...BRIQUES.flatMap((b) =>
+                    (b.menuItems || [])
+                      .filter((m) => m.position === "header")
+                      .map((m) => ({ to: m.path, label: m.label, feature: b.feature }))
+                  ),
+                ]
+                  .filter((item) => !item.feature || isFeatureEnabled(item.feature, true))
+                  .map((item) => (
+                    <li key={item.to}>
+                      <Link
+                        to={item.to}
+                        onClick={closeMenu}
+                        style={{
+                          color: "var(--color-content-primary)",
+                          textDecoration: "none",
+                          fontWeight: 500,
+                          fontSize: "0.95em",
+                          padding: "2px 8px",
+                          transition: "background var(--duration-fast) ease",
+                          display: "inline-block",
+                        }}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
               </ul>
               {/* Auth section */}
               <div

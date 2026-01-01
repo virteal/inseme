@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
+import { MarkdownViewer } from "@inseme/ui";
 import { getMetadata } from "../../lib/metadata";
 import { getPostTitle, getPostType, POST_TYPES } from "../../lib/socialMetadata";
 import {
@@ -176,9 +176,9 @@ export default function PostCard({ post, currentUserId, gazette = null, showMark
       {/* Extrait du contenu */}
       {showMarkdown || isGazettePost(post) ? (
         <div className={`text-gray-600 text-sm mb-3 ${expanded ? "" : "line-clamp-3"}`}>
-          <ReactMarkdown>
-            {expanded ? post.content || "" : (post.content || "").slice(0, 600)}
-          </ReactMarkdown>
+          <MarkdownViewer
+            content={expanded ? post.content || "" : (post.content || "").slice(0, 600)}
+          />
           {(post.content || "").length > 600 && (
             <button
               onClick={(e) => {

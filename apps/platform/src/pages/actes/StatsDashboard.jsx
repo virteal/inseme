@@ -180,7 +180,7 @@ export default function StatsDashboard() {
 
         // Actes stats
         const { data: actes, count: actesTotal } = await getSupabase()
-          .from("acte")
+          .from("actes")
           .select("id, type_acte, statut, created_at", { count: "exact" });
 
         const actesRecent = since

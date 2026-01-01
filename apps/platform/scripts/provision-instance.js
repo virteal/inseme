@@ -20,6 +20,27 @@ import fs from "fs";
 import path from "path";
 import readline from "readline";
 
+// Built-in fetch is available in Node.js 18+ (we are on 24)
+// Use process.argv to parse flags
+const args = process.argv.slice(2);
+const isInteractive = args.includes("--interactive");
+const dryRun = args.includes("--dry-run");
+const help = args.includes("--help");
+
+// Step flags
+const steps = {
+  collect: args.includes("--step-collect") || (!args.some(arg => arg.startsWith("--step-")) && !help),
+  github: args.includes("--step-github"),
+  migrations: args.includes("--step-migrations"),
+  vault: args.includes("--step-vault"),
+  registry: args.includes("--step-registry"),
+  seed: args.includes("--step-seed"),
+};
+
+// Config override
+const subdomainArg = args.find(arg => arg.startsWith("--subdomain="))?.split("=")[1];
+const configFileArg = args.find(arg => arg.startsWith("--config="))?.split("=")[1];
+
 // ============================================
 // Configuration des templates par type de communauté
 // ============================================
@@ -111,6 +132,81 @@ function generateSubdomain(name) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "")
     .substring(0, 20);
+}
+
+function loadInstanceConfig(subdomain) {
+  const configPath = configFileArg || path.join(process.cwd(), "instances", `${subdomain}.json`);
+  if (fs.existsSync(configPath)) {
+    console.log(`\n📂 Chargement du fichier de config: ${configPath}`);
+    return JSON.parse(fs.readFileSync(configPath, "utf-8"));
+  }
+  return null;
+}
+
+// ============================================
+// Automatisation GitHub
+// ============================================
+
+async function ensureGitHubRepo(info) {
+  const token = info.github_token || process.env.GITHUB_TOKEN;
+  if (!token) {
+    console.warn("⚠️ Pas de GITHUB_TOKEN trouvé, impossible d'automatiser le repo.");
+    return false;
+  }
+
+  const owner = info.github_wiki_owner || "JeanHuguesRobert";
+  const repoName = info.github_wiki_repo || `wiki-${info.subdomain}`;
+  const templateRepo = "JeanHuguesRobert/commune-wiki-template"; // Template par défaut
+
+  console.log(`\n👨‍💻 Vérification du dépôt GitHub: ${owner}/${repoName}...`);
+
+  try {
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repoName}`, {
+      headers: { Authorization: `token ${token}` },
+    });
+
+    if (res.status === 200) {
+      console.log(`  ✅ Dépôt déjà existant.`);
+      return true;
+    }
+
+    if (res.status === 404) {
+      console.log(`  🚀 Création du dépôt à partir du template ${templateRepo}...`);
+      if (dryRun) {
+        console.log(`  [DRY RUN] Octokit.repos.createUsingTemplate({ template_owner: 'JeanHuguesRobert', template_repo: 'commune-wiki-template', name: '${repoName}' })`);
+        return true;
+      }
+
+      // Utiliser fetch pour créer depuis template
+      const [templOwner, templRepo] = templateRepo.split("/");
+      const createRes = await fetch(`https://api.github.com/repos/${templOwner}/${templRepo}/generate`, {
+        method: "POST",
+        headers: {
+          Authorization: `token ${token}`,
+          Accept: "application/vnd.github+json",
+        },
+        body: JSON.stringify({
+          owner: owner,
+          name: repoName,
+          description: `Wiki pour l'instance Ophélia de ${info.community_name}`,
+          include_all_branches: false,
+          private: false,
+        }),
+      });
+
+      if (createRes.status === 201) {
+        console.log(`  ✅ Dépôt créé avec succès.`);
+        return true;
+      } else {
+        const err = await createRes.json();
+        console.warn(`  ⚠️ Échec de la création: ${err.message}`);
+        return false;
+      }
+    }
+  } catch (err) {
+    console.error(`  ⚠️ Erreur GitHub API: ${err.message}`);
+    return false;
+  }
 }
 
 // ============================================
@@ -351,87 +447,74 @@ async function applyMigrations(info) {
 }
 
 // ============================================
-// Sauvegarde de la configuration
+// Seeding du Wiki
 // ============================================
 
-function saveInstanceConfig(info) {
-  const instancesDir = path.join(process.cwd(), "instances");
-  if (!fs.existsSync(instancesDir)) {
-    fs.mkdirSync(instancesDir, { recursive: true });
-  }
-
-  const configPath = path.join(instancesDir, `${info.subdomain}.json`);
-
-  // Ne pas sauvegarder les secrets
-  const safeInfo = { ...info };
-  delete safeInfo.supabase_service_key;
-  delete safeInfo.openai_key;
-  delete safeInfo.anthropic_key;
-  delete safeInfo.hub_anon_key;
-
-  fs.writeFileSync(configPath, JSON.stringify(safeInfo, null, 2));
-  console.log(`\n📁 Configuration sauvegardée: ${configPath}`);
-
-  return configPath;
-}
-
-// ============================================
-// Génération des fichiers SQL
-// ============================================
-
-function generateSQLFiles(info) {
-  const sqlDir = path.join(process.cwd(), "instances", "sql");
-  if (!fs.existsSync(sqlDir)) {
-    fs.mkdirSync(sqlDir, { recursive: true });
-  }
-
-  // Vault SQL
-  const vaultSQL = generateVaultSQL(info);
-  const vaultPath = path.join(sqlDir, `${info.subdomain}-vault.sql`);
-  fs.writeFileSync(vaultPath, vaultSQL);
-  console.log(`📄 SQL Vault: ${vaultPath}`);
-
-  // Registry SQL
-  const registrySQL = generateRegistrySQL(info);
-  const registryPath = path.join(sqlDir, `${info.subdomain}-registry.sql`);
-  fs.writeFileSync(registryPath, registrySQL);
-  console.log(`📄 SQL Registry: ${registryPath}`);
-
-  return { vaultPath, registryPath, vaultSQL, registrySQL };
-}
-
-// ============================================
-// Exécution du SQL
-// ============================================
-
-async function executeSQL(info, sql, description) {
-  console.log(`\n⚡ ${description}...`);
+async function seedWiki(info) {
+  console.log(`\n🌱 Seeding du Wiki pour ${info.community_name}...`);
 
   const supabase = createClient(info.supabase_url, info.supabase_service_key);
+  const seedDir = path.join(process.cwd(), "seeds", info.community_type);
 
-  try {
-    // Essayer d'exécuter via RPC (si la fonction existe)
-    const { error } = await supabase.rpc("exec_sql", { sql_query: sql });
-
-    if (error) {
-      // Fallback: instruction manuelle
-      console.log(`\n⚠️  Exécution automatique impossible.`);
-      console.log(`Veuillez exécuter manuellement dans Supabase SQL Editor:\n`);
-      console.log("─".repeat(60));
-      console.log(sql);
-      console.log("─".repeat(60));
-      return false;
-    }
-
-    console.log(`✅ ${description} - OK`);
-    return true;
-  } catch (err) {
-    console.log(`\n⚠️  Erreur: ${err.message}`);
-    console.log(`Veuillez exécuter manuellement:\n`);
-    console.log(sql);
+  if (!fs.existsSync(seedDir)) {
+    console.warn(`  ⚠️ Dossier de seed non trouvé: ${seedDir}`);
     return false;
   }
+
+  const files = fs.readdirSync(seedDir).filter((f) => f.endsWith(".md"));
+  console.log(`  Fichiers à ingérer: ${files.length}`);
+
+  for (const file of files) {
+    const slug = file.replace(".md", "");
+    const filePath = path.join(seedDir, file);
+    let content = fs.readFileSync(filePath, "utf-8");
+
+    // Remplacement des variables
+    content = content
+      .replace(/{CITY_NAME}/g, info.city_name)
+      .replace(/{COMMUNITY_NAME}/g, info.community_name)
+      .replace(/{SUBDOMAIN}/g, info.subdomain);
+
+    const title = content.match(/^#\s+(.+)$/m)?.[1] || slug;
+
+    console.log(`  → Ingestion de ${slug}...`);
+
+    if (dryRun) {
+      console.log(`    [DRY RUN] upsert wiki_pages: ${slug}`);
+      continue;
+    }
+
+    try {
+      const { error } = await supabase.from("wiki_pages").upsert({
+        slug,
+        title,
+        content,
+        metadata: {
+          wiki_page: {
+            status: "active",
+            page_key: slug,
+            origin_hub_id: info.subdomain,
+            global_id: `instance:${info.subdomain}:${slug}`,
+          },
+        },
+      }, { onConflict: "slug" });
+
+      if (error) {
+        console.warn(`    ⚠️ Erreur: ${error.message}`);
+      } else {
+        console.log(`    ✅ OK`);
+      }
+    } catch (err) {
+      console.error(`    ⚠️ Erreur: ${err.message}`);
+    }
+  }
+
+  return true;
 }
+
+// ============================================
+// Résumé final
+// ============================================
 
 // ============================================
 // Résumé final
@@ -474,39 +557,115 @@ function printSummary(info, sqlFiles) {
 // Main
 // ============================================
 
+// ============================================
+// Main
+// ============================================
+
 async function main() {
+  if (help) {
+    console.log(`
+Usage: node scripts/provision-instance.js [options]
+
+Options:
+  --subdomain=NAME       Load config from instances/NAME.json
+  --config=PATH          Load config from specific path
+  --interactive          Force interactive collection
+  --dry-run              Skip database/API writes
+  --help                 Show this help
+
+Steps (can be combined):
+  --step-collect         Collect/verify instance information
+  --step-github          Check/Create GitHub wiki repository
+  --step-migrations      Apply database migrations
+  --step-vault           Provision instance configuration (vault)
+  --step-registry        Register instance in Hub registry
+  --step-seed            Seed initial wiki content
+
+Examples:
+  node scripts/provision-instance.js --interactive
+  node scripts/provision-instance.js --subdomain=bastia --step-seed --step-vault
+    `);
+    rl.close();
+    return;
+  }
+
   try {
-    // Mode interactif
-    const info = await collectInstanceInfo();
+    let info = {};
 
-    // Sauvegarder la config
-    saveInstanceConfig(info);
-
-    // Générer les fichiers SQL
-    const sqlFiles = generateSQLFiles(info);
-
-    // Demander si on applique automatiquement
-    const autoApply = await ask("\nAppliquer automatiquement le SQL ? (o/n)", "n");
-
-    if (autoApply.toLowerCase() === "o") {
-      // Appliquer les migrations
-      await applyMigrations(info);
-
-      // Appliquer le vault
-      await executeSQL(info, sqlFiles.vaultSQL, "Provisioning du vault");
-
-      // Pour le registry, on a besoin des credentials du hub
-      if (info.hub_url) {
-        const hubServiceKey = await ask("Clé service_role du HUB pour le registry");
-        if (hubServiceKey) {
-          const hubInfo = { supabase_url: info.hub_url, supabase_service_key: hubServiceKey };
-          await executeSQL(hubInfo, sqlFiles.registrySQL, "Enregistrement dans le registry");
+    // 1. Collecte / Chargement
+    if (steps.collect) {
+      if (subdomainArg || configFileArg) {
+        const loaded = loadInstanceConfig(subdomainArg);
+        if (loaded) {
+          info = loaded;
+          console.log(`✅ Config chargée pour: ${info.community_name}`);
+          
+          if (isInteractive) {
+            console.log("\nMode interactif: vérification des infos...");
+            // On pourrait rajouter une boucle de confirmation ici
+          }
+        } else {
+          console.warn(`⚠️ Config non trouvée pour ${subdomainArg}. Passage en mode interactif.`);
+          info = await collectInstanceInfo();
         }
+      } else {
+        info = await collectInstanceInfo();
+      }
+      
+      // Sauvegarder/Mettre à jour la config (sans secrets)
+      saveInstanceConfig(info);
+      // Générer SQL pour info manuelle
+      generateSQLFiles(info);
+    } else {
+      // Charger sans collecter
+      info = loadInstanceConfig(subdomainArg);
+      if (!info) {
+        throw new Error("Aucune config trouvée. Utilisez --step-collect ou --subdomain.");
       }
     }
 
-    // Afficher le résumé
-    printSummary(info, sqlFiles);
+    // On complète info avec les secrets d'environnement si besoin
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY && !info.supabase_service_key) {
+      info.supabase_service_key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    }
+
+    // 2. Step GitHub
+    if (steps.github) {
+      await ensureGitHubRepo(info);
+    }
+
+    // 3. Step Migrations
+    if (steps.migrations) {
+      await applyMigrations(info);
+    }
+
+    // 4. Step Vault
+    if (steps.vault) {
+      const sql = generateVaultSQL(info);
+      await executeSQL(info, sql, "Provisioning du vault");
+    }
+
+    // 5. Step Registry
+    if (steps.registry) {
+      const sql = generateRegistrySQL(info);
+      if (info.hub_url) {
+        const hubServiceKey = process.env.HUB_SERVICE_ROLE_KEY || await ask("Clé service_role du HUB pour le registry");
+        if (hubServiceKey) {
+          const hubInfo = { supabase_url: info.hub_url, supabase_service_key: hubServiceKey };
+          await executeSQL(hubInfo, sql, "Enregistrement dans le registry");
+        }
+      } else {
+        console.warn("⚠️ Pas de hub_url configuré, step registry ignoré.");
+      }
+    }
+
+    // 6. Step Seed
+    if (steps.seed) {
+      await seedWiki(info);
+    }
+
+    console.log("\n🏁 Opérations terminées.");
+
   } catch (err) {
     console.error("\n❌ Erreur:", err.message);
   } finally {
@@ -514,5 +673,4 @@ async function main() {
   }
 }
 
-// Lancer
 main();

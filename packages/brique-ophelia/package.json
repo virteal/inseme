@@ -1,0 +1,27 @@
+{
+  "name": "@inseme/brique-ophelia",
+  "version": "1.0.0",
+  "description": "Ophélia Vocal Chat - Direct and Liquid Democracy Assembly Room",
+  "main": "index.jsx",
+  "type": "module",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "lucide-react": "^0.294.0",
+    "@jitsi/react-sdk": "^1.0.0",
+    "@inseme/ui": "workspace:*",
+    "@inseme/cop-host": "workspace:*"
+  },
+  "keywords": [
+    "democracy",
+    "liquid-democracy",
+    "assembly",
+    "voting",
+    "realtime",
+    "ai",
+    "vocal",
+    "ophelia"
+  ],
+  "author": "Jean Hugues Noël Robert",
+  "license": "MIT"
+}

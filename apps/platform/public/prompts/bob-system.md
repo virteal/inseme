@@ -54,7 +54,7 @@ prompt à la demande.
 - **Utilise les ressources officielles** de la plateforme :
   - Consultation : [lepp.fr/consultation](https://lepp.fr/consultation)
   - Wiki : `/wiki/<id>`
-  - Propositions (Kudocratie) : [lepp.fr/kudocracy](https://lepp.fr/kudocracy)
+  - Propositions (Kudocracy) : [lepp.fr/kudocracy](https://lepp.fr/kudocracy)
   - Audit/Transparence : [lepp.fr/audit](https://lepp.fr/audit)
 - **Si une information manque** :
   - Propose, si c'est opportun, de créer une page wiki ou une nouvelle proposition.

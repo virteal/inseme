@@ -31,6 +31,7 @@ Inseme permet aux participants de s'engager sans barrières bureaucratiques :
 ## 🤖 Ophélia : L'Agente Médiatrice
 
 Ophélia est une participante active au service de l'assemblée :
+
 - **Synthèse** : Elle résume les échanges complexes pour aider à la décision.
 - **Neutralité** : Elle ne prend pas parti, elle facilite le processus démocratique.
 - **Mémoire** : Elle accède aux archives et au contexte des sessions précédentes.
@@ -41,6 +42,7 @@ Ophélia est une participante active au service de l'assemblée :
 ## 🛠️ Installation et Développement
 
 ### Setup Rapide
+
 1.  Installez les dépendances : `npm install`
 2.  Configurez votre `.env` (voir `.env.example`).
 3.  Lancez le serveur de développement :
@@ -48,11 +50,12 @@ Ophélia est une participante active au service de l'assemblée :
     # Recommandé (avec Edge Functions)
     netlify dev
     ```
-    *L'application sera accessible sur `http://localhost:8888`.*
+    _L'application sera accessible sur `http://localhost:8888`._
 
 ---
 
 ## 📖 Commandes Inseme (Chat)
+
 - `inseme ? [Texte]` : Définit la proposition de vote active.
 - `inseme !` : Réinitialise les votes de la session.
 - `inseme live [url]` : Active le flux vidéo.
@@ -61,16 +64,19 @@ Ophélia est une participante active au service de l'assemblée :
 ---
 
 ## ⚖️ Neutralité & Engagement
+
 Comme tous les outils du projet Inseme, cette application est une infrastructure **neutre**. Elle ne soutient aucun candidat ou liste électorale.
 
 ---
 
 ## 📜 Licence & Auteur
 
-Ce projet est sous licence **MIT**. 
+Ce projet est sous licence **MIT**.
 
 **Auteur : Jean Hugues Noël Robert**
-- Projet porté par la communauté [LePP.fr](https://lepp.fr).
+
+- Projet porté par l'association **C.O.R.S.I.C.A.** (Président Fondateur : Jean Hugues Noël Robert).
+- Communauté [LePP.fr](https://lepp.fr).
 - Fait avec ❤️ à Corte, Corse.
 
 ---

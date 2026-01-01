@@ -704,15 +704,26 @@ mandats
 
 sessions audio/textuelles
 
+wiki_pages (La Mémoire Citoyenne Active)
+
 9.2 Object Storage
 
 PDF, images, audios, vidéos.
 
-9.3 Indexation vectorielle
+9.3 Indexation Hybride (Le Cerveau d'Ophélia)
 
-Embedding multi-chunks, tags, dates, entités.
+Ophélia ne se contente pas de stocker des fichiers. Elle construit un graphe de connaissance vivant
+via deux types d'indexation :
 
-9.4 Moteur graphe (optionnel)
+- **Indexation Vectorielle (pgvector)** : Capture le _sens_ des documents pour permettre des
+  recherches sémantiques ("Trouve les délibérations qui parlent d'écologie, même si le mot n'y est
+  pas").
+- **Indexation Full-Text (FTS)** : Capture les _mots exacts_ pour une précision chirurgicale sur les
+  noms propres, les dates ou les références de marchés publics.
+- **Indexation "Sociale"** : Le contenu du Wiki citoyen est priorisé comme source de synthèse,
+  permettant de confronter la donnée administrative brute à la réalité vécue.
+
+  9.4 Moteur graphe (optionnel)
 
 Relations entre élus, associations, projets.
 
@@ -778,35 +789,29 @@ Débats vocaux + votes express.
 
 12. Couche E — Intelligence IA (Ophélia)
 
-12.1 RAG complet
+12.1 Capacités cognitives
 
-Lecture SQL + documents + embeddings.
+Ophélia n'est pas un simple chatbot. C'est un agent autonome capable de :
 
-12.2 Agents spécialisés
+- **Synthèse de la Mémoire Citoyenne** : Elle agrège les discussions des assemblées et les documents
+  officiels pour proposer des pages de Wiki.
+- **Vérification (Fact-checking)** : Elle confronte les allégations des forums aux données froides
+  (budgets, permis).
+- **Aide à la Décision** : Elle calcule les impacts budgétaires des propositions citoyennes.
+- **Rédaction de documents** : Elle aide à rédiger des recours administratifs ou des propositions de
+  délibération.
 
-budget_verifier
+  12.2 La "Mémoire Citoyenne Active" (Wiki-RAG)
 
-urbanisme_watcher
+Contrairement aux IA classiques qui s'appuient sur des données figées, Ophélia utilise le **Wiki
+Citoyen** comme une mémoire de travail partagée :
 
-cadastre_crosschecker
-
-summarizer
-
-decision_tracker
-
-conflict_detector
-
-12.3 Génération de rapports
-
-Hebdo, mensuel, quartier, thématique.
-
-12.4 Analyse prédictive
-
-finances
-
-construction
-
-tendances sociologiques
+- **Apprentissage continu** : Elle s'adapte aux nouvelles informations saisies par les citoyens dans
+  le Wiki.
+- **Proactivité** : Elle propose de créer des pages wiki lorsqu'elle détecte un manque de clarté sur
+  un sujet récurrent dans les assemblées.
+- **Traceabilité** : Chaque information fournie par Ophélia est sourcée, soit dans un document
+  officiel, soit dans une page wiki éditée par un humain.
 
 13. Couche F — Gouvernance des données et sécurité
 

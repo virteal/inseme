@@ -1,0 +1,12 @@
+{
+  "name": "@inseme/brique-wiki",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-router-dom": "^6.26.1",
+    "@inseme/ui": "*",
+    "@inseme/cop-host": "*",
+    "recharts": "^2.12.7"
+  }
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import ReactMarkdown from "react-markdown";
+import { MarkdownViewer } from "@inseme/ui";
 import { Link } from "react-router-dom";
 import FacebookEmbed from "../FacebookEmbed";
 import { getSupabase } from "../../lib/supabase";
@@ -177,7 +177,7 @@ export default function GazettePost({ post, isEditor = false, gazetteName = null
             font-weight: bold;
           }
         `}</style>
-        <ReactMarkdown>{sanitizedContent}</ReactMarkdown>
+        <MarkdownViewer content={sanitizedContent} />
       </div>
       {isFacebook && (
         <div className="mt-6 mb-4 flex justify-center">

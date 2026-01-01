@@ -6,8 +6,10 @@
   "module": "./src/index.js",
   "type": "module",
   "exports": {
+    ".": "./src/index.js",
     "./config/*": "./src/config/*.js",
-    "./runtime/*": "./src/runtime/*.js"
+    "./runtime/*": "./src/runtime/*.js",
+    "./constants": "./src/constants.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0"

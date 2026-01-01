@@ -1,5 +1,4 @@
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { MarkdownViewer } from "@inseme/ui";
 import { Link } from "react-router-dom";
 import { MOVEMENT_NAME, CITY_NAME, BOT_NAME, PARTY_NAME, HASHTAG } from "../constants";
 import SiteFooter from "../components/layout/SiteFooter";
@@ -42,9 +41,7 @@ export default function Audit() {
             </div>
           )}
           {error && <div className="text-center text-red-600">Erreur: {error}</div>}
-          {!loading && !error && content && (
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
-          )}
+          {!loading && !error && content && <MarkdownViewer content={content} />}
           {!loading && !error && !content && (
             <div className="text-center">No content available</div>
           )}

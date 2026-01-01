@@ -107,30 +107,47 @@ export default function ActeForm() {
     date_publication: "",
     url_document: "",
     notes: "",
+    mandat_id: "",
   });
 
   const [originalData, setOriginalData] = useState(null);
   const [errors, setErrors] = useState({});
+  const [mandats, setMandats] = useState([]);
 
-  // Fetch collectivites on mount
+  // Fetch collectivites and mandats on mount
   useEffect(() => {
-    const fetchCollectivites = async () => {
+    const fetchInitialData = async () => {
       if (!getSupabase()) return;
 
-      const { data } = await getSupabase()
+      // Fetch collectivites
+      const { data: collData } = await getSupabase()
         .from("collectivite")
         .select("id, nom, code_insee")
         .order("nom");
 
-      setCollectivites(data || []);
+      setCollectivites(collData || []);
+
+      // Fetch mandats (to link actes to specific roles)
+      const { data: mandatData } = await getSupabase()
+        .from("mandats")
+        .select(
+          `
+          id_mandat, 
+          role, 
+          user:users(display_name)
+        `
+        )
+        .order("role");
+
+      setMandats(mandatData || []);
 
       // Set default collectivite if only one
-      if (data?.length === 1 && !isEditing) {
-        setFormData((prev) => ({ ...prev, collectivite_id: data[0].id }));
+      if (collData?.length === 1 && !isEditing) {
+        setFormData((prev) => ({ ...prev, collectivite_id: collData[0].id }));
       }
     };
 
-    fetchCollectivites();
+    fetchInitialData();
   }, [isEditing]);
 
   // Fetch existing acte if editing
@@ -164,6 +181,7 @@ export default function ActeForm() {
           transmission_confirmed: data.transmission_confirmed || "",
           date_publication: data.date_publication || "",
           url_document: data.url_document || "",
+          mandat_id: data.mandat_id || "",
           notes: "",
         };
 
@@ -268,13 +286,18 @@ export default function ActeForm() {
           transmission_confirmed: formData.transmission_confirmed || null,
           date_publication: formData.date_publication || null,
           url_document: formData.url_document || null,
+          mandat_id: formData.mandat_id || null,
+          metadata: {
+            notes: formData.notes,
+            last_edited_at: new Date().toISOString(),
+          },
           created_by: user.id,
           version: 1,
           is_current: true,
         };
 
         const { data, error: insertError } = await getSupabase()
-          .from("acte")
+          .from("actes")
           .insert(insertData)
           .select("id")
           .single();
@@ -371,6 +394,24 @@ export default function ActeForm() {
                   {collectivites.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.nom} ({c.code_insee})
+                    </option>
+                  ))}
+                </select>
+              </FormField>
+
+              <FormField
+                label="Mandat associé"
+                help="Associer cet acte à un élu ou un mandat spécifique"
+              >
+                <select
+                  value={formData.mandat_id}
+                  onChange={(e) => handleChange("mandat_id", e.target.value)}
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Aucun mandat spécifique</option>
+                  {mandats.map((m) => (
+                    <option key={m.id_mandat} value={m.id_mandat}>
+                      {m.user?.display_name} - {m.role}
                     </option>
                   ))}
                 </select>

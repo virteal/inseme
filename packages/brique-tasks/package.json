@@ -1,0 +1,14 @@
+{
+  "name": "@inseme/brique-tasks",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "type": "module",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "framer-motion": "^10.16.4",
+    "@inseme/ui": "workspace:*",
+    "@inseme/cop-host": "workspace:*"
+  }
+}

@@ -1,8 +1,7 @@
 // src/components/common/LegalLinks.jsx
 
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { useMarkdownDoc } from "../../hooks/useMarkdownDoc";
+import { LegalPage as UILegalPage, MarkdownViewer } from "@inseme/ui";
+import { LEGAL_CONTENT } from "@inseme/kudocracy";
 
 /**
  * Composant pour afficher un fichier Markdown depuis /docs/
@@ -12,29 +11,19 @@ export function LegalMarkdown({ file }) {
   // Normaliser le chemin : enlever /docs/ si présent
   const docPath = file?.replace(/^\/docs\//, "") || "";
 
-  const { content, loading, error } = useMarkdownDoc(docPath);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center p-4">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
+  // Utiliser les contenus statiques si disponibles
+  let content = "";
+  if (docPath === "privacy-policy.md") content = LEGAL_CONTENT.PRIVACY_POLICY;
+  else if (docPath === "terms-of-use.md") content = LEGAL_CONTENT.TERMS_OF_USE;
 
   return (
-    // apply site markdown typography (Tailwind Typography / prose) while keeping legacy "markdown-content"
     <div className="markdown-content prose max-w-none">
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+      <MarkdownViewer content={content} />
     </div>
   );
 }
 
-// Utilisation dans une page ou un footer :
+// Utilisation dans une page ou un footer :
 export default function LegalLinks() {
   return (
     <footer className="prose max-w-none mx-auto p-4 border-t mt-8">
@@ -58,20 +47,23 @@ export default function LegalLinks() {
   );
 }
 
-// Ou pour affichage intégré Markdown :
+// Ou pour affichage intégré Markdown :
 export function LegalPage({ type }) {
-  const file = type === "privacy" ? "privacy-policy.md" : "terms-of-use.md";
+  const isPrivacy = type === "privacy";
+  const title = isPrivacy ? "Politique de confidentialité" : "Conditions d'utilisation";
+  const content = isPrivacy ? LEGAL_CONTENT.PRIVACY_POLICY : LEGAL_CONTENT.TERMS_OF_USE;
+
   return (
-    <>
-      <LegalMarkdown file={file} />
-      <div className="mt-8 text-center">
+    <div className="min-h-screen bg-slate-50 py-12">
+      <UILegalPage title={title} content={content} />
+      <div className="mt-8 text-center pb-12">
         <a
           href="/contact"
-          className="inline-block px-4 py-2 bg-blue-600 text-bauhaus-white hover:bg-blue-700 font-semibold shadow"
+          className="inline-block px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 font-semibold rounded-lg shadow-sm transition-colors"
         >
           Contactez-nous
         </a>
       </div>
-    </>
+    </div>
   );
 }

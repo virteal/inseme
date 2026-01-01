@@ -34,8 +34,7 @@ import {
   isFacebookPost,
 } from "../../lib/postPredicates";
 import CommentThread from "./CommentThread";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { MarkdownViewer } from "@inseme/ui";
 import FacebookEmbed from "../FacebookEmbed";
 import { getDisplayName, getUserInitials } from "../../lib/userDisplay";
 import { enrichUserMetadata } from "../../lib/userTransform";
@@ -430,8 +429,8 @@ export default function PostView({ currentUser }) {
         )}
 
         {/* Contenu (Markdown rendu) */}
-        <div className="prose max-w-none mb-6">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content || ""}</ReactMarkdown>
+        <div className="markdown-content prose prose-slate max-w-none mb-10">
+          <MarkdownViewer content={post.content || ""} />
         </div>
 
         {/* Facebook embed if post.metadata.sourceUrl is a Facebook URL */}

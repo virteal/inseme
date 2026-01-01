@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { MarkdownViewer } from "@inseme/ui";
 import CommentSection from "../components/common/CommentSection";
 import { useCurrentUser } from "../lib/useCurrentUser";
 import VoteButton from "../components/kudocracy/VoteButton";
@@ -147,6 +146,39 @@ export default function Proposition() {
     loadUserVote();
   };
 
+  const renderLink = ({ href = "", children }) => {
+    const url = String(href);
+    const isExternal = url.startsWith("http") || url.startsWith("//");
+    // Supporte [label](wiki/adresse) ou [label](/wiki/adresse) ou [label](wiki:adresse)
+    const wikiMatch = url.match(/^\/?wiki(?:\/:|\/)?(.+)$/i);
+    if (!isExternal && wikiMatch) {
+      const slug = wikiMatch[1].replace(/^\//, "");
+      return (
+        <Link to={`/wiki/${slug}`} className="text-blue-600 hover:underline">
+          {children}
+        </Link>
+      );
+    }
+    // Liens internes absolus (ex: /propositions/123) -> Link
+    if (!isExternal && url.startsWith("/")) {
+      return (
+        <Link to={url} className="text-blue-600 hover:underline">
+          {children}
+        </Link>
+      );
+    }
+    return (
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 hover:underline"
+      >
+        {children}
+      </a>
+    );
+  };
+
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto p-6">
@@ -206,47 +238,11 @@ export default function Proposition() {
 
         <div className="markdown-content mb-6">
           {proposition.description && typeof proposition.description === "string" ? (
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
+            <MarkdownViewer
+              content={proposition.description}
+              components={{ a: renderLink }}
               breaks={true}
-              components={{
-                a: ({ href = "", children }) => {
-                  const url = String(href);
-                  const isExternal = url.startsWith("http") || url.startsWith("//");
-                  // Supporte [label](wiki/adresse) ou [label](/wiki/adresse) ou [label](wiki:adresse)
-                  const wikiMatch = url.match(/^\/?wiki(?:\/:|\/)?(.+)$/i);
-                  if (!isExternal && wikiMatch) {
-                    const slug = wikiMatch[1].replace(/^\//, "");
-                    return (
-                      <Link to={`/wiki/${slug}`} className="text-blue-600 hover:underline">
-                        {children}
-                      </Link>
-                    );
-                  }
-                  // Liens internes absolus (ex: /propositions/123) -> Link
-                  if (!isExternal && url.startsWith("/")) {
-                    return (
-                      <Link to={url} className="text-blue-600 hover:underline">
-                        {children}
-                      </Link>
-                    );
-                  }
-                  return (
-                    <a
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      {children}
-                    </a>
-                  );
-                },
-              }}
-              skipHtml={true}
-            >
-              {proposition.description}
-            </ReactMarkdown>
+            />
           ) : (
             <p className="text-gray-300">Aucune description fournie.</p>
           )}

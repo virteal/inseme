@@ -1,5 +1,5 @@
 import { useCurrentUser } from "../lib/useCurrentUser";
-import ChatWindow from "../components/bob/v2/ChatWindowV2";
+import { OpheliaChat as ChatWindow } from "@inseme/brique-ophelia";
 
 function App() {
   const { currentUser, userStatus } = useCurrentUser();

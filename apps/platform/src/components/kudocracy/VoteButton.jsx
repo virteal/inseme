@@ -1,39 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { getSupabase } from "../../lib/supabase";
+import { getGovernanceModel } from "@inseme/kudocracy";
 
-export default function VoteButton({ propositionId, userId, currentVote, onVoteChange }) {
+export default function VoteButton({
+  propositionId,
+  userId,
+  currentVote,
+  onVoteChange,
+  modelId = "democratie_directe",
+}) {
   const [loading, setLoading] = useState(false);
 
-  const options = [
-    {
-      value: "approve",
-      label: "Pour",
-      color: "green",
-      displayClass: "bg-green-600 text-white",
-      hoverClass: "bg-green-100 text-green-700 hover:bg-green-200",
-    },
-    {
-      value: "neutral",
-      label: "Neutre",
-      color: "gray",
-      displayClass: "bg-gray-600 text-white",
-      hoverClass: "bg-gray-100 text-gray-700 hover:bg-gray-200",
-    },
-    {
-      value: "disapprove",
-      label: "Contre",
-      color: "red",
-      displayClass: "bg-red-600 text-white",
-      hoverClass: "bg-red-100 text-red-700 hover:bg-red-200",
-    },
-    {
-      value: "false_choice",
-      label: "Faux Dilemme",
-      color: "purple",
-      displayClass: "bg-purple-600 text-white",
-      hoverClass: "bg-purple-100 text-purple-700 hover:bg-purple-200",
-    },
-  ];
+  const model = useMemo(() => getGovernanceModel(modelId), [modelId]);
+
+  const options = useMemo(() => {
+    return (model?.propositionVoteOptions || []).map((opt) => ({
+      value: opt.id,
+      label: opt.label,
+      color: opt.color,
+      displayClass: `bg-${opt.color}-600 text-white`,
+      hoverClass: `bg-${opt.color}-100 text-${opt.color}-700 hover:bg-${opt.color}-200`,
+    }));
+  }, [model]);
 
   const [showRefusalOptions, setShowRefusalOptions] = useState(false);
 

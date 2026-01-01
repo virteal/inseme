@@ -1,0 +1,15 @@
+{
+  "name": "@inseme/kudocracy",
+  "version": "0.1.0",
+  "description": "Governance models and collective logic for Inseme",
+  "type": "module",
+  "main": "src/governance.js",
+  "keywords": [
+    "governance",
+    "democracy",
+    "collective",
+    "kudocracy"
+  ],
+  "license": "MIT",
+  "dependencies": {}
+}

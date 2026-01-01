@@ -264,7 +264,7 @@ export default function GlobalDashboard() {
                 Votre tableau de bord
               </Link>
               <Link
-                to="/wiki-dashboard"
+                to="/wiki/dashboard"
                 className="px-4 py-2 bg-bauhaus-yellow text-bauhaus-black font-bold  border-2 border-bauhaus-black hover:bg-yellow-500 shadow-[4px_4px_0px_0px_#121212] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
               >
                 Vos contributions Wiki

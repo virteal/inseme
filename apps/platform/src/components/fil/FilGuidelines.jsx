@@ -1,4 +1,4 @@
-import ReactMarkdown from "react-markdown";
+import { MarkdownViewer } from "@inseme/ui";
 import SiteFooter from "../layout/SiteFooter";
 import FilHeader from "./FilHeader";
 import { useMarkdownDoc } from "../../hooks/useMarkdownDoc";
@@ -27,7 +27,7 @@ export default function FilGuidelines() {
         <div style={styles.content}>
           {loading && <p>Chargement...</p>}
           {error && <p>Erreur: {error}</p>}
-          {!loading && !error && <ReactMarkdown>{content}</ReactMarkdown>}
+          {!loading && !error && <MarkdownViewer content={content} />}
         </div>
       </div>
       <SiteFooter />

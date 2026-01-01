@@ -6,17 +6,33 @@ existing tables — no SQL schema changes.
 
 ## Metadata schema (wiki_pages.metadata)
 
-The library expects (and writes) the following structure under `metadata.wiki_page`:
+The library expects (and writes) the following structure under `metadata`:
 
 ```jsonc
 {
-  "page_key": "charte-participation",
-  "status": "active | draft | archived | proposed_upstream",
-  "origin_hub_id": "corte",
-  "parent_revision_global_id": "instance:nice:charte-participation",
-  "global_id": "global:charte-participation" | "instance:corte:charte-participation"
+  "is_proposed": true, // Marqueur pour les pages suggérées par l'IA (en attente de validation)
+  "ai_generated": true, // Indique que le contenu initial a été rédigé par Ophélia
+  "updated_at": "ISO-DATE",
+  "wiki_page": {
+    "page_key": "charte-participation",
+    "status": "active | draft | archived | proposed_upstream",
+    "origin_hub_id": "corte",
+    "parent_revision_global_id": "instance:nice:charte-participation",
+    "global_id": "global:charte-participation" | "instance:corte:charte-participation"
+  }
 }
 ```
+
+## Conventions Inseme
+
+### 1. Pages de Room (Assemblées)
+Chaque assemblée Inseme est associée à une page wiki via son slug : `room:${room_slug}`. Cette page sert de "Mémoire de travail" pour la room.
+
+### 2. Outils Ophélia
+Ophélia dispose de l'outil `propose_wiki_page` qui lui permet de :
+- Synthétiser les débats d'une assemblée.
+- Créer une nouvelle page avec le flag `is_proposed: true`.
+- Ces pages apparaissent dans le Wiki mais avec un bandeau indiquant qu'elles doivent être validées/éditées par les citoyens.
 
 Conventions:
 

@@ -15,8 +15,92 @@
 
 
 # ============================================================================
+# EDGE FUNCTIONS
+# ============================================================================
+
+# Instance resolver - Doit être AVANT les autres pour intercepter les sous-domaines
+# --- GENERATED BRIQUE EDGE START ---
+[[edge_functions]]
+  function = "ophelia-chat"
+  path = "/api/ophelia"
+
+[[edge_functions]]
+  function = "ophelia-chat-stream"
+  path = "/api/chat-stream"
+
+[[edge_functions]]
+  function = "ophelia-openai-v1"
+  path = "/v1/chat/completions"
+
+[[edge_functions]]
+  function = "ophelia-vector-search"
+  path = "/api/vector-search"
+
+[[edge_functions]]
+  function = "ophelia-transcribe"
+  path = "/api/transcribe"
+
+[[edge_functions]]
+  function = "ophelia-translate"
+  path = "/api/translate"
+
+[[edge_functions]]
+  function = "ophelia-sessions"
+  path = "/api/sessions"
+
+[[edge_functions]]
+  function = "map-municipal-data"
+  path = "/api/municipal/*"
+
+[[edge_functions]]
+  function = "fil-create-item"
+  path = "/api/fil/items"
+
+[[edge_functions]]
+  function = "fil-vote"
+  path = "/api/fil/vote"
+# --- GENERATED BRIQUE EDGE END ---
+
+[[edge_functions]]
+  path = "/*"
+  function = "instance-resolver"
+  excludedPath = ["/assets/*", "/images/*", "/fonts/*", "/api/*"]
+
+# ============================================================================
 # REDIRECTS
 # ============================================================================
+
+# --- GENERATED BRIQUE REDIRECTS START ---
+[[redirects]]
+  from = "/api/wiki-sync"
+  to = "/.netlify/functions/wiki-sync"
+  status = 200
+
+[[redirects]]
+  from = "/api/wiki-resolve"
+  to = "/.netlify/functions/wiki-resolve"
+  status = 200
+
+[[redirects]]
+  from = "/api/wiki-propose"
+  to = "/.netlify/functions/wiki-propose"
+  status = 200
+
+[[redirects]]
+  from = "/api/wiki-optimize-title"
+  to = "/.netlify/functions/wiki-optimize-title"
+  status = 200
+
+[[redirects]]
+  from = "/api/wiki-propose-ai"
+  to = "/.netlify/functions/wiki-propose-ai"
+  status = 200
+
+[[redirects]]
+  from = "/api/wiki-search"
+  to = "/.netlify/functions/wiki-search"
+  status = 200
+# --- GENERATED BRIQUE REDIRECTS END ---
 
 [[redirects]]
   from = "/api/config"
@@ -38,4 +122,4 @@
   [headers.values]
     Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Headers = "Content-Type, Authorization, X-Ophelia-Instance"
-    Access-Control-Expose-Headers = "X-Ophelia-Instance"
+    Access-Control-Expose-Headers = "X-Ophelia-Instance, X-Ophelia-Instance-Name, X-Ophelia-Supabase-URL, X-Ophelia-Supabase-Anon-Key, X-Ophelia-Instance-Error"

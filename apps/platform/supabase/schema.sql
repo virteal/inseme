@@ -28,9 +28,9 @@ CREATE TABLE public.acte (
   created_by uuid,
   CONSTRAINT acte_pkey PRIMARY KEY (id),
   CONSTRAINT acte_collectivite_id_fkey FOREIGN KEY (collectivite_id) REFERENCES public.collectivite(id),
-  CONSTRAINT acte_supersedes_id_fkey FOREIGN KEY (supersedes_id) REFERENCES public.acte(id),
   CONSTRAINT acte_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id),
-  CONSTRAINT acte_exec_proof_fkey FOREIGN KEY (exec_proof_id) REFERENCES public.proof(id)
+  CONSTRAINT acte_exec_proof_fkey FOREIGN KEY (exec_proof_id) REFERENCES public.proof(id),
+  CONSTRAINT acte_supersedes_id_fkey FOREIGN KEY (supersedes_id) REFERENCES public.acte(id)
 );
 CREATE TABLE public.cafe_reflection_tasks (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -164,8 +164,8 @@ CREATE TABLE public.civic_user_profile (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT civic_user_profile_pkey PRIMARY KEY (id),
-  CONSTRAINT civic_user_profile_id_fkey FOREIGN KEY (id) REFERENCES public.users(id),
-  CONSTRAINT civic_user_profile_collectivite_fkey FOREIGN KEY (collectivite_id) REFERENCES public.collectivite(id)
+  CONSTRAINT civic_user_profile_collectivite_fkey FOREIGN KEY (collectivite_id) REFERENCES public.collectivite(id),
+  CONSTRAINT civic_user_profile_id_fkey FOREIGN KEY (id) REFERENCES public.users(id)
 );
 CREATE TABLE public.collected_data (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -334,7 +334,7 @@ CREATE TABLE public.cop_agents (
 CREATE TABLE public.cop_artifact (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   topic_id uuid NOT NULL,
-  source_task_id uuid,
+  source_job_id uuid,
   source_step_id uuid,
   type text NOT NULL,
   format text,
@@ -343,9 +343,9 @@ CREATE TABLE public.cop_artifact (
   created_by uuid,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT cop_artifact_pkey PRIMARY KEY (id),
-  CONSTRAINT cop_artifact_topic_id_fkey FOREIGN KEY (topic_id) REFERENCES public.cop_topic(id),
-  CONSTRAINT cop_artifact_source_task_id_fkey FOREIGN KEY (source_task_id) REFERENCES public.cop_task(id),
-  CONSTRAINT cop_artifact_source_step_id_fkey FOREIGN KEY (source_step_id) REFERENCES public.cop_step(id)
+  CONSTRAINT cop_artifact_source_job_id_fkey FOREIGN KEY (source_job_id) REFERENCES public.cop_job(id),
+  CONSTRAINT cop_artifact_source_step_id_fkey FOREIGN KEY (source_step_id) REFERENCES public.cop_step(id),
+  CONSTRAINT cop_artifact_topic_id_fkey FOREIGN KEY (topic_id) REFERENCES public.cop_topic(id)
 );
 CREATE TABLE public.cop_artifacts (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -399,7 +399,7 @@ CREATE TABLE public.cop_events (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT cop_events_pkey PRIMARY KEY (id)
 );
-CREATE TABLE public.cop_task (
+CREATE TABLE public.cop_job (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   topic_id uuid NOT NULL,
   type text NOT NULL,
@@ -415,8 +415,8 @@ CREATE TABLE public.cop_task (
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   source_event_id uuid,
   status_reason text,
-  CONSTRAINT cop_task_pkey PRIMARY KEY (id),
-  CONSTRAINT cop_task_topic_id_fkey FOREIGN KEY (topic_id) REFERENCES public.cop_topic(id)
+  CONSTRAINT cop_job_pkey PRIMARY KEY (id),
+  CONSTRAINT cop_job_topic_id_fkey FOREIGN KEY (topic_id) REFERENCES public.cop_topic(id)
 );
 CREATE TABLE public.cop_nodes (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -433,7 +433,7 @@ CREATE TABLE public.cop_nodes (
 );
 CREATE TABLE public.cop_step (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
-  task_id uuid NOT NULL,
+  job_id uuid NOT NULL,
   name text NOT NULL,
   status text NOT NULL DEFAULT 'pending'::text,
   input jsonb DEFAULT '{}'::jsonb,
@@ -447,7 +447,7 @@ CREATE TABLE public.cop_step (
   lease_expires_at timestamp with time zone,
   checkpoint jsonb DEFAULT '{}'::jsonb,
   CONSTRAINT cop_step_pkey PRIMARY KEY (id),
-  CONSTRAINT cop_step_task_id_fkey FOREIGN KEY (task_id) REFERENCES public.cop_task(id)
+  CONSTRAINT cop_step_job_id_fkey FOREIGN KEY (job_id) REFERENCES public.cop_job(id)
 );
 CREATE TABLE public.cop_topic (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -505,10 +505,10 @@ CREATE TABLE public.deadline_instance (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT deadline_instance_pkey PRIMARY KEY (id),
-  CONSTRAINT deadline_instance_template_id_fkey FOREIGN KEY (template_id) REFERENCES public.deadline_template(id),
   CONSTRAINT deadline_instance_closed_by_user_id_fkey FOREIGN KEY (closed_by_user_id) REFERENCES public.users(id),
   CONSTRAINT deadline_instance_closed_proof_id_fkey FOREIGN KEY (closed_proof_id) REFERENCES public.proof(id),
-  CONSTRAINT deadline_instance_generated_status_id_fkey FOREIGN KEY (generated_status_id) REFERENCES public.legal_status_instance(id)
+  CONSTRAINT deadline_instance_generated_status_id_fkey FOREIGN KEY (generated_status_id) REFERENCES public.legal_status_instance(id),
+  CONSTRAINT deadline_instance_template_id_fkey FOREIGN KEY (template_id) REFERENCES public.deadline_template(id)
 );
 CREATE TABLE public.deadline_template (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -538,8 +538,8 @@ CREATE TABLE public.delegations (
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   metadata jsonb NOT NULL DEFAULT '{"schemaVersion": 1}'::jsonb,
   CONSTRAINT delegations_pkey PRIMARY KEY (id),
-  CONSTRAINT delegations_delegator_id_fkey FOREIGN KEY (delegator_id) REFERENCES public.users(id),
   CONSTRAINT delegations_delegate_id_fkey FOREIGN KEY (delegate_id) REFERENCES public.users(id),
+  CONSTRAINT delegations_delegator_id_fkey FOREIGN KEY (delegator_id) REFERENCES public.users(id),
   CONSTRAINT delegations_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES public.tags(id)
 );
 CREATE TABLE public.demande_admin (
@@ -563,8 +563,8 @@ CREATE TABLE public.demande_admin (
   created_by uuid,
   CONSTRAINT demande_admin_pkey PRIMARY KEY (id),
   CONSTRAINT demande_admin_acte_id_fkey FOREIGN KEY (acte_id) REFERENCES public.acte(id),
-  CONSTRAINT demande_admin_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id),
-  CONSTRAINT demande_admin_collectivite_id_fkey FOREIGN KEY (collectivite_id) REFERENCES public.collectivite(id)
+  CONSTRAINT demande_admin_collectivite_id_fkey FOREIGN KEY (collectivite_id) REFERENCES public.collectivite(id),
+  CONSTRAINT demande_admin_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id)
 );
 CREATE TABLE public.document_sources (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -653,6 +653,30 @@ CREATE TABLE public.groups (
   CONSTRAINT groups_pkey PRIMARY KEY (id),
   CONSTRAINT groups_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id)
 );
+CREATE TABLE public.inseme_messages (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  room_id text NOT NULL,
+  user_id uuid,
+  name text NOT NULL,
+  message text NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  type text DEFAULT 'chat'::text,
+  metadata jsonb DEFAULT '{}'::jsonb,
+  embedding USER-DEFINED,
+  CONSTRAINT inseme_messages_pkey PRIMARY KEY (id),
+  CONSTRAINT inseme_messages_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
+);
+CREATE TABLE public.inseme_rooms (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  slug text NOT NULL UNIQUE,
+  owner_id uuid,
+  name text NOT NULL,
+  settings jsonb DEFAULT '{}'::jsonb,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT inseme_rooms_pkey PRIMARY KEY (id),
+  CONSTRAINT inseme_rooms_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES auth.users(id)
+);
 CREATE TABLE public.instance_config (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   key text NOT NULL UNIQUE,
@@ -699,7 +723,7 @@ CREATE TABLE public.instance_registry (
   CONSTRAINT instance_registry_pkey PRIMARY KEY (id),
   CONSTRAINT instance_registry_parent_hub_id_fkey FOREIGN KEY (parent_hub_id) REFERENCES public.instance_registry(id)
 );
-CREATE TABLE public.tasks (
+CREATE TABLE public.jobs (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   owner uuid,
   type text NOT NULL,
@@ -713,8 +737,8 @@ CREATE TABLE public.tasks (
   updated_at timestamp with time zone DEFAULT now(),
   started_at timestamp with time zone,
   completed_at timestamp with time zone,
-  CONSTRAINT tasks_pkey PRIMARY KEY (id),
-  CONSTRAINT tasks_owner_fkey FOREIGN KEY (owner) REFERENCES public.users(id)
+  CONSTRAINT jobs_pkey PRIMARY KEY (id),
+  CONSTRAINT jobs_owner_fkey FOREIGN KEY (owner) REFERENCES public.users(id)
 );
 CREATE TABLE public.knowledge_chunks (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -765,8 +789,8 @@ CREATE TABLE public.legal_status_instance (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT legal_status_instance_pkey PRIMARY KEY (id),
-  CONSTRAINT legal_status_instance_proof_id_fkey FOREIGN KEY (proof_id) REFERENCES public.proof(id),
-  CONSTRAINT legal_status_instance_created_by_user_id_fkey FOREIGN KEY (created_by_user_id) REFERENCES public.users(id)
+  CONSTRAINT legal_status_instance_created_by_user_id_fkey FOREIGN KEY (created_by_user_id) REFERENCES public.users(id),
+  CONSTRAINT legal_status_instance_proof_id_fkey FOREIGN KEY (proof_id) REFERENCES public.proof(id)
 );
 CREATE TABLE public.legal_status_registry (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -797,8 +821,8 @@ CREATE TABLE public.municipal_documents (
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT municipal_documents_pkey PRIMARY KEY (id),
-  CONSTRAINT municipal_documents_source_id_fkey FOREIGN KEY (source_id) REFERENCES public.sources_web(id),
-  CONSTRAINT municipal_documents_raw_document_id_fkey FOREIGN KEY (raw_document_id) REFERENCES public.municipal_raw_documents(id)
+  CONSTRAINT municipal_documents_raw_document_id_fkey FOREIGN KEY (raw_document_id) REFERENCES public.municipal_raw_documents(id),
+  CONSTRAINT municipal_documents_source_id_fkey FOREIGN KEY (source_id) REFERENCES public.sources_web(id)
 );
 CREATE TABLE public.municipal_poi (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -811,7 +835,7 @@ CREATE TABLE public.municipal_poi (
   description text,
   latitude double precision,
   longitude double precision,
-  geom USER-DEFINED DEFAULT
+  geom USER-DEFINED DEFAULT 
 CASE
     WHEN ((latitude IS NOT NULL) AND (longitude IS NOT NULL)) THEN st_setsrid(st_makepoint(longitude, latitude), 4326)
     ELSE NULL::geometry
@@ -822,8 +846,8 @@ END,
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT municipal_poi_pkey PRIMARY KEY (id),
-  CONSTRAINT municipal_poi_source_id_fkey FOREIGN KEY (source_id) REFERENCES public.sources_web(id),
-  CONSTRAINT municipal_poi_raw_document_id_fkey FOREIGN KEY (raw_document_id) REFERENCES public.municipal_raw_documents(id)
+  CONSTRAINT municipal_poi_raw_document_id_fkey FOREIGN KEY (raw_document_id) REFERENCES public.municipal_raw_documents(id),
+  CONSTRAINT municipal_poi_source_id_fkey FOREIGN KEY (source_id) REFERENCES public.sources_web(id)
 );
 CREATE TABLE public.municipal_raw_documents (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -841,8 +865,8 @@ CREATE TABLE public.municipal_raw_documents (
   metadata jsonb DEFAULT '{}'::jsonb,
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT municipal_raw_documents_pkey PRIMARY KEY (id),
-  CONSTRAINT municipal_raw_documents_source_id_fkey FOREIGN KEY (source_id) REFERENCES public.sources_web(id),
-  CONSTRAINT municipal_raw_documents_crawl_run_id_fkey FOREIGN KEY (crawl_run_id) REFERENCES public.crawl_runs(id)
+  CONSTRAINT municipal_raw_documents_crawl_run_id_fkey FOREIGN KEY (crawl_run_id) REFERENCES public.crawl_runs(id),
+  CONSTRAINT municipal_raw_documents_source_id_fkey FOREIGN KEY (source_id) REFERENCES public.sources_web(id)
 );
 CREATE TABLE public.municipal_transparency (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -893,13 +917,13 @@ CREATE TABLE public.outgoing_action (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT outgoing_action_pkey PRIMARY KEY (id),
-  CONSTRAINT outgoing_action_collectivite_id_fkey FOREIGN KEY (collectivite_id) REFERENCES public.collectivite(id),
   CONSTRAINT outgoing_action_acte_id_fkey FOREIGN KEY (acte_id) REFERENCES public.acte(id),
-  CONSTRAINT outgoing_action_demande_admin_id_fkey FOREIGN KEY (demande_admin_id) REFERENCES public.demande_admin(id),
+  CONSTRAINT outgoing_action_collectivite_id_fkey FOREIGN KEY (collectivite_id) REFERENCES public.collectivite(id),
+  CONSTRAINT outgoing_action_confirmation_proof_id_fkey FOREIGN KEY (confirmation_proof_id) REFERENCES public.proof(id),
   CONSTRAINT outgoing_action_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id),
-  CONSTRAINT outgoing_action_validated_by_fkey FOREIGN KEY (validated_by) REFERENCES auth.users(id),
+  CONSTRAINT outgoing_action_demande_admin_id_fkey FOREIGN KEY (demande_admin_id) REFERENCES public.demande_admin(id),
   CONSTRAINT outgoing_action_sent_by_fkey FOREIGN KEY (sent_by) REFERENCES auth.users(id),
-  CONSTRAINT outgoing_action_confirmation_proof_id_fkey FOREIGN KEY (confirmation_proof_id) REFERENCES public.proof(id)
+  CONSTRAINT outgoing_action_validated_by_fkey FOREIGN KEY (validated_by) REFERENCES auth.users(id)
 );
 CREATE TABLE public.posts (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -932,8 +956,8 @@ CREATE TABLE public.proof (
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   created_by uuid,
   CONSTRAINT proof_pkey PRIMARY KEY (id),
-  CONSTRAINT proof_verified_by_user_id_fkey FOREIGN KEY (verified_by_user_id) REFERENCES public.users(id),
-  CONSTRAINT proof_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id)
+  CONSTRAINT proof_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id),
+  CONSTRAINT proof_verified_by_user_id_fkey FOREIGN KEY (verified_by_user_id) REFERENCES public.users(id)
 );
 CREATE TABLE public.proof_link (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -992,10 +1016,10 @@ CREATE TABLE public.publication_citoyenne (
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   published_at timestamp with time zone,
   CONSTRAINT publication_citoyenne_pkey PRIMARY KEY (id),
-  CONSTRAINT publication_citoyenne_collectivite_id_fkey FOREIGN KEY (collectivite_id) REFERENCES public.collectivite(id),
   CONSTRAINT publication_citoyenne_acte_id_fkey FOREIGN KEY (acte_id) REFERENCES public.acte(id),
-  CONSTRAINT publication_citoyenne_demande_admin_id_fkey FOREIGN KEY (demande_admin_id) REFERENCES public.demande_admin(id),
   CONSTRAINT publication_citoyenne_author_id_fkey FOREIGN KEY (author_id) REFERENCES auth.users(id),
+  CONSTRAINT publication_citoyenne_collectivite_id_fkey FOREIGN KEY (collectivite_id) REFERENCES public.collectivite(id),
+  CONSTRAINT publication_citoyenne_demande_admin_id_fkey FOREIGN KEY (demande_admin_id) REFERENCES public.demande_admin(id),
   CONSTRAINT publication_citoyenne_moderated_by_fkey FOREIGN KEY (moderated_by) REFERENCES auth.users(id)
 );
 CREATE TABLE public.reactions (
@@ -1035,12 +1059,12 @@ CREATE TABLE public.recours (
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   created_by uuid,
   CONSTRAINT recours_pkey PRIMARY KEY (id),
-  CONSTRAINT recours_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id),
-  CONSTRAINT recours_collectivite_id_fkey FOREIGN KEY (collectivite_id) REFERENCES public.collectivite(id),
-  CONSTRAINT recours_demande_id_fkey FOREIGN KEY (demande_id) REFERENCES public.demande_admin(id),
   CONSTRAINT recours_acte_id_fkey FOREIGN KEY (acte_id) REFERENCES public.acte(id),
-  CONSTRAINT recours_proof_id_envoi_fkey FOREIGN KEY (proof_id_envoi) REFERENCES public.proof(id),
-  CONSTRAINT recours_proof_id_decision_fkey FOREIGN KEY (proof_id_decision) REFERENCES public.proof(id)
+  CONSTRAINT recours_collectivite_id_fkey FOREIGN KEY (collectivite_id) REFERENCES public.collectivite(id),
+  CONSTRAINT recours_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id),
+  CONSTRAINT recours_demande_id_fkey FOREIGN KEY (demande_id) REFERENCES public.demande_admin(id),
+  CONSTRAINT recours_proof_id_decision_fkey FOREIGN KEY (proof_id_decision) REFERENCES public.proof(id),
+  CONSTRAINT recours_proof_id_envoi_fkey FOREIGN KEY (proof_id_envoi) REFERENCES public.proof(id)
 );
 CREATE TABLE public.reponse_admin (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -1054,9 +1078,9 @@ CREATE TABLE public.reponse_admin (
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   created_by uuid,
   CONSTRAINT reponse_admin_pkey PRIMARY KEY (id),
+  CONSTRAINT reponse_admin_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id),
   CONSTRAINT reponse_admin_demande_id_fkey FOREIGN KEY (demande_id) REFERENCES public.demande_admin(id),
-  CONSTRAINT reponse_admin_proof_id_fkey FOREIGN KEY (proof_id) REFERENCES public.proof(id),
-  CONSTRAINT reponse_admin_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(id)
+  CONSTRAINT reponse_admin_proof_id_fkey FOREIGN KEY (proof_id) REFERENCES public.proof(id)
 );
 CREATE TABLE public.responsibility_log (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -1240,8 +1264,8 @@ CREATE TABLE public.user_feed_subscriptions (
   category text,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT user_feed_subscriptions_pkey PRIMARY KEY (user_id, feed_id),
-  CONSTRAINT user_feed_subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id),
-  CONSTRAINT user_feed_subscriptions_feed_id_fkey FOREIGN KEY (feed_id) REFERENCES public.feeds(id)
+  CONSTRAINT user_feed_subscriptions_feed_id_fkey FOREIGN KEY (feed_id) REFERENCES public.feeds(id),
+  CONSTRAINT user_feed_subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
 CREATE TABLE public.users (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -1253,8 +1277,9 @@ CREATE TABLE public.users (
   rgpd_consent_date timestamp with time zone,
   updated_at timestamp with time zone DEFAULT now(),
   metadata jsonb NOT NULL DEFAULT '{"schemaVersion": 1}'::jsonb,
-  role text NOT NULL DEFAULT 'user'::text CHECK (role = ANY (ARRAY['user'::text, 'moderator'::text, 'admin'::text])),
+  role text NOT NULL DEFAULT 'user'::text CHECK (role = ANY (ARRAY['user'::text, 'moderator'::text, 'admin'::text, 'ai'::text, 'represented'::text])),
   public_profile boolean NOT NULL DEFAULT true,
+  avatar_url text,
   CONSTRAINT users_pkey PRIMARY KEY (id)
 );
 CREATE TABLE public.verification_queue (
@@ -1271,8 +1296,8 @@ CREATE TABLE public.verification_queue (
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT verification_queue_pkey PRIMARY KEY (id),
-  CONSTRAINT verification_queue_proof_id_fkey FOREIGN KEY (proof_id) REFERENCES public.proof(id),
   CONSTRAINT verification_queue_assigned_to_fkey FOREIGN KEY (assigned_to) REFERENCES auth.users(id),
+  CONSTRAINT verification_queue_proof_id_fkey FOREIGN KEY (proof_id) REFERENCES public.proof(id),
   CONSTRAINT verification_queue_verified_by_fkey FOREIGN KEY (verified_by) REFERENCES auth.users(id)
 );
 CREATE TABLE public.votes (
@@ -1284,8 +1309,8 @@ CREATE TABLE public.votes (
   updated_at timestamp with time zone DEFAULT now(),
   metadata jsonb DEFAULT '{}'::jsonb,
   CONSTRAINT votes_pkey PRIMARY KEY (id),
-  CONSTRAINT votes_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id),
-  CONSTRAINT votes_proposition_id_fkey FOREIGN KEY (proposition_id) REFERENCES public.propositions(id)
+  CONSTRAINT votes_proposition_id_fkey FOREIGN KEY (proposition_id) REFERENCES public.propositions(id),
+  CONSTRAINT votes_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
 CREATE TABLE public.wiki_pages (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -1297,7 +1322,8 @@ CREATE TABLE public.wiki_pages (
   updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()),
   summary text,
   metadata jsonb NOT NULL DEFAULT '{"schemaVersion": 1}'::jsonb,
+  fts_tokens tsvector,
+  embedding USER-DEFINED,
   CONSTRAINT wiki_pages_pkey PRIMARY KEY (id),
   CONSTRAINT wiki_pages_author_id_fkey FOREIGN KEY (author_id) REFERENCES public.users(id)
 );
-

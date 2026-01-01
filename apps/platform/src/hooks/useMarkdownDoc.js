@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { substituteVariables } from "@inseme/cop-host";
 
 /**
  * Hook pour charger un document Markdown depuis /docs/
@@ -22,11 +23,7 @@ export function useMarkdownDoc(docPath, replacements = {}) {
         let text = await res.text();
 
         // Appliquer les remplacements de variables {{KEY}}
-        Object.entries(replacements).forEach(([key, value]) => {
-          if (value) {
-            text = text.split(`{{${key}}}`).join(value);
-          }
-        });
+        text = substituteVariables(text, replacements);
 
         setContent(text);
         setError(null);

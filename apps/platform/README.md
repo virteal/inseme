@@ -1,8 +1,10 @@
 # 📊 Kudocracy.Survey - Plateforme de Consultation Citoyenne
 
-**Kudocracy.Survey** est la plateforme de consultation citoyenne et de démocratie participative du monorepo Inseme. Elle est conçue pour être réutilisable par n'importe quelle commune ou collectif.
+**Kudocracy.Survey** est la plateforme de consultation citoyenne et de démocratie participative du
+monorepo Inseme. Elle est conçue pour être réutilisable par n'importe quelle commune ou collectif.
 
-> Pour une vue d'ensemble de l'écosystème (Agora, IA, Multi-instances), consultez le [README global du dépôt](../../README.md).
+> Pour une vue d'ensemble de l'écosystème (Agora, IA, Multi-instances), consultez le
+> [README global du dépôt](../../README.md).
 
 ---
 
@@ -11,19 +13,28 @@
 Kudocracy.Survey rassemble plusieurs espaces complémentaires pour le quotidien citoyen :
 
 ### 1. ☕ Café — Discuter entre voisins
-Un lieu convivial pour créer des groupes par quartier, association ou thème. On y publie des messages, on réagit avec des emojis et on suit les conversations.
+
+Un lieu convivial pour créer des groupes par quartier, association ou thème. On y publie des
+messages, on réagit avec des emojis et on suit les conversations.
 
 ### 2. 💬 Ophélia — Une assistante qui répond
-L'IA de la plateforme répond aux questions, aide à formuler des idées et guide vers les démarches utiles en s'appuyant sur le wiki et les consultations.
+
+L'IA de la plateforme répond aux questions, aide à formuler des idées et guide vers les démarches
+utiles en s'appuyant sur le wiki et les consultations.
 
 ### 3. 📖 Wiki collaboratif — La mémoire commune
+
 Un carnet de bord collectif pour les comptes rendus, fiches pratiques et idées de quartier.
 
-### 4. 🗳️ Kudocratie — Débattre et voter
-Permet de déposer une proposition, de voter et de déléguer sa voix à quelqu'un de confiance sur un sujet précis.
+### 4. 🗳️ Kudocracy — Débattre et voter
+
+Permet de déposer une proposition, de voter et de déléguer sa voix à quelqu'un de confiance sur un
+sujet précis.
 
 ### 5. 🔍 Transparence — Comprendre comment la ville décide
-Un tableau de bord synthétise les engagements de transparence : score automatique, comptes rendus publiés, accès aux archives.
+
+Un tableau de bord synthétise les engagements de transparence : score automatique, comptes rendus
+publiés, accès aux archives.
 
 ---
 
@@ -56,15 +67,18 @@ apps/platform/
 ---
 
 ## ⚖️ Neutralité & Engagement
-Cette plateforme est une infrastructure **neutre**. Elle ne soutient aucun parti politique, aucune campagne électorale, ni aucun candidat ou liste.
+
+Cette plateforme est une infrastructure **neutre**. Elle ne soutient aucun parti politique, aucune
+campagne électorale, ni aucun candidat ou liste.
 
 ---
 
 ## 📜 Licence & Auteur
 
-Ce projet est sous licence **MIT**. 
+Ce projet est sous licence **MIT**.
 
 **Auteur : Jean Hugues Noël Robert**
+
 - Projet porté par l'association **C.O.R.S.I.C.A.**
 - Communauté [LePP.fr](https://lepp.fr).
 

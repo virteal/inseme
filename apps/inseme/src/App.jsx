@@ -1,256 +1,244 @@
-// 
+//
 
-import React, { useState, useEffect } from 'react'
-import { supabase } from './lib/supabase'
-import { AuthModal } from './package/inseme/components/AuthModal'
-import { InsemeRoom } from './package/inseme'
-import { SaaSDashboard } from './components/SaaS/SaaSDashboard'
-import { LandingPage } from './components/SaaS/LandingPage'
-import { Layout, Play, LogOut, UserCheck } from 'lucide-react'
+import React, { useState, useEffect } from "react";
+import { supabase } from "./lib/supabase";
+import { AuthModal } from "@inseme/core";
+import { InsemeRoom, InsemeProvider } from "@inseme/core";
+import { SaaSDashboard } from "./components/SaaS/SaaSDashboard";
+import { LandingPage } from "./components/SaaS/LandingPage";
+import { LegalPage } from "@inseme/ui";
+import { LEGAL_CONTENT } from "@inseme/kudocracy";
+import { Layout, Play, LogOut, UserCheck } from "lucide-react";
+import { CurrentUserProvider, useCurrentUser } from "@inseme/cop-host";
 
-function App() {
-    const [user, setUser] = useState(null)
-    const [roomName, setRoomName] = useState('Général')
-    const [showAuth, setShowAuth] = useState(false)
-    const [view, setView] = useState('landing') // 'landing', 'dashboard', 'participation'
-    const [isSpectator, setIsSpectator] = useState(false)
-    const [showGuestReconnect, setShowGuestReconnect] = useState(false)
-    const [authInitialMode, setAuthInitialMode] = useState(null)
+function AppContent() {
+  const { currentUser: user, loading, userStatus } = useCurrentUser();
+  const [roomName, setRoomName] = useState("Général");
+  const [showAuth, setShowAuth] = useState(false);
+  const [view, setView] = useState("landing"); // 'landing', 'dashboard', 'participation', 'terms', 'privacy'
+  const [isSpectator, setIsSpectator] = useState(false);
+  const [showGuestReconnect, setShowGuestReconnect] = useState(false);
+  const [authInitialMode, setAuthInitialMode] = useState(null);
 
-    useEffect(() => {
-        const handleOpenAuth = (e) => {
-            if (e?.detail?.mode) {
-                setAuthInitialMode(e.detail.mode);
-            }
-            setShowAuth(true);
-        };
-        const handleStopSpectating = () => setIsSpectator(false);
-        window.addEventListener('inseme-open-auth', handleOpenAuth);
-        window.addEventListener('inseme-stop-spectating', handleStopSpectating);
-        
-        // Get initial session
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            const currentUser = session?.user ?? null
-            setUser(currentUser)
+  useEffect(() => {
+    const handleOpenAuth = (e) => {
+      if (e?.detail?.mode) {
+        setAuthInitialMode(e.detail.mode);
+      }
+      setShowAuth(true);
+    };
+    const handleStopSpectating = () => setIsSpectator(false);
+    window.addEventListener("inseme-open-auth", handleOpenAuth);
+    window.addEventListener("inseme-stop-spectating", handleStopSpectating);
 
-            // Determine initial view
-            const params = new URLSearchParams(window.location.search)
-            const room = params.get('room')
-            
-            if (currentUser?.is_anonymous) {
-                // Check if we are in "public" mode or if it's a returning session
-                const isPublicMode = localStorage.getItem('inseme_is_public') === 'true'
-                
-                // If public mode OR if it's a restored session (not just created)
-                // We show the reconnection prompt for safety
-                setShowGuestReconnect(true)
-            }
+    // Determine initial view based on user status
+    const params = new URLSearchParams(window.location.search);
+    const room = params.get("room");
 
-            if (room) {
-                setRoomName(room)
-                setView('participation')
-                // Default to spectator only if NO user is present at all
-                if (!currentUser) {
-                    setIsSpectator(true)
-                } else {
-                    setIsSpectator(false)
-                }
-            } else if (currentUser) {
-                setRoomName('Général')
-                setView('dashboard')
-            } else {
-                setRoomName('Général')
-                setView('landing')
-            }
-        })
-
-        // Listen for auth changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            const currentUser = session?.user ?? null
-            setUser(currentUser)
-            
-            if (currentUser) {
-                // If we just signed in (any method), we are no longer a spectator
-                setIsSpectator(false) 
-                
-                if (view === 'landing' || event === 'SIGNED_IN') {
-                    // Anonymous guests go straight to the room, members go to dashboard
-                    if (currentUser.is_anonymous) {
-                        setView('participation')
-                    } else if (view === 'landing') {
-                        setView('dashboard')
-                    }
-                }
-            } else {
-                // Only go back to landing if we were not already there
-                if (view !== 'landing') {
-                    setView('landing')
-                    setIsSpectator(false)
-                }
-            }
-        })
-
-        return () => {
-            subscription.unsubscribe();
-            window.removeEventListener('inseme-open-auth', handleOpenAuth);
-            window.removeEventListener('inseme-stop-spectating', handleStopSpectating);
-        };
-    }, [])
-
-    const handleSelectRoom = (slug) => {
-        setRoomName(slug)
-        setView('participation')
-        const url = new URL(window.location)
-        url.searchParams.set('room', slug)
-        window.history.pushState({}, '', url)
+    if (user?.is_anonymous) {
+      setShowGuestReconnect(true);
     }
 
-    const handleSpectator = () => {
-        setIsSpectator(true)
-        setShowAuth(false)
-        setView('participation')
+    if (room) {
+      setRoomName(room);
+      setView("participation");
+      setIsSpectator(!user);
+    } else if (user) {
+      setRoomName("Général");
+      setView("dashboard");
+    } else if (!loading) {
+      setRoomName("Général");
+      setView("landing");
     }
 
-    if ((!user || user.is_anonymous) && showAuth) {
-        return <AuthModal 
-            onClose={() => {
-                setShowAuth(false)
-                setAuthInitialMode(null)
-            }} 
-            roomName={roomName} 
-            isUpgrading={!!user?.is_anonymous} 
-            onSpectator={handleSpectator}
-            initialMode={authInitialMode}
+    return () => {
+      window.removeEventListener("inseme-open-auth", handleOpenAuth);
+      window.removeEventListener(
+        "inseme-stop-spectating",
+        handleStopSpectating
+      );
+    };
+  }, [user, loading]);
+
+  // Sync view on auth events
+  useEffect(() => {
+    if (user) {
+      setIsSpectator(false);
+      if (view === "landing") {
+        if (user.is_anonymous) {
+          setView("participation");
+        } else {
+          setView("dashboard");
+        }
+      }
+    } else if (!loading && view !== "landing") {
+      setView("landing");
+      setIsSpectator(false);
+    }
+  }, [user, loading]);
+
+  if (loading) return null;
+
+  const handleAuthSuccess = () => {
+    setShowAuth(false);
+  };
+
+  return (
+    <InsemeProvider
+      roomName={roomName}
+      user={user}
+      supabase={supabase}
+      isSpectator={isSpectator}
+    >
+      <div className="min-h-screen bg-[#0A0A0B] text-white selection:bg-emerald-500/30">
+        {/* Navigation */}
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0B]/80 backdrop-blur-md border-b border-white/5">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              <div
+                className="flex items-center gap-2 cursor-pointer group"
+                onClick={() => setView("landing")}
+              >
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center border border-emerald-500/20 group-hover:border-emerald-500/40 transition-colors">
+                  <div className="w-4 h-4 rounded-sm bg-emerald-500" />
+                </div>
+                <span className="font-bold text-xl tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+                  Inseme
+                </span>
+              </div>
+
+              <div className="flex items-center gap-4">
+                {user ? (
+                  <>
+                    <button
+                      onClick={() => setView("dashboard")}
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                        view === "dashboard"
+                          ? "bg-white/10 text-white"
+                          : "text-white/60 hover:text-white hover:bg-white/5"
+                      }`}
+                    >
+                      Dashboard
+                    </button>
+                    <button
+                      onClick={() => supabase.auth.signOut()}
+                      className="p-2 rounded-full text-white/40 hover:text-rose-400 hover:bg-rose-400/10 transition-all"
+                      title="Déconnexion"
+                    >
+                      <LogOut className="w-5 h-5" />
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => setShowAuth(true)}
+                    className="px-6 py-2 rounded-full bg-emerald-500 text-black text-sm font-bold hover:bg-emerald-400 transition-all"
+                  >
+                    Connexion
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        {/* Main Content */}
+        <main className="pt-16">
+          {view === "landing" && (
+            <LandingPage
+              onStart={() => {
+                if (user) setView("dashboard");
+                else setShowAuth(true);
+              }}
+              onParticipate={() => {
+                setRoomName("Général");
+                setView("participation");
+              }}
+            />
+          )}
+
+          {view === "dashboard" && user && (
+            <SaaSDashboard
+              user={user}
+              onJoinRoom={(name) => {
+                setRoomName(name);
+                setView("participation");
+              }}
+            />
+          )}
+
+          {view === "participation" && (
+            <InsemeRoom
+              roomName={roomName}
+              user={user}
+              supabase={supabase}
+              isSpectator={isSpectator}
+              onBack={() => setView(user ? "dashboard" : "landing")}
+            />
+          )}
+
+          {(view === "terms" || view === "privacy") && (
+            <div className="max-w-4xl mx-auto px-4 py-12">
+              <button
+                onClick={() => setView("landing")}
+                className="mb-8 text-emerald-500 hover:text-emerald-400 flex items-center gap-2"
+              >
+                ← Retour à l'accueil
+              </button>
+              <LegalPage
+                content={
+                  view === "terms" ? LEGAL_CONTENT.TERMS : LEGAL_CONTENT.PRIVACY
+                }
+              />
+            </div>
+          )}
+        </main>
+
+        {/* Auth Modal */}
+        <AuthModal
+          isOpen={showAuth}
+          onClose={() => setShowAuth(false)}
+          onSuccess={handleAuthSuccess}
+          initialMode={authInitialMode}
         />
-    }
 
-    // --- RENDER MODES ---
-
-    // 1. Landing Page (Public)
-    if (view === 'landing') {
-        return <LandingPage onLogin={(mode) => {
-            setAuthInitialMode(mode || 'signin')
-            setShowAuth(true)
-        }} />
-    }
-
-    return (
-        <div className="min-h-screen bg-[#0a0a0c]">
-            {/* Global Header (Post-Auth) */}
-            {user && (
-                <div className="fixed top-6 right-8 z-[60] flex items-center gap-4 animate-in slide-in-from-right duration-500">
-                    {user.is_anonymous && (
-                        <button
-                            onClick={() => setShowAuth(true)}
-                            className="px-5 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl shadow-lg shadow-indigo-500/20 transition-all font-bold text-xs flex items-center gap-2 border border-indigo-400/30"
-                        >
-                            <Layout className="w-3 h-4" />
-                            DEVENIR MEMBRE
-                        </button>
-                    )}
-                    <button
-                        onClick={() => setView(view === 'dashboard' ? 'participation' : 'dashboard')}
-                        className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white rounded-xl border border-white/10 backdrop-blur-xl transition-all font-bold text-xs flex items-center gap-2"
-                    >
-                        {view === 'dashboard' ? <Play className="w-3 h-4" /> : <Layout className="w-3 h-4" />}
-                        {view === 'dashboard' ? 'ACCÉDER À LA SALLE' : 'MON HUB'}
-                    </button>
-                    <button
-                        onClick={() => {
-                            supabase.auth.signOut()
-                            localStorage.removeItem('inseme_is_public')
-                        }}
-                        className="p-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl border border-rose-500/20 transition-all font-bold text-xs group"
-                        title="Déconnexion"
-                    >
-                        <LogOut className="w-4 h-4" />
-                    </button>
+        {/* Reconnect Prompt for Guests */}
+        {showGuestReconnect && !user && view === "participation" && (
+          <div className="fixed bottom-6 right-6 z-[60] animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="bg-[#161618] border border-white/10 p-4 rounded-2xl shadow-2xl max-w-xs backdrop-blur-xl">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-500">
+                  <UserCheck className="w-5 h-5" />
                 </div>
-            )}
-
-            {/* 2. SaaS Dashboard */}
-            {view === 'dashboard' && (
-                <SaaSDashboard user={user} onSelectRoom={handleSelectRoom} />
-            )}
-
-            {/* 3. Assembly Room */}
-            {view === 'participation' && (
-                <div className="relative h-full w-full">
-                    <InsemeRoom
-                        roomName={roomName || 'Général'}
-                        user={user}
-                        isSpectator={isSpectator}
-                        supabase={supabase}
-                        config={{
-                            promptUrl: '/prompts/inseme.md',
-                            opheliaUrl: '/api/ophelia'
-                        }}
-                    />
-                    
-                    {/* Spectator Overlay */}
-                    {isSpectator && (
-                        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100]">
-                            <div className="px-4 py-2 bg-gray-900/90 backdrop-blur-md border border-white/10 rounded-full flex items-center gap-3 shadow-2xl">
-                                <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
-                                <span className="text-xs font-bold text-white uppercase tracking-widest">Mode Spectateur</span>
-                                <div className="w-px h-4 bg-white/20 mx-1" />
-                                <button 
-                                    onClick={() => {
-                                        if (user) {
-                                            setIsSpectator(false)
-                                        } else {
-                                            setAuthInitialMode('anonymous')
-                                            setShowAuth(true)
-                                        }
-                                    }}
-                                    className="text-[10px] font-black text-indigo-400 hover:text-indigo-300 uppercase tracking-tighter transition-colors"
-                                >
-                                    {user ? 'Participer' : 'Rejoindre'}
-                                </button>
-                            </div>
-                        </div>
-                    )}
+                <div>
+                  <h4 className="font-bold text-sm">Bon retour !</h4>
+                  <p className="text-xs text-white/40">
+                    Session invité détectée
+                  </p>
                 </div>
-            )}
-
-            {/* Guest Reconnection Prompt (Public Browser Safety) */}
-            {showGuestReconnect && user?.is_anonymous && (
-                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
-                    <div className="max-w-md w-full bg-white rounded-3xl p-8 text-center shadow-2xl animate-in zoom-in-95 duration-300">
-                        <div className="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <UserCheck className="w-10 h-10" />
-                        </div>
-                        <h2 className="text-2xl font-black text-gray-900 mb-2">Ravi de vous revoir !</h2>
-                        <p className="text-gray-500 mb-8 leading-relaxed">
-                            Vous êtes reconnu en tant que <span className="font-bold text-indigo-600">{user.user_metadata?.full_name || 'Invité'}</span>. 
-                            <br />Est-ce bien vous ?
-                        </p>
-                        <div className="flex flex-col gap-3">
-                            <button
-                                onClick={() => setShowGuestReconnect(false)}
-                                className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all shadow-lg shadow-indigo-500/25"
-                            >
-                                OUI, C'EST MOI
-                            </button>
-                            <button
-                                onClick={() => {
-                                    supabase.auth.signOut()
-                                    localStorage.removeItem('inseme_is_public')
-                                    setShowGuestReconnect(false)
-                                }}
-                                className="w-full py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-2xl font-bold transition-all"
-                            >
-                                NON, CHANGER DE PROFIL
-                            </button>
-                        </div>
-                        <p className="mt-6 text-[10px] text-gray-400 uppercase tracking-widest font-bold">
-                            Sécurité navigateur public
-                        </p>
-                    </div>
-                </div>
-            )}
-        </div>
-    )
+              </div>
+              <button
+                onClick={() => {
+                  setShowGuestReconnect(false);
+                  setShowAuth(true);
+                }}
+                className="w-full py-2 bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold rounded-xl transition-all"
+              >
+                Reprendre ma session
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </InsemeProvider>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <CurrentUserProvider>
+      <AppContent />
+    </CurrentUserProvider>
+  );
+}
+
+export default App;

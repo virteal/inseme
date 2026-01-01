@@ -97,7 +97,7 @@ Le Café Pertitellu complète nos autres services :
 
 - 🗳️ **Consultation citoyenne** (questionnaires & sondages)
 - 📚 **Wiki collaboratif** (savoirs partagés)
-- 💡 **Kudocratie** (propositions & votes)
+- 💡 **Kudocracy** (propositions & votes)
 - 🤖 **Ophélia IA** (assistant intelligent)
 - 📊 **Transparence** (audit démocratique)
 

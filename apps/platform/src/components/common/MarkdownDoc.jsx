@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { MarkdownViewer } from "@inseme/ui";
 import { Link } from "react-router-dom";
+import { substituteVariables } from "@inseme/cop-host";
 
 /**
  * Composant générique pour afficher un document Markdown statique depuis /docs/
@@ -43,11 +43,7 @@ export default function MarkdownDoc({
         let text = await res.text();
 
         // Appliquer les remplacements de variables {{KEY}}
-        Object.entries(replacements).forEach(([key, value]) => {
-          if (value) {
-            text = text.split(`{{${key}}}`).join(value);
-          }
-        });
+        text = substituteVariables(text, replacements);
 
         setContent(text);
       } catch (err) {
@@ -120,34 +116,8 @@ export default function MarkdownDoc({
 
       <main className="max-w-4xl mx-auto px-6 py-8">
         <article className={`bg-white rounded-xl shadow-sm p-8 ${contentClassName}`}>
-          <div className="prose prose-slate prose-lg max-w-none prose-headings:text-slate-800 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-table:text-sm">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                // Liens externes en nouvelle fenêtre
-                a: ({ href, children, ...props }) => {
-                  const isExternal = href?.startsWith("http");
-                  return (
-                    <a
-                      href={href}
-                      target={isExternal ? "_blank" : undefined}
-                      rel={isExternal ? "noopener noreferrer" : undefined}
-                      {...props}
-                    >
-                      {children}
-                    </a>
-                  );
-                },
-                // Tableaux responsifs
-                table: ({ children }) => (
-                  <div className="overflow-x-auto">
-                    <table>{children}</table>
-                  </div>
-                ),
-              }}
-            >
-              {content}
-            </ReactMarkdown>
+          <div className={`prose prose-slate max-w-none ${contentClassName}`}>
+            <MarkdownViewer content={content} />
           </div>
         </article>
 

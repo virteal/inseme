@@ -1,0 +1,17 @@
+{
+  "name": "@inseme/cop-prolog",
+  "version": "0.1.0",
+  "description": "Multi-runtime Prolog Engine Loader for Inseme",
+  "type": "module",
+  "main": "src/index.js",
+  "keywords": [
+    "prolog",
+    "reasoning",
+    "cop",
+    "inseme"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "tau-prolog": "^0.3.4"
+  }
+}

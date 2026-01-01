@@ -143,7 +143,7 @@ export default function DemandeForm() {
   const navigate = useNavigate();
   const { user } = useSupabase();
   const isEditing = Boolean(id);
-  const linkedActeId = searchParams.get("acte");
+  const linkedActeId = searchParams.get("actes") || searchParams.get("acte");
 
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(isEditing);

@@ -16,6 +16,7 @@
     "platform:dev": "npm run dev -w platform",
     "inseme:netlify": "npm run netlify:dev -w inseme",
     "platform:netlify": "npm run netlify:dev -w platform",
+    "compile:briques": "node packages/cop-host/scripts/compile-briques.js",
     "inseme:build": "npm run build -w inseme",
     "platform:build": "npm run build -w platform"
   },

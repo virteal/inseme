@@ -6,7 +6,14 @@
 
 import { getSupabase } from "./supabase";
 import { getMetadata, setMetadata } from "./metadata";
-import { TASK_STATUSES, TASK_COMMANDS, isValidStatus, isValidPriority } from "./taskMetadata";
+import {
+  TASK_STATUSES,
+  TASK_COMMANDS,
+  isValidStatus,
+  isValidPriority,
+  parseTaskCommand as kudocracyParseTaskCommand,
+  normalizeStatusArg,
+} from "./taskMetadata";
 
 /**
  * Get task details from post metadata
@@ -94,27 +101,10 @@ export function getStatusHistory(post) {
 /**
  * Parse task command from comment content
  * Returns { type, args } or null if not a command
+ * Proxy to kudocracy implementation
  */
 export function parseTaskCommand(content) {
-  if (!content || typeof content !== "string") return null;
-
-  const trimmed = content.trim();
-  if (!trimmed.startsWith("/")) return null;
-
-  // Extract command and arguments
-  const parts = trimmed.split(/\s+/);
-  const command = parts[0].toLowerCase();
-  const args = parts.slice(1);
-
-  // Validate known commands
-  const validCommands = Object.values(TASK_COMMANDS);
-  if (!validCommands.includes(command)) return null;
-
-  return {
-    type: command,
-    args: args,
-    raw: trimmed,
-  };
+  return kudocracyParseTaskCommand(content);
 }
 
 /**
@@ -339,35 +329,7 @@ async function handleUnassign(task, username, userId) {
   };
 }
 
-/**
- * Normalize status argument from French to internal format
- */
-function normalizeStatusArg(arg) {
-  if (!arg) return null;
 
-  const normalized = arg.toLowerCase().replace(/[éè]/g, "e").replace(/\s+/g, "_");
-
-  const mapping = {
-    a_faire: TASK_STATUSES.TODO,
-    todo: TASK_STATUSES.TODO,
-    en_cours: TASK_STATUSES.IN_PROGRESS,
-    "en-cours": TASK_STATUSES.IN_PROGRESS,
-    encours: TASK_STATUSES.IN_PROGRESS,
-    in_progress: TASK_STATUSES.IN_PROGRESS,
-    en_revue: TASK_STATUSES.REVIEW,
-    "en-revue": TASK_STATUSES.REVIEW,
-    revue: TASK_STATUSES.REVIEW,
-    review: TASK_STATUSES.REVIEW,
-    termine: TASK_STATUSES.DONE,
-    terminé: TASK_STATUSES.DONE,
-    done: TASK_STATUSES.DONE,
-    bloque: TASK_STATUSES.BLOCKED,
-    bloqué: TASK_STATUSES.BLOCKED,
-    blocked: TASK_STATUSES.BLOCKED,
-  };
-
-  return mapping[normalized] || normalized;
-}
 
 /**
  * Normalize priority argument from French to internal format

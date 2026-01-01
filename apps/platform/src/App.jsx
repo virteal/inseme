@@ -6,10 +6,6 @@ import Methodologie from "./pages/Methodologie";
 import GlobalStatusIndicator from "./components/common/GlobalStatusIndicator";
 import Audit from "./pages/Audit";
 import Kudocracy from "./pages/Kudocracy";
-import Wiki from "./pages/Wiki";
-import WikiPage from "./pages/WikiPage";
-import WikiCreate from "./pages/WikiCreate";
-import WikiEdit from "./pages/WikiEdit";
 import Bob from "./pages/Bob";
 import Proposition from "./pages/Proposition";
 import Transparence from "./pages/Transparence";
@@ -30,7 +26,6 @@ import VotingDashboard from "./pages/VotingDashboard";
 import UserDashboard from "./pages/UserDashboard";
 import HomeDashboard from "./pages/HomeDashboard";
 import GlobalDashboard from "./pages/GlobalDashboard";
-import WikiDashboard from "./pages/WikiDashboard";
 import SocialDashboard from "./pages/SocialDashboard";
 import SubscriptionFeed from "./pages/SubscriptionFeed";
 import Contact from "./pages/Contact";
@@ -75,6 +70,10 @@ import FilGuidelines from "./components/fil/FilGuidelines";
 import FilFAQ from "./components/fil/FilFAQ";
 import CopCoreLandingPage from "./pages/CopCoreLandingPage";
 import OpheliaLandingPage from "./pages/OpheliaLandingPage";
+import FeatureRoute from "./components/common/FeatureRoute";
+import { FEATURES } from "./lib/features";
+import { BRIQUES } from "./brique-registry.gen";
+import { BriqueRoute } from "./components/common/BriqueRoute";
 
 // Consultation active (module séparé)
 import ConsultationsHome, {
@@ -134,13 +133,33 @@ export function App() {
         <Route path="/kudocracy" element={<Kudocracy />} />
         <Route path="/propositions/:id" element={<Proposition />} />
         <Route path="/proposition/:id" element={<Proposition />} />
-        <Route path="/bob" element={<Bob />} />
-        <Route path="/ophelia" element={<Bob />} />
-        <Route path="/wiki" element={<Wiki />} />
-        <Route path="/wiki/new" element={<WikiCreate />} />
-        <Route path="/wiki/new/:slug" element={<WikiCreate />} />
-        <Route path="/wiki/:slug" element={<WikiPage />} />
-        <Route path="/wiki/:slug/edit" element={<WikiEdit />} />
+        <Route
+          path="/bob"
+          element={
+            <FeatureRoute feature={FEATURES.CHATBOT}>
+              <Bob />
+            </FeatureRoute>
+          }
+        />
+        <Route
+          path="/ophelia"
+          element={
+            <FeatureRoute feature={FEATURES.CHATBOT}>
+              <Bob />
+            </FeatureRoute>
+          }
+        />
+        {/* Dynamic Briques Routes */}
+        {BRIQUES.map((brique) =>
+          brique.routes.map((route) => (
+            <Route
+              key={`${brique.id}-${route.path}`}
+              path={route.path.endsWith("/*") ? route.path : `${route.path}/*`}
+              element={<BriqueRoute brique={brique} route={route} />}
+            />
+          ))
+        )}
+
         <Route path="/legal/terms" element={<LegalPage type="terms" />} />
         <Route path="/legal/privacy" element={<LegalPage type="privacy" />} />
         <Route path="/privacy" element={<LegalPage type="privacy" />} />
@@ -158,12 +177,18 @@ export function App() {
         <Route path="/incidents/new" element={<IncidentEditor />} />
         <Route path="/incidents/:id" element={<IncidentPage />} />
         <Route path="/incidents/:id/edit" element={<IncidentEditor />} />
-        <Route path="/social" element={<Social />} />
+        <Route
+          path="/social"
+          element={
+            <FeatureRoute feature={FEATURES.SOCIAL}>
+              <Social />
+            </FeatureRoute>
+          }
+        />
         <Route path="/users/:id" element={<UserPage />} />
         <Route path="/dashboard" element={<HomeDashboard />} />
         <Route path="/user-dashboard" element={<UserDashboard />} />
         <Route path="/global-dashboard" element={<GlobalDashboard />} />
-        <Route path="/wiki-dashboard" element={<WikiDashboard />} />
         <Route path="/social-dashboard" element={<SocialDashboard />} />
         <Route path="/voting-dashboard" element={<VotingDashboard />} />
         <Route path="/data-collector" element={<DataCollector />} />
@@ -240,48 +265,118 @@ export function App() {
         <Route path="/oauth/facebook/deletion-status" element={<FacebookDeletionStatus />} />
         <Route path="/oauth/:provider/callback" element={<OAuthCallback />} />
         <Route path="/oauth/consent" element={<OAuthConsent />} />
-        <Route path="/missions" element={<MissionsPage />} />
-        <Route path="/missions/new" element={<MissionCreate />} />
-        <Route path="/missions/:id" element={<MissionDetail />} />
-        <Route path="/missions/:id/edit" element={<MissionCreate />} />
-        <Route path="/tasks" element={<TaskProjectsPage />} />
-        <Route path="/tasks/new" element={<TaskProjectCreate />} />
-        <Route path="/tasks/:id" element={<TaskProjectDetail />} />
-        <Route path="/tasks/:projectId/task/new" element={<TaskCreate />} />
-        <Route path="/tasks/:projectId/task/:taskId" element={<TaskDetail />} />
-        <Route path="/tasks/:projectId/task/:taskId/edit" element={<TaskEdit />} />
-        <Route path="/tasks/:projectId/task/:taskId/edit" element={<TaskEdit />} />
-        <Route path="/fil" element={<FilFeed />} />
-        <Route path="/fil/new" element={<FilSubmissionForm />} />
-        <Route path="/fil/guidelines" element={<FilGuidelines />} />
-        <Route path="/fil/faq" element={<FilFAQ />} />
+        <Route
+          path="/missions/*"
+          element={
+            <FeatureRoute feature={FEATURES.MISSIONS}>
+              <Routes>
+                <Route index element={<MissionsPage />} />
+                <Route path="new" element={<MissionCreate />} />
+                <Route path=":id" element={<MissionDetail />} />
+                <Route path=":id/edit" element={<MissionCreate />} />
+              </Routes>
+            </FeatureRoute>
+          }
+        />
 
-        {/* Système citoyen de contrôle des actes municipaux */}
-        <Route path="/actes/accueil" element={<ActesHome />} />
-        <Route path="/actes" element={<ActesDashboard />} />
-        <Route path="/actes/liste" element={<ActesList />} />
-        <Route path="/actes/nouveau" element={<ActeForm />} />
-        <Route path="/actes/:id" element={<ActeDetail />} />
-        <Route path="/actes/:id/modifier" element={<ActeForm />} />
-        <Route path="/demandes" element={<DemandesList />} />
-        <Route path="/demandes/nouvelle" element={<DemandeForm />} />
-        <Route path="/demandes/:id" element={<DemandeDetail />} />
-        <Route path="/demandes/:id/modifier" element={<DemandeForm />} />
-        <Route path="/preuves/ajouter" element={<ProofUpload />} />
-        <Route path="/docs/guide-citoyen" element={<GuideActes />} />
+        <Route
+          path="/tasks/*"
+          element={
+            <FeatureRoute feature={FEATURES.MISSIONS}>
+              <Routes>
+                <Route index element={<TaskProjectsPage />} />
+                <Route path="new" element={<TaskProjectCreate />} />
+                <Route path=":id" element={<TaskProjectDetail />} />
+                <Route path=":projectId/task/new" element={<TaskCreate />} />
+                <Route path=":projectId/task/:taskId" element={<TaskDetail />} />
+                <Route path=":projectId/task/:taskId/edit" element={<TaskEdit />} />
+              </Routes>
+            </FeatureRoute>
+          }
+        />
 
-        {/* Phase 3: Human-in-the-Loop - Modération et validation */}
-        <Route path="/moderation/actions" element={<OutgoingActionsQueue />} />
-        <Route path="/moderation/preuves" element={<VerificationQueue />} />
-        <Route path="/moderation/publications" element={<PublicationModeration />} />
-        <Route path="/moderation/responsabilites" element={<ResponsibilityLog />} />
+        <Route
+          path="/fil/*"
+          element={
+            <FeatureRoute feature={FEATURES.FIL}>
+              <Routes>
+                <Route index element={<FilFeed />} />
+                <Route path="new" element={<FilSubmissionForm />} />
+                <Route path="guidelines" element={<FilGuidelines />} />
+                <Route path="faq" element={<FilFAQ />} />
+              </Routes>
+            </FeatureRoute>
+          }
+        />
 
-        {/* Phase 7: Exports et indicateurs */}
-        <Route path="/exports/pdf" element={<ExportPDF />} />
-        <Route path="/exports/csv" element={<ExportCSV />} />
-        <Route path="/actes/chronologie" element={<ActeTimeline />} />
-        <Route path="/actes/:id/chronologie" element={<ActeTimeline />} />
-        <Route path="/actes/stats" element={<StatsDashboard />} />
+        <Route
+          path="/actes/*"
+          element={
+            <FeatureRoute feature={FEATURES.ACTES}>
+              <Routes>
+                <Route index element={<ActesDashboard />} />
+                <Route path="accueil" element={<ActesHome />} />
+                <Route path="liste" element={<ActesList />} />
+                <Route path="nouveau" element={<ActeForm />} />
+                <Route path=":id" element={<ActeDetail />} />
+                <Route path=":id/modifier" element={<ActeForm />} />
+                <Route path=":id/chronologie" element={<ActeTimeline />} />
+                <Route path="chronologie" element={<ActeTimeline />} />
+                <Route path="stats" element={<StatsDashboard />} />
+              </Routes>
+            </FeatureRoute>
+          }
+        />
+
+        {/* Ces routes étaient à la racine mais font partie de la feature Actes ou Demandes */}
+        <Route
+          path="/demandes/*"
+          element={
+            <FeatureRoute feature={FEATURES.ACTES}>
+              <Routes>
+                <Route index element={<DemandesList />} />
+                <Route path="nouvelle" element={<DemandeForm />} />
+                <Route path=":id" element={<DemandeDetail />} />
+                <Route path=":id/modifier" element={<DemandeForm />} />
+              </Routes>
+            </FeatureRoute>
+          }
+        />
+
+        <Route
+          path="/preuves/ajouter"
+          element={
+            <FeatureRoute feature={FEATURES.ACTES}>
+              <ProofUpload />
+            </FeatureRoute>
+          }
+        />
+
+        <Route
+          path="/moderation/*"
+          element={
+            <FeatureRoute feature={FEATURES.ACTES}>
+              <Routes>
+                <Route path="actions" element={<OutgoingActionsQueue />} />
+                <Route path="preuves" element={<VerificationQueue />} />
+                <Route path="publications" element={<PublicationModeration />} />
+                <Route path="responsabilites" element={<ResponsibilityLog />} />
+              </Routes>
+            </FeatureRoute>
+          }
+        />
+
+        <Route
+          path="/exports/*"
+          element={
+            <FeatureRoute feature={FEATURES.ACTES}>
+              <Routes>
+                <Route path="pdf" element={<ExportPDF />} />
+                <Route path="csv" element={<ExportCSV />} />
+              </Routes>
+            </FeatureRoute>
+          }
+        />
 
         {/* Fractal Governance */}
         <Route path="/fractal-feed" element={<FractalFeedPage />} />

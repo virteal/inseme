@@ -291,7 +291,7 @@ export default function UserDashboard() {
                 Activité sociale
               </Link>
               <Link
-                to="/wiki-dashboard"
+                to="/wiki/dashboard"
                 className="px-4 py-2 bg-green-600 text-light hover:bg-green-700"
               >
                 Activité Wiki

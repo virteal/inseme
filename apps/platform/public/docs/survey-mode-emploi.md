@@ -1,7 +1,7 @@
 # Mode d'emploi Kudocracy.Survey
 
 Ce guide pratique vous accompagne pas à pas pour utiliser la plateforme citoyenne. Il complète la
-[présentation](docs/survey.md) du projet et se concentre sur les actions concrètes à réaliser.
+[présentation](survey.md) du projet et se concentre sur les actions concrètes à réaliser.
 
 ## 1. Préparer votre participation
 
@@ -20,7 +20,7 @@ Ce guide pratique vous accompagne pas à pas pour utiliser la plateforme citoyen
 - **Gazette** [Gazette](/gazette) : articles éditorialisés avec accès direct aux groupes et
   propositions associées.
 - **Wiki collaboratif** [Wiki](/wiki) : bases de connaissances partagées.
-- **Kudocratie** [Proposition](/kudocracy) : dépôt et vote des propositions.
+- **Kudocracy** [Proposition](/kudocracy) : dépôt et vote des propositions.
 - **Consultations** [/consultations](/consultations) : questionnaires temps réel.
 
 ## 3. Scénarios clés
@@ -40,7 +40,7 @@ Ce guide pratique vous accompagne pas à pas pour utiliser la plateforme citoyen
 3. Une fois membre, les discussions du groupe sont prioritaires dans votre fil et accessibles via
    [Le Café](/social).
 
-### Proposer ou soutenir une idée dans la Kudocratie
+### Proposer ou soutenir une idée dans la Kudocracy
 
 1. Ouvrez [Propositions](/kudocracy) et sélectionnez **"Nouvelle proposition"**.
 2. Décrivez le problème, proposez une solution, rattachez le thème adéquat.

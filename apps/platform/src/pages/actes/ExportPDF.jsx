@@ -451,7 +451,7 @@ export default function ExportPDF() {
       // Fetch data based on type
       if (exportType === "ACTE_COMPLET") {
         const { data: acte, error: acteError } = await getSupabase()
-          .from("acte")
+          .from("actes")
           .select("*, acte_version(*)")
           .eq("id", entityId)
           .single();

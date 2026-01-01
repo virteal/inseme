@@ -1,4 +1,4 @@
-# Kudocray.Survey : la consultation citoyenne ouverte de Corte
+# Kudocracy.Survey : la consultation citoyenne ouverte de Corte
 
 Une plateforme participative, libre et transparente pour débattre, proposer et suivre la vie
 démocratique. Tout est publié sous licence MIT et co-construit avec les usagers.
@@ -12,8 +12,7 @@ enrichir la démocratie locale.
 L'objectif : faciliter la participation, documenter les débats, créer du lien entre citoyens et
 publier des résultats auditables en temps réel.
 
-➡️ Pour un guide pas à pas, consultez le
-[Mode d'emploi de la plateforme](/docs/survey-mode-emploi.md).
+➡️ Pour un guide pas à pas, consultez le [Mode d'emploi de la plateforme](survey-mode-emploi.md).
 
 ## Fonctions clés
 
@@ -71,7 +70,7 @@ Un espace de connaissance partagée alimenté par les citoyens :
 - Créez des guides pratiques pour la vie à Corte
 - Navigation intuitive avec recherche rapide
 
-### 💡 Kudocratie - Propositions citoyennes
+### 💡 Kudocracy - Propositions citoyennes
 
 Un système démocratique innovant pour transformer vos idées en actions :
 
@@ -125,7 +124,7 @@ Un outil de suivi de la démocratie locale :
 
 ### Pour proposer et voter
 
-- [Formulez ou soutenez une proposition](/kudocracy) via la Kudocratie
+- [Formulez ou soutenez une proposition](/kudocracy) via Kudocracy
 - Votez sur les idées qui vous tiennent à cœur
 - Déléguez votre vote à des personnes de confiance
 

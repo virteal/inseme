@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { MarkdownViewer } from "@inseme/ui";
 import { getSupabase } from "../lib/supabase";
 import { useCurrentUser } from "../lib/useCurrentUser";
 import SiteFooter from "../components/layout/SiteFooter";
@@ -369,13 +368,12 @@ export default function TaskDetail() {
               {dueDate && <div className="text-sm text-gray-500">📅 {displayDate(dueDate)}</div>}
             </div>
 
-            {description ? (
-              <ReactMarkdown className="prose prose-sm max-w-none" remarkPlugins={[remarkGfm]}>
-                {description}
-              </ReactMarkdown>
-            ) : (
-              <p className="text-gray-500 text-sm">Aucune description pour le moment.</p>
-            )}
+            <div className="bg-gray-50 rounded-lg p-6 min-h-[150px]">
+              <MarkdownViewer
+                className="prose prose-sm max-w-none"
+                content={description || "*Aucune description.*"}
+              />
+            </div>
           </div>
 
           <div className="bg-white border border-gray-200  p-6 shadow-sm">

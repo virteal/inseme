@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import ReactMarkdown from "react-markdown";
+import { MarkdownViewer } from "@inseme/ui";
 import { getPostTitle, getPostSubtitle, getThreadDepth } from "../../lib/socialMetadata";
 import { getDisplayName, getUserInitials } from "../../lib/userDisplay";
 
@@ -101,8 +101,8 @@ export default function SubPostCard({ post, currentUser }) {
           </Link>
 
           {/* Content Preview */}
-          <div className="prose prose-sm max-w-none text-gray-300 mb-3 line-clamp-3">
-            <ReactMarkdown>{contentPreview}</ReactMarkdown>
+          <div className="prose prose-sm max-w-none text-gray-300 mb-4">
+            <MarkdownViewer content={contentPreview} />
           </div>
 
           {/* Footer with stats */}

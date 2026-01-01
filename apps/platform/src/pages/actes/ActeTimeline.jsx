@@ -201,8 +201,17 @@ export default function ActeTimeline() {
         if (id) {
           // Single acte timeline
           const { data: acteData, error: acteError } = await getSupabase()
-            .from("acte")
-            .select("*, acte_version(*)")
+            .from("actes")
+            .select(
+              `
+              *, 
+              acte_version(*), 
+              mandats(
+                role, 
+                user:users(display_name)
+              )
+            `
+            )
             .eq("id", id)
             .single();
 
@@ -303,7 +312,7 @@ export default function ActeTimeline() {
 
           // Recent actes
           const { data: actes } = await getSupabase()
-            .from("acte")
+            .from("actes")
             .select("id, titre, created_at, date_transmission, date_affichage")
             .gte("created_at", since.toISOString())
             .order("created_at", { ascending: false })
@@ -419,6 +428,11 @@ export default function ActeTimeline() {
               ? `Timeline des événements liés à cet acte`
               : `Visualisation des événements sur la période sélectionnée`}
           </p>
+          {id && acte?.mandats && (
+            <div className="mt-4 inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-medium border border-blue-100">
+              👤 Porté par : {acte.mandats.user?.display_name} ({acte.mandats.role})
+            </div>
+          )}
         </div>
       </div>
 

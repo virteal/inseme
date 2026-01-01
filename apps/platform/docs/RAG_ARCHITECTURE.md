@@ -24,6 +24,16 @@ SOURCE: Conseil Municipal de Corte
 | `type`        | enum  | `fact`, `allegation`, `opinion`                               |
 | `status`      | enum  | `under_review`, `confirmed`, `refuted`, `obsolete`            |
 | `source_type` | text  | `official`, `wiki`, `history`, `proposal`, `comment`, `forum` |
+
+### 1.4. Hybridation de la connaissance (Wiki-RAG)
+
+Le système RAG d'Ophélia distingue deux types de sources :
+
+1.  **La Donnée Froide (Officielle)** : immuable, indexée vectoriellement dans `knowledge_chunks`.
+2.  **La Donnée Chaude (Wiki Citoyen)** : vivante, éditable, indexée via un double moteur **FTS (Full Text Search)** et **Vectoriel**.
+
+**Priorité de synthèse :**
+Lors d'une requête, Ophélia cherche d'abord dans le Wiki local (page de la room) pour obtenir le contexte immédiat, puis élargit sa recherche au Wiki Global et enfin aux documents officiels.
 | `domain`      | text  | `civics`, `history`, `budget`, `urbanisme`, `cadastre`        |
 | `territory`   | text  | `Corte`, `Corse`, etc.                                        |
 | `info_date`   | date  | Date logique de l'événement                                   |
