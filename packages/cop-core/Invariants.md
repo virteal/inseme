@@ -1,6 +1,6 @@
 ---
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop-core/Invariants.md
-last_stamped_at: 2026-05-15
+last_stamped_at: 2026-05-16
 ---
 
 # COP Protocol Invariants
@@ -169,3 +169,14 @@ If an optimization violates an invariant, it is invalid.
 These invariants are what make COP different.
 
 Violating any of them may produce a working system — but not a COP system.
+
+<!-- BEGIN_AUTO: backlinks -->
+
+### Backlinks
+
+_These documents link to this file:_
+
+- [Corpus Status — inseme](../../research/corpus-status.md)
+- [Research Index — Inseme](../../research/index.md)
+
+<!-- END_AUTO: backlinks -->

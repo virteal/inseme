@@ -1,6 +1,6 @@
 ---
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop-host/BRIQUE_SPEC.md
-last_stamped_at: 2026-05-15
+last_stamped_at: 2026-05-16
 ---
 
 # Spécification du Manifeste de Brique (brique.config.js)
@@ -97,3 +97,14 @@ Le **Brique Compiler** (dans `cop-host`) utilisera ces manifestes pour :
 
 3.  **Validation de la Config** : Vérification au démarrage que l'instance possède les paramètres
     requis par les briques activées.
+
+<!-- BEGIN_AUTO: backlinks -->
+
+### Backlinks
+
+_These documents link to this file:_
+
+- [Corpus Status — inseme](../../research/corpus-status.md)
+- [Research Index — Inseme](../../research/index.md)
+
+<!-- END_AUTO: backlinks -->

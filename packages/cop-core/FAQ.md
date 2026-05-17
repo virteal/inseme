@@ -1,6 +1,6 @@
 ---
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop-core/FAQ.md
-last_stamped_at: 2026-05-15
+last_stamped_at: 2026-05-16
 ---
 
 # **FAQ.md**
@@ -319,3 +319,14 @@ The roadmap includes:
 - decentralized COPBuses for federated cognition
 
 COP aims to become the **standard protocol for distributed, durable, multi-agent AI systems**.
+
+<!-- BEGIN_AUTO: backlinks -->
+
+### Backlinks
+
+_These documents link to this file:_
+
+- [Corpus Status — inseme](../../research/corpus-status.md)
+- [Research Index — Inseme](../../research/index.md)
+
+<!-- END_AUTO: backlinks -->

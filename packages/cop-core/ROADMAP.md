@@ -1,6 +1,6 @@
 ---
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop-core/ROADMAP.md
-last_stamped_at: 2026-05-15
+last_stamped_at: 2026-05-16
 ---
 
 # ROADMAP — Cognitive Orchestration Protocol (COP)
@@ -149,3 +149,14 @@ The success of COP is measured by:
 The reference kernel will evolve.
 
 The protocol should not.
+
+<!-- BEGIN_AUTO: backlinks -->
+
+### Backlinks
+
+_These documents link to this file:_
+
+- [Corpus Status — inseme](../../research/corpus-status.md)
+- [Research Index — Inseme](../../research/index.md)
+
+<!-- END_AUTO: backlinks -->

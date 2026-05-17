@@ -1,6 +1,6 @@
 ---
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop-core/Architecture.md
-last_stamped_at: 2026-05-15
+last_stamped_at: 2026-05-16
 ---
 
 # Cognitive Orchestration Protocol (COP)
@@ -2958,3 +2958,14 @@ If an implementation:
 - makes reasoning resumable and inspectable,
 
 then it is aligned with the spirit and the letter of COP.
+
+<!-- BEGIN_AUTO: backlinks -->
+
+### Backlinks
+
+_These documents link to this file:_
+
+- [Corpus Status — inseme](../../research/corpus-status.md)
+- [Research Index — Inseme](../../research/index.md)
+
+<!-- END_AUTO: backlinks -->

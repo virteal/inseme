@@ -1,6 +1,6 @@
 ---
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop-core/Manifesto.md
-last_stamped_at: 2026-05-15
+last_stamped_at: 2026-05-16
 ---
 
 # **The COP Manifesto**
@@ -211,3 +211,14 @@ It is more than a specification. It is an **invitation** to build cognitive syst
 trusted, audited, composed, replayed, federated, shared, and sustained.
 
 COP is the foundation upon which a century of cognitive infrastructure can be built.
+
+<!-- BEGIN_AUTO: backlinks -->
+
+### Backlinks
+
+_These documents link to this file:_
+
+- [Corpus Status — inseme](../../research/corpus-status.md)
+- [Research Index — Inseme](../../research/index.md)
+
+<!-- END_AUTO: backlinks -->

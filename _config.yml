@@ -1,0 +1,15 @@
+title: "Cogentia Corpus — inseme"
+description: "Distributed research and governance."
+theme: just-the-docs
+
+color_scheme: dark
+
+# Cogentia structure
+aux_links:
+  "Cogentia README": "https://github.com/JeanHuguesRobert/cogentia"
+
+# Disable default Jekyll behavior that might interfere with raw Markdown files
+exclude:
+  - ".cogentiaignore"
+  - ".git/"
+  - "node_modules/"

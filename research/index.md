@@ -56,6 +56,7 @@ _Platform-level specifications and architectural documents._
 | [BRIQUE_SPEC — the brique manifest contract](../packages/cop-host/BRIQUE_SPEC.md)                                         | this repo | 2025-12     |
 | [Multi-Instance Architecture](../packages/cop-host/docs/MULTI_INSTANCE.md)                                                | this repo | 2025-12     |
 | [Corpus Status](corpus-status.md) _(living view — auto-refreshed by `cogentia.js corpus-status`)_                         | this repo | refreshable |
+| [Concept Index](concepts.md) _(typed concept registry — mapped by `cogentia.js concepts`)_                                | this repo | refreshable |
 
 ---
 
