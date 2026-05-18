@@ -5,7 +5,7 @@ description:
   possible"
 layout: default
 nav_order: 2
-last_modified_at: 2026-05-16
+last_modified_at: 2026-05-18
 repository: "github.com/JeanHuguesRobert/inseme"
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/corpus-status.md
 last_stamped_at: 2026-05-16
@@ -26,11 +26,11 @@ Objections_ — _are manually curated and preserved across refreshes._
 
 | Repository     | research/index.md | Branch | Last commit |
 | -------------- | ----------------- | ------ | ----------- |
-| cogentia       | ✅                | main   | 2026-05-15  |
-| FractaVolta    | ✅                | main   | 2026-05-15  |
-| marenostrum    | ✅                | main   | 2026-05-15  |
-| barons-Mariani | ✅                | main   | 2026-05-15  |
-| inseme         | ✅                | main   | 2026-05-15  |
+| cogentia       | ✅                | main   | 2026-05-18  |
+| FractaVolta    | ✅                | main   | 2026-05-18  |
+| marenostrum    | ✅                | main   | 2026-05-18  |
+| barons-Mariani | ✅                | main   | 2026-05-18  |
+| inseme         | ✅                | main   | 2026-05-17  |
 
 <!-- END_AUTO: registered_repos -->
 
@@ -67,6 +67,11 @@ graph LR
   inseme --> marenostrum
   inseme --> FractaVolta
   inseme --> barons-Mariani
+  click cogentia "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/index.md" "Open research/index.md"
+  click FractaVolta "https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/index.md" "Open research/index.md"
+  click marenostrum "https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/index.md" "Open research/index.md"
+  click barons-Mariani "https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/index.md" "Open research/index.md"
+  click inseme "https://github.com/JeanHuguesRobert/inseme/blob/main/research/index.md" "Open research/index.md"
 ```
 
 <!-- END_AUTO: graph -->
@@ -77,18 +82,18 @@ graph LR
 
 <!-- BEGIN_AUTO: concepts -->
 
-| Concept                                                                                | Scope               | Status      | Type                                |
-| -------------------------------------------------------------------------------------- | ------------------- | ----------- | ----------------------------------- |
-| [Cogentia](./concepts.md#cogentia)                                                     | Global              | Working     | abstract concept / agentivity class |
-| [Cogentigram](./concepts.md#cogentigram)                                               | Global              | Working     | representation / map                |
-| [COP (Continuous Operation Protocol)](./concepts.md#cop-continuous-operation-protocol) | Global              | Canonical   | protocol / runtime                  |
-| [Briques](./concepts.md#briques)                                                       | Global              | Operational | modular component                   |
-| [Kudocracy](./concepts.md#kudocracy)                                                   | Global              | Defined     | governance system                   |
-| [Agora](./concepts.md#agora)                                                           | Global              | Defined     | system model                        |
-| [Ophélia](./concepts.md#ophelia)                                                       | Global              | Operational | agent                               |
-| [COP Invariants](./concepts.md#cop-invariants)                                         | repository-specific | Canonical   | cryptographic rule                  |
-| [Brique Spec / Multi-Instance](./concepts.md#brique-spec-multi-instance)               | project-specific    | Defined     | technical specification             |
-| [Modular System](./concepts.md#modular-system)                                         | repository-specific | Working     | frontend architecture               |
+| Concept                                                                                | Scope | Status | Type                                                                      |
+| -------------------------------------------------------------------------------------- | ----- | ------ | ------------------------------------------------------------------------- |
+| [Cogentia](./concepts.md#cogentia)                                                     | —     | —      | abstract concept / agentivity class **Scope:** Global **Status:** Working |
+| [Cogentigram](./concepts.md#cogentigram)                                               | —     | —      | representation / map **Scope:** Global **Status:** Working                |
+| [COP (Continuous Operation Protocol)](./concepts.md#cop-continuous-operation-protocol) | —     | —      | protocol / runtime **Scope:** Global **Status:** Canonical                |
+| [Briques](./concepts.md#briques)                                                       | —     | —      | modular component **Scope:** Global **Status:** Operational               |
+| [Kudocracy](./concepts.md#kudocracy)                                                   | —     | —      | governance system **Scope:** Global **Status:** Defined                   |
+| [Agora](./concepts.md#agora)                                                           | —     | —      | system model **Scope:** Global **Status:** Defined                        |
+| [Ophélia](./concepts.md#ophelia)                                                       | —     | —      | agent **Scope:** Global **Status:** Operational                           |
+| [COP Invariants](./concepts.md#cop-invariants)                                         | —     | —      | cryptographic rule **Scope:** repository-specific **Status:** Canonical   |
+| [Brique Spec / Multi-Instance](./concepts.md#brique-spec-multi-instance)               | —     | —      | technical specification **Scope:** project-specific **Status:** Defined   |
+| [Modular System](./concepts.md#modular-system)                                         | —     | —      | frontend architecture **Scope:** repository-specific **Status:** Working  |
 
 <!-- END_AUTO: concepts -->
 
