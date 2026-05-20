@@ -1,0 +1,71 @@
+{
+  "name": "brique-auxilia",
+  "version": "0.1.0",
+  "description": "Auxilia — brique d'hospitalité numérique (data & power) pour téléphones portables. Composant inseme.",
+  "type": "module",
+  "main": "./brique.config.js",
+  "exports": {
+    ".": "./brique.config.js",
+    "./pages/*": "./src/pages/*",
+    "./functions/*": "./src/functions/*",
+    "./edge/*": "./src/edge/*",
+    "./lib/*": "./src/lib/*",
+    "./i18n/*": "./src/i18n/*"
+  },
+  "files": [
+    "brique.config.js",
+    "src",
+    "README.md",
+    "AUXILIA_SPEC.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "test": "echo \"Tests à venir — voir apps/cyrnea/tests/integration/ pour le pattern\" && exit 0",
+    "typecheck": "echo \"Pas de TypeScript pour l'instant\" && exit 0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0",
+    "react-router-dom": "^6.0.0 || ^7.0.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0",
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "@inseme/cop-host": "workspace:*"
+  },
+  "keywords": [
+    "inseme",
+    "brique",
+    "auxilia",
+    "hospitality",
+    "mutual-aid",
+    "data-sharing",
+    "power-sharing",
+    "energy-packet-network",
+    "fractavolta",
+    "corsica"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Jean Hugues Robert",
+    "email": "jhr@baronsmariani.org",
+    "url": "https://baronsmariani.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JeanHuguesRobert/inseme.git",
+    "directory": "packages/brique-auxilia"
+  },
+  "homepage": "https://github.com/JeanHuguesRobert/inseme/tree/main/packages/brique-auxilia#readme",
+  "bugs": {
+    "url": "https://github.com/JeanHuguesRobert/inseme/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
+
