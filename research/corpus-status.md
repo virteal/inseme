@@ -5,7 +5,7 @@ description:
   possible"
 layout: default
 nav_order: 2
-last_modified_at: 2026-05-18
+last_modified_at: 2026-05-20
 repository: "github.com/JeanHuguesRobert/inseme"
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/corpus-status.md
 last_stamped_at: 2026-05-16
@@ -26,11 +26,11 @@ Objections_ — _are manually curated and preserved across refreshes._
 
 | Repository     | research/index.md | Branch | Last commit |
 | -------------- | ----------------- | ------ | ----------- |
-| cogentia       | ✅                | main   | 2026-05-18  |
-| FractaVolta    | ✅                | main   | 2026-05-18  |
+| cogentia       | ✅                | main   | 2026-05-20  |
+| FractaVolta    | ✅                | main   | 2026-05-20  |
 | marenostrum    | ✅                | main   | 2026-05-18  |
-| barons-Mariani | ✅                | main   | 2026-05-18  |
-| inseme         | ✅                | main   | 2026-05-18  |
+| barons-Mariani | ✅                | main   | 2026-05-20  |
+| inseme         | ✅                | main   | 2026-05-20  |
 
 <!-- END_AUTO: registered_repos -->
 
