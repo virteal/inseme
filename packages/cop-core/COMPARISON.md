@@ -1,5 +1,8 @@
 ---
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop-core/COMPARISON.md
+author: "Jean Hugues Noël Robert, baron Mariani"
+affiliation: "Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica"
+license: "CC BY-SA 4.0"
 last_stamped_at: 2026-05-16
 ---
 
@@ -264,7 +267,7 @@ COP is designed to remain.
 
 _These documents link to this file:_
 
-- [Corpus Status — inseme](../../research/corpus-status.md)
 - [Research Index — Inseme](../../research/index.md)
+- [Corpus Status — inseme](../../research/corpus-status.md)
 
 <!-- END_AUTO: backlinks -->

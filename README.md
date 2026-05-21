@@ -6,15 +6,21 @@ dedicated to citizen participation, augmented deliberation, and democratic trans
 This project brings together the tools of the **#PERTITELLU** citizen movement (Corte, Corsica) and
 aims to provide free solutions to empower citizens.
 
-_Inseme is also the **platform layer** (COP runtime + briques + civic applications) of a
-five-repository sovereignty corpus, alongside
-[MareNostrum](https://github.com/JeanHuguesRobert/marenostrum) (strategic framework),
-[FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta) (engineering firm and stack
-operator), [Cogentia](https://github.com/JeanHuguesRobert/cogentia) (cognitive infrastructure
-tooling), and [barons-Mariani](https://github.com/JeanHuguesRobert/barons-Mariani)
-(political/institutional framework). Inseme keeps its own identity — neutral, MIT-licensed, governed
-by its citizen community. The five-repo framing simply names where it interoperates with the rest of
-the corpus. See [fractavolta.com](https://fractavolta.com) for the integrated picture._
+_Inseme operates the **civic layer (Layer 4)** of the FractaVolta four-layer stack (energy / compute
+/ cognition / civic), as the **platform layer** of a five-repository corpus. Inseme keeps its own
+identity — neutral, MIT-licensed, governed by its citizen community. The five-repo framing simply
+names where it interoperates with the rest of the corpus. The common methodology — *Discours de la
+seconde méthode* — lives in
+[barons-Mariani/research/second_method.md](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/second_method.md).
+See [fractavolta.com](https://fractavolta.com) for the integrated picture._
+
+| Repository                                                           | Role                                                                                                                                                 |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [MareNostrum](https://github.com/JeanHuguesRobert/marenostrum)       | Strategic framework. CXU specification, DHITL axiom, Mediterranean solar commons.                                                                    |
+| [FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta)       | Engineering firm + software publisher + stack operator. EPN, DC-native nodes, PGN, IPN, Mariani Village.                                             |
+| [Cogentia](https://github.com/JeanHuguesRobert/cogentia)             | Cognitive infrastructure tooling. `cogentia.js` CLI, Cogentia Commons methodology, continuation protocol.                                            |
+| **inseme**                                                           | **Platform — COP runtime, briques, Kudocracy.Survey, Inseme Agora, Ophélia AI mediator, Atlas of Biodiversity. MIT-licensed, governed by citizens.** |
+| [barons-Mariani](https://github.com/JeanHuguesRobert/barons-Mariani) | Political and institutional framework. Plan 2038, _Discours de la seconde méthode_.                                                                  |
 
 ---
 
@@ -49,7 +55,8 @@ components of the ecosystem:
 The ecosystem is composed of several specialized packages:
 
 - **`packages/cop-*`**: Cognitive Orchestration Protocol (Kernel, CLI, Host).
-- **`packages/brique-*`**: Functional modules (Wiki, Blog, Tasks, Group, **Map**, etc.).
+- **`packages/brique-*`**: Functional modules (Wiki, Blog, Tasks, Group, **Map**, **Auxilia** —
+  digital hospitality for mobile data and battery, etc.).
 - **`packages/models`**: Sovereign LLM controller for local inference.
 - **`packages/kudocracy`**: Core governance models and liquid democracy logic.
 - **`packages/ui`**: Shared design system and component library.

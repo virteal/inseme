@@ -99,3 +99,22 @@ _Ideas that trotte — no commitment, no deadline._
 
 _Priority established by first public commit. License: open-source per individual file/package._
 _Fork to explore alternatives. Challenge via issues._
+
+<!-- BEGIN_AUTO: backlinks -->
+
+### Backlinks
+
+_These documents link to this file:_
+
+- [Concept Index — inseme](concepts.md)
+- [Spécification du Manifeste de Brique (brique.config.js)](../packages/cop-host/BRIQUE_SPEC.md)
+- [ROADMAP — Cognitive Orchestration Protocol (COP)](../packages/cop-core/ROADMAP.md)
+- [**The COP Manifesto**](../packages/cop-core/Manifesto.md)
+- [COP Protocol Invariants](../packages/cop-core/Invariants.md)
+- [**FAQ.md**](../packages/cop-core/FAQ.md)
+- [Cognitive Orchestration Protocol (COP)](../packages/cop-core/Architecture.md)
+- [COMPARISON.md](../packages/cop-core/COMPARISON.md)
+- [🏗️ Inseme Modular System Architecture](../docs/MODULAR_SYSTEM.md)
+- [Corpus Status — inseme](corpus-status.md)
+
+<!-- END_AUTO: backlinks -->

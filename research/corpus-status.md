@@ -5,7 +5,7 @@ description:
   possible"
 layout: default
 nav_order: 2
-last_modified_at: 2026-05-20
+last_modified_at: 2026-05-21
 repository: "github.com/JeanHuguesRobert/inseme"
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/corpus-status.md
 last_stamped_at: 2026-05-16
@@ -26,11 +26,11 @@ Objections_ — _are manually curated and preserved across refreshes._
 
 | Repository     | research/index.md | Branch | Last commit |
 | -------------- | ----------------- | ------ | ----------- |
-| cogentia       | ✅                | main   | 2026-05-20  |
-| FractaVolta    | ✅                | main   | 2026-05-20  |
-| marenostrum    | ✅                | main   | 2026-05-18  |
-| barons-Mariani | ✅                | main   | 2026-05-20  |
-| inseme         | ✅                | main   | 2026-05-20  |
+| cogentia       | ✅                | main   | 2026-05-21  |
+| FractaVolta    | ✅                | main   | 2026-05-21  |
+| marenostrum    | ✅                | main   | 2026-05-21  |
+| barons-Mariani | ✅                | main   | 2026-05-21  |
+| inseme         | ✅                | main   | 2026-05-21  |
 
 <!-- END_AUTO: registered_repos -->
 
@@ -236,7 +236,16 @@ _Challenge via issues. Fork to explore alternatives._
 
 _These documents link to this file:_
 
-- [Corpus Status — inseme](corpus-status.md)
+- [Concept Index — inseme](concepts.md)
 - [Research Index — Inseme](index.md)
+- [Spécification du Manifeste de Brique (brique.config.js)](../packages/cop-host/BRIQUE_SPEC.md)
+- [ROADMAP — Cognitive Orchestration Protocol (COP)](../packages/cop-core/ROADMAP.md)
+- [**The COP Manifesto**](../packages/cop-core/Manifesto.md)
+- [COP Protocol Invariants](../packages/cop-core/Invariants.md)
+- [**FAQ.md**](../packages/cop-core/FAQ.md)
+- [Cognitive Orchestration Protocol (COP)](../packages/cop-core/Architecture.md)
+- [COMPARISON.md](../packages/cop-core/COMPARISON.md)
+- [🏗️ Inseme Modular System Architecture](../docs/MODULAR_SYSTEM.md)
+- [Corpus Status — inseme](corpus-status.md)
 
 <!-- END_AUTO: backlinks -->
