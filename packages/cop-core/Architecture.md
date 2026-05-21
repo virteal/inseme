@@ -2968,7 +2968,7 @@ then it is aligned with the spirit and the letter of COP.
 
 _These documents link to this file:_
 
-- [Corpus Status — inseme](../../research/corpus-status.md)
 - [Research Index — Inseme](../../research/index.md)
+- [Corpus Status — inseme](../../research/corpus-status.md)
 
 <!-- END_AUTO: backlinks -->

@@ -31,6 +31,7 @@ Objections_ — _are manually curated and preserved across refreshes._
 | marenostrum    | ✅                | main   | 2026-05-21  |
 | barons-Mariani | ✅                | main   | 2026-05-21  |
 | inseme         | ✅                | main   | 2026-05-21  |
+| Inox           | ✅                | master | 2026-04-19  |
 
 <!-- END_AUTO: registered_repos -->
 
@@ -47,6 +48,7 @@ graph LR
   marenostrum["📄 marenostrum"]
   barons-Mariani["📄 barons-Mariani"]
   inseme["📄 inseme"]
+  Inox["📄 Inox"]
   cogentia --> marenostrum
   cogentia --> barons-Mariani
   cogentia --> FractaVolta
@@ -67,11 +69,17 @@ graph LR
   inseme --> marenostrum
   inseme --> FractaVolta
   inseme --> barons-Mariani
+  Inox --> marenostrum
+  Inox --> FractaVolta
+  Inox --> cogentia
+  Inox --> barons-Mariani
+  Inox --> inseme
   click cogentia "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/index.md" "Open research/index.md"
   click FractaVolta "https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/index.md" "Open research/index.md"
   click marenostrum "https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/index.md" "Open research/index.md"
   click barons-Mariani "https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/index.md" "Open research/index.md"
   click inseme "https://github.com/JeanHuguesRobert/inseme/blob/main/research/index.md" "Open research/index.md"
+  click Inox "https://github.com/JeanHuguesRobert/Inox/blob/main/research/index.md" "Open research/index.md"
 ```
 
 <!-- END_AUTO: graph -->
@@ -245,7 +253,7 @@ _These documents link to this file:_
 - [ROADMAP — Cognitive Orchestration Protocol (COP)](../packages/cop-core/ROADMAP.md)
 - [Spécification du Manifeste de Brique (brique.config.js)](../packages/cop-host/BRIQUE_SPEC.md)
 - [Concept Index — inseme](concepts.md)
-- [Corpus Status — inseme](corpus-status.md)
 - [Research Index — Inseme](index.md)
+- [Corpus Status — inseme](corpus-status.md)
 
 <!-- END_AUTO: backlinks -->

@@ -7,20 +7,21 @@ This project brings together the tools of the **#PERTITELLU** citizen movement (
 aims to provide free solutions to empower citizens.
 
 _Inseme operates the **civic layer (Layer 4)** of the FractaVolta four-layer stack (energy / compute
-/ cognition / civic), as the **platform layer** of a five-repository corpus. Inseme keeps its own
-identity — neutral, MIT-licensed, governed by its citizen community. The five-repo framing simply
+/ cognition / civic), as the **platform layer** of a six-repository corpus. Inseme keeps its own
+identity — neutral, MIT-licensed, governed by its citizen community. The six-repo framing simply
 names where it interoperates with the rest of the corpus. The common methodology — *Discours de la
 seconde méthode* — lives in
 [barons-Mariani/research/second_method.md](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/second_method.md).
 See [fractavolta.com](https://fractavolta.com) for the integrated picture._
 
-| Repository                                                           | Role                                                                                                                                                 |
-| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [MareNostrum](https://github.com/JeanHuguesRobert/marenostrum)       | Strategic framework. CXU specification, DHITL axiom, Mediterranean solar commons.                                                                    |
-| [FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta)       | Engineering firm + software publisher + stack operator. EPN, DC-native nodes, PGN, IPN, Mariani Village.                                             |
-| [Cogentia](https://github.com/JeanHuguesRobert/cogentia)             | Cognitive infrastructure tooling. `cogentia.js` CLI, Cogentia Commons methodology, continuation protocol.                                            |
-| **inseme**                                                           | **Platform — COP runtime, briques, Kudocracy.Survey, Inseme Agora, Ophélia AI mediator, Atlas of Biodiversity. MIT-licensed, governed by citizens.** |
-| [barons-Mariani](https://github.com/JeanHuguesRobert/barons-Mariani) | Political and institutional framework. Plan 2038, _Discours de la seconde méthode_.                                                                  |
+| Repository                                                           | Role                                                                                                                                                                                                                           |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [MareNostrum](https://github.com/JeanHuguesRobert/marenostrum)       | Strategic framework. CXU specification, DHITL axiom, Mediterranean solar commons.                                                                                                                                              |
+| [FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta)       | Engineering firm + software publisher + stack operator. EPN, DC-native nodes, PGN, IPN, Mariani Village.                                                                                                                       |
+| [Cogentia](https://github.com/JeanHuguesRobert/cogentia)             | Cognitive infrastructure tooling. `cogentia.js` CLI, Cogentia Commons methodology, continuation protocol.                                                                                                                      |
+| **inseme**                                                           | **Platform — COP runtime, briques, Kudocracy.Survey, Inseme Agora, Ophélia AI mediator, Atlas of Biodiversity. MIT-licensed, governed by citizens.**                                                                           |
+| [barons-Mariani](https://github.com/JeanHuguesRobert/barons-Mariani) | Political and institutional framework. Plan 2038, _Discours de la seconde méthode_.                                                                                                                                            |
+| [Inox](https://github.com/JeanHuguesRobert/Inox)                     | Language and runtime substrate. Concatenative stack VM, strict control/data plane separation. Intended runtime for the agents and nodes of the future _Fractanet_. JS today, WASM and C/C++ next, ESP32 bare-metal eventually. |
 
 ---
 

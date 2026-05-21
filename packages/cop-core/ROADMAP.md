@@ -159,7 +159,7 @@ The protocol should not.
 
 _These documents link to this file:_
 
-- [Corpus Status — inseme](../../research/corpus-status.md)
 - [Research Index — Inseme](../../research/index.md)
+- [Corpus Status — inseme](../../research/corpus-status.md)
 
 <!-- END_AUTO: backlinks -->
