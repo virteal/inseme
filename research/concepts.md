@@ -170,7 +170,7 @@ within the React and Vite frontend ecosystems.
 
 _These documents link to this file:_
 
-- [Research Index — Inseme](index.md)
 - [Corpus Status — inseme](corpus-status.md)
+- [Research Index — Inseme](index.md)
 
 <!-- END_AUTO: backlinks -->

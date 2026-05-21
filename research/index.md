@@ -106,15 +106,15 @@ _Fork to explore alternatives. Challenge via issues._
 
 _These documents link to this file:_
 
-- [Concept Index — inseme](concepts.md)
-- [Spécification du Manifeste de Brique (brique.config.js)](../packages/cop-host/BRIQUE_SPEC.md)
-- [ROADMAP — Cognitive Orchestration Protocol (COP)](../packages/cop-core/ROADMAP.md)
-- [**The COP Manifesto**](../packages/cop-core/Manifesto.md)
-- [COP Protocol Invariants](../packages/cop-core/Invariants.md)
-- [**FAQ.md**](../packages/cop-core/FAQ.md)
+- [🏗️ Inseme Modular System Architecture](../docs/MODULAR_SYSTEM.md)
 - [Cognitive Orchestration Protocol (COP)](../packages/cop-core/Architecture.md)
 - [COMPARISON.md](../packages/cop-core/COMPARISON.md)
-- [🏗️ Inseme Modular System Architecture](../docs/MODULAR_SYSTEM.md)
+- [**FAQ.md**](../packages/cop-core/FAQ.md)
+- [COP Protocol Invariants](../packages/cop-core/Invariants.md)
+- [**The COP Manifesto**](../packages/cop-core/Manifesto.md)
+- [ROADMAP — Cognitive Orchestration Protocol (COP)](../packages/cop-core/ROADMAP.md)
+- [Spécification du Manifeste de Brique (brique.config.js)](../packages/cop-host/BRIQUE_SPEC.md)
+- [Concept Index — inseme](concepts.md)
 - [Corpus Status — inseme](corpus-status.md)
 
 <!-- END_AUTO: backlinks -->
