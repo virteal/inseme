@@ -103,7 +103,7 @@ inseme/
 
 _These documents link to this file:_
 
-- [Research Index — Inseme](../research/index.md)
 - [Corpus Status — inseme](../research/corpus-status.md)
+- [Research Index — Inseme](../research/index.md)
 
 <!-- END_AUTO: backlinks -->

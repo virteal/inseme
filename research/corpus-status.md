@@ -5,7 +5,7 @@ description:
   possible"
 layout: default
 nav_order: 2
-last_modified_at: 2026-05-21
+last_modified_at: 2026-05-22
 repository: "github.com/JeanHuguesRobert/inseme"
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/corpus-status.md
 last_stamped_at: 2026-05-16
@@ -26,12 +26,12 @@ Objections_ — _are manually curated and preserved across refreshes._
 
 | Repository     | research/index.md | Branch | Last commit |
 | -------------- | ----------------- | ------ | ----------- |
-| cogentia       | ✅                | main   | 2026-05-21  |
-| FractaVolta    | ✅                | main   | 2026-05-21  |
-| marenostrum    | ✅                | main   | 2026-05-21  |
+| cogentia       | ✅                | main   | 2026-05-22  |
+| FractaVolta    | ✅                | main   | 2026-05-22  |
+| marenostrum    | ✅                | main   | 2026-05-22  |
 | barons-Mariani | ✅                | main   | 2026-05-21  |
 | inseme         | ✅                | main   | 2026-05-21  |
-| Inox           | ✅                | master | 2026-04-19  |
+| Inox           | ✅                | master | 2026-05-22  |
 
 <!-- END_AUTO: registered_repos -->
 
@@ -253,7 +253,7 @@ _These documents link to this file:_
 - [ROADMAP — Cognitive Orchestration Protocol (COP)](../packages/cop-core/ROADMAP.md)
 - [Spécification du Manifeste de Brique (brique.config.js)](../packages/cop-host/BRIQUE_SPEC.md)
 - [Concept Index — inseme](concepts.md)
-- [Research Index — Inseme](index.md)
 - [Corpus Status — inseme](corpus-status.md)
+- [Research Index — Inseme](index.md)
 
 <!-- END_AUTO: backlinks -->
