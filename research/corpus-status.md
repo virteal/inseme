@@ -26,11 +26,11 @@ Objections_ — _are manually curated and preserved across refreshes._
 
 | Repository     | research/index.md | Branch | Last commit |
 | -------------- | ----------------- | ------ | ----------- |
-| cogentia       | ✅                | main   | 2026-05-22  |
-| FractaVolta    | ✅                | main   | 2026-05-22  |
-| marenostrum    | ✅                | main   | 2026-05-22  |
-| barons-Mariani | ✅                | main   | 2026-05-22  |
-| inseme         | ✅                | main   | 2026-05-22  |
+| cogentia       | ✅                | main   | 2026-05-23  |
+| FractaVolta    | ✅                | main   | 2026-05-23  |
+| marenostrum    | ✅                | main   | 2026-05-23  |
+| barons-Mariani | ✅                | main   | 2026-05-23  |
+| inseme         | ✅                | main   | 2026-05-23  |
 | Inox           | ✅                | master | 2026-05-23  |
 
 <!-- END_AUTO: registered_repos -->
