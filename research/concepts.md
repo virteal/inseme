@@ -6,7 +6,7 @@ layout: default
 nav_order: 3
 last_modified_at: 2026-05-16
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/concepts.md
-last_stamped_at: 2026-05-16
+last_stamped_at: 2026-05-26
 ---
 
 # Concept Index — inseme
