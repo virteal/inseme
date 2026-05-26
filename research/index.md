@@ -11,10 +11,10 @@ last_modified_at: 2026-05-13
 
 ## Foundation
 
-Inseme is the **deployable platform** of the four-repo Cogentia corpus and the #PERTITELLU
-civic-tech agenda. Where the four canonical research repos (`barons-Mariani`, `marenostrum`,
-`cogentia`, `FractaVolta`) carry the _doctrine_ and _methodology_, inseme carries the _running
-infrastructure_:
+Inseme is the **deployable platform** of the six-repo Cogentia corpus and the #PERTITELLU civic-tech
+agenda. Where the five sibling research repos (`barons-Mariani`, `marenostrum`, `cogentia`,
+`FractaVolta`, `Inox`) carry the _doctrine_, _methodology_, and _runtime substrate_, inseme carries
+the _running infrastructure_:
 
 - The **COP (Cognitive Orchestration Protocol)** runtime — see
   [`packages/cop-core/Architecture.md`](../packages/cop-core/Architecture.md), the canonical
@@ -36,7 +36,8 @@ _A map of what is, what is in progress, and what could be._ _See sibling indexes
 [cogentia](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/index.md),
 [MareNostrum](https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/index.md),
 [FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/index.md),
-[barons-Mariani](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/index.md)._
+[barons-Mariani](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/index.md),
+[Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md)._
 
 ---
 
@@ -64,13 +65,14 @@ _Platform-level specifications and architectural documents._
 
 _Hosted elsewhere, intellectually connected here._
 
-| Title                                                                                                                                                                                                 | Location       |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| [Discours de la seconde méthode](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/second_method.md) _(founding doctrine — names cogentia.js as canonical tooling)_               | barons-Mariani |
-| [DHITL — Democratic Humans in the Loop](https://github.com/JeanHuguesRobert/marenostrum/blob/main/DHITL.md) _(architectural axiom — Layer 4 = cognitive infrastructure where inseme briques operate)_ | marenostrum    |
-| [Cogentia Commons MVP Specification](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_mvp_spec.md) _(targets inseme as `brique-cogentia-commons`, see §12)_           | cogentia       |
-| [Cogentia Workflows](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_workflows.md)                                                                                           | cogentia       |
-| [Packetized Gravity Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/PGN.md) _(physical infrastructure layer the platform may eventually run on)_                                  | FractaVolta    |
+| Title                                                                                                                                                                                                        | Location       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
+| [Discours de la seconde méthode](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/second_method.md) _(founding doctrine — names cogentia.js as canonical tooling)_                      | barons-Mariani |
+| [DHITL — Democratic Humans in the Loop](https://github.com/JeanHuguesRobert/marenostrum/blob/main/DHITL.md) _(architectural axiom — Layer 4 = cognitive infrastructure where inseme briques operate)_        | marenostrum    |
+| [Cogentia Commons MVP Specification](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_mvp_spec.md) _(targets inseme as `brique-cogentia-commons`, see §12)_                  | cogentia       |
+| [Cogentia Workflows](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_workflows.md)                                                                                                  | cogentia       |
+| [Packetized Gravity Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/PGN.md) _(physical infrastructure layer the platform may eventually run on)_                                         | FractaVolta    |
+| [Inox — language and runtime substrate](https://github.com/JeanHuguesRobert/Inox/blob/master/research/inox-spec.md) _(concatenative stack VM; future implementation target for `cop-core` and edge briques)_ | Inox           |
 
 ---
 
