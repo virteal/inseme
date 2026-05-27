@@ -82,7 +82,7 @@ across the Inseme platform.
 
 **Reference documents:**
 
-- `packages/cop-core/Architecture.md`
+- [`packages/cop-core/Architecture.md`](../packages/cop-core/Architecture.md)
 
 ---
 
@@ -95,7 +95,7 @@ for expanding capabilities.
 
 **Reference documents:**
 
-- `docs/MODULAR_SYSTEM.md`
+- [`docs/MODULAR_SYSTEM.md`](../docs/MODULAR_SYSTEM.md)
 
 ---
 
@@ -135,7 +135,7 @@ Continuous Operation Protocol enforces locally upon all state machines.
 
 **Reference documents:**
 
-- `packages/cop-core/Invariants.md`
+- [`packages/cop-core/Invariants.md`](../packages/cop-core/Invariants.md)
 
 ---
 
@@ -148,8 +148,8 @@ and operated across different rooms and groups.
 
 **Reference documents:**
 
-- `packages/cop-host/BRIQUE_SPEC.md`
-- `packages/cop-host/docs/MULTI_INSTANCE.md`
+- [`packages/cop-host/BRIQUE_SPEC.md`](../packages/cop-host/BRIQUE_SPEC.md)
+- [`packages/cop-host/docs/MULTI_INSTANCE.md`](../packages/cop-host/docs/MULTI_INSTANCE.md)
 
 ---
 
@@ -162,7 +162,7 @@ within the React and Vite frontend ecosystems.
 
 **Reference documents:**
 
-- `docs/MODULAR_SYSTEM.md`
+- [`docs/MODULAR_SYSTEM.md`](../docs/MODULAR_SYSTEM.md)
 
 <!-- BEGIN_AUTO: backlinks -->
 
@@ -170,6 +170,10 @@ within the React and Vite frontend ecosystems.
 
 _These documents link to this file:_
 
+- [🏗️ Inseme Modular System Architecture](../docs/MODULAR_SYSTEM.md)
+- [Cognitive Orchestration Protocol (COP)](../packages/cop-core/Architecture.md)
+- [COP Protocol Invariants](../packages/cop-core/Invariants.md)
+- [Spécification du Manifeste de Brique (brique.config.js)](../packages/cop-host/BRIQUE_SPEC.md)
 - [Corpus Status — inseme](corpus-status.md)
 - [Research Index — Inseme](index.md)
 

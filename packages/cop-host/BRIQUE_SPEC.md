@@ -107,6 +107,7 @@ Le **Brique Compiler** (dans `cop-host`) utilisera ces manifestes pour :
 
 _These documents link to this file:_
 
+- [Concept Index — inseme](../../research/concepts.md)
 - [Corpus Status — inseme](../../research/corpus-status.md)
 - [Research Index — Inseme](../../research/index.md)
 
