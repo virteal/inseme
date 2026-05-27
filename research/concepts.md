@@ -7,6 +7,10 @@ nav_order: 3
 last_modified_at: 2026-05-16
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/concepts.md
 last_stamped_at: 2026-05-26
+license: CC BY-SA 4.0
+affiliation: Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica
+date: 2026-05-16
+creator: Jean Hugues Noël Robert, baron Mariani
 ---
 
 # Concept Index — inseme
