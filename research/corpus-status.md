@@ -26,12 +26,12 @@ _and_ _Open Objections_ — _are manually curated and preserved across refreshes
 
 | Repository     | research/index.md | Branch | Last commit |
 | -------------- | ----------------- | ------ | ----------- |
-| cogentia       | ✅                | main   | 2026-05-26  |
-| FractaVolta    | ✅                | main   | 2026-05-26  |
-| marenostrum    | ✅                | main   | 2026-05-26  |
+| cogentia       | ✅                | main   | 2026-05-27  |
+| FractaVolta    | ✅                | main   | 2026-05-27  |
+| marenostrum    | ✅                | main   | 2026-05-27  |
 | barons-Mariani | ✅                | main   | 2026-05-27  |
-| inseme         | ✅                | main   | 2026-05-26  |
-| Inox           | ✅                | master | 2026-05-26  |
+| inseme         | ✅                | main   | 2026-05-27  |
+| Inox           | ✅                | master | 2026-05-27  |
 
 <!-- END_AUTO: registered_repos -->
 

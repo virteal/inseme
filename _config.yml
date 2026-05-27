@@ -8,6 +8,13 @@ color_scheme: dark
 aux_links:
   "Cogentia README": "https://github.com/JeanHuguesRobert/cogentia"
 
+# Plugins (tous supportés sur GitHub Pages)
+plugins:
+  - jekyll-seo-tag
+  - jekyll-relative-links
+  - jekyll-sitemap
+  # - jekyll-feed     # décommente si tu veux un flux RSS/Atom plus tard
+
 # Disable default Jekyll behavior that might interfere with raw Markdown files
 exclude:
   - ".cogentiaignore"
