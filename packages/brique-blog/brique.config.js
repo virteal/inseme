@@ -1,5 +1,6 @@
 export default {
   id: "blog",
+  status: "experimental", // post 2025 massive refactoring - aucune brique n'est "active" pour l'instant
   name: "Gestion des Blogs",
   feature: "blog",
   routes: [

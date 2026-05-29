@@ -42,7 +42,8 @@ _A map of what is, what is in progress, and what could be._ _See sibling indexes
 [MareNostrum](https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/index.md),
 [FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/index.md),
 [barons-Mariani](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/index.md),
-[Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md)._
+[Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md). Entry point:
+[profile / meta-node](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md)._
 
 ---
 
@@ -50,19 +51,20 @@ _A map of what is, what is in progress, and what could be._ _See sibling indexes
 
 _Platform-level specifications and architectural documents._
 
-| Title                                                                                                                     | Location  | Date        |
-| ------------------------------------------------------------------------------------------------------------------------- | --------- | ----------- |
-| [COP — Cognitive Orchestration Protocol (Architecture)](../packages/cop-core/Architecture.md) _(canonical protocol spec)_ | this repo | 2025-12     |
-| [COP Invariants — non-negotiable rules of the protocol](../packages/cop-core/Invariants.md)                               | this repo | 2025-12     |
-| [COP Manifesto](../packages/cop-core/Manifesto.md)                                                                        | this repo | 2025-12     |
-| [COP FAQ](../packages/cop-core/FAQ.md)                                                                                    | this repo | 2025-12     |
-| [COP Comparison with other orchestration frameworks](../packages/cop-core/COMPARISON.md)                                  | this repo | 2025-12     |
-| [COP Roadmap](../packages/cop-core/ROADMAP.md)                                                                            | this repo | 2025-12     |
-| [Modular System Architecture — the Brique pattern](../docs/MODULAR_SYSTEM.md)                                             | this repo | 2025-12     |
-| [BRIQUE_SPEC — the brique manifest contract](../packages/cop-host/BRIQUE_SPEC.md)                                         | this repo | 2025-12     |
-| [Multi-Instance Architecture](../packages/cop-host/docs/MULTI_INSTANCE.md)                                                | this repo | 2025-12     |
-| [Corpus Status](corpus-status.md) _(living view — auto-refreshed by `cogentia.js corpus-status`)_                         | this repo | refreshable |
-| [Concept Index](concepts.md) _(typed concept registry — mapped by `cogentia.js concepts`)_                                | this repo | refreshable |
+| Title                                                                                                                                  | Location  | Date        |
+| -------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------- |
+| [COP — Cognitive Orchestration Protocol (Architecture)](../packages/cop-core/Architecture.md) _(canonical protocol spec)_              | this repo | 2025-12     |
+| [COP Invariants — non-negotiable rules of the protocol](../packages/cop-core/Invariants.md)                                            | this repo | 2025-12     |
+| [COP Manifesto](../packages/cop-core/Manifesto.md)                                                                                     | this repo | 2025-12     |
+| [COP FAQ](../packages/cop-core/FAQ.md)                                                                                                 | this repo | 2025-12     |
+| [COP Comparison with other orchestration frameworks](../packages/cop-core/COMPARISON.md)                                               | this repo | 2025-12     |
+| [COP Roadmap](../packages/cop-core/ROADMAP.md)                                                                                         | this repo | 2025-12     |
+| [Modular System Architecture — the Brique pattern](../docs/MODULAR_SYSTEM.md)                                                          | this repo | 2025-12     |
+| [BRIQUE_SPEC — the brique manifest contract](../packages/cop-host/BRIQUE_SPEC.md)                                                      | this repo | 2025-12     |
+| [Multi-Instance Architecture](../packages/cop-host/docs/MULTI_INSTANCE.md)                                                             | this repo | 2025-12     |
+| [Corpus Status](corpus-status.md) _(living view — auto-refreshed by `cogentia.js corpus-status`)_                                      | this repo | refreshable |
+| [Concept Index](concepts.md) _(typed concept registry — mapped by `cogentia.js concepts`)_                                             | this repo | refreshable |
+| [Cyrnea State of Play](CYRNEA_STATE_OF_PLAY.md) _(living assessment for the bar/conviviality app — AI + human collaborator reference)_ | this repo | 2026-05-28  |
 
 ---
 
@@ -70,14 +72,15 @@ _Platform-level specifications and architectural documents._
 
 _Hosted elsewhere, intellectually connected here._
 
-| Title                                                                                                                                                                                                        | Location       |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
-| [Discours de la seconde méthode](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/second_method.md) _(founding doctrine — names cogentia.js as canonical tooling)_                      | barons-Mariani |
-| [DHITL — Democratic Humans in the Loop](https://github.com/JeanHuguesRobert/marenostrum/blob/main/DHITL.md) _(architectural axiom — Layer 4 = cognitive infrastructure where inseme briques operate)_        | marenostrum    |
-| [Cogentia Commons MVP Specification](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_mvp_spec.md) _(targets inseme as `brique-cogentia-commons`, see §12)_                  | cogentia       |
-| [Cogentia Workflows](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_workflows.md)                                                                                                  | cogentia       |
-| [Packetized Gravity Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/PGN.md) _(physical infrastructure layer the platform may eventually run on)_                                         | FractaVolta    |
-| [Inox — language and runtime substrate](https://github.com/JeanHuguesRobert/Inox/blob/master/research/inox-spec.md) _(concatenative stack VM; future implementation target for `cop-core` and edge briques)_ | Inox           |
+| Title                                                                                                                                                                                                        | Location         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------- |
+| [Discours de la seconde méthode](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/second_method.md) _(founding doctrine — names cogentia.js as canonical tooling)_                      | barons-Mariani   |
+| [DHITL — Democratic Humans in the Loop](https://github.com/JeanHuguesRobert/marenostrum/blob/main/DHITL.md) _(architectural axiom — Layer 4 = cognitive infrastructure where inseme briques operate)_        | marenostrum      |
+| [Cogentia Commons MVP Specification](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_mvp_spec.md) _(targets inseme as `brique-cogentia-commons`, see §12)_                  | cogentia         |
+| [Cogentia Workflows](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_workflows.md)                                                                                                  | cogentia         |
+| [Packetized Gravity Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/PGN.md) _(physical infrastructure layer the platform may eventually run on)_                                         | FractaVolta      |
+| [Inox — language and runtime substrate](https://github.com/JeanHuguesRobert/Inox/blob/master/research/inox-spec.md) _(concatenative stack VM; future implementation target for `cop-core` and edge briques)_ | Inox             |
+| [Jean Hugues Noël Robert — profile / corpus entry point](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md) _(meta-node — registry host, orientation, AI agent briefing)_     | JeanHuguesRobert |
 
 ---
 
@@ -123,5 +126,6 @@ _These documents link to this file:_
 - [Spécification du Manifeste de Brique (brique.config.js)](../packages/cop-host/BRIQUE_SPEC.md)
 - [Concept Index — inseme](concepts.md)
 - [Corpus Status — inseme](corpus-status.md)
+- [Cyrnea — State of Play (Initial Assessment)](CYRNEA_STATE_OF_PLAY.md)
 
 <!-- END_AUTO: backlinks -->

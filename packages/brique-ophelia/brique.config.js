@@ -1,5 +1,6 @@
 export default {
   id: "ophelia",
+  status: "experimental", // post 2025 massive refactoring - aucune brique n'est "active" pour l'instant
   name: "Ophélia - Chat Vocal",
   feature: "vocal_chat",
   routes: [

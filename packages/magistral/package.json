@@ -14,11 +14,19 @@
   "scripts": {
     "check": "node --check src/router.js && node --check bin/magistral.js && node --check scripts/launcher.js",
     "test": "node --test tests/*.test.js",
+
+    "// Production-ish commands (via bin)": "",
     "start": "node bin/magistral.js start",
     "stop": "node bin/magistral.js stop",
     "status": "node bin/magistral.js status",
     "metrics": "node bin/magistral.js metrics",
-    "logs": "node bin/magistral.js logs"
+    "logs": "node bin/magistral.js logs",
+
+    "// === Developer Experience (recommended) ===": "",
+    "dev": "node scripts/dev.js",
+    "dev:pilot": "node scripts/launcher.js --pilot pilots/reference-js/src/main.js --blueprint coding --map default",
+    "dev:monitor": "node scripts/monitor.js",
+    "dev:full": "node scripts/dev.js --full"
   },
   "dependencies": {
     "node-fetch": "^3.0.0"

@@ -5,6 +5,7 @@
 
 export default {
   id: "cyrnea",
+  status: "experimental", // post 2025 massive refactoring - aucune brique n'est "active" pour l'instant
   name: "Cyrnea",
   description: "Module de convivialité bar: jeux, musique, défis et interaction QR.",
 

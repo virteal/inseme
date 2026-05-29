@@ -184,6 +184,14 @@
       tr.expanded .log-detail {
         display: block;
       }
+
+      /* Improved logs detail rows */
+      #logs-body tr:nth-child(even) {
+        background: #1e293b;
+      }
+      #tab-logs table td {
+        vertical-align: top;
+      }
     </style>
   </head>
   <body>
@@ -407,27 +415,37 @@
       }
 
       async function addToMap(modelId, tier, baseUrl) {
-        const id = prompt("Enter ID for this node:", modelId.split("-").slice(0, 2).join("-"));
+        // Better UX: pre-fill sensible defaults and use one confirm dialog with editable fields
+        const suggestedId = modelId.split("-").slice(0, 2).join("-");
+        const defaultUrl = baseUrl.replace(/\/$/, "") + "/chat/completions";
+
+        const id = prompt("Node ID (used in routing):", suggestedId);
         if (!id) return;
+
+        const url = prompt("Endpoint URL:", defaultUrl);
+        if (!url) return;
+
+        const finalTier = prompt("Tier (fast / strong / fallback):", tier) || tier;
 
         try {
           const res = await fetch("/v1/magistral/map/add", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              id,
-              url: baseUrl.replace(/\/$/, "") + "/chat/completions",
+              id: id.trim(),
+              url: url.trim(),
               model: modelId,
-              tier,
+              tier: finalTier.trim(),
               weight: 1,
             }),
           });
           const json = await res.json();
           if (json.error) throw new Error(json.error);
-          alert("Node added to active map!");
-          loadMetrics();
+
+          alert(`✅ Node "${id}" added to the active map!`);
+          loadMetrics(); // refresh the main metrics view
         } catch (e) {
-          alert("Failed to add: " + e.message);
+          alert("Failed to add node: " + e.message);
         }
       }
 
@@ -510,24 +528,30 @@
           const tbody = document.getElementById("logs-body");
 
           let html = "";
-          logs.forEach((l) => {
+          logs.forEach((l, index) => {
             const date = new Date(l.ts).toLocaleTimeString();
             const statusIcon = l.status === 200 ? "✅" : l.status === 0 ? "⚠️" : "❌";
             const streamBadge = l.stream
-              ? '<span style="color:#38bdf8; font-size:10px;">⚡</span>'
+              ? '<span style="color:#38bdf8; font-size:10px;">⚡ stream</span>'
               : "";
 
-            html += `<tr onclick="this.classList.toggle('expanded')" style="cursor:pointer">
-            <td class="code">${date}</td>
-            <td>${l.nodeId}</td>
-            <td>${statusIcon} ${l.status || "-"} ${streamBadge}</td>
-            <td><span class="pill ${l.tier}">${l.tier}</span></td>
-            <td>${l.latencyMs}ms</td>
-            <td>${l.completionTokens || "-"}</td>
-          </tr>
-          <tr style="display:none"><td colspan="6" style="padding:0;">
-             <div class="log-detail">${JSON.stringify(l, null, 2)}</div>
-          </td></tr>`; // Detail row handled by CSS
+            const preview = l.preview ? l.preview.substring(0, 120) + (l.preview.length > 120 ? "..." : "") : "";
+
+            html += `
+              <tr onclick="toggleLogRow(${index})" style="cursor:pointer" data-row="${index}">
+                <td class="code">${date}</td>
+                <td><strong>${l.nodeId}</strong></td>
+                <td>${statusIcon} ${l.status || "-"} ${streamBadge}</td>
+                <td><span class="pill ${l.tier}">${l.tier}</span></td>
+                <td>${l.latencyMs || 0}ms</td>
+                <td>${l.promptTokens || 0} → ${l.completionTokens || 0}</td>
+              </tr>
+              <tr id="log-detail-${index}" style="display:none; background:#0f172a;">
+                <td colspan="6" style="padding:12px; font-family:monospace; font-size:12px; white-space:pre-wrap; border-top:1px solid #334155;">
+                  ${preview ? `<div style="margin-bottom:8px; color:#94a3b8;">Preview: ${preview}</div>` : ""}
+                  <div>${JSON.stringify(l, null, 2)}</div>
+                </td>
+              </tr>`;
           });
           tbody.innerHTML = html;
         } catch (e) {
@@ -539,6 +563,14 @@
         await fetch("/v1/magistral/logs", { method: "DELETE" });
         loadLogs();
       }
+
+      // Toggle detailed log row
+      window.toggleLogRow = function(index) {
+        const detailRow = document.getElementById(`log-detail-${index}`);
+        if (detailRow) {
+          detailRow.style.display = detailRow.style.display === "none" ? "table-row" : "none";
+        }
+      };
 
       // Init
       setInterval(loadMetrics, 2000);

@@ -1,5 +1,6 @@
 export default {
   id: "host",
+  status: "experimental", // post 2025 massive refactoring - aucune brique n'est "active" pour l'instant
   name: "Host Runtime",
   feature: "host",
   routes: [],

@@ -2,6 +2,29 @@ import { useState, useEffect, useCallback } from "react";
 import { useSupabase } from "./useSupabase.js";
 
 /**
+ * Pure function: détermine si une présence mérite d'être persistée
+ * (changement significatif vs historique).
+ * Extraite hors du hook pour éviter tout problème d'ordre de déclaration (TDZ).
+ */
+function shouldPersist(current, historical) {
+  if (!historical) return true; // Nouvelle présence
+
+  const currentData = JSON.stringify({
+    role: current?.role,
+    zone: current?.zone,
+    public_links: current?.public_links,
+  });
+
+  const historicalData = JSON.stringify({
+    role: historical?.role,
+    zone: historical?.zone,
+    public_links: historical?.public_links,
+  });
+
+  return currentData !== historicalData;
+}
+
+/**
  * Hook hybride qui combine le système Realtime existant
  * avec la persistance via inseme_messages
  */
@@ -132,7 +155,7 @@ export const useHybridPresence = (roomId, userId, _currentPresenceMetadata = {})
         historicalData: presenceHistory.get(realtimeData.user_id),
       };
 
-      // Persister les changements significatifs
+      // Persister les changements significatifs (fonction pure hors hook)
       if (shouldPersist(realtimeData, presenceHistory.get(realtimeData.user_id))) {
         persistPresence("update", {
           ...realtimeData,
@@ -142,29 +165,10 @@ export const useHybridPresence = (roomId, userId, _currentPresenceMetadata = {})
 
       return enrichedData;
     },
-    [presenceHistory, persistPresence, shouldPersist]
+    [presenceHistory, persistPresence]
   );
 
-  // 4. Déterminer si une présence doit être persistée
-  const shouldPersist = useCallback((current, historical) => {
-    if (!historical) return true; // Nouvelle présence
-
-    const currentData = JSON.stringify({
-      role: current.role,
-      zone: current.zone,
-      public_links: current.public_links,
-    });
-
-    const historicalData = JSON.stringify({
-      role: historical.role,
-      zone: historical.zone,
-      public_links: historical.public_links,
-    });
-
-    return currentData !== historicalData;
-  }, []);
-
-  // 5. Heartbeat automatique
+  // 4. Heartbeat automatique
   const sendHeartbeat = useCallback(async () => {
     if (!isOnline) return;
 
@@ -177,7 +181,7 @@ export const useHybridPresence = (roomId, userId, _currentPresenceMetadata = {})
     return success;
   }, [persistPresence, isOnline]);
 
-  // 6. Nettoyage des présences expirées
+  // 5. Nettoyage des présences expirées
   const cleanupExpiredPresences = useCallback(() => {
     const now = Date.now();
     const timeout = 5 * 60 * 1000; // 5 minutes
@@ -206,7 +210,7 @@ export const useHybridPresence = (roomId, userId, _currentPresenceMetadata = {})
     return hasChanges;
   }, [presenceHistory, persistPresence]);
 
-  // 7. Initialisation
+  // 6. Initialisation
   useEffect(() => {
     console.debug("[HybridPresence Debug] Initialization:", { roomId, userId });
     if (roomId && userId) {
@@ -223,7 +227,7 @@ export const useHybridPresence = (roomId, userId, _currentPresenceMetadata = {})
     }
   }, [roomId, userId, loadPresenceHistory, persistPresence]);
 
-  // 8. Heartbeat interval
+  // 7. Heartbeat interval
   useEffect(() => {
     const heartbeatInterval = setInterval(() => {
       sendHeartbeat();
@@ -232,7 +236,7 @@ export const useHybridPresence = (roomId, userId, _currentPresenceMetadata = {})
     return () => clearInterval(heartbeatInterval);
   }, [sendHeartbeat]);
 
-  // 9. Cleanup interval
+  // 8. Cleanup interval
   useEffect(() => {
     const cleanupInterval = setInterval(() => {
       cleanupExpiredPresences();
@@ -241,7 +245,7 @@ export const useHybridPresence = (roomId, userId, _currentPresenceMetadata = {})
     return () => clearInterval(cleanupInterval);
   }, [cleanupExpiredPresences]);
 
-  // 10. Gestion de la connectivité
+  // 9. Gestion de la connectivité
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
@@ -262,7 +266,7 @@ export const useHybridPresence = (roomId, userId, _currentPresenceMetadata = {})
     };
   }, [loadPresenceHistory]);
 
-  // 11. Nettoyage au démontage
+  // 10. Nettoyage au démontage
   useEffect(() => {
     return () => {
       // Annoncer le départ

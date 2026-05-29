@@ -1,5 +1,6 @@
 export default {
   id: "democracy", // exposed as 'democracy' or 'kudocracy'? Let's use 'democracy' for the ID/routes to be clean.
+  status: "experimental", // post 2025 massive refactoring - aucune brique n'est "active" pour l'instant
   name: "Gouvernance Citoyenne",
   feature: "democracy",
   routes: [
@@ -112,8 +113,7 @@ export default {
       type: "function",
       function: {
         name: "prolog_query",
-        description:
-          "Interroger le moteur de raisonnement logique ProLog sur la gouvernance.",
+        description: "Interroger le moteur de raisonnement logique ProLog sur la gouvernance.",
         parameters: {
           type: "object",
           properties: {

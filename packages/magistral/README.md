@@ -112,18 +112,42 @@ Upon process spawn, the Pilot MUST consume a single UTF-8 JSON object from `stdi
   }
 }
 
-### 3. Exécuter Magistral
+### 3. Running Magistral (Developer Experience)
 
-Magistral operates entirely natively on **Deno**. To run it, ensure you have Deno installed (`deno --version`), then launch the platform's default orchestrator (`launcher.js`), which handles booting the pilot in Deno internally for you:
+The easiest way to work on Magistral locally:
 
 ```bash
-# In packages/magistral/
-node scripts/launcher.js --pilot pilots/reference-js/src/main.js
-````
+cd packages/magistral
 
-> Note: The `launcher.js` script handles parsing your configurations, combining them with your
-> `.env` variables from `packages/models`, and passing them cleanly into the Deno stream for
-> execution.
+# Recommended: Start the pilot (with nice output)
+npm run dev
+
+# In another terminal, start the monitor
+npm run dev:monitor
+```
+
+**All-in-one mode** (pilot + monitor together):
+
+```bash
+npm run dev -- --full
+# or
+npm run dev:full
+```
+
+Once the pilot prints `MAGISTRAL_READY: http://127.0.0.1:8082`, you can open the admin UI:
+
+→ **http://127.0.0.1:8082/__admin**
+
+#### Available dev commands
+
+| Command            | Description                              |
+|--------------------|------------------------------------------|
+| `npm run dev`      | Start the reference pilot (recommended)  |
+| `npm run dev:full` | Pilot + monitor in one command           |
+| `npm run dev:monitor` | Start the CLI monitor only          |
+| `npm run dev:pilot` | Raw launcher (if you need flags)     |
+
+> **Note**: As of late May 2026, Magistral is in `experimental` state (like most of the Inseme platform after the large 2025 refactoring). No brique is currently marked "active".
 
 ### 4. Admin Web UI & CLI Monitoring
 
@@ -220,3 +244,4 @@ Use this prompt to instruct your agent to build the implementation within the `i
 ---
 
 ### Next Steps
+````

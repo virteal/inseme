@@ -1,5 +1,6 @@
 export default {
   id: "group",
+  status: "experimental", // post 2025 massive refactoring - aucune brique n'est "active" pour l'instant
   name: "Gestion des Groupes",
   feature: "group",
   routes: [
@@ -33,5 +34,5 @@ export default {
   },
   configSchema: {
     // Schéma de configuration si nécessaire
-  }
+  },
 };

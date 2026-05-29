@@ -72,7 +72,7 @@ Cyrnea est une **Progressive Web App (PWA)** moderne construite sur une architec
 - Un compte Supabase et Netlify (pour le déploiement)
 - Clés API pour les modèles IA (OpenAI, Anthropic, etc.) configurées dans le Vault.
 
-### Setup Rapide
+### Setup Rapide (DX amélioré)
 
 1.  **Installez les dépendances (racine du monorepo)** :
 
@@ -80,18 +80,46 @@ Cyrnea est une **Progressive Web App (PWA)** moderne construite sur une architec
     pnpm install
     ```
 
-2.  **Lancez le serveur de développement** :
+2.  **Lancez Cyrnea** (optimisé pour le développement itératif) :
+
+    Pour la plupart de votre travail quotidien (édition de composants, hooks, jeux, UI dans
+    brique-cyrnea) :
 
     ```bash
-    pnpm run netlify:dev
+    # Mode itératif ultra-rapide (recommandé quand vous codez)
+    pnpm cyrnea:launch --dev --no-compile
+
+    # Ou via alias court :
+    pnpm cyrnea:dev:fast
+    pnpm cyrnea:dev:iter
     ```
 
-    _Note : Utilisez `netlify:dev` plutôt que `vite` seul pour activer les Edge Functions (IA)._
+    Avant de commencer une session, il est recommandé de vérifier l'état :
+
+    ```bash
+    pnpm cyrnea:doctor
+    ```
+
+    Quand vous avez besoin du vrai comportement IA / Edge Functions :
+
+    ```bash
+    pnpm cyrnea:launch --full
+    ```
+
+    Pour tester sur mobile / depuis l'extérieur :
+
+    ```bash
+    pnpm cyrnea:launch --full --tunnel
+    ```
+
+    Anciennes commandes (toujours supportées) :
+    - `pnpm cyrnea:backend`
+    - `pnpm cyrnea:dev`
 
 3.  **Accédez à l'application** :
-    - **URL** : `http://localhost:8888` (Port Netlify)
-    - **Bar de démo** : `http://localhost:8888/bar/cyrnea`
-    - **Client** : `http://localhost:8888/app/cyrnea`
+    - **URL principale** : `http://localhost:8888`
+    - **Barman (gestion du bar)** : `http://localhost:8888/bar/cyrnea`
+    - **Client (vue habitué)** : `http://localhost:8888/app/cyrnea`
 
 ---
 

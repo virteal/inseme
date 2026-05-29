@@ -15,6 +15,12 @@ export default {
   // Identifiant unique de la brique (kebab-case, sans préfixe brique-).
   id: "auxilia",
 
+  // Maturity level of this brique.
+  // Context (May 2026): massive incomplete refactoring done end of 2025.
+  // No brique is currently considered "active".
+  // Possible values: "skeleton" | "experimental" | "active" | "deprecated"
+  status: "skeleton", // Very early stage — mostly declarations and specs
+
   // Nom d'affichage administratif.
   name: "Auxilia — hospitalité data & power",
 

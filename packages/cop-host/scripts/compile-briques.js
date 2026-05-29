@@ -92,6 +92,25 @@ const isDebug = process.argv.includes("--debug");
 const isVerbose =
   process.argv.includes("--verbose") || process.argv.includes("-v") || process.env.DEBUG || isDebug;
 
+/**
+ * Maturity status of a brique.
+ * Different briques evolve at different speeds.
+ */
+const BRIQUE_STATUSES = {
+  SKELETON: "skeleton", // Very early: mostly declarations, many missing handlers
+  EXPERIMENTAL: "experimental", // Functional but unstable / subject to big changes
+  ACTIVE: "active", // Normal, mature state (default)
+  DEPRECATED: "deprecated", // Still works but should not be used for new work
+};
+
+/**
+ * Current global reality (as of late May 2026):
+ * A massive refactoring was done end of 2025 and is still incomplete.
+ * No brique is currently considered fully "active".
+ * Therefore we default to "experimental" rather than "active".
+ */
+const DEFAULT_STATUS = BRIQUE_STATUSES.EXPERIMENTAL;
+
 if (isVerbose) console.log(`🚀 Compiler started. CWD: ${process.cwd()} | ROOT: ${ROOT}`);
 
 function safeMkdir(path) {
@@ -132,6 +151,9 @@ async function compile() {
   const briques = [];
   const generatedFiles = new Set();
 
+  // Collect missing handlers from embryonic / skeleton briques instead of spamming warnings
+  const skippedHandlers = new Map(); // briqueId -> { functions: [], edgeFunctions: [], tools: [] }
+
   const hostAppsGlob = (
     await glob("*/netlify.toml", {
       cwd: APPS_PATH,
@@ -152,8 +174,22 @@ async function compile() {
 
     const { default: config } = await import(`file://${fullPath}?t=${Date.now()}`);
 
+    const normalizedStatus =
+      config.status && Object.values(BRIQUE_STATUSES).includes(config.status)
+        ? config.status
+        : DEFAULT_STATUS;
+
+    if (!config.status) {
+      if (isVerbose) {
+        console.log(
+          `   ℹ️  Brique "${config.id}" has no explicit status (defaulting to "${DEFAULT_STATUS}")`
+        );
+      }
+    }
+
     briques.push({
       ...config,
+      status: normalizedStatus,
       _manifestPath: manifestPath,
       _briqueDir: briqueDir,
     });
@@ -172,7 +208,23 @@ async function compile() {
           const handlerPath = resolve(briqueDir, funcConfig.handler);
           const relHandlerPath = relative(genDir, handlerPath).replace(/\\/g, "/");
 
-          const handlerContent = readFileSync(handlerPath, "utf-8");
+          let handlerContent;
+          try {
+            handlerContent = readFileSync(handlerPath, "utf-8");
+          } catch (e) {
+            if (!skippedHandlers.has(config.id)) {
+              skippedHandlers.set(config.id, {
+                status: normalizedStatus || config.status || DEFAULT_STATUS,
+                functions: [],
+                edgeFunctions: [],
+                tools: [],
+              });
+            }
+            const entry = skippedHandlers.get(config.id);
+            if (!entry.functions.includes(funcName)) entry.functions.push(funcName);
+            continue;
+          }
+
           const isAlreadyWrapped = handlerContent.includes("defineFunction(");
           const isAlreadyLoggingWrapped = handlerContent.includes("defineNodeFunctionWithLogging(");
 
@@ -245,7 +297,23 @@ export default defineNodeFunctionWithLogging(DEFINE_FUNCTION(handler), {
           const handlerPath = resolve(briqueDir, funcConfig.handler);
           const relHandlerPath = relative(genDir, handlerPath).replace(/\\/g, "/");
 
-          const handlerContent = readFileSync(handlerPath, "utf-8");
+          let handlerContent;
+          try {
+            handlerContent = readFileSync(handlerPath, "utf-8");
+          } catch (e) {
+            if (!skippedHandlers.has(config.id)) {
+              skippedHandlers.set(config.id, {
+                status: normalizedStatus || config.status || DEFAULT_STATUS,
+                functions: [],
+                edgeFunctions: [],
+                tools: [],
+              });
+            }
+            const entry = skippedHandlers.get(config.id);
+            if (!entry.edgeFunctions.includes(funcName)) entry.edgeFunctions.push(funcName);
+            continue;
+          }
+
           const isAlreadyWrapped = handlerContent.includes("defineEdgeFunction(");
           const isAlreadyLoggingWrapped = handlerContent.includes("defineEdgeFunctionWithLogging(");
 
@@ -460,6 +528,70 @@ export const config = {
   }
 
   await generateMagistralMaps();
+
+  // === Brique Maturity Report ===
+  console.log("\n📊  Brique Maturity Report (post 2025 massive refactoring):");
+
+  // Build a map of all known briques with their status
+  const maturityReport = new Map();
+  briques.forEach((b) => {
+    maturityReport.set(b.id, b.status || DEFAULT_STATUS);
+  });
+
+  // Add any skipped ones that might not have been pushed to briques array yet
+  skippedHandlers.forEach((data, id) => {
+    if (!maturityReport.has(id)) {
+      maturityReport.set(id, data.status || DEFAULT_STATUS);
+    }
+  });
+
+  const byStatus = {};
+  Object.values(BRIQUE_STATUSES).forEach((s) => (byStatus[s] = []));
+  maturityReport.forEach((status, id) => {
+    if (!byStatus[status]) byStatus[status] = [];
+    byStatus[status].push(id);
+  });
+
+  for (const [status, list] of Object.entries(byStatus)) {
+    if (list.length > 0) {
+      const label =
+        status === "skeleton" ? " (very early)" : status === "experimental" ? "" : ` (${status})`;
+      console.log(`   ${status}${label}: ${list.sort().join(", ")}`);
+    }
+  }
+
+  console.log(
+    "   Note: No brique is currently marked 'active' (massive refactoring still in progress).\n"
+  );
+
+  // Report skipped handlers, taking maturity status into account
+  if (skippedHandlers.size > 0) {
+    console.log("📦  Briques with missing handlers:");
+
+    for (const [briqueId, data] of skippedHandlers.entries()) {
+      const status = data.status || DEFAULT_STATUS;
+      const parts = [];
+      if (data.functions.length) parts.push(`functions: ${data.functions.join(", ")}`);
+      if (data.edgeFunctions.length) parts.push(`edgeFunctions: ${data.edgeFunctions.join(", ")}`);
+      if (data.tools.length) parts.push(`tools: ${data.tools.join(", ")}`);
+
+      console.log(`   • ${briqueId} [${status}] — ${parts.join(" | ")}`);
+    }
+    console.log();
+  }
+
+  // Note about skeleton frontend routes (they are now stubbed to avoid Vite import errors)
+  const skeletonWithRoutes = briques.filter(
+    (b) => b.status === "skeleton" && b.routes && b.routes.length > 0
+  );
+  if (skeletonWithRoutes.length > 0) {
+    console.log("🧪  Skeleton briques with declared routes (frontend components stubbed):");
+    skeletonWithRoutes.forEach((b) => {
+      console.log(`   • ${b.id} — ${b.routes.length} routes declared but not implemented yet`);
+    });
+    console.log();
+  }
+
   console.log("✅ Compilation finished.");
 }
 
@@ -716,7 +848,14 @@ export const BRIQUE_COMPONENTS = {
 
   briques.forEach((b) => {
     if (b.routes) {
+      const isSkeleton = b.status === "skeleton";
       b.routes.forEach((route) => {
+        if (isSkeleton) {
+          // Skeleton briques declare routes in brique.config.js but have no implementation yet.
+          // We emit a safe stub so Vite import analysis does not fail during dev.
+          content += `  "${b.id}:${route.path}": () => Promise.resolve({ default: () => null }), // SKELETON — no implementation yet\n`;
+          return;
+        }
         const componentPath = resolve(b._briqueDir, route.component);
         const relPath = relative(genDir, componentPath).replace(/\\/g, "/");
         content += `  "${b.id}:${route.path}": () => import("${relPath}"),\n`;

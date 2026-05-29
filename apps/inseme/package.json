@@ -43,6 +43,7 @@
     "loglayer": "^8.4.0",
     "lucide-react": "^0.562.0",
     "openai": "^4.52.5",
+    "qrcode": "^1.5.3",
     "react": "^18.3.1",
     "react-camera-pro": "^1.4.0",
     "react-dom": "^18.3.1",

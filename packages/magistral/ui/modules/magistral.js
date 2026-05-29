@@ -95,10 +95,40 @@ export function initMagistral(apiEndpoint) {
         </div>
     `;
 
+  const exploreTab = `
+        <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">
+            <h2 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Model Explorer</h2>
+            <div class="flex gap-2">
+                <input type="text" id="explore-url" placeholder="Base URL (e.g. https://api.groq.com/openai/v1)" 
+                       class="flex-1 bg-black/40 border border-slate-700 rounded px-2 py-1 text-xs text-slate-300">
+                <input type="password" id="explore-key" placeholder="API Key (opt.)" 
+                       class="w-28 bg-black/40 border border-slate-700 rounded px-2 py-1 text-xs text-slate-300">
+                <button id="explore-probe-btn" class="bg-slate-700 text-slate-200 px-3 py-1 rounded text-xs hover:bg-slate-600">Probe</button>
+            </div>
+            <div id="explore-results" class="hidden mt-3">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs text-slate-400">Available Models</span>
+                    <button onclick="window.saveMapFromExplore()" class="text-[10px] text-sky-400 hover:text-sky-300">💾 Save Current Map</button>
+                </div>
+                <table class="w-full text-left text-[11px]">
+                    <thead class="text-slate-500 border-b border-slate-800">
+                        <tr>
+                            <th class="pb-1">Model ID</th>
+                            <th class="pb-1">Tier</th>
+                            <th class="pb-1">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="explore-body" class="text-slate-300 divide-y divide-slate-800/50"></tbody>
+                </table>
+            </div>
+        </div>
+    `;
+
   return {
     sidebar: sidebar,
     tabs: [
       { id: "nodes", label: "Nodes", content: nodesTab },
+      { id: "explore", label: "Explore", content: exploreTab },
       { id: "logs", label: "Logs", content: logsTab },
     ],
     onLoad: () => setupMagistralLogic(apiEndpoint),
@@ -206,14 +236,24 @@ function setupMagistralLogic(apiEndpoint) {
     }
   }
 
-  // --- Probe ---
-  async function probeProvider() {
-    const baseUrl = els.probeUrl.value;
-    const apiKey = els.probeKey.value;
+  // --- Probe (used by both Nodes tab and Explore tab) ---
+  async function probeProvider(source = "nodes") {
+    const urlEl = source === "explore" ? document.getElementById("explore-url") : els.probeUrl;
+    const keyEl = source === "explore" ? document.getElementById("explore-key") : els.probeKey;
+    const btn = source === "explore" ? document.getElementById("explore-probe-btn") : els.probeBtn;
+    const resultsContainer =
+      source === "explore" ? document.getElementById("explore-results") : els.probeResults;
+    const tbody = source === "explore" ? document.getElementById("explore-body") : els.probeBody;
+
+    const baseUrl = urlEl?.value;
+    const apiKey = keyEl?.value;
+
     if (!baseUrl) return alert("Base URL required");
 
-    els.probeBtn.textContent = "Probing...";
-    els.probeBtn.disabled = true;
+    if (btn) {
+      btn.textContent = "Probing...";
+      btn.disabled = true;
+    }
 
     try {
       const data = await apiFetch("/v1/magistral/probe", {
@@ -222,27 +262,73 @@ function setupMagistralLogic(apiEndpoint) {
         body: JSON.stringify({ baseUrl, apiKey }),
       });
 
-      els.probeResults.classList.remove("hidden");
-      els.probeBody.innerHTML = (data.data || [])
-        .map(
-          (m) => `
-                <tr class="border-b border-slate-800/50">
-                    <td class="py-1 font-mono text-emerald-300">${m.id}</td>
-                    <td class="py-1 text-slate-400">${m.owned_by}</td>
-                    <td class="py-1">
-                        <button class="text-[10px] text-sky-400 hover:text-sky-300" onclick="window.addNode('${m.id}', '${baseUrl}')">Add</button>
-                    </td>
-                </tr>
-            `
-        )
+      if (resultsContainer) resultsContainer.classList.remove("hidden");
+
+      const models = data.data || [];
+      tbody.innerHTML = models
+        .map((m) => {
+          const tier =
+            m.id.includes("8b") || m.id.includes("7b") || m.id.includes("instant")
+              ? "fast"
+              : "strong";
+          return `
+            <tr class="border-b border-slate-800/50">
+              <td class="py-1 font-mono text-emerald-300">${m.id}</td>
+              <td class="py-1">
+                <span class="px-1.5 py-0.5 text-[10px] rounded bg-slate-800">${tier}</span>
+              </td>
+              <td class="py-1">
+                <button class="text-[10px] text-sky-400 hover:text-sky-300" 
+                        onclick="window.addNodeFromExplore('${m.id}', '${tier}', '${baseUrl}')">
+                  Add to Map
+                </button>
+              </td>
+            </tr>`;
+        })
         .join("");
     } catch (e) {
       alert("Probe failed: " + e.message);
     } finally {
-      els.probeBtn.textContent = "Probe";
-      els.probeBtn.disabled = false;
+      if (btn) {
+        btn.textContent = "Probe";
+        btn.disabled = false;
+      }
     }
   }
+
+  // Global helper for the new Explore UI
+  window.addNodeFromExplore = async (modelId, tier, baseUrl) => {
+    const cleanBase = baseUrl.replace(/\/+$/, "");
+    const node = {
+      id: modelId,
+      url: cleanBase.endsWith("/chat/completions") ? cleanBase : `${cleanBase}/chat/completions`,
+      model: modelId,
+      tier,
+      weight: 10,
+    };
+
+    try {
+      await apiFetch("/v1/magistral/map/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(node),
+      });
+      alert(`✅ ${modelId} added to map`);
+      // Refresh nodes view if available
+      if (typeof loadMetrics === "function") loadMetrics();
+    } catch (e) {
+      alert("Failed to add: " + e.message);
+    }
+  };
+
+  window.saveMapFromExplore = async () => {
+    try {
+      const res = await apiFetch("/v1/magistral/map/save", { method: "POST" });
+      alert("Map saved to " + (res.path || "registry"));
+    } catch (e) {
+      alert("Save failed: " + e.message);
+    }
+  };
 
   // --- Global Actions (exposed for inline onclicks) ---
   window.enableNode = async (id) => {
@@ -284,7 +370,13 @@ function setupMagistralLogic(apiEndpoint) {
   // --- Event Listeners ---
   if (els.refreshMetricsBtn) els.refreshMetricsBtn.addEventListener("click", loadMetrics);
   if (els.refreshNodesBtn) els.refreshNodesBtn.addEventListener("click", loadMetrics);
-  if (els.probeBtn) els.probeBtn.addEventListener("click", probeProvider);
+  if (els.probeBtn) els.probeBtn.addEventListener("click", () => probeProvider("nodes"));
+
+  // New Explore tab probe button
+  const exploreProbeBtn = document.getElementById("explore-probe-btn");
+  if (exploreProbeBtn) {
+    exploreProbeBtn.addEventListener("click", () => probeProvider("explore"));
+  }
 
   if (els.saveMapBtn)
     els.saveMapBtn.addEventListener("click", async () => {

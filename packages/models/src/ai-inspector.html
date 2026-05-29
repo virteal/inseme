@@ -10,6 +10,12 @@
       href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%230f172a'/%3E%3Ctext%20x='50%25'%20y='50%25'%20dy='.35em'%20text-anchor='middle'%20font-size='28'%20fill='%2322c55e'%20font-family='system-ui%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20Segoe%20UI%2C%20sans-serif'%3EAI%3C/text%3E%3C/svg%3E"
     />
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load shared Magistral UI components to reduce duplication with the dedicated admin -->
+    <script type="module">
+      import { initMagistral } from "../../magistral/ui/modules/magistral.js";
+      // Will be initialized after DOM load if needed
+      window.initSharedMagistral = initMagistral;
+    </script>
   </head>
   <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
     <header
@@ -152,14 +158,7 @@ Explain in one sentence what this local AI service does.</textarea
                   id="voice-select"
                   class="h-6 rounded border border-slate-700 bg-black/40 px-2 text-[10px] text-slate-300 outline-none focus:border-slate-500"
                 >
-                  <option value="af_bella">af_bella</option>
-                  <option value="af_sarah">af_sarah</option>
-                  <option value="am_adam">am_adam</option>
-                  <option value="am_michael">am_michael</option>
-                  <option value="bf_emma">bf_emma</option>
-                  <option value="bf_isabella">bf_isabella</option>
-                  <option value="bm_george">bm_george</option>
-                  <option value="bm_lewis">bm_lewis</option>
+                  <option value="" disabled selected>Loading voices…</option>
                 </select>
                 <button
                   id="stop-stream-btn"
@@ -194,89 +193,9 @@ Explain in one sentence what this local AI service does.</textarea
           </div>
         </div>
 
-        <!-- VIEW: Nodes -->
+        <!-- VIEW: Nodes — fully driven by shared Magistral module -->
         <div id="view-nodes" class="view-content hidden space-y-4">
-          <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">
-            <div class="flex items-center justify-between">
-              <h2 class="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                Magistral Nodes
-              </h2>
-              <div class="flex gap-2">
-                <button
-                  onclick="addCurrentNodeToMap()"
-                  class="text-[10px] text-sky-400 hover:text-sky-300"
-                >
-                  Add to Map
-                </button>
-                <button onclick="saveMap()" class="text-[10px] text-sky-400 hover:text-sky-300">
-                  Save Map
-                </button>
-                <button
-                  onclick="loadMetrics()"
-                  class="text-[10px] text-slate-500 hover:text-slate-300"
-                >
-                  Refresh
-                </button>
-              </div>
-            </div>
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-[11px]">
-                <thead class="text-slate-500 border-b border-slate-800">
-                  <tr>
-                    <th class="pb-2 font-medium">ID</th>
-                    <th class="pb-2 font-medium">Tier</th>
-                    <th class="pb-2 font-medium">Status</th>
-                    <th class="pb-2 font-medium">Succ/Req</th>
-                    <th class="pb-2 font-medium">Latency</th>
-                    <th class="pb-2 font-medium">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="metrics-body" class="text-slate-300 divide-y divide-slate-800/50">
-                  <tr>
-                    <td colspan="6" class="py-2 text-center text-slate-600">Loading...</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Probe Section -->
-          <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">
-            <h2 class="text-xs font-semibold uppercase tracking-wide text-slate-400">
-              Probe Provider
-            </h2>
-            <div class="flex gap-2">
-              <input
-                type="text"
-                id="probe-url"
-                placeholder="Base URL"
-                class="flex-1 bg-black/40 border border-slate-700 rounded px-2 py-1 text-xs text-slate-300"
-              />
-              <input
-                type="password"
-                id="probe-key"
-                placeholder="API Key"
-                class="w-24 bg-black/40 border border-slate-700 rounded px-2 py-1 text-xs text-slate-300"
-              />
-              <button
-                onclick="probeProvider()"
-                class="bg-slate-700 text-slate-200 px-3 py-1 rounded text-xs hover:bg-slate-600"
-              >
-                Probe
-              </button>
-            </div>
-            <div id="probe-results" class="hidden mt-2">
-              <table class="w-full text-left text-[11px]">
-                <thead class="text-slate-500 border-b border-slate-800">
-                  <tr>
-                    <th class="pb-1">Model ID</th>
-                    <th class="pb-1">Owner</th>
-                  </tr>
-                </thead>
-                <tbody id="probe-body" class="text-slate-300 divide-y divide-slate-800/50"></tbody>
-              </table>
-            </div>
-          </div>
+          <!-- Populated by injectSharedMagistralNodes() -->
         </div>
 
         <!-- VIEW: Logs -->
@@ -287,16 +206,7 @@ Explain in one sentence what this local AI service does.</textarea
                 Traffic Logs
               </h2>
               <div class="flex gap-2">
-                <button onclick="clearLogs()" class="text-[10px] text-red-400 hover:text-red-300">
-                  Clear
-                </button>
-                <button
-                  onclick="toggleAutoRefresh()"
-                  id="auto-refresh-btn"
-                  class="text-[10px] text-emerald-500"
-                >
-                  Auto: ON
-                </button>
+                <!-- Logs handled by shared Magistral module -->
               </div>
             </div>
             <div class="overflow-x-auto">
@@ -322,6 +232,14 @@ Explain in one sentence what this local AI service does.</textarea
     </main>
 
     <script>
+      // ============================================================
+      // Inseme AI Inspector - Client logic
+      // ============================================================
+
+      // ============================================================
+      // Constants & Shared State
+      // ============================================================
+
       const KOKORO_VOICES = [
         { id: "af_heart", label: "Heart" },
         { id: "af_alloy", label: "Alloy" },
@@ -359,39 +277,45 @@ Explain in one sentence what this local AI service does.</textarea
       function populateVoiceSelect() {
         const select = document.getElementById("voice-select");
         if (!select) return;
+
         select.innerHTML = "";
+
+        // Kokoro voices
         const kokoroGroup = document.createElement("optgroup");
         kokoroGroup.label = "Kokoro";
-        KOKORO_VOICES.forEach((v, index) => {
+        KOKORO_VOICES.forEach((v) => {
           const opt = document.createElement("option");
           opt.value = "kokoro:" + v.id;
           opt.textContent = v.label;
           kokoroGroup.appendChild(opt);
         });
         select.appendChild(kokoroGroup);
+
         populateBrowserVoices();
       }
 
       function populateBrowserVoices() {
         const select = document.getElementById("voice-select");
         if (!select || !window.speechSynthesis) return;
+
         browserVoices = window.speechSynthesis.getVoices() || [];
         const existing = select.querySelector('optgroup[label="Browser"]');
         if (existing) existing.remove();
-        if (!browserVoices.length) return;
+
+        const frVoices = browserVoices.filter((v) => v.lang === "fr-FR");
+        if (!frVoices.length) return;
+
         const browserGroup = document.createElement("optgroup");
         browserGroup.label = "Browser";
-        browserVoices
-          .filter((v) => v.lang === "fr-FR")
-          .forEach((v) => {
-            const opt = document.createElement("option");
-            opt.value = "browser:" + v.name;
-            opt.textContent = v.name;
-            browserGroup.appendChild(opt);
-          });
-        if (browserGroup.children.length > 0) {
-          select.appendChild(browserGroup);
-        }
+
+        frVoices.forEach((v) => {
+          const opt = document.createElement("option");
+          opt.value = "browser:" + v.name;
+          opt.textContent = v.name;
+          browserGroup.appendChild(opt);
+        });
+
+        select.appendChild(browserGroup);
       }
 
       function getSelectedVoice() {
@@ -400,38 +324,35 @@ Explain in one sentence what this local AI service does.</textarea
           const fallback = KOKORO_VOICES[0]?.id || "af_bella";
           return { type: "kokoro", id: fallback };
         }
-        const value = select.value;
-        const parts = value.split(":");
-        if (parts.length === 2) {
-          return { type: parts[0], id: parts[1] };
-        }
-        return { type: "kokoro", id: value };
+        const [type, id] = select.value.split(":");
+        return { type: type || "kokoro", id: id || select.value };
       }
 
       function speakWithBrowserTts(text, voiceId, statusEl, onEnd) {
         if (!window.speechSynthesis) {
-          if (statusEl) statusEl.textContent = "Browser TTS not available";
-          if (onEnd) onEnd();
+          setStatus(statusEl, "Browser TTS not available");
+          onEnd?.();
           return;
         }
         if (!text) {
-          if (onEnd) onEnd();
+          onEnd?.();
           return;
         }
+
         browserUtterance = new SpeechSynthesisUtterance(text);
-        const voices = window.speechSynthesis.getVoices() || browserVoices || [];
-        const voice = voices.find((v) => v.name === voiceId);
-        if (voice) {
-          browserUtterance.voice = voice;
-        }
-        browserUtterance.onend = function () {
-          if (statusEl) statusEl.textContent = "Done";
-          if (onEnd) onEnd();
+        const voice = (window.speechSynthesis.getVoices() || browserVoices)
+          .find((v) => v.name === voiceId);
+        if (voice) browserUtterance.voice = voice;
+
+        browserUtterance.onend = () => {
+          setStatus(statusEl, "Done");
+          onEnd?.();
         };
-        browserUtterance.onerror = function () {
-          if (statusEl) statusEl.textContent = "TTS error";
-          if (onEnd) onEnd();
+        browserUtterance.onerror = () => {
+          setStatus(statusEl, "TTS error");
+          onEnd?.();
         };
+
         window.speechSynthesis.cancel();
         window.speechSynthesis.speak(browserUtterance);
       }
@@ -447,233 +368,54 @@ Explain in one sentence what this local AI service does.</textarea
         }
       }
 
-      // --- Magistral UI Logic ---
-      let autoRefreshLogs = true;
-      let autoRefreshTimer = null;
+      // ============================================================
+      // Voice / Browser TTS (Playground Talk tab)
+      // ============================================================
+
+      let sharedMagistral = null;
+
+      function initMagistral() {
+        if (window.initSharedMagistral && !sharedMagistral) {
+          sharedMagistral = window.initSharedMagistral("/magistral");
+        }
+      }
+
+      // Kept only for any external calls
+      window.loadMetrics = () => sharedMagistral?.onLoad?.();
+
+      function injectMagistralNodes() {
+        const container = document.getElementById("view-nodes");
+        if (!container) return;
+
+        if (sharedMagistral) {
+          const nodesTab = sharedMagistral.tabs.find((t) => t.id === "nodes");
+          if (nodesTab) container.innerHTML = nodesTab.content;
+
+          sharedMagistral.onLoad?.();
+          return;
+        }
+
+        container.innerHTML = `<div class="p-4 text-center text-slate-500">Magistral module not loaded.</div>`;
+      }
 
       function switchView(viewId) {
-        document.querySelectorAll(".view-content").forEach((el) => el.classList.add("hidden"));
-        document.getElementById("view-" + viewId).classList.remove("hidden");
+        document.querySelectorAll(".view-content").forEach(el => el.classList.add("hidden"));
+        document.getElementById("view-" + viewId)?.classList.remove("hidden");
 
-        // Update tabs
-        ["playground", "nodes", "logs"].forEach((id) => {
+        ["playground", "nodes", "logs"].forEach(id => {
           const btn = document.getElementById("tab-" + id);
-          if (id === viewId) {
-            btn.classList.remove("text-slate-400", "hover:bg-slate-800", "hover:text-white");
-            btn.classList.add("bg-slate-800", "text-white");
-          } else {
-            btn.classList.add("text-slate-400", "hover:bg-slate-800", "hover:text-white");
-            btn.classList.remove("bg-slate-800", "text-white");
-          }
+          if (!btn) return;
+          const active = id === viewId;
+          btn.classList.toggle("bg-slate-800", active);
+          btn.classList.toggle("text-white", active);
+          btn.classList.toggle("text-slate-400", !active);
         });
 
-        if (viewId === "nodes") loadMetrics();
-        if (viewId === "logs") loadLogs();
+        if (viewId === "nodes") injectMagistralNodes();
       }
 
-      async function loadMetrics() {
-        const tbody = document.getElementById("metrics-body");
-        try {
-          const data = await fetchJSON("/magistral/metrics");
-          if (!data) throw new Error("No data");
-
-          tbody.innerHTML = "";
-          data.forEach((node) => {
-            const tr = document.createElement("tr");
-            tr.className = "border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors";
-
-            const isOk = node.status === "active";
-            const statusColor = isOk ? "text-emerald-400" : "text-red-400";
-
-            const succRate =
-              node.requests > 0 ? Math.round((node.successes / node.requests) * 100) + "%" : "-";
-
-            const latency = node.latency > 0 ? Math.round(node.latency) + "ms" : "-";
-
-            const actionBtn = isOk
-              ? `<button onclick="toggleNode('${node.id}', 'disable')" class="text-red-400 hover:text-red-300">Disable</button>`
-              : `<button onclick="toggleNode('${node.id}', 'enable')" class="text-emerald-400 hover:text-emerald-300">Enable</button>`;
-
-            tr.innerHTML = `
-              <td class="py-2 font-mono text-slate-400">${node.id}</td>
-              <td class="py-2 text-slate-500">${node.tier}</td>
-              <td class="py-2 ${statusColor} font-medium">${node.status}</td>
-              <td class="py-2 text-slate-300">${succRate}</td>
-              <td class="py-2 text-slate-300">${latency}</td>
-              <td class="py-2 text-[10px] font-medium">${actionBtn}</td>
-            `;
-            tbody.appendChild(tr);
-          });
-        } catch (e) {
-          tbody.innerHTML = `<tr><td colspan="6" class="py-2 text-center text-red-400">Error loading metrics</td></tr>`;
-        }
-      }
-
-      async function addCurrentNodeToMap() {
-        // For now, this just adds a placeholder or prompts user
-        // Ideally, we would inspect the current server status and add it
-        const id = prompt("Enter Node ID (e.g. 'my-remote-gpt4'):");
-        if (!id) return;
-
-        const url = prompt("Enter Base URL:", "http://localhost:11434/v1");
-        if (!url) return;
-
-        const model = prompt("Enter Model Name:", "llama3");
-        if (!model) return;
-
-        const apiKey = prompt("Enter API Key (optional):", "");
-
-        const node = {
-          id,
-          provider: "openai-compatible",
-          url,
-          model,
-          apiKey: apiKey || undefined,
-          tier: "standard",
-        };
-
-        try {
-          const res = await fetch("/magistral/map/add", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ node }),
-          });
-          if (!res.ok) throw new Error("Failed to add node");
-          loadMetrics();
-          alert("Node added!");
-        } catch (e) {
-          alert("Error: " + e.message);
-        }
-      }
-
-      async function saveMap() {
-        if (!confirm("Save current map to disk?")) return;
-        try {
-          const res = await fetch("/magistral/map/save", { method: "POST" });
-          if (!res.ok) throw new Error("Failed to save map");
-          const data = await res.json();
-          alert("Map saved to " + data.path);
-        } catch (e) {
-          alert("Error: " + e.message);
-        }
-      }
-
-      async function clearLogs() {
-        if (!confirm("Clear all traffic logs?")) return;
-        try {
-          const res = await fetch("/magistral/logs", { method: "DELETE" });
-          if (!res.ok) throw new Error("Failed to clear logs");
-          loadLogs();
-        } catch (e) {
-          alert("Error: " + e.message);
-        }
-      }
-
-      async function toggleNode(id, action) {
-        try {
-          await fetch("/magistral/nodes/" + id + "/" + action, { method: "POST" });
-          loadMetrics();
-        } catch (e) {
-          console.error(e);
-          alert("Failed to " + action + " node");
-        }
-      }
-
-      async function probeProvider() {
-        const url = document.getElementById("probe-url").value;
-        const key = document.getElementById("probe-key").value;
-        const tbody = document.getElementById("probe-body");
-        const results = document.getElementById("probe-results");
-
-        if (!url) return;
-
-        tbody.innerHTML =
-          '<tr><td colspan="2" class="py-2 text-center text-slate-500">Probing...</td></tr>';
-        results.classList.remove("hidden");
-
-        try {
-          const res = await fetch("/magistral/probe", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ baseUrl: url, apiKey: key }),
-          });
-
-          if (!res.ok) throw new Error("Probe failed");
-
-          const data = await res.json();
-          tbody.innerHTML = "";
-
-          if (data.data && Array.isArray(data.data)) {
-            data.data.forEach((m) => {
-              const tr = document.createElement("tr");
-              tr.innerHTML = `
-                <td class="py-1 font-mono text-emerald-400">${m.id}</td>
-                <td class="py-1 text-slate-500">${m.owned_by || "-"}</td>
-              `;
-              tbody.appendChild(tr);
-            });
-          } else {
-            tbody.innerHTML =
-              '<tr><td colspan="2" class="py-2 text-center text-slate-500">No models found</td></tr>';
-          }
-        } catch (e) {
-          tbody.innerHTML = `<tr><td colspan="2" class="py-2 text-center text-red-400">Error: ${e.message}</td></tr>`;
-        }
-      }
-
-      async function loadLogs() {
-        const tbody = document.getElementById("logs-body");
-        try {
-          const res = await fetch("/magistral/logs?limit=50");
-          const data = await res.json();
-
-          if (!data.logs || !data.logs.length) {
-            tbody.innerHTML =
-              '<tr><td colspan="4" class="py-2 text-center text-slate-600">No logs</td></tr>';
-            return;
-          }
-
-          tbody.innerHTML = "";
-          // Newest first
-          [...data.logs].reverse().forEach((log) => {
-            const tr = document.createElement("tr");
-            tr.className = "border-b border-slate-800/50 text-[10px]";
-
-            const time = new Date(log.ts).toLocaleTimeString();
-            const isErr = log.status >= 400 || log.error;
-            const statusColor = isErr ? "text-red-400" : "text-emerald-400";
-            const statusText = log.error ? "ERR" : log.status;
-
-            tr.innerHTML = `
-              <td class="py-1 text-slate-500">${time}</td>
-              <td class="py-1 font-mono text-slate-300">${log.nodeId}</td>
-              <td class="py-1 ${statusColor}">${statusText}</td>
-              <td class="py-1 text-slate-500">${log.latencyMs}ms</td>
-            `;
-            tbody.appendChild(tr);
-          });
-        } catch (e) {
-          console.error(e);
-        }
-      }
-
-      function toggleAutoRefresh() {
-        autoRefreshLogs = !autoRefreshLogs;
-        const btn = document.getElementById("auto-refresh-btn");
-        if (autoRefreshLogs) {
-          btn.textContent = "Auto: ON";
-          btn.className = "text-[10px] text-emerald-500";
-          loadLogs();
-          if (!autoRefreshTimer) autoRefreshTimer = setInterval(loadLogs, 2000);
-        } else {
-          btn.textContent = "Auto: OFF";
-          btn.className = "text-[10px] text-slate-500";
-          if (autoRefreshTimer) {
-            clearInterval(autoRefreshTimer);
-            autoRefreshTimer = null;
-          }
-        }
-      }
+      // Initialize shared Magistral module
+      setTimeout(initMagistral, 180);
 
       function updateStatusView(data) {
         const pill = document.getElementById("status-pill");
@@ -723,12 +465,16 @@ Explain in one sentence what this local AI service does.</textarea
         updateStatusView(data);
       }
 
+      // ============================================================
+      // Playground Testing Functions (Quick LLM + Talk)
+      // ============================================================
+
       async function runLLMTest() {
-        const input = document.getElementById("llm-input");
         const output = document.getElementById("llm-output");
-        const prompt = input.value.trim();
+        const prompt = getTrimmedInput("llm-input");
         if (!prompt) return;
-        output.textContent = "";
+        resetTestOutput(output, null);
+
         try {
           const res = await fetch("/v1/completions", {
             method: "POST",
@@ -742,79 +488,76 @@ Explain in one sentence what this local AI service does.</textarea
           });
 
           if (!res.ok) {
-            output.textContent = "Error: HTTP " + res.status;
+            showError(output, { message: "HTTP " + res.status });
             return;
           }
 
           const reader = res.body && res.body.getReader ? res.body.getReader() : null;
-
           if (!reader) {
             const text = await res.text();
-            output.textContent = text;
+            setStatus(output, text);
             return;
           }
 
           const decoder = new TextDecoder("utf-8");
           let buffer = "";
           let assembled = "";
+
           while (true) {
             const { done, value } = await reader.read();
             if (done) break;
+
             const chunk = decoder.decode(value, { stream: true });
             if (!chunk) continue;
             buffer += chunk;
+
             const parts = buffer.split("\n\n");
-            buffer = parts.pop();
+            buffer = parts.pop() || "";
+
             for (const part of parts) {
               const frame = part.trim();
               if (!frame) continue;
-              const lines = frame.split("\n");
-              const dataLines = lines.filter((l) => l.startsWith("data: "));
+
+              const dataLines = frame
+                .split("\n")
+                .filter((l) => l.startsWith("data: "));
               for (const dataLine of dataLines) {
                 const dataStr = dataLine.slice(6).trim();
                 if (!dataStr || dataStr === "[DONE]") continue;
-                try {
-                  const json = JSON.parse(dataStr);
-                  const token =
-                    (json.choices &&
-                      json.choices[0] &&
-                      (json.choices[0].text ||
-                        (json.choices[0].delta && json.choices[0].delta.content))) ||
-                    "";
-                  if (token) {
-                    assembled += token;
-                    output.textContent = assembled;
-                    output.scrollTop = output.scrollHeight;
-                  }
-                } catch (e) {}
+
+                const token = extractSSEToken(dataStr);
+                if (token) {
+                  assembled += token;
+                  output.textContent = assembled;
+                  output.scrollTop = output.scrollHeight;
+                }
               }
             }
           }
         } catch (e) {
-          output.textContent = "Error: " + e.message;
+          showError(output, e);
         }
       }
 
       async function runTTSTest() {
-        const textArea = document.getElementById("llm-input");
         const statusEl = document.getElementById("tts-status");
         const audioEl = document.getElementById("tts-audio");
         const downloadEl = document.getElementById("tts-download");
         const voiceInfo = getSelectedVoice();
-        const text = textArea.value.trim();
+        const text = getTrimmedInput("llm-input");
         const voice = voiceInfo.id;
         if (!text) return;
+        resetTestOutput(null, statusEl);
+
         if (voiceInfo.type === "browser") {
-          statusEl.textContent = "Speaking (" + voice + ")...";
+          setStatus(statusEl, "Speaking (" + voice + ")...");
           audioEl.src = "";
-          if (downloadEl) {
-            downloadEl.href = "#";
-            downloadEl.classList.add("opacity-40", "pointer-events-none");
-          }
+          resetDownloadLink(downloadEl);
           speakWithBrowserTts(text, voice, statusEl, function () {});
           return;
         }
-        statusEl.textContent = "Generating audio (" + voice + ")...";
+
+        setStatus(statusEl, "Generating audio (" + voice + ")...");
         try {
           const res = await fetch("/v1/audio/speech", {
             method: "POST",
@@ -822,21 +565,17 @@ Explain in one sentence what this local AI service does.</textarea
             body: JSON.stringify({ input: text, voice }),
           });
           if (!res.ok) {
-            statusEl.textContent = "Error: HTTP " + res.status;
+            showError(statusEl, { message: "HTTP " + res.status });
             return;
           }
           const blob = await res.blob();
           const url = URL.createObjectURL(blob);
           audioEl.src = url;
           await audioEl.play().catch(function () {});
-          statusEl.textContent = "Audio ready";
-          if (downloadEl) {
-            downloadEl.href = url;
-            downloadEl.setAttribute("download", "tts.wav");
-            downloadEl.classList.remove("opacity-40", "pointer-events-none");
-          }
+          setStatus(statusEl, "Audio ready");
+          enableDownloadLink(downloadEl, url, "tts.wav");
         } catch (e) {
-          statusEl.textContent = "Error: " + e.message;
+          showError(statusEl, e);
         }
       }
 
@@ -852,17 +591,65 @@ Explain in one sentence what this local AI service does.</textarea
       }
 
       function updateStopButton(show) {
-        const btn = document.getElementById("stop-stream-btn");
-        const answerBtn = document.getElementById("run-llm2tts-btn");
-        if (show) {
-          btn.classList.remove("hidden");
-          answerBtn.classList.add("hidden");
-        } else {
-          btn.classList.add("hidden");
-          answerBtn.classList.remove("hidden");
+        const stopBtn = document.getElementById("stop-stream-btn");
+        const runBtn = document.getElementById("run-llm2tts-btn");
+        stopBtn.classList.toggle("hidden", !show);
+        runBtn.classList.toggle("hidden", show);
+      }
+
+      // ============================================================
+      // Small Helpers
+      // ============================================================
+      function setStatus(el, msg) {
+        if (el) el.textContent = msg;
+      }
+
+      function showError(el, err) {
+        setStatus(el, "Error: " + (err.message || err));
+      }
+
+      function resetTestOutput(textOut, statusEl) {
+        if (textOut) textOut.textContent = "";
+        if (statusEl) statusEl.textContent = "";
+      }
+
+      function getTrimmedInput(id) {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : "";
+      }
+
+      function resetDownloadLink(el) {
+        if (!el) return;
+        el.href = "#";
+        el.classList.add("opacity-40", "pointer-events-none");
+      }
+
+      function enableDownloadLink(el, url, filename) {
+        if (!el) return;
+        el.href = url;
+        el.setAttribute("download", filename);
+        el.classList.remove("opacity-40", "pointer-events-none");
+      }
+
+      function extractSSEToken(jsonStr) {
+        try {
+          const json = JSON.parse(jsonStr);
+          return (
+            (json.choices &&
+              json.choices[0] &&
+              (json.choices[0].text ||
+                (json.choices[0].delta && json.choices[0].delta.content))) ||
+            ""
+          );
+        } catch (e) {
+          return "";
         }
       }
 
+      // ============================================================
+      // Playground Test Actions (LLM quick check + Talk LLM2TTS)
+      // These call the local /v1/* endpoints served by the models package.
+      // ============================================================
       function stopLLM2TTSStream() {
         if (llm2ttsSocket) {
           llm2ttsSocket.close();
@@ -874,55 +661,53 @@ Explain in one sentence what this local AI service does.</textarea
         }
       }
 
-      async function runLLM2TTSTest() {
-        const textArea = document.getElementById("llm-input");
-        const statusEl = document.getElementById("tts-status");
-        const textOut = document.getElementById("llm-output");
-        const voiceInfo = getSelectedVoice();
-        const text = textArea.value.trim();
-        const voice = voiceInfo.id;
-
-        if (!text) return;
-        if (textOut) textOut.textContent = "";
-        if (voiceInfo.type === "browser") {
-          stopLLM2TTSStream();
-          statusEl.textContent = "Generating answer (" + voice + ")...";
-          updateStopButton(true);
-          try {
-            const res = await fetch("/v1/llm", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                prompt: text,
-                max_tokens: 256,
-                temperature: 0.4,
-              }),
-            });
-            if (!res.ok) {
-              statusEl.textContent = "Error: HTTP " + res.status;
-              updateStopButton(false);
-              return;
-            }
-            const data = await res.json();
-            const answer =
-              data.choices?.[0]?.text ||
-              data.choices?.[0]?.message?.content ||
-              JSON.stringify(data, null, 2);
-            if (textOut) {
-              textOut.textContent = answer;
-              textOut.scrollTop = textOut.scrollHeight;
-            }
-            statusEl.textContent = "Speaking answer (" + voice + ")...";
-            speakWithBrowserTts(answer, voice, statusEl, function () {
-              updateStopButton(false);
-            });
-          } catch (e) {
-            statusEl.textContent = "Error: " + e.message;
-            updateStopButton(false);
-          }
-          return;
+      function decodeAudioChunk(base64) {
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
         }
-        statusEl.textContent = "Streaming answer (" + voice + ")...";
+        return bytes;
+      }
+
+      async function handleBrowserLLM2TTS(text, voice, statusEl, textOut) {
+        stopLLM2TTSStream();
+        setStatus(statusEl, "Generating answer (" + voice + ")...");
+        updateStopButton(true);
+
+        try {
+          const res = await fetch("/v1/llm", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt: text, max_tokens: 256, temperature: 0.4 }),
+          });
+
+          if (!res.ok) {
+            showError(statusEl, { message: "HTTP " + res.status });
+            updateStopButton(false);
+            return;
+          }
+
+          const data = await res.json();
+          const answer = data.choices?.[0]?.text ||
+                         data.choices?.[0]?.message?.content ||
+                         JSON.stringify(data, null, 2);
+
+          if (textOut) {
+            textOut.textContent = answer;
+            textOut.scrollTop = textOut.scrollHeight;
+          }
+
+          setStatus(statusEl, "Speaking answer (" + voice + ")...");
+          speakWithBrowserTts(answer, voice, statusEl, () => updateStopButton(false));
+        } catch (e) {
+          showError(statusEl, e);
+          updateStopButton(false);
+        }
+      }
+
+      async function handleStreamingLLM2TTS(text, voice, statusEl, textOut) {
+        setStatus(statusEl, "Streaming answer (" + voice + ")...");
         stopLLM2TTSStream();
         ensureAudioContext();
         updateStopButton(true);
@@ -948,13 +733,7 @@ Explain in one sentence what this local AI service does.</textarea
             }
             if (!msg.audio_chunk) return;
 
-            const binary = atob(msg.audio_chunk);
-            const len = binary.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-              bytes[i] = binary.charCodeAt(i);
-            }
-
+            const bytes = decodeAudioChunk(msg.audio_chunk);
             const buffer = await localCtx.decodeAudioData(bytes.buffer);
             const source = localCtx.createBufferSource();
             source.buffer = buffer;
@@ -965,20 +744,37 @@ Explain in one sentence what this local AI service does.</textarea
             localNextStart = startAt + buffer.duration;
             llm2ttsNextStart = localNextStart;
           } catch (e) {
-            statusEl.textContent = "Error during stream: " + e.message;
+            showError(statusEl, { message: "Stream error: " + e.message });
           }
         };
 
         ws.onerror = () => {
-          statusEl.textContent = "WebSocket error for LLM2TTS";
+          showError(statusEl, { message: "WebSocket error for LLM2TTS" });
           updateStopButton(false);
         };
 
         ws.onclose = () => {
           llm2ttsSocket = null;
-          statusEl.textContent = "Stream ended";
+          setStatus(statusEl, "Stream ended");
           updateStopButton(false);
         };
+      }
+
+      async function runLLM2TTSTest() {
+        const statusEl = document.getElementById("tts-status");
+        const textOut = document.getElementById("llm-output");
+        const voiceInfo = getSelectedVoice();
+        const text = getTrimmedInput("llm-input");
+        const voice = voiceInfo.id;
+
+        if (!text) return;
+        resetTestOutput(textOut, statusEl);
+
+        if (voiceInfo.type === "browser") {
+          await handleBrowserLLM2TTS(text, voice, statusEl, textOut);
+        } else {
+          await handleStreamingLLM2TTS(text, voice, statusEl, textOut);
+        }
       }
 
       async function stopServer() {
@@ -988,6 +784,7 @@ Explain in one sentence what this local AI service does.</textarea
         setTimeout(refreshStatus, 1000);
       }
 
+      // === Event wiring & Initialization ===
       document.getElementById("refresh-btn").addEventListener("click", refreshStatus);
       document.getElementById("run-llm-btn").addEventListener("click", runLLMTest);
       document.getElementById("run-tts-btn").addEventListener("click", runTTSTest);
@@ -999,6 +796,7 @@ Explain in one sentence what this local AI service does.</textarea
       if (window.speechSynthesis) {
         window.speechSynthesis.onvoiceschanged = populateBrowserVoices;
       }
+
       refreshStatus();
       setInterval(refreshStatus, 8000);
     </script>
