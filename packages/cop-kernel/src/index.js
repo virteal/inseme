@@ -10,4 +10,24 @@ export * from "./debugLog.js";
 export * from "./env.js";
 export * from "./events.js";
 export * from "./artifacts.js";
+
+// Task / Step / Continuation orchestration helpers (generic foundation)
+// These provide the reusable Task/Step lifecycle + tight integration with
+// Continuations and JobScheduler so that apps and briques do not have to
+// reinvent coordination logic at their level.
 export * from "./Cop-kerneltasks.js";
+
+// New for priority C (minimal bus + scheduler)
+export * from "./bus.js";
+export * from "./scheduler.js";
+
+// Continuation helpers (restored as part of priority B)
+export * from "./continuation.js";
+export * from "./call.js";
+
+// Higher-level Job Scheduler (cron-like, with exponential backoff + obsolescence)
+// See lineage in jobScheduler.js: l8 Task/Step scheduler → COP → future Inox implementation.
+export * from "./jobScheduler.js";
+
+// Timing & performance measurement helpers (wall time, CPU, human reaction times)
+export * from "./timing.js";

@@ -1,131 +1,282 @@
-// File: packages/cop-kernel/src/call.js
-// Description:
-//   High-level helpers to call another agent with a COP continuation
-//   and to resume an existing continuation.
+/**
+ * continuation.js
+ *
+ * Low-level COP Continuation primitives.
+ *
+ * Lineage and context:
+ * - Historical precedent: l8 (https://github.com/JeanHuguesRobert/l8) — an early JS library
+ *   that modeled "Tasks" as activities broken into "Steps" executed by a scheduler, with
+ *   blocking-style control flow via cooperating closures, promises, and synchronization primitives.
+ *   l8 tasks are user-level non-preemptive threads / promises with rich resumption.
+ * - Future target: Inox (https://github.com/virteal/Inox or JeanHuguesRobert/Inox) — the
+ *   concatenative stack VM with strict control/data plane separation, actors, and named values,
+ *   intended as the efficient runtime substrate for COP agents/nodes at the edge (Fractanet).
+ *   Inox's control structures and actor model are designed to implement COP-level Task/Step/Continuation
+ *   semantics with minimal overhead and excellent traceability.
+ *
+ * These functions are derived directly from the normative specification
+ * in packages/cop-core/Architecture.md (primarily sections 2.4 Task, 2.5 Step, 2.7 Continuation,
+ * and 5.5 Continuation Execution Semantics).
+ *
+ * Goal: Provide a faithful, minimal implementation that can be used to
+ * validate and harden the spec itself through real usage in the bac-à-sable.
+ *
+ * If the spec is ambiguous or incomplete, this implementation will surface it.
+ *
+ * See also:
+ * - cop-kernel/src/jobScheduler.js (higher-level scheduling on top of continuations)
+ * - cop-kernel/src/scheduler.js (the reactor that resumes continuations)
+ * - The supabase COP schema (cop_task, cop_step, cop_artifact for continuations)
+ * - inseme research/ and sandbox/cop-continuation-bac-a-sable for practical usage patterns.
+ */
 
-import {
-  createContinuationDescriptor,
-  attachContinuationToMessage,
-  buildContinuationResumeMessage,
-} from "./continuation.js";
-import { COP_VERSION } from "./message.js";
-import { postCopMessage } from "./transport.js";
+import { randomUUID } from "crypto";
 
 /**
- * High-level helper:
- *  - build a continuation descriptor
- *  - attach it to a COP_MESSAGE
- *  - POST it to /cop
+ * Creates a Continuation Descriptor.
  *
- * @param {Object} params
- * @param {string} params.from
- * @param {string} params.to
- * @param {string} params.intent
- * @param {Object} params.payload
- * @param {string} [params.channel]
+ * Derived from spec §2.7 "Continuation Artifact":
+ * - It represents suspended/deferred work.
+ * - Must contain: where to resume (agent/topic/task/step), how (state),
+ *   under which conditions (waitForEvents, resumeAfter, resumeBefore),
+ *   and optional retry hints.
  *
- * @param {string} params.resumeTo
- * @param {string} params.resumeIntent
- *
- * @param {string} [params.correlationId]
- * @param {string} [params.taskId]
- * @param {string} [params.stepId]
- *
- * @param {string} [params.endpoint]
- * @param {string} [params.baseUrl]
+ * This is the in-memory / message form before it becomes a persisted
+ * `cop/continuation` Artifact.
  */
-export async function callAgentWithContinuation(params) {
+export function createContinuationDescriptor(params = {}) {
   const {
-    from,
-    to,
-    intent,
-    payload,
-    channel = null,
-
-    resumeTo,
+    resumeTo, // maps to "agent" in the Artifact payload
     resumeIntent,
-
     correlationId = null,
+    channel = null,
     taskId = null,
     stepId = null,
+    state = {},
+    waitForEvents = [],
+    resumeAfter = null,
+    resumeBefore = null,
+    retry = null,
+    label = null,
+    meta = {},
+  } = params;
 
-    endpoint,
-    baseUrl,
-  } = params || {};
+  if (!resumeTo) {
+    throw new Error("createContinuationDescriptor: 'resumeTo' (agent) is required per spec §2.7");
+  }
 
-  if (!from) throw new Error("callAgentWithContinuation: 'from' is required");
-  if (!to) throw new Error("callAgentWithContinuation: 'to' is required");
-  if (!intent) throw new Error("callAgentWithContinuation: 'intent' is required");
-  if (!resumeTo) throw new Error("callAgentWithContinuation: 'resumeTo' is required");
-  if (!resumeIntent) throw new Error("callAgentWithContinuation: 'resumeIntent' is required");
-
-  const continuation = createContinuationDescriptor({
-    resumeTo,
+  const descriptor = {
+    continuationId: randomUUID(),
+    type: "cop/continuation", // as per spec §2.7.3 Reserved Type Name
+    resumeTo, // "agent" field
     resumeIntent,
-    correlationId,
+    correlationId: correlationId || randomUUID(),
     channel,
     taskId,
     stepId,
-  });
-
-  const message = attachContinuationToMessage(
-    {
-      cop_version: COP_VERSION,
-      message_id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-      correlation_id: correlationId || continuation.continuationId,
-      from,
-      to,
-      intent,
-      channel,
-      payload,
-      metadata: {},
-      auth: null,
+    state, // JSON-serializable state for resumption
+    conditions: {
+      waitForEvents: Array.isArray(waitForEvents) ? waitForEvents : [],
+      resumeAfter: resumeAfter || null, // ISO-8601 as per spec
+      resumeBefore: resumeBefore || null,
     },
-    continuation
-  );
+    retry: retry || undefined,
+    label,
+    meta,
+    createdAt: new Date().toISOString(),
+  };
 
-  const res = await postCopMessage({ message, endpoint, baseUrl });
+  return descriptor;
+}
+
+/**
+ * Returns whether a continuation with a retry policy should be retried.
+ * Supports exponential backoff: if retryDelayMs is provided, the actual delay
+ * for this attempt is computed as retryDelayMs * 2^(attempt-1).
+ *
+ * Also supports obsolescence: if the continuation has been marked obsolete
+ * (by an agent, typically an AI), retry is refused.
+ */
+export function prepareRetry(continuation) {
+  if (!continuation || !continuation.retry) {
+    return { shouldRetry: false, nextState: continuation?.state || {} };
+  }
+
+  // Obsolescence check (decided by an agent / AI in absence of precise spec)
+  if (continuation.obsolete) {
+    return {
+      shouldRetry: false,
+      nextState: continuation.state || {},
+      obsolete: true,
+      obsolescenceReason: continuation.obsolescenceReason || "marked obsolete by agent",
+    };
+  }
+
+  const retryPolicy = continuation.retry;
+  const currentAttempt = retryPolicy.attempt || 1;
+  const maxAttempts = retryPolicy.maxAttempts || 1;
+
+  if (currentAttempt >= maxAttempts) {
+    return { shouldRetry: false, nextState: continuation.state || {} };
+  }
+
+  const nextAttempt = currentAttempt + 1;
+  const baseDelayMs = retryPolicy.retryDelayMs || 0;
+
+  // Exponential backoff
+  const delayMs = baseDelayMs > 0 ? Math.floor(baseDelayMs * Math.pow(2, currentAttempt - 1)) : 0;
+
+  const nextState = {
+    ...(continuation.state || {}),
+    _retry: {
+      attempt: nextAttempt,
+      maxAttempts,
+      previousError: continuation.state?._retry?.lastError || null,
+      backoffDelayMs: delayMs,
+    },
+  };
+
+  const updatedContinuation = {
+    ...continuation,
+    state: nextState,
+    retry: {
+      ...retryPolicy,
+      attempt: nextAttempt,
+    },
+  };
+
+  // Handle delayed automatic re-registration with exponential backoff
+  if (delayMs > 0) {
+    const resumeAfter = new Date(Date.now() + delayMs).toISOString();
+    updatedContinuation.conditions = {
+      ...(updatedContinuation.conditions || {}),
+      resumeAfter,
+    };
+  }
 
   return {
-    ok: res.ok,
-    message,
-    continuation,
-    response: res.response,
-    error: res.error,
+    shouldRetry: true,
+    nextAttempt,
+    updatedContinuation,
+    nextState,
+    delayMs,
+    hasDelay: delayMs > 0,
+    backoffApplied: true,
   };
 }
 
 /**
- * High-level helper:
- *  - build a continuation resume COP_MESSAGE
- *  - POST it to /cop
- *
- * @param {Object} params
- * @param {Object} params.continuation
- * @param {Object} params.payload
- * @param {string} [params.from]
- * @param {string} [params.endpoint]
- * @param {string} [params.baseUrl]
+ * Marks a continuation as having reached max retries (no more retry possible).
  */
-export async function resumeContinuationAndSend(params) {
-  const { continuation, payload, from = null, endpoint, baseUrl } = params || {};
+export function markMaxRetriesReached(continuation) {
+  return {
+    ...continuation,
+    retry: {
+      ...(continuation.retry || {}),
+      exhausted: true,
+    },
+    state: {
+      ...(continuation.state || {}),
+      _retry: {
+        ...(continuation.state?._retry || {}),
+        exhausted: true,
+      },
+    },
+  };
+}
 
-  if (!continuation) {
-    throw new Error("resumeContinuationAndSend: 'continuation' is required");
+/**
+ * Marks a continuation as obsolete.
+ * This is the "clause d'obsolescence" – in the absence of a precise specification,
+ * the decision is left to the judgment of an agent (typically an AI agent).
+ *
+ * Once obsolete, prepareRetry will refuse further retries.
+ */
+export function markContinuationObsolete(
+  continuation,
+  reason = "marked obsolete by agent",
+  decidedBy = "agent"
+) {
+  return {
+    ...continuation,
+    obsolete: true,
+    obsolescenceReason: reason,
+    obsolescenceDecidedBy: decidedBy,
+    obsolescenceDecidedAt: new Date().toISOString(),
+  };
+}
+
+/**
+ * Attaches a continuation descriptor to a COP Message.
+ *
+ * This is an internal mechanism (not directly in the Event schema) used by
+ * higher-level helpers (callAgentWithContinuation) to carry resumption
+ * information alongside a message.
+ *
+ * In a full implementation this would typically result in a `cop/continuation`
+ * Artifact being created via an Event.
+ */
+export function attachContinuationToMessage(message, continuation) {
+  if (!message || typeof message !== "object") {
+    throw new Error("attachContinuationToMessage: message must be an object");
+  }
+  if (!continuation || !continuation.continuationId) {
+    throw new Error("attachContinuationToMessage: valid continuation descriptor required");
   }
 
-  const message = buildContinuationResumeMessage({
-    continuation,
-    payload,
-    from,
-  });
+  // Per usage patterns and the spirit of spec §5.5, we attach under metadata.continuation
+  return {
+    ...message,
+    metadata: {
+      ...(message.metadata || {}),
+      continuation: {
+        continuationId: continuation.continuationId,
+        resumeTo: continuation.resumeTo,
+        resumeIntent: continuation.resumeIntent,
+        correlationId: continuation.correlationId,
+        taskId: continuation.taskId,
+        stepId: continuation.stepId,
+      },
+    },
+  };
+}
 
-  const res = await postCopMessage({ message, endpoint, baseUrl });
+/**
+ * Builds a COP Message used to trigger resumption of a Continuation.
+ *
+ * This is the message the Scheduler (or an external trigger) would send
+ * when resumption conditions are met (§5.5.2 and §5.5.3).
+ *
+ * The receiving side (Agent) is expected to receive the original continuation
+ * state + the triggering context.
+ */
+export function buildContinuationResumeMessage(params = {}) {
+  const { continuation, payload = {}, from = null, triggeringEvent = null } = params;
+
+  if (!continuation || !continuation.continuationId) {
+    throw new Error("buildContinuationResumeMessage: valid continuation descriptor required");
+  }
 
   return {
-    ok: res.ok,
-    message,
-    response: res.response,
-    error: res.error,
+    cop_version: "0.1",
+    message_id: randomUUID(),
+    correlation_id: continuation.correlationId || continuation.continuationId,
+    from: from || "cop-scheduler",
+    to: continuation.resumeTo,
+    intent: continuation.resumeIntent || "resume-continuation",
+    channel: continuation.channel,
+    payload: {
+      resumedContinuationId: continuation.continuationId,
+      state: continuation.state, // the state the Agent should resume with
+      triggeringEvent, // the event that caused resumption (if any)
+      ...payload,
+    },
+    metadata: {
+      continuation: {
+        continuationId: continuation.continuationId,
+        isResumption: true,
+        originalResumeTo: continuation.resumeTo,
+      },
+    },
   };
 }

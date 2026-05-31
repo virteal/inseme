@@ -92,16 +92,25 @@ export function createAgentContext(params) {
       throw new Error("startStep: 'task' with 'id' is required");
     }
     const { name, indexInTask = 0, inputHash } = options || {};
-    return createTaskStep({
+    const step = await createTaskStep({
       taskId: task.id,
       name,
       indexInTask,
       inputHash,
     });
+
+    // Start wall-clock and CPU timing for this step
+    step._timing = {
+      wallStart: Date.now(),
+      cpuStart: process.cpuUsage ? process.cpuUsage() : null,
+    };
+
+    return step;
   }
 
   async function completeTask(task, step) {
     if (step && step.id) {
+      captureStepTiming(step);
       await markTaskStepCompleted(step.id);
     }
     if (task && task.id) {
@@ -112,12 +121,61 @@ export function createAgentContext(params) {
   async function failTask(task, step, err) {
     const msgText = err && err.message ? err.message : String(err);
     if (step && step.id) {
+      captureStepTiming(step);
       await markTaskStepFailed(step.id, msgText);
     }
     if (task && task.id) {
       await markTaskFailed(task.id, msgText);
     }
     await log("error", "internal", { error: msgText });
+  }
+
+  /**
+   * Captures wall-clock and CPU time for a step.
+   * Attaches `performance` data to the step for later use (e.g. when producing a continuation).
+   */
+  function captureStepTiming(step) {
+    if (!step || !step._timing) return;
+
+    const wallEnd = Date.now();
+    const wallDurationMs = wallEnd - step._timing.wallStart;
+
+    let cpuDuration = null;
+    if (step._timing.cpuStart && process.cpuUsage) {
+      const cpuEnd = process.cpuUsage(step._timing.cpuStart);
+      cpuDuration = {
+        user: cpuEnd.user / 1000, // microseconds to ms
+        system: cpuEnd.system / 1000,
+      };
+    }
+
+    step.performance = {
+      wallDurationMs,
+      cpu: cpuDuration,
+      measuredAt: new Date().toISOString(),
+    };
+
+    // Clean up internal timer
+    delete step._timing;
+  }
+
+  /**
+   * When creating a continuation from the current step, attach the measured
+   * performance (wall time + CPU) of the step that produced it.
+   */
+  function attachStepPerformanceToContinuation(continuation, step) {
+    if (!step || !step.performance) return continuation;
+
+    return {
+      ...continuation,
+      performance: {
+        ...(continuation.performance || {}),
+        producingStep: {
+          wallDurationMs: step.performance.wallDurationMs,
+          cpu: step.performance.cpu,
+        },
+      },
+    };
   }
 
   async function emitArtifact(options) {
@@ -196,6 +254,40 @@ export function createAgentContext(params) {
 
     const res = await postCopMessage({ message: response, endpoint, baseUrl });
     return { ok: res.ok, response: res.response, error: res.error, message: response };
+  }
+
+  /**
+   * Records that human input was requested at a certain time.
+   * Returns a small object that can be used later to compute reaction time.
+   */
+  function recordHumanInputRequested(options = {}) {
+    const requestedAt = new Date().toISOString();
+    return {
+      requestedAt,
+      requestType: options.requestType || "decision",
+      correlationId,
+    };
+  }
+
+  /**
+   * When a human decision arrives, attach the reaction time to the decision artifact/event.
+   */
+  function attachHumanReactionTime(decisionArtifact, requestedInfo) {
+    if (!requestedInfo || !requestedInfo.requestedAt) return decisionArtifact;
+
+    const reactedAt = new Date().toISOString();
+    const reactionTimeMs =
+      new Date(reactedAt).getTime() - new Date(requestedInfo.requestedAt).getTime();
+
+    return {
+      ...decisionArtifact,
+      performance: {
+        ...(decisionArtifact.performance || {}),
+        humanReactionTimeMs: reactionTimeMs,
+        requestedAt: requestedInfo.requestedAt,
+        reactedAt,
+      },
+    };
   }
 
   async function callAgent(options) {
