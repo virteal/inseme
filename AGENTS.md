@@ -1,44 +1,204 @@
-# Agents & MCP Tools
+# AGENTS.md — Inseme Multi-Agent Working Contract
 
-Ce fichier recense les outils et règles spécifiques pour les agents de codage (comme toi)
-travaillant sur ce dépôt.
+This file defines the working contract for coding agents, research agents, and review agents contributing to this repository.
 
-## Nouveaux Outils MCP
+It is intentionally short. Agents should read it before modifying code, documents, workflows, or package structure.
+
+---
+
+## 1. Repository priority
+
+`inseme` is the platform repository of the corpus.
+
+Current priority: stabilize the **Cognitive Orchestration Protocol (COP)** implementation path, especially:
+
+- `packages/cop-core` — protocol, data model, invariants, interfaces;
+- `packages/cop-kernel` — reference runtime / implementation layer;
+- `packages/cop-host` — hosting and brique integration surface;
+- `cop-cli`, `cop-chat`, and future adapters — operational profiles or surfaces.
+
+COP must remain distinguishable from its implementations.
+
+```text
+cop-core     = abstract protocol / invariant level
+cop-kernel   = reference implementation profile
+cop-host     = platform integration surface
+cop-cli/chat = operational derived interfaces
+```
+
+---
+
+## 2. Core rule: one issue = one bounded mandate
+
+Before starting substantial work, identify the issue or create one.
+
+A good issue should state:
+
+- target files or packages;
+- problem or opportunity;
+- proposed change;
+- risks;
+- expected closure condition;
+- agent-resumable next step.
+
+Do not expand the scope silently. If the work reveals a new problem, create or propose a new issue.
+
+---
+
+## 3. Branch / PR discipline
+
+Use one branch or pull request per coherent transformation.
+
+Avoid mixing:
+
+- protocol changes;
+- runtime changes;
+- UI changes;
+- documentation updates;
+- refactors;
+- generated files.
+
+If mixed changes are unavoidable, explain why in the commit or PR description.
+
+---
+
+## 4. Preserve COP invariants
+
+Any change touching COP must preserve these invariants unless the change explicitly proposes a versioned protocol revision:
+
+- immutable Events and Artifacts;
+- topic-local ordering;
+- idempotency under at-least-once delivery;
+- durability of meaningful state;
+- stateless agents;
+- coordination via Events and Artifacts, not hidden direct coupling;
+- deterministic replay of recorded traces and projections;
+- explicit schema versioning;
+- transparency over convenience.
+
+If a shortcut violates one of these invariants, flag it clearly as non-conformant or experimental.
+
+---
+
+## 5. Abstract / implementation separation
+
+When working on COP or related systems, separate:
+
+- **abstract level** — concepts, invariants, interfaces, conformance;
+- **implementation level** — concrete runtime, storage, bus, scheduler, UI, adapter, package.
+
+Do not let an implementation silently redefine the protocol.
+
+Do not let protocol documents drift into untested speculation.
+
+---
+
+## 6. Documentation expectations
+
+For significant changes, update or create the smallest useful document:
+
+- README for package-level usage;
+- architecture note for structural choices;
+- implementation profile note for concrete runtimes;
+- state-of-play note for living implementation status;
+- issue comment for temporary continuation.
+
+Documentation should state what is stable, what is experimental, and what remains to verify.
+
+---
+
+## 7. Testing and validation
+
+Before presenting work as ready, run the relevant checks when available.
+
+At minimum, report:
+
+- commands run;
+- tests passed or missing;
+- failures and suspected causes;
+- files intentionally not tested;
+- assumptions requiring human review.
+
+If no tests exist, say so and propose the smallest conformance or regression test that would reduce risk.
+
+---
+
+## 8. Traceability and uncertainty
+
+Agents must preserve traceability.
+
+When making decisions, state:
+
+- why the change was made;
+- which issue or document it serves;
+- what evidence supports it;
+- what remains uncertain;
+- what could break.
+
+Do not conceal uncertainty behind confident prose.
+
+---
+
+## 9. Human validation anchors
+
+Stop and request human validation when a change affects:
+
+- COP invariants;
+- public doctrine or institutional positioning;
+- licensing;
+- security model;
+- irreversible data migrations;
+- naming of major concepts;
+- deletion of documents or package structure;
+- anything likely to affect several repositories.
+
+Human decision artifacts are part of the governance model, not optional ceremony.
+
+---
+
+## 10. Existing agent tools and references
 
 ### Context7
 
-**But** : Explorer efficacement la documentation des packages et bibliothèques utilisés dans le
-projet. **Usage** : Utilise cet outil lorsque tu as besoin de comprendre comment utiliser une
-fonction, une classe ou un module d'un package tiers ou interne, au lieu de deviner ou de chercher
-uniquement dans le code source. Il fournit un contexte enrichi issu des documentations officielles.
-**Exemples d'utilisation** :
+Use Context7 or equivalent documentation tools when you need to understand third-party or internal packages instead of guessing.
 
-- **Netlify** : Vérifier la syntaxe de configuration `netlify.toml` ou les API des Edge Functions.
-- **Vite** : Comprendre la configuration avancée (`vite.config.js`), les plugins (comme
-  `vite-plugin-pwa`), ou les variables d'environnement.
-- **React / Bibliothèques UI** :
-  - `@dnd-kit/core` : Gestion avancée du drag & drop.
-  - `@tanstack/react-query` : Gestion du cache et de l'état serveur.
-  - `framer-motion` : Animations complexes.
-  - `playwright` : Tests end-to-end.
-  - `tailwindcss` (v4) : Nouvelles directives et configuration.
+Typical uses:
 
-## Règles et Contextes pour les Agents
+- Netlify configuration or Edge Functions;
+- Vite configuration;
+- React libraries;
+- `@dnd-kit/core`;
+- `@tanstack/react-query`;
+- `framer-motion`;
+- `playwright`;
+- `tailwindcss`.
 
-Plusieurs fichiers à la racine du dépôt définissent les règles de codage, l'architecture et le
-contexte nécessaire pour travailler efficacement :
+### Local rule files
 
-- **[.rules.md](./.rules.md)** : Règles générales de développement, conventions de nommage, et
-  bonnes pratiques.
-- **[.ai-rules.md](./.ai-rules.md)** : Règles spécifiques pour les assistants IA (comportement,
-  style de réponse, etc.).
-- **[.gemini.md](./.gemini.md)** : Instructions ou contextes spécifiques au modèle Gemini.
-- **[.api-docs.md](./.api-docs.md)** : Documentation ou références d'API importantes pour le projet.
+Also inspect, when present:
 
-## Architecture
+- `.rules.md` — general development rules;
+- `.ai-rules.md` — AI assistant behavior and response style;
+- `.gemini.md` — Gemini-specific context;
+- `.api-docs.md` — important API references;
+- `ARCHITECTURE.md` — system architecture;
+- `ROADMAP-TECH.md` — technical roadmap.
 
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** : Vue d'ensemble de l'architecture du système
-  Inseme/Cyrnea.
-- **[ROADMAP-TECH.md](./ROADMAP-TECH.md)** : Feuille de route technique.
+If these files disagree with this document, preserve the conflict and report it. Do not silently choose one.
 
-Merci de te référer à ces fichiers pour aligner tes contributions avec les standards du projet.
+---
+
+## 11. Minimal completion report
+
+Every substantial agent contribution should end with:
+
+```text
+Issue:
+Files changed:
+Tests run:
+Known risks:
+Next step:
+Human validation needed: yes/no
+```
+
+This keeps multi-agent work reviewable, resumable, and compatible with the Cogentia / COP traceability doctrine.
