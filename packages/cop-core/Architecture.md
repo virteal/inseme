@@ -1072,6 +1072,12 @@ Replaying Events in `topicSeq` order MUST reconstruct:
 **External effects** (LLM outputs, API results, human decisions) are recorded as immutable Artifacts
 at execution time. Replay reuses these recorded outcomes rather than re-executing external systems.
 
+This distinction is fundamental: the protocol mechanics (event ordering, projectors, continuation
+conditions, causal links) are designed for deterministic replay of structure and traces. The
+cognitive content produced by agents — whether human or artificial — is not re-executed during
+replay. The same inputs to an agentic step may legitimately produce different outputs; this
+non-determinism is not a defect but a source of useful diversity in exploration and reasoning.
+
 Projectors MUST be **pure functions** over Events → Projections. Given identical Event sequences,
 projectors MUST produce identical projection state (excluding external timestamps, random seeds, or
 implementation-specific optimizations).
