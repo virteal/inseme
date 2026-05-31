@@ -134,9 +134,26 @@ Modern AI is plagued by opacity. COP makes transparency structural:
 - every step is an Event,
 - every output becomes an Artifact,
 - every causal chain is traceable,
-- every reasoning process is replayable.
+- the _trace_ of every reasoning process is replayable (even when the internal generation of that
+  output was non-deterministic).
 
-Explainable AI is no longer an afterthought; it is embedded in the protocol.
+Agentic steps — whether performed by humans or artificial agents — are not required to be
+deterministic. The same context can legitimately yield different outputs; this diversity is often a
+feature of exploration rather than a bug. What COP guarantees is that whatever output was produced,
+and whatever human decision may have enacted or validated it, is captured immutably as an Artifact
+at the time of execution.
+
+Replay reconstructs the causal history and the recorded outcomes; it does not pretend to re-simulate
+the exact cognitive path that led to those outcomes. This distinction is essential:
+
+- for honest audit (post-hoc analysis works on the actual trace, not on a fictional re-execution),
+- for imputability (a human decision Artifact provides a clear point of responsibility and skin in
+  the game),
+- and for resistance to capture (diffuse, unanchored automation makes harmful influence easier to
+  hide).
+
+Explainable AI is no longer an afterthought; it is embedded in the protocol — as far as the boundary
+between deterministic mechanics and non-deterministic cognition allows.
 
 This is essential for:
 
@@ -221,6 +238,7 @@ COP is the foundation upon which a century of cognitive infrastructure can be bu
 
 _These documents link to this file:_
 
+- [Concept Index — inseme](../../research/concepts.md)
 - [Corpus Status — inseme](../../research/corpus-status.md)
 - [Research Index — Inseme](../../research/index.md)
 
