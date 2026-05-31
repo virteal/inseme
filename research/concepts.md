@@ -132,14 +132,142 @@ assisting humans in navigating the platform.
 
 ## COP Invariants
 
-**Type:** cryptographic rule **Scope:** repository-specific **Status:** Canonical
+**Type:** protocol constraints / architectural invariants **Scope:** Global **Status:** Canonical
 
-**Short definition:** The unchangeable, hardened rules and cryptographic state boundaries that the
-Continuous Operation Protocol enforces locally upon all state machines.
+**Short definition:** The 9 non-negotiable invariants of the Cognitive Orchestration Protocol that
+any compliant system MUST preserve: Immutability (Events and Artifacts append-only), Topic-Local
+Ordering, Idempotency, Durability (all critical state reconstructible from Event log + Artifacts),
+Stateless Agents, Isolation via Events, Deterministic Replay of traces and projectors, Schema
+Versioning, and Transparency over Convenience.
+
+**Parent concepts:**
+
+- Machine à explorer
+- Stabilisateurs (anti-Ubik / procéduraux)
 
 **Reference documents:**
 
 - [`packages/cop-core/Invariants.md`](../packages/cop-core/Invariants.md)
+- [`packages/cop-core/Architecture.md`](../packages/cop-core/Architecture.md)
+
+**Used in:**
+
+- cop-kernel implementation
+- Evaluation of current gaps (Scheduler, rich causality, audit tooling)
+- Phase 2 application of explorer/empêcher grid
+
+---
+
+## Non-deterministic Cognitive Step (Agentic Step)
+
+**Type:** process concept **Scope:** Global **Status:** Working
+
+**Short definition:** A step in a cognitive process (within a Task/Step or Continuation) whose
+output depends on agentic reasoning (human judgment or AI model) and is not guaranteed to be
+reproducible from the same inputs. This non-determinism is often a source of useful diversity for
+exploration, objection, and serendipity. The protocol captures the actual output as an immutable
+Artifact at execution time rather than requiring re-computation.
+
+**Parent concepts:**
+
+- Machine à explorer
+
+**Related concepts:**
+
+- Human Enacted Decision Artifact
+- Causal Trace Replay
+
+**Reference documents:**
+
+- `packages/cop-core/Architecture.md` (§3.5 Replay Semantics and Determinism, updated Phase 2)
+- `packages/cop-core/Invariants.md` (§9.1, updated Phase 2)
+- `cogentia/research/cognitive_packets.md`
+
+---
+
+## Human Enacted Decision Artifact
+
+**Type:** artifact type / imputability anchor **Scope:** Global **Status:** Working
+
+**Short definition:** An explicit Artifact (in the COP/HITL profile) representing a decision
+actively taken or validated by a living human person. It serves as a structural anchor for
+imputability, skin in the game, and resistance to harmful capture. Without such anchors,
+traceability of the log remains but accountability diffuses, increasing the risk of Machine à
+empêcher dynamics.
+
+**Parent concepts:**
+
+- Machine à explorer
+- COP/HITL Profile
+
+**Related concepts:**
+
+- Non-deterministic Cognitive Step
+- Rule 0 (seconde méthode)
+- DHITL Layer 5
+
+**Reference documents:**
+
+- `packages/cop-core/Architecture.md` (COP/HITL profile and human decision handling, updated
+  Phase 2)
+- `barons-Mariani/research/second_method.md` (Rule 0)
+- `marenostrum/DHITL.md`
+
+**Used in:**
+
+- Processes carrying real consequences
+- Justification of human anchor points in continuation flows
+
+---
+
+## Causal Trace Replay (Auditable Causal Reconstruction)
+
+**Type:** audit / replay mechanism **Scope:** Global **Status:** Working
+
+**Short definition:** The form of replay guaranteed by COP: faithful reconstruction of the causal
+history, Events, and recorded Artifacts (including outputs of non-deterministic agentic steps). It
+does not promise deterministic re-execution of the internal reasoning processes of agents. This
+distinction preserves honest auditability while acknowledging the boundary between protocol
+mechanics and agentic cognition.
+
+**Parent concepts:**
+
+- COP Invariants
+- Machine à explorer
+
+**Related concepts:**
+
+- Deterministic Replay (protocol layer only)
+- Non-deterministic Cognitive Step
+
+**Reference documents:**
+
+- `packages/cop-core/Architecture.md` (§3.5, updated Phase 2)
+- `packages/cop-core/Invariants.md` (§9.1, updated Phase 2)
+
+---
+
+## COP (Cognitive Orchestration Protocol)
+
+**Type:** protocol / runtime **Scope:** Global **Status:** Canonical
+
+**Short definition:** The vendor-neutral, implementation-independent protocol for coordinating
+cognitive agents (human and artificial) through an event-driven model with strong causality,
+immutability, and continuation support. It provides the asynchronous substrate for durable,
+traceable, multi-agent cognition (the "nervous system" of the explorer machines).
+
+**Reference documents:**
+
+- [`packages/cop-core/Architecture.md`](../packages/cop-core/Architecture.md)
+- [`packages/cop-core/Invariants.md`](../packages/cop-core/Invariants.md)
+- [`packages/cop-core/Manifesto.md`](../packages/cop-core/Manifesto.md)
+- [`research/COP_STATE_OF_PLAY.md`](../research/COP_STATE_OF_PLAY.md)
+
+**Used in:**
+
+- cop-kernel (bus, store, scheduler, continuations)
+- Phase 1 and Phase 2 of the explorer/empêcher grid application
+- Sandbox validation work
 
 ---
 
@@ -177,7 +305,9 @@ _These documents link to this file:_
 - [🏗️ Inseme Modular System Architecture](../docs/MODULAR_SYSTEM.md)
 - [Cognitive Orchestration Protocol (COP)](../packages/cop-core/Architecture.md)
 - [COP Protocol Invariants](../packages/cop-core/Invariants.md)
+- [**The COP Manifesto**](../packages/cop-core/Manifesto.md)
 - [Spécification du Manifeste de Brique (brique.config.js)](../packages/cop-host/BRIQUE_SPEC.md)
+- [COP State of Play – Asynchronous Orchestration & Traceability](COP_STATE_OF_PLAY.md)
 - [Corpus Status — inseme](corpus-status.md)
 - [Research Index — Inseme](index.md)
 

@@ -436,6 +436,31 @@ practice**.
 
 ## 10. Change Log (Living — Append New Entries at Top)
 
+**2026-05-31 — Resumption of work (Grok 4.3 + human, via cogentia corpus session)**
+
+- **Dev health snapshot** (`pnpm cyrnea:doctor` from canonical tree): 60% iterative readiness.
+  - ✅ Node 24 / pnpm 10.28, monorepo root, .env present, Supabase URL, Netlify CLI.
+  - ⚠️ 22 modified files (structural changes detected → recommend full compile, not --no-compile).
+  - ⚠️ brique-registry last generated ~53 hours ago.
+  - ⚠️ Proxy variables in .env (check-tunnel.js may block some flows).
+- **ClientMiniApp debt confirmed still open** (cross-ref to Jan 2026 ROADMAP "REEVALUATION COMPLÈTE"
+  P1 section + May 28 initial assessment):
+  - Current modular `TipModal.jsx` forces `method: "manual"` only; no Stripe / Wero / physical
+    payment flows or phone_visibility reveal logic from the 130 kB backup (the P0 item).
+  - `ClientMiniApp.jsx` (30 kB) vs `.backup` (130 kB) gap remains the #1 technical debt.
+- **Corpus view** (via `cogentia status` / `list` / `lint`): inseme now reports in sync (previously
+  1 behind on cached refs); 331 MD files (heavy ignore list), 1 unreferenced; frontmatter mostly
+  clean on research/ docs.
+- **Open threads pulled from inseme's own research/**:
+  - In Progress (index.md): `@inseme/brique-cogentia-commons` (spec in cogentia repo, impl pending),
+    COP v0.3+ federation events, per-instance deployment hardening.
+  - Cyrnea: ClientMiniApp parity + live bar pilot + ethics/resolver/PWA.
+  - COP: shift to async/traceable core (synchronous UIs deprioritized for now).
+- Agent task list created for systematic resumption (audit → port P0 features → update views → COP /
+  brique-cogentia-commons).
+- All actions governed by the project AGENTS.md / .ai-rules.md / .rules.md and the corpus
+  agent_brief (draft only; human arbiter on Layer 3).
+
 **2026-05-28 — Smart auto-detection + Dev Doctor (Grok)**
 
 - Enhanced launcher with **automatic intelligent compile skipping**:
