@@ -5,7 +5,7 @@ description:
   possible"
 layout: default
 nav_order: 2
-last_modified_at: 2026-05-28
+last_modified_at: 2026-05-30
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/corpus-status.md
 last_stamped_at: 2026-05-26
 license: CC BY-SA 4.0
@@ -29,13 +29,13 @@ _and_ _Open Objections_ — _are manually curated and preserved across refreshes
 
 | Repository       | research/index.md | Branch | Last commit |
 | ---------------- | ----------------- | ------ | ----------- |
-| cogentia         | ✅                | main   | 2026-05-27  |
-| FractaVolta      | ✅                | main   | 2026-05-27  |
-| marenostrum      | ✅                | main   | 2026-05-27  |
-| barons-Mariani   | ✅                | main   | 2026-05-27  |
-| inseme           | ✅                | main   | 2026-05-27  |
-| Inox             | ✅                | master | 2026-05-27  |
-| JeanHuguesRobert | ✅                | main   | 2026-05-28  |
+| cogentia         | ✅                | main   | 2026-05-30  |
+| FractaVolta      | ✅                | main   | 2026-05-30  |
+| marenostrum      | ✅                | main   | 2026-05-30  |
+| barons-Mariani   | ✅                | main   | 2026-05-30  |
+| inseme           | ✅                | main   | 2026-05-29  |
+| Inox             | ✅                | master | 2026-05-30  |
+| JeanHuguesRobert | ✅                | main   | 2026-05-30  |
 
 <!-- END_AUTO: registered_repos -->
 
@@ -113,18 +113,22 @@ graph LR
 
 <!-- BEGIN_AUTO: concepts -->
 
-| Concept                                                                                | Scope | Status | Type                                                                      |
-| -------------------------------------------------------------------------------------- | ----- | ------ | ------------------------------------------------------------------------- |
-| [Cogentia](./concepts.md#cogentia)                                                     | —     | —      | abstract concept / agentivity class **Scope:** Global **Status:** Working |
-| [Cogentigram](./concepts.md#cogentigram)                                               | —     | —      | representation / map **Scope:** Global **Status:** Working                |
-| [COP (Continuous Operation Protocol)](./concepts.md#cop-continuous-operation-protocol) | —     | —      | protocol / runtime **Scope:** Global **Status:** Canonical                |
-| [Briques](./concepts.md#briques)                                                       | —     | —      | modular component **Scope:** Global **Status:** Operational               |
-| [Kudocracy](./concepts.md#kudocracy)                                                   | —     | —      | governance system **Scope:** Global **Status:** Defined                   |
-| [Agora](./concepts.md#agora)                                                           | —     | —      | system model **Scope:** Global **Status:** Defined                        |
-| [Ophélia](./concepts.md#ophelia)                                                       | —     | —      | agent **Scope:** Global **Status:** Operational                           |
-| [COP Invariants](./concepts.md#cop-invariants)                                         | —     | —      | cryptographic rule **Scope:** repository-specific **Status:** Canonical   |
-| [Brique Spec / Multi-Instance](./concepts.md#brique-spec-multi-instance)               | —     | —      | technical specification **Scope:** project-specific **Status:** Defined   |
-| [Modular System](./concepts.md#modular-system)                                         | —     | —      | frontend architecture **Scope:** repository-specific **Status:** Working  |
+| Concept                                                                                                                    | Scope | Status | Type                                                                                    |
+| -------------------------------------------------------------------------------------------------------------------------- | ----- | ------ | --------------------------------------------------------------------------------------- |
+| [Cogentia](./concepts.md#cogentia)                                                                                         | —     | —      | abstract concept / agentivity class **Scope:** Global **Status:** Working               |
+| [Cogentigram](./concepts.md#cogentigram)                                                                                   | —     | —      | representation / map **Scope:** Global **Status:** Working                              |
+| [COP (Continuous Operation Protocol)](./concepts.md#cop-continuous-operation-protocol)                                     | —     | —      | protocol / runtime **Scope:** Global **Status:** Canonical                              |
+| [Briques](./concepts.md#briques)                                                                                           | —     | —      | modular component **Scope:** Global **Status:** Operational                             |
+| [Kudocracy](./concepts.md#kudocracy)                                                                                       | —     | —      | governance system **Scope:** Global **Status:** Defined                                 |
+| [Agora](./concepts.md#agora)                                                                                               | —     | —      | system model **Scope:** Global **Status:** Defined                                      |
+| [Ophélia](./concepts.md#ophelia)                                                                                           | —     | —      | agent **Scope:** Global **Status:** Operational                                         |
+| [COP Invariants](./concepts.md#cop-invariants)                                                                             | —     | —      | protocol constraints / architectural invariants **Scope:** Global **Status:** Canonical |
+| [Non-deterministic Cognitive Step (Agentic Step)](./concepts.md#non-deterministic-cognitive-step-agentic-step)             | —     | —      | process concept **Scope:** Global **Status:** Working                                   |
+| [Human Enacted Decision Artifact](./concepts.md#human-enacted-decision-artifact)                                           | —     | —      | artifact type / imputability anchor **Scope:** Global **Status:** Working               |
+| [Causal Trace Replay (Auditable Causal Reconstruction)](./concepts.md#causal-trace-replay-auditable-causal-reconstruction) | —     | —      | audit / replay mechanism **Scope:** Global **Status:** Working                          |
+| [COP (Cognitive Orchestration Protocol)](./concepts.md#cop-cognitive-orchestration-protocol)                               | —     | —      | protocol / runtime **Scope:** Global **Status:** Canonical                              |
+| [Brique Spec / Multi-Instance](./concepts.md#brique-spec-multi-instance)                                                   | —     | —      | technical specification **Scope:** project-specific **Status:** Defined                 |
+| [Modular System](./concepts.md#modular-system)                                                                             | —     | —      | frontend architecture **Scope:** repository-specific **Status:** Working                |
 
 <!-- END_AUTO: concepts -->
 
