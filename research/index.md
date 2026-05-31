@@ -4,7 +4,7 @@ description:
   "The deployable platform — bricks, COP runtime, and the civic-tech infrastructure of #PERTITELLU"
 layout: default
 nav_order: 1
-last_modified_at: 2026-05-13
+last_modified_at: 2026-06-01
 license: CC BY-SA 4.0
 affiliation: Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica
 date: 2026-05-13
@@ -59,6 +59,8 @@ _Platform-level specifications and architectural documents._
 | [COP FAQ](../packages/cop-core/FAQ.md)                                                                                                 | this repo | 2025-12     |
 | [COP Comparison with other orchestration frameworks](../packages/cop-core/COMPARISON.md)                                               | this repo | 2025-12     |
 | [COP Roadmap](../packages/cop-core/ROADMAP.md)                                                                                         | this repo | 2025-12     |
+| [Reactive Cognitive COP Extension](reactive_cognitive_cop_extension.md) _(Toubkal/Inox/COP source document: Packet Attractors, pressure strategies, control/data plane)_ | this repo | 2026-06-01  |
+| [COP Reactive Cognitive Extension](../packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md) _(operational COP-core protocol note derived from the source document)_ | this repo | 2026-06-01  |
 | [Modular System Architecture — the Brique pattern](../docs/MODULAR_SYSTEM.md)                                                          | this repo | 2025-12     |
 | [BRIQUE_SPEC — the brique manifest contract](../packages/cop-host/BRIQUE_SPEC.md)                                                      | this repo | 2025-12     |
 | [Multi-Instance Architecture](../packages/cop-host/docs/MULTI_INSTANCE.md)                                                             | this repo | 2025-12     |
@@ -76,10 +78,13 @@ _Hosted elsewhere, intellectually connected here._
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------- |
 | [Discours de la seconde méthode](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/second_method.md) _(founding doctrine — names cogentia.js as canonical tooling)_                      | barons-Mariani   |
 | [DHITL — Democratic Humans in the Loop](https://github.com/JeanHuguesRobert/marenostrum/blob/main/DHITL.md) _(architectural axiom — Layer 4 = cognitive infrastructure where inseme briques operate)_        | marenostrum      |
+| [Cogentia Pipeline](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/pipeline.md) _(source-to-derived packet workflow followed by the reactive cognitive artifacts)_                         | cogentia         |
+| [Cognitive Packets](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md) _(envelope/payload distinction used by COP reactive cognitive artifacts)_                         | cogentia         |
 | [Cogentia Commons MVP Specification](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_mvp_spec.md) _(targets inseme as `brique-cogentia-commons`, see §12)_                  | cogentia         |
 | [Cogentia Workflows](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_workflows.md)                                                                                                  | cogentia         |
 | [Packetized Gravity Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/PGN.md) _(physical infrastructure layer the platform may eventually run on)_                                         | FractaVolta      |
 | [Inox — language and runtime substrate](https://github.com/JeanHuguesRobert/Inox/blob/master/research/inox-spec.md) _(concatenative stack VM; future implementation target for `cop-core` and edge briques)_ | Inox             |
+| [Reactive Sets in Inox — Native Implementation Path](https://github.com/JeanHuguesRobert/Inox/blob/master/research/reactive_sets_inox_cop_implementation.md) _(native runtime path for the reactive cognitive layer)_ | Inox             |
 | [Jean Hugues Noël Robert — profile / corpus entry point](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md) _(meta-node — registry host, orientation, AI agent briefing)_     | JeanHuguesRobert |
 
 ---
@@ -89,6 +94,8 @@ _Hosted elsewhere, intellectually connected here._
 - `@inseme/brique-cogentia-commons` — the Cogentia Commons brique, specified in
   [cogentia/research/](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/);
   implementation pending.
+- Reactive Cognitive COP extension — source and operational note created; native implementation path delegated to
+  [Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/reactive_sets_inox_cop_implementation.md).
 - COP v0.3+ extensions — federation events (`cop_nodes`, `cop_agents`, `cop_events` per
   `apps/platform/supabase/migrations/cop/applied/schema_v0-2-0.sql`).
 - Per-instance deployment hardening — multi-instance auth, vault, federation consultations.
