@@ -165,6 +165,22 @@ COP favors:
 
 If an optimization violates an invariant, it is invalid.
 
+### 9.1 Scope of Determinism and the Role of Human Anchors
+
+The invariants guarantee deterministic replay of the _trace_ (Events, causal ordering, Artifacts
+produced, continuation states). They do not require or promise deterministic re-execution of the
+cognitive processes that generated those Artifacts.
+
+When an agentic step (human judgment or AI reasoning) is involved, the same inputs and context may
+produce different outputs. This non-determinism is often valuable for exploration. What matters for
+auditability and imputability is that the _trace_ — including the specific output chosen and, when
+relevant, the human decision that enacted or validated it — is immutably recorded.
+
+Consequently, for processes that carry real consequences, the presence of explicit human-enacted
+decision Artifacts (see COP/HITL profile) is not optional decoration: it is the necessary anchor
+that preserves imputability, skin in the game, and resistance to diffuse or hidden capture. Without
+such anchors, traceability of the log remains, but accountability dissolves.
+
 ---
 
 ## Final Note
