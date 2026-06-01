@@ -1,6 +1,6 @@
 title: "Cogentia Corpus — inseme"
 description: "Distributed research and governance."
-theme: just-the-docs
+remote_theme: just-the-docs/just-the-docs
 
 color_scheme: dark
 
@@ -10,6 +10,7 @@ aux_links:
 
 # Plugins (tous supportés sur GitHub Pages)
 plugins:
+  - jekyll-remote-theme
   - jekyll-seo-tag
   - jekyll-relative-links
   - jekyll-sitemap
