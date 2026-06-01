@@ -1,3 +1,8 @@
+---
+canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/COP_STATE_OF_PLAY.md
+last_stamped_at: 2026-06-01
+---
+
 # COP State of Play – Asynchronous Orchestration & Traceability
 
 **Living document.**  

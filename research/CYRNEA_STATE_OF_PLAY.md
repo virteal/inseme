@@ -1,3 +1,8 @@
+---
+canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/CYRNEA_STATE_OF_PLAY.md
+last_stamped_at: 2026-06-01
+---
+
 # Cyrnea — State of Play (Initial Assessment)
 
 **Repository:** inseme (https://github.com/JeanHuguesRobert/inseme)  

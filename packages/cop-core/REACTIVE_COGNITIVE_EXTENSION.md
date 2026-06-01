@@ -20,6 +20,7 @@ tags:
   - control-plane
   - data-plane
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md
+last_stamped_at: 2026-06-01
 ---
 
 # COP Reactive Cognitive Extension
@@ -28,17 +29,22 @@ canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop
 
 ### Object of this document
 
-This document is the COP-core operational note derived from [`research/reactive_cognitive_cop_extension.md`](../../research/reactive_cognitive_cop_extension.md).
+This document is the COP-core operational note derived from
+[`research/reactive_cognitive_cop_extension.md`](../../research/reactive_cognitive_cop_extension.md).
 
-It defines the protocol-facing surface for a future reactive cognitive layer without implementing the low-level runtime. Native implementation is delegated to Inox.
+It defines the protocol-facing surface for a future reactive cognitive layer without implementing
+the low-level runtime. Native implementation is delegated to Inox.
 
 ### Associated documents
 
-- [Reactive Cognitive COP Extension](../../research/reactive_cognitive_cop_extension.md) — source document;
+- [Reactive Cognitive COP Extension](../../research/reactive_cognitive_cop_extension.md) — source
+  document;
 - [COP — Cognitive Orchestration Protocol](Architecture.md) — canonical COP specification;
 - [COP Invariants](Invariants.md) — protocol invariants;
-- [Cognitive Packets](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md) — envelope/payload specification;
-- [Reactive Sets in Inox — Native Implementation Path](https://github.com/JeanHuguesRobert/Inox/blob/master/research/reactive_sets_inox_cop_implementation.md) — native runtime continuation.
+- [Cognitive Packets](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md)
+  — envelope/payload specification;
+- [Reactive Sets in Inox — Native Implementation Path](https://github.com/JeanHuguesRobert/Inox/blob/master/research/reactive_sets_inox_cop_implementation.md)
+  — native runtime continuation.
 
 ---
 
@@ -46,7 +52,8 @@ It defines the protocol-facing surface for a future reactive cognitive layer wit
 
 This is a protocol extension note, not a final schema.
 
-The extension is intentionally small. It introduces names and JSON sketches sufficient to guide future code and schema work.
+The extension is intentionally small. It introduces names and JSON sketches sufficient to guide
+future code and schema work.
 
 ---
 
@@ -69,7 +76,8 @@ Inox owns:
 - runtime backpressure and pressure strategy execution;
 - stack/actor execution semantics.
 
-COP MAY expose reactive-cognitive structures as events and artifacts. COP MUST NOT require any specific runtime implementation.
+COP MAY expose reactive-cognitive structures as events and artifacts. COP MUST NOT require any
+specific runtime implementation.
 
 ---
 
@@ -125,7 +133,8 @@ A COP event or artifact participating in this extension MAY carry a `packet` obj
 }
 ```
 
-Large payloads SHOULD be referenced rather than embedded when durable storage already exists elsewhere.
+Large payloads SHOULD be referenced rather than embedded when durable storage already exists
+elsewhere.
 
 ---
 
@@ -166,9 +175,7 @@ Declares demand or interest.
   "id": "attractor:corte:mandates",
   "matches": {
     "packetKind": ["operation", "event", "continuation"],
-    "query": [
-      { "flow": "mandates", "commune": "Corte" }
-    ]
+    "query": [{ "flow": "mandates", "commune": "Corte" }]
   },
   "pressure": {
     "accepted": ["best-effort", "ttl", "durable"]
@@ -284,4 +291,5 @@ Next actions:
 
 1. Create the Inox-native implementation path document.
 2. Create an Inox coding continuation for a minimal Reactive Set / CogQuery seed.
-3. Only after that, decide whether Inseme needs a small JS adapter for tests, demos or COP projections.
+3. Only after that, decide whether Inseme needs a small JS adapter for tests, demos or COP
+   projections.
