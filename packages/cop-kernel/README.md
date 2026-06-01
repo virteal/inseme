@@ -7,6 +7,8 @@ Built on top of `cop-core`, the kernel handles the practical execution of the pr
 > For an overview of the ecosystem (Agora, IA, Multi-instances), see the
 > [global repository README](../../README.md).
 
+> For the implementation-profile status of this package, see [`PROFILE.md`](PROFILE.md).
+
 ---
 
 ## 🎯 What is it for?
@@ -28,6 +30,7 @@ Helpers for managing complex multi-agent interactions and ensuring protocol comp
 
 ```
 packages/cop-kernel/
+├── PROFILE.md      # Implementation profile and conformance status
 ├── src/
 │   ├── agents/        # Agent definition and management logic
 │   ├── nodes/         # Node utilities and helpers
