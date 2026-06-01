@@ -41,6 +41,8 @@ COP is deliberately minimal. It does **not**:
 
 Those concerns belong to **runtimes** built on top of COP.
 
+See also [`ImplementationProfiles.md`](ImplementationProfiles.md) for the rule separating COP Core from concrete runtimes, interfaces, adapters, and integration surfaces.
+
 ---
 
 ## Core Concepts
@@ -78,6 +80,8 @@ Any technology stack can implement these interfaces:
 - Edge runtimes
 - In-memory test harnesses
 
+Concrete realizations should be documented as implementation profiles. See [`ImplementationProfiles.md`](ImplementationProfiles.md).
+
 ---
 
 ## Protocol Invariants
@@ -110,6 +114,8 @@ Examples:
 - Human-in-the-loop governance
 
 Profiles define **additional semantics**, not new execution rules.
+
+Implementation profiles document concrete runtimes or surfaces that realize COP responsibilities. They must not silently redefine COP. See [`ImplementationProfiles.md`](ImplementationProfiles.md).
 
 ---
 
