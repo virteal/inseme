@@ -21,3 +21,17 @@ exclude:
   - ".cogentiaignore"
   - ".git/"
   - "node_modules/"
+  # Dev / build / infrastructure — not corpus content
+  - "apps/"
+  - "sandbox/"
+  - "scripts/"
+  - "tests/"
+  - "supabase/"
+  - ".turbo/"
+  - ".netlify/"
+  # Packages whose docs contain React/JS template syntax `{{...}}` that breaks Liquid parsing.
+  # To re-include later: wrap offending code blocks in `{% raw %}...{% endraw %}`.
+  - "packages/cop-host/"
+  - "packages/room/"
+  - "packages/brique-ophelia/"
+  - "docs/biodiversite-tests-validation.md"
