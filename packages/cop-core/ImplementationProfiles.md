@@ -4,18 +4,22 @@ author: "Jean Hugues Noël Robert, baron Mariani"
 affiliation: "Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica"
 license: "CC BY-SA 4.0"
 status: "working-note"
-last_stamped_at: 2026-05-31
+last_stamped_at: 2026-06-01
 ---
 
 # COP Implementation Profiles
 
 ## Purpose
 
-This note defines how concrete implementations of the Cognitive Orchestration Protocol (COP) should be documented.
+This note defines how concrete implementations of the Cognitive Orchestration Protocol (COP) should
+be documented.
 
-`cop-core` defines the protocol-level abstractions, data model, invariants, and interfaces. It intentionally does not execute workflows, run agents, schedule tasks, manage infrastructure, or depend on a specific runtime.
+`cop-core` defines the protocol-level abstractions, data model, invariants, and interfaces. It
+intentionally does not execute workflows, run agents, schedule tasks, manage infrastructure, or
+depend on a specific runtime.
 
-An implementation profile describes one concrete way of realizing COP without silently redefining COP.
+An implementation profile describes one concrete way of realizing COP without silently redefining
+COP.
 
 ```text
 COP Core = abstract protocol / invariant level
@@ -29,7 +33,8 @@ COP Implementation Profile = concrete runtime, interface, adapter, or integratio
 COP needs implementation profiles because two opposite failures are possible:
 
 1. **Theory without implementation** — the protocol remains elegant but untested.
-2. **Implementation drift** — a runtime or adapter starts redefining the protocol through convenience shortcuts.
+2. **Implementation drift** — a runtime or adapter starts redefining the protocol through
+   convenience shortcuts.
 
 A profile is the bridge between the protocol and one concrete realization.
 
@@ -37,7 +42,8 @@ A profile is the bridge between the protocol and one concrete realization.
 
 ## Definition
 
-A COP implementation profile is a documented realization of some COP responsibilities in a specific technical context.
+A COP implementation profile is a documented realization of some COP responsibilities in a specific
+technical context.
 
 A profile may be:
 
@@ -57,7 +63,8 @@ A profile is not automatically COP-compliant. It must show how it preserves the 
 
 ## Non-negotiable inheritance from COP Core
 
-A profile claiming COP alignment MUST preserve, or explicitly mark as not yet implemented, the following invariants:
+A profile claiming COP alignment MUST preserve, or explicitly mark as not yet implemented, the
+following invariants:
 
 1. Events and Artifacts are immutable.
 2. Events are ordered within Topics.
@@ -69,15 +76,19 @@ A profile claiming COP alignment MUST preserve, or explicitly mark as not yet im
 8. Events and Artifacts carry explicit schema versions.
 9. Transparency takes priority over hidden convenience.
 
-If a profile violates one of these constraints for prototyping reasons, the violation MUST be explicit and temporary.
+If a profile violates one of these constraints for prototyping reasons, the violation MUST be
+explicit and temporary.
 
 ---
 
 ## What may vary by profile
 
-Implementation profiles may vary in programming language, runtime environment, storage backend, transport layer, scheduling strategy, UI surface, deployment model, persistence guarantees, federation mechanism, human-in-the-loop validation flow, and observability tooling.
+Implementation profiles may vary in programming language, runtime environment, storage backend,
+transport layer, scheduling strategy, UI surface, deployment model, persistence guarantees,
+federation mechanism, human-in-the-loop validation flow, and observability tooling.
 
-Variation is acceptable only if the profile documents its consequences for durability, replay, auditability, and conformance.
+Variation is acceptable only if the profile documents its consequences for durability, replay,
+auditability, and conformance.
 
 ---
 
@@ -89,36 +100,48 @@ Each implementation profile SHOULD include:
 # <Profile Name>
 
 ## Status
+
 experimental | prototype | reference | production candidate | deprecated
 
 ## Scope
+
 What COP responsibilities this profile implements.
 
 ## Non-goals
+
 What this profile deliberately does not implement.
 
 ## Mapping to COP Core
-How Events, Artifacts, Topics, Tasks, Steps, Continuations, Bus, Store, Scheduler, and Agents are represented.
+
+How Events, Artifacts, Topics, Tasks, Steps, Continuations, Bus, Store, Scheduler, and Agents are
+represented.
 
 ## Invariants
+
 Which COP invariants are fully preserved, partially preserved, or not yet implemented.
 
 ## Persistence model
+
 Where durable Events and Artifacts live.
 
 ## Replay model
+
 How recorded traces and projections can be reconstructed.
 
 ## Human validation anchors
+
 Where human decisions are required and how they are recorded.
 
 ## Known limitations
+
 What remains experimental, unsafe, incomplete, or non-conformant.
 
 ## Tests and conformance
+
 Existing tests, missing tests, replay checks, and validation commands.
 
 ## Next steps
+
 Agent-resumable continuation items.
 ```
 
@@ -130,13 +153,15 @@ Agent-resumable continuation items.
 
 Status: protocol specification package.
 
-`cop-core` is not itself a runtime profile. It is the reference against which profiles are evaluated.
+`cop-core` is not itself a runtime profile. It is the reference against which profiles are
+evaluated.
 
 ### `cop-kernel`
 
 Status: emerging reference runtime profile.
 
-`cop-kernel` should become the first documented implementation profile because it exercises the async, event-driven, traceable core of COP.
+`cop-kernel` should become the first documented implementation profile because it exercises the
+async, event-driven, traceable core of COP.
 
 Current priority:
 
@@ -149,7 +174,8 @@ Current priority:
 
 Status: platform and brique integration surface.
 
-It should not redefine COP semantics. It should consume COP services or expose brique-level events and artifacts.
+It should not redefine COP semantics. It should consume COP services or expose brique-level events
+and artifacts.
 
 ### `cop-cli`
 
@@ -167,7 +193,8 @@ It should clarify how conversational state becomes durable COP state.
 
 Status: exploratory only.
 
-It should not be implemented before `cop-kernel` is stable enough to define what a visual adapter must preserve.
+It should not be implemented before `cop-kernel` is stable enough to define what a visual adapter
+must preserve.
 
 ---
 
@@ -187,15 +214,18 @@ Before calling a profile COP-compliant, answer:
 - Which tests demonstrate replay or reconstruction?
 - Which invariants are still aspirational?
 
-If these questions cannot be answered, the profile may be useful, but it should not yet be described as conformant.
+If these questions cannot be answered, the profile may be useful, but it should not yet be described
+as conformant.
 
 ---
 
 ## Relation to Cogentia
 
-This note applies the broader Cogentia method of separating abstract source documents from concrete implementation documents.
+This note applies the broader Cogentia method of separating abstract source documents from concrete
+implementation documents.
 
-The abstract level protects coherence. The implementation level protects contact with reality. The profile is the documented interface between both.
+The abstract level protects coherence. The implementation level protects contact with reality. The
+profile is the documented interface between both.
 
 ---
 
