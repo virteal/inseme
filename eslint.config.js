@@ -66,6 +66,7 @@ export default defineConfig([
       "**/runtime/**",
       "**/__tests__/**",
       "**/*.test.js",
+      "sandbox/**",
     ],
     languageOptions: {
       globals: {

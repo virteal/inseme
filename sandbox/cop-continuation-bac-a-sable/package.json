@@ -1,0 +1,16 @@
+{
+  "name": "cop-continuation-bac-a-sable",
+  "version": "0.1.0",
+  "description": "Bac à sable CLI pour faire converger COP (Cognitive Orchestration Protocol) avec Cogentia. Utilise du vrai code de cop-kernel le plus tôt possible. Pas une simulation : un outil de facilitation d'implémentation réelle.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "run": "node index.js run",
+    "list": "node index.js list",
+    "replay": "node index.js replay",
+    "test": "node --test test/*.js"
+  },
+  "dependencies": {
+    "@inseme/cop-kernel": "workspace:*"
+  }
+}
