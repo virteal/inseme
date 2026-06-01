@@ -55,7 +55,14 @@ components of the ecosystem:
 
 The ecosystem is composed of several specialized packages:
 
-- **`packages/cop-*`**: Cognitive Orchestration Protocol (Kernel, CLI, Host).
+- **`packages/cop-*`**: Cognitive Orchestration Protocol (Kernel, CLI, Host). The
+  [Reactive Cognitive Extension](packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md) (v0.1,
+  operational note) defines the protocol surface for packet attractors, CogQueries, and pressure
+  strategies; native implementation is delegated to
+  [Inox](https://github.com/JeanHuguesRobert/Inox). Developer convergence with
+  [Cogentia](https://github.com/JeanHuguesRobert/cogentia) happens in
+  [`sandbox/cop-continuation-bac-a-sable/`](sandbox/cop-continuation-bac-a-sable/) — a CLI + ~20
+  scenarios (notaire, mairie, greffier, federation, …) injecting real `cop-kernel` primitives.
 - **`packages/brique-*`**: Functional modules (Wiki, Blog, Tasks, Group, **Map**, **Auxilia** —
   digital hospitality for mobile data and battery, etc.).
 - **`packages/models`**: Sovereign LLM controller for local inference.
