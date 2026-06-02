@@ -206,5 +206,5 @@ test("per-topic COPBus sub-buses isolate topic-scoped events", async () => {
 
   assert.equal(seenA.length, 1);
   assert.equal(seenB.length, 0);
-  assert.equal(seenA[0].namespace, "topic:topic-A");
+  assert.equal(seenA[0].subBus, "topic:topic-A");
 });
