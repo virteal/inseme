@@ -5,7 +5,7 @@ description:
   possible"
 layout: default
 nav_order: 2
-last_modified_at: 2026-06-01
+last_modified_at: 2026-06-02
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/corpus-status.md
 last_stamped_at: 2026-06-01
 license: CC BY-SA 4.0
@@ -29,13 +29,13 @@ _and_ _Open Objections_ — _are manually curated and preserved across refreshes
 
 | Repository       | research/index.md | Branch | Last commit |
 | ---------------- | ----------------- | ------ | ----------- |
-| cogentia         | ✅                | main   | 2026-06-01  |
-| FractaVolta      | ✅                | main   | 2026-06-01  |
-| marenostrum      | ✅                | main   | 2026-06-01  |
-| barons-Mariani   | ✅                | main   | 2026-06-01  |
-| inseme           | ✅                | main   | 2026-06-01  |
-| Inox             | ✅                | master | 2026-06-01  |
-| JeanHuguesRobert | ✅                | main   | 2026-06-01  |
+| cogentia         | ✅                | main   | 2026-06-02  |
+| FractaVolta      | ✅                | main   | 2026-06-02  |
+| marenostrum      | ✅                | main   | 2026-06-02  |
+| barons-Mariani   | ✅                | main   | 2026-06-02  |
+| inseme           | ✅                | main   | 2026-06-02  |
+| Inox             | ✅                | master | 2026-06-02  |
+| JeanHuguesRobert | ✅                | main   | 2026-06-02  |
 
 <!-- END_AUTO: registered_repos -->
 
@@ -212,22 +212,24 @@ graph LR
 
 <!-- BEGIN_AUTO: published -->
 
-| Title                                                                                                                                                                    | Location  | Date        |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- | ----------- |
-| [COP — Cognitive Orchestration Protocol (Architecture)](../packages/cop-core/Architecture.md) _(canonical protocol spec)_                                                | this repo | 2025-12     |
-| [COP Invariants — non-negotiable rules of the protocol](../packages/cop-core/Invariants.md)                                                                              | this repo | 2025-12     |
-| [COP Manifesto](../packages/cop-core/Manifesto.md)                                                                                                                       | this repo | 2025-12     |
-| [COP FAQ](../packages/cop-core/FAQ.md)                                                                                                                                   | this repo | 2025-12     |
-| [COP Comparison with other orchestration frameworks](../packages/cop-core/COMPARISON.md)                                                                                 | this repo | 2025-12     |
-| [COP Roadmap](../packages/cop-core/ROADMAP.md)                                                                                                                           | this repo | 2025-12     |
-| [Reactive Cognitive COP Extension](reactive_cognitive_cop_extension.md) _(Toubkal/Inox/COP source document: Packet Attractors, pressure strategies, control/data plane)_ | this repo | 2026-06-01  |
-| [COP Reactive Cognitive Extension](../packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md) _(operational COP-core protocol note derived from the source document)_         | this repo | 2026-06-01  |
-| [Modular System Architecture — the Brique pattern](../docs/MODULAR_SYSTEM.md)                                                                                            | this repo | 2025-12     |
-| [BRIQUE_SPEC — the brique manifest contract](../packages/cop-host/BRIQUE_SPEC.md)                                                                                        | this repo | 2025-12     |
-| [Multi-Instance Architecture](../packages/cop-host/docs/MULTI_INSTANCE.md)                                                                                               | this repo | 2025-12     |
-| [Corpus Status](corpus-status.md) _(living view — auto-refreshed by `cogentia.js corpus-status`)_                                                                        | this repo | refreshable |
-| [Concept Index](concepts.md) _(typed concept registry — mapped by `cogentia.js concepts`)_                                                                               | this repo | refreshable |
-| [Cyrnea State of Play](CYRNEA_STATE_OF_PLAY.md) _(living assessment for the bar/conviviality app — AI + human collaborator reference)_                                   | this repo | 2026-05-28  |
+| Title                                                                                                                                                                                                            | Location  | Date        |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------- |
+| [COP — Cognitive Orchestration Protocol (Architecture)](../packages/cop-core/Architecture.md) _(canonical protocol spec)_                                                                                        | this repo | 2025-12     |
+| [COP Invariants — non-negotiable rules of the protocol](../packages/cop-core/Invariants.md)                                                                                                                      | this repo | 2025-12     |
+| [COP Manifesto](../packages/cop-core/Manifesto.md)                                                                                                                                                               | this repo | 2025-12     |
+| [COP FAQ](../packages/cop-core/FAQ.md)                                                                                                                                                                           | this repo | 2025-12     |
+| [COP Comparison with other orchestration frameworks](../packages/cop-core/COMPARISON.md)                                                                                                                         | this repo | 2025-12     |
+| [COP Roadmap](../packages/cop-core/ROADMAP.md)                                                                                                                                                                   | this repo | 2025-12     |
+| [Reactive Cognitive COP Extension](reactive_cognitive_cop_extension.md) _(Toubkal/Inox/COP source document: Packet Attractors, pressure strategies, control/data plane)_                                         | this repo | 2026-06-01  |
+| [COP Reactive Cognitive Extension](../packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md) _(operational COP-core protocol note derived from the source document)_                                                 | this repo | 2026-06-01  |
+| [COP Implementation Profiles](../packages/cop-core/ImplementationProfiles.md) _(working-note — documentation convention for concrete COP implementations; companion to the kernel profile)_                      | this repo | 2026-06-01  |
+| [Modular System Architecture — the Brique pattern](../docs/MODULAR_SYSTEM.md)                                                                                                                                    | this repo | 2025-12     |
+| [BRIQUE_SPEC — the brique manifest contract](../packages/cop-host/BRIQUE_SPEC.md)                                                                                                                                | this repo | 2025-12     |
+| [Multi-Instance Architecture](../packages/cop-host/docs/MULTI_INSTANCE.md)                                                                                                                                       | this repo | 2025-12     |
+| [Corpus Status](corpus-status.md) _(living view — auto-refreshed by `cogentia.js corpus-status`)_                                                                                                                | this repo | refreshable |
+| [Concept Index](concepts.md) _(typed concept registry — mapped by `cogentia.js concepts`)_                                                                                                                       | this repo | refreshable |
+| [COP State of Play — Asynchronous Orchestration & Traceability](COP_STATE_OF_PLAY.md) _(living document — focus on async, event-driven, strongly traceable aspects of COP; sync apps temporarily deprioritized)_ | this repo | 2026-05     |
+| [Cyrnea State of Play](CYRNEA_STATE_OF_PLAY.md) _(living assessment for the bar/conviviality app — AI + human collaborator reference)_                                                                           | this repo | 2026-05-28  |
 
 <!-- END_AUTO: published -->
 
