@@ -8,7 +8,6 @@ author: "Jean Hugues Noël Robert"
 affiliation: "Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica"
 license: "CC BY-SA 4.0"
 language: "en"
-repository: "JeanHuguesRobert/inseme"
 intended_path: "research/reactive_cognitive_cop_extension.md"
 tags:
   - inseme
@@ -32,6 +31,7 @@ ai_assisted_by:
   - "Grok"
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/reactive_cognitive_cop_extension.md
 last_stamped_at: 2026-06-01
+corpus_role: "source"
 ---
 
 # Reactive Cognitive COP Extension

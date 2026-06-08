@@ -1,6 +1,14 @@
 ---
-canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/CYRNEA_STATE_OF_PLAY.md
-last_stamped_at: 2026-06-01
+title: "Cyrnea — State of Play (Initial Assessment)"
+author: "Grok 4.3 (xAI), for Jean Hugues Robert"
+affiliation: "Jean Hugues Robert / C.O.R.S.I.C.A. / Institut Mariani"
+date: "2026-05-28"
+license: "CC BY-SA 4.0"
+status: "working-note"
+corpus_role: "source"
+canonical_url: "https://github.com/JeanHuguesRobert/inseme/blob/main/research/CYRNEA_STATE_OF_PLAY.md"
+last_stamped_at: "2026-06-01"
+language: "en"
 ---
 
 # Cyrnea — State of Play (Initial Assessment)

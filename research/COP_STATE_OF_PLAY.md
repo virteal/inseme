@@ -1,6 +1,14 @@
 ---
-canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/COP_STATE_OF_PLAY.md
-last_stamped_at: 2026-06-01
+title: "COP State of Play — Asynchronous Orchestration & Traceability"
+author: "Jean Hugues Noël Robert, baron Mariani"
+affiliation: "Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica"
+date: "2026-05"
+license: "CC BY-SA 4.0"
+status: "working-note"
+corpus_role: "source"
+canonical_url: "https://github.com/JeanHuguesRobert/inseme/blob/main/research/COP_STATE_OF_PLAY.md"
+last_stamped_at: "2026-06-01"
+language: "en"
 ---
 
 # COP State of Play – Asynchronous Orchestration & Traceability
