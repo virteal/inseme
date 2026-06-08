@@ -129,75 +129,210 @@ graph LR
 ## Concept Graph
 
 <!-- BEGIN_AUTO: concept_graph -->
-
 ```mermaid
 graph LR
+  c_machine_a_explorer["Machine à explorer"]
+  c_machine_a_empecher["Machine à empêcher"]
+  c_effet_ubik["Effet Ubik"]
+  c_stabilisateurs_anti_ubik_proceduraux["Stabilisateurs (anti-Ubik / procéduraux)"]
   c_cogentia["Cogentia"]
   c_cogentigram["Cogentigram"]
   c_continuation_protocol["Continuation Protocol"]
+  c_non_deterministic_cognitive_step_agentic_step["Non-deterministic Cognitive Step (Agentic Step)"]
+  c_human_enacted_decision_artifact["Human Enacted Decision Artifact"]
+  c_causal_trace_replay_auditable_causal_reconstruction["Causal Trace Replay (Auditable Causal Reconstruction)"]
+  c_cognitive_packet["Cognitive Packet"]
   c_cogentia_commons["Cogentia Commons"]
-  c_sovereign_digital_twin["Sovereign Digital Twin"]
+  c_cogentia_pipeline["Cogentia Pipeline"]
+  c_derived_product["Derived Product"]
   c_agent_resumable_cli["Agent-Resumable CLI"]
-  c_kernel_extractor["Kernel Extractor"]
-  c_kys_know_your_system_psychocognitive_analysis["KYS (Know Your System) / Psychocognitive Analysis"]
-  c_cogentia_workflows["Cogentia Workflows"]
-  c_cogentia["Cogentia"]
-  c_cogentigram["Cogentigram"]
-  c_ipn_inference_packet_network["IPN (Inference Packet Network)"]
-  c_epn_energy_packet_network["EPN (Energy Packet Network)"]
-  c_pgn_power_generation_node["PGN (Power Generation Node)"]
-  c_packet_attractors["Packet Attractors"]
-  c_the_unconscious_grid["The Unconscious Grid"]
-  c_mariani_village["Mariani Village"]
-  c_value_shaped_solar["Value-Shaped Solar"]
-  c_containerized_compute_tera["Containerized Compute (Tera)"]
-  c_traceable_governance["Traceable Governance"]
-  c_cogentia["Cogentia"]
-  c_cogentigram["Cogentigram"]
-  c_dhitl_democratic_human_in_the_loop["DHITL (Democratic Human In The Loop)"]
-  c_cxu_compute_and_exergy_unit["CXU (Compute and Exergy Unit)"]
-  c_safe_compute_exergy["Safe Compute Exergy"]
-  c_constellia["Constellia"]
-  c_corsica_forest_synergies["Corsica Forest Synergies"]
   c_infrastructure_is_all_you_need["Infrastructure is All You Need"]
-  c_sun_to_sovereignty["Sun to Sovereignty"]
-  c_cogentia["Cogentia"]
-  c_cogentigram["Cogentigram"]
-  c_potentics["Potentics"]
-  c_cognitive_waves["Cognitive Waves"]
-  c_mimetic_desynchronization["Mimetic Desynchronization"]
-  c_invidia["Invidia"]
-  c_transition_markets["Transition Markets"]
-  c_the_uchronian_museum["The Uchronian Museum"]
   c_possibilism["Possibilism"]
   c_territoires_possibilistes["Territoires Possibilistes"]
-  c_the_second_method["The Second Method"]
-  c_projet_minesteggio["Projet Minesteggio"]
-  c_discret_holography["Discret Holography"]
-  c_cogentia["Cogentia"]
-  c_cogentigram["Cogentigram"]
-  c_cop_continuous_operation_protocol["COP (Continuous Operation Protocol)"]
-  c_briques["Briques"]
+  c_autonomie_de_capacite["Autonomie de capacité"]
   c_kudocracy["Kudocracy"]
-  c_agora["Agora"]
-  c_ophelia["Ophélia"]
+  c_kudos["Kudos"]
+  c_pathologie_du_secret["Pathologie du secret"]
+  c_the_second_method["The Second Method"]
   c_cop_invariants["COP Invariants"]
-  c_brique_spec_multi_instance["Brique Spec / Multi-Instance"]
-  c_modular_system["Modular System"]
-  c_traceable_agency["traceable agency"]
-  c_traceable_agency --> c_cogentia
+  c_concatenative_language["Concatenative language"]
+  c_stack_vm["Stack VM"]
+  c_controldata_plane_separation["Control/data plane separation"]
+  c_named_values["Named values"]
+  c_actors["Actors"]
+  c_fractanet["Fractanet"]
+  c_possibilism --> c_machine_a_explorer
+  c_democratic_ai_safety["democratic ai safety"]
+  c_democratic_ai_safety --> c_machine_a_explorer
+  c_cogentia_commons_declinaison_manuelle["cogentia commons declinaison manuelle"]
+  c_machine_a_explorer --> c_cogentia_commons_declinaison_manuelle
+  c_fractanet_cop_declinaison_automatisee["fractanet cop declinaison automatisee"]
+  c_machine_a_explorer --> c_fractanet_cop_declinaison_automatisee
+  c_stabilisateurs_anti_ubik["stabilisateurs anti ubik"]
+  c_machine_a_explorer --> c_stabilisateurs_anti_ubik
+  c_machine_a_explorer -.-> c_continuation_protocol
+  c_machine_a_explorer -.-> c_cognitive_packet
+  c_dhitl_couches_45["dhitl couches 45"]
+  c_machine_a_explorer -.-> c_dhitl_couches_45
+  c_effet_ubik_oppose["effet ubik oppose"]
+  c_machine_a_explorer -.-> c_effet_ubik_oppose
+  c_machine_a_empecher -.-> c_effet_ubik
+  c_machine_a_explorer_oppose_symetrique["machine a explorer oppose symetrique"]
+  c_machine_a_empecher -.-> c_machine_a_explorer_oppose_symetrique
+  c_fm_11_outer_optimizer_capture["fm 11 outer optimizer capture"]
+  c_machine_a_empecher -.-> c_fm_11_outer_optimizer_capture
+  c_concentration_de_compute_85_frontier["concentration de compute 85 frontier"]
+  c_machine_a_empecher -.-> c_concentration_de_compute_85_frontier
+  c_effet_ubik -.-> c_stabilisateurs_anti_ubik
+  c_effet_ubik -.-> c_pathologie_du_secret
+  c_invidia_densite_sociale_destructrice["invidia densite sociale destructrice"]
+  c_effet_ubik -.-> c_invidia_densite_sociale_destructrice
+  c_machine_a_explorer --> c_stabilisateurs_anti_ubik_proceduraux
+  c_stabilisateurs_anti_ubik_proceduraux -.-> c_effet_ubik
+  c_stabilisateurs_anti_ubik_proceduraux -.-> c_continuation_protocol
+  c_stabilisateurs_anti_ubik_proceduraux -.-> c_cognitive_packet
+  c_dhitl_compute_exergy_comme_unite_tracable["dhitl compute exergy comme unite tracable"]
+  c_stabilisateurs_anti_ubik_proceduraux -.-> c_dhitl_compute_exergy_comme_unite_tracable
   c_cogentia --> c_cogentigram
-  c_operational_memory["operational memory"]
-  c_cogentia --> c_operational_memory
   c_map_vs_territory["map vs territory"]
   c_cogentigram -.-> c_map_vs_territory
+  c_operational_memory["operational memory"]
   c_cogentigram -.-> c_operational_memory
+  c_traceable_agency["traceable agency"]
   c_cogentigram -.-> c_traceable_agency
   c_agent_resumable_cli --> c_continuation_protocol
+  c_non_deterministic_cognitive_step["non deterministic cognitive step"]
+  c_continuation_protocol -.-> c_non_deterministic_cognitive_step
+  c_continuation_protocol -.-> c_human_enacted_decision_artifact
+  c_causal_trace_replay["causal trace replay"]
+  c_continuation_protocol -.-> c_causal_trace_replay
+  c_machine_a_explorer --> c_non_deterministic_cognitive_step_agentic_step
+  c_non_deterministic_cognitive_step_agentic_step -.-> c_human_enacted_decision_artifact
+  c_non_deterministic_cognitive_step_agentic_step -.-> c_causal_trace_replay
+  c_non_deterministic_cognitive_step_agentic_step -.-> c_continuation_protocol
+  c_machine_a_explorer --> c_human_enacted_decision_artifact
+  c_cophitl_profile["cophitl profile"]
+  c_cophitl_profile --> c_human_enacted_decision_artifact
+  c_human_enacted_decision_artifact -.-> c_non_deterministic_cognitive_step
+  c_rule_0_seconde_methode["rule 0 seconde methode"]
+  c_human_enacted_decision_artifact -.-> c_rule_0_seconde_methode
+  c_dhitl_layer_5["dhitl layer 5"]
+  c_human_enacted_decision_artifact -.-> c_dhitl_layer_5
+  c_cop_invariants --> c_causal_trace_replay_auditable_causal_reconstruction
+  c_machine_a_explorer --> c_causal_trace_replay_auditable_causal_reconstruction
+  c_causal_trace_replay_auditable_causal_reconstruction -.-> c_continuation_protocol
+  c_causal_trace_replay_auditable_causal_reconstruction -.-> c_non_deterministic_cognitive_step
+  c_continuation_protocol --> c_cognitive_packet
+  c_agent_resumable_cli --> c_cognitive_packet
+  c_envelope_kind_agnostic_metadata_layer["envelope kind agnostic metadata layer"]
+  c_cognitive_packet --> c_envelope_kind_agnostic_metadata_layer
+  c_payload_kind_specific_content_layer["payload kind specific content layer"]
+  c_cognitive_packet --> c_payload_kind_specific_content_layer
+  c_continuation_payload["continuation payload"]
+  c_cognitive_packet --> c_continuation_payload
+  c_objection_payload["objection payload"]
+  c_cognitive_packet --> c_objection_payload
+  c_hypothesis_payload["hypothesis payload"]
+  c_cognitive_packet --> c_hypothesis_payload
+  c_decision_payload["decision payload"]
+  c_cognitive_packet --> c_decision_payload
+  c_failure_payload["failure payload"]
+  c_cognitive_packet --> c_failure_payload
+  c_routing_payload["routing payload"]
+  c_cognitive_packet --> c_routing_payload
+  c_cognitive_packet -.-> c_cogentia_commons
+  c_cogentia_commons --> c_cogentia_pipeline
+  c_cognitive_packet --> c_cogentia_pipeline
+  c_source_document["source document"]
+  c_cogentia_pipeline --> c_source_document
+  c_cogentia_pipeline --> c_derived_product
+  c_derived_product -.-> c_source_document
+  c_traceable_agency --> c_cogentia
+  c_cogentia --> c_operational_memory
   c_dhitl["dhitl"]
   c_dhitl --> c_infrastructure_is_all_you_need
+  c_possibilism --> c_autonomie_de_capacite
+  c_capabilities_approach_sen_nussbaum["capabilities approach sen nussbaum"]
+  c_capabilities_approach_sen_nussbaum --> c_autonomie_de_capacite
+  c_specificite_de_phase["specificite de phase"]
+  c_autonomie_de_capacite --> c_specificite_de_phase
+  c_flexibilite_dusage_redistributive_vs_predatory["flexibilite dusage redistributive vs predatory"]
+  c_autonomie_de_capacite --> c_flexibilite_dusage_redistributive_vs_predatory
+  c_autonomie_de_capacite -.-> c_territoires_possibilistes
+  c_auto_institution_democratique_castoriadis["auto institution democratique castoriadis"]
+  c_autonomie_de_capacite -.-> c_auto_institution_democratique_castoriadis
+  c_possibilism --> c_kudocracy
+  c_auto_institution_democratique_castoriadis --> c_kudocracy
+  c_kudocracy -.-> c_autonomie_de_capacite
+  c_kudocracy -.-> c_kudos
+  c_kudocracy -.-> c_pathologie_du_secret
+  c_kudocracy -.-> c_cognitive_packet
+  c_possibilism --> c_kudos
+  c_communs_ostrom["communs ostrom"]
+  c_communs_ostrom --> c_kudos
+  c_kudos -.-> c_kudocracy
+  c_kudos -.-> c_autonomie_de_capacite
+  c_mauss_gift_counter_gift["mauss gift counter gift"]
+  c_kudos -.-> c_mauss_gift_counter_gift
+  c_democratic_ai_safety_thesis_kernel["democratic ai safety thesis kernel"]
+  c_democratic_ai_safety_thesis_kernel --> c_pathologie_du_secret
+  c_the_second_method --> c_pathologie_du_secret
+  c_dhitl_democratic_humans_in_the_loop["dhitl democratic humans in the loop"]
+  c_pathologie_du_secret -.-> c_dhitl_democratic_humans_in_the_loop
+  c_cogentia_commons_auditable_knowledge["cogentia commons auditable knowledge"]
+  c_pathologie_du_secret -.-> c_cogentia_commons_auditable_knowledge
+  c_tracabilite_civique_anti_mafieuse["tracabilite civique anti mafieuse"]
+  c_pathologie_du_secret -.-> c_tracabilite_civique_anti_mafieuse
+  c_machine_a_explorer --> c_cop_invariants
+  c_stabilisateurs_anti_ubik_proceduraux --> c_cop_invariants
+  c_deterministic_replay_protocol_layer_only["deterministic replay protocol layer only"]
+  c_causal_trace_replay_auditable_causal_reconstruction -.-> c_deterministic_replay_protocol_layer_only
+  c_concatenative_language -.-> c_stack_vm
+  c_concatenative_language -.-> c_named_values
+  c_stack_vm -.-> c_concatenative_language
+  c_stack_vm -.-> c_controldata_plane_separation
+  c_stack_vm -.-> c_named_values
+  c_energy_packet_network_fractavolta["energy packet network fractavolta"]
+  c_controldata_plane_separation -.-> c_energy_packet_network_fractavolta
+  c_cognitive_packet_envelopepayload_cogentia["cognitive packet envelopepayload cogentia"]
+  c_controldata_plane_separation -.-> c_cognitive_packet_envelopepayload_cogentia
+  c_fractanet -.-> c_energy_packet_network_fractavolta
+  c_auxilia_inseme_brique_human_scale_fractanet_exchange["auxilia inseme brique human scale fractanet exchange"]
+  c_fractanet -.-> c_auxilia_inseme_brique_human_scale_fractanet_exchange
+  c_fractanet -.-> c_actors
+  click c_machine_a_explorer "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#machine-a-explorer" "Open Machine à explorer"
+  click c_machine_a_empecher "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#machine-a-empecher" "Open Machine à empêcher"
+  click c_effet_ubik "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#effet-ubik" "Open Effet Ubik"
+  click c_stabilisateurs_anti_ubik_proceduraux "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#stabilisateurs-anti-ubik-proceduraux" "Open Stabilisateurs (anti-Ubik / procéduraux)"
+  click c_cogentia "https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/concepts.md#cogentia" "Open Cogentia"
+  click c_cogentigram "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#cogentigram" "Open Cogentigram"
+  click c_continuation_protocol "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#continuation-protocol" "Open Continuation Protocol"
+  click c_non_deterministic_cognitive_step_agentic_step "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#non-deterministic-cognitive-step-agentic-step" "Open Non-deterministic Cognitive Step (Agentic Step)"
+  click c_human_enacted_decision_artifact "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#human-enacted-decision-artifact" "Open Human Enacted Decision Artifact"
+  click c_causal_trace_replay_auditable_causal_reconstruction "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#causal-trace-replay-auditable-causal-reconstruction" "Open Causal Trace Replay (Auditable Causal Reconstruction)"
+  click c_cognitive_packet "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#cognitive-packet" "Open Cognitive Packet"
+  click c_cogentia_commons "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#cogentia-commons" "Open Cogentia Commons"
+  click c_cogentia_pipeline "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#cogentia-pipeline" "Open Cogentia Pipeline"
+  click c_derived_product "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#derived-product" "Open Derived Product"
+  click c_agent_resumable_cli "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/concepts.md#agent-resumable-cli" "Open Agent-Resumable CLI"
+  click c_infrastructure_is_all_you_need "https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/concepts.md#infrastructure-is-all-you-need" "Open Infrastructure is All You Need"
+  click c_possibilism "https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/concepts.md#possibilism" "Open Possibilism"
+  click c_territoires_possibilistes "https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/concepts.md#territoires-possibilistes" "Open Territoires Possibilistes"
+  click c_autonomie_de_capacite "https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/concepts.md#autonomie-de-capacite" "Open Autonomie de capacité"
+  click c_kudocracy "https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/concepts.md#kudocracy" "Open Kudocracy"
+  click c_kudos "https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/concepts.md#kudos" "Open Kudos"
+  click c_pathologie_du_secret "https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/concepts.md#pathologie-du-secret" "Open Pathologie du secret"
+  click c_the_second_method "https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/concepts.md#the-second-method" "Open The Second Method"
+  click c_cop_invariants "https://github.com/JeanHuguesRobert/inseme/blob/main/research/concepts.md#cop-invariants" "Open COP Invariants"
+  click c_concatenative_language "https://github.com/JeanHuguesRobert/Inox/blob/main/research/concepts.md#concatenative-language" "Open Concatenative language"
+  click c_stack_vm "https://github.com/JeanHuguesRobert/Inox/blob/main/research/concepts.md#stack-vm" "Open Stack VM"
+  click c_controldata_plane_separation "https://github.com/JeanHuguesRobert/Inox/blob/main/research/concepts.md#controldata-plane-separation" "Open Control/data plane separation"
+  click c_named_values "https://github.com/JeanHuguesRobert/Inox/blob/main/research/concepts.md#named-values" "Open Named values"
+  click c_actors "https://github.com/JeanHuguesRobert/Inox/blob/main/research/concepts.md#actors" "Open Actors"
+  click c_fractanet "https://github.com/JeanHuguesRobert/Inox/blob/main/research/concepts.md#fractanet" "Open Fractanet"
 ```
 
+*Orphan concepts (no parents / children / related): `Civilizational Stakes` (cogentia), `Sovereign Digital Twin` (cogentia), `Kernel Extractor` (cogentia), `KYS (Know Your System) / Psychocognitive Analysis` (cogentia), `Cogentia Workflows` (cogentia), `IPN (Inference Packet Network)` (FractaVolta), `EPN (Energy Packet Network)` (FractaVolta), `PGN (Power Generation Node)` (FractaVolta), `Packet Attractors` (FractaVolta), `The Unconscious Grid` (FractaVolta), `Mariani Village` (FractaVolta), `Value-Shaped Solar` (FractaVolta), `Containerized Compute (Tera)` (FractaVolta), `Traceable Governance` (FractaVolta), `DHITL (Democratic Human In The Loop)` (marenostrum), `CXU (Compute and Exergy Unit)` (marenostrum), `Safe Compute Exergy` (marenostrum), `Constellia` (marenostrum), `Corsica Forest Synergies` (marenostrum), `Sun to Sovereignty` (marenostrum), `Potentics` (barons-Mariani), `Cognitive Waves` (barons-Mariani), `Mimetic Desynchronization` (barons-Mariani), `Invidia` (barons-Mariani), `Transition Markets` (barons-Mariani), `The Uchronian Museum` (barons-Mariani), `Projet Minesteggio` (barons-Mariani), `Discret Holography` (barons-Mariani), `COP (Continuous Operation Protocol)` (inseme), `Briques` (inseme), `Agora` (inseme), `Ophélia` (inseme), `COP (Cognitive Orchestration Protocol)` (inseme), `Brique Spec / Multi-Instance` (inseme), `Modular System` (inseme), `Reactive sets` (Inox), `Dialects` (Inox). Re-include with `--include-orphans`.*
 <!-- END_AUTO: concept_graph -->
 
 ---
@@ -264,11 +399,9 @@ _Generated with `cogentia.js corpus-status` —
 _Challenge via issues. Fork to explore alternatives._
 
 <!-- BEGIN_AUTO: backlinks -->
-
 ### Backlinks
 
-_These documents link to this file:_
-
+*These documents link to this file:*
 - [🏗️ Inseme Modular System Architecture](../docs/MODULAR_SYSTEM.md)
 - [Cognitive Orchestration Protocol (COP)](../packages/cop-core/Architecture.md)
 - [COMPARISON.md](../packages/cop-core/COMPARISON.md)

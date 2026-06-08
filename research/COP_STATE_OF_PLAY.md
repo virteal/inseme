@@ -216,11 +216,12 @@ Ready when you are. What is the first concrete task inside B? (e.g., harden the 
 descriptor, improve resumption reliability, add tests, design a resumption API, etc.)
 
 <!-- BEGIN_AUTO: backlinks -->
-
 ### Backlinks
 
-_These documents link to this file:_
-
+*These documents link to this file:*
 - [Concept Index — inseme](concepts.md)
+- [COOP — Tutorial and Near-Specification](coop_tutorial.md)
+- [Corpus Status — inseme](corpus-status.md)
+- [Research Index — Inseme](index.md)
 
 <!-- END_AUTO: backlinks -->

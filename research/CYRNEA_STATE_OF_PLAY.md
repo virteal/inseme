@@ -530,11 +530,9 @@ changes._
 ### #PERTITELLU | CORTI CAPITALE | Possibilism in Practice
 
 <!-- BEGIN_AUTO: backlinks -->
-
 ### Backlinks
 
-_These documents link to this file:_
-
+*These documents link to this file:*
 - [Corpus Status — inseme](corpus-status.md)
 - [Research Index — Inseme](index.md)
 

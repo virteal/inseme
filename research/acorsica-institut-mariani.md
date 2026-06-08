@@ -66,3 +66,14 @@ Ils ne valent ni fusion institutionnelle, ni portage juridique, ni financement, 
 ou électoral.
 
 > L’interconnexion documentaire ne vaut pas confusion institutionnelle.
+
+
+<!-- BEGIN_AUTO: backlinks -->
+### Backlinks
+
+*These documents link to this file:*
+- [Lien avec C.O.R.S.I.C.A. et l’Institut Mariani](../acorsica-institut-mariani.md)
+- [Corpus Status — inseme](corpus-status.md)
+- [Research Index — Inseme](index.md)
+
+<!-- END_AUTO: backlinks -->

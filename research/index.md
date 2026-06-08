@@ -123,11 +123,9 @@ _Priority established by first public commit. License: open-source per individua
 _Fork to explore alternatives. Challenge via issues._
 
 <!-- BEGIN_AUTO: backlinks -->
-
 ### Backlinks
 
-_These documents link to this file:_
-
+*These documents link to this file:*
 - [🏗️ Inseme Modular System Architecture](../docs/MODULAR_SYSTEM.md)
 - [Cognitive Orchestration Protocol (COP)](../packages/cop-core/Architecture.md)
 - [COMPARISON.md](../packages/cop-core/COMPARISON.md)

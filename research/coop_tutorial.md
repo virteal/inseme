@@ -490,3 +490,13 @@ sources._
 
 _Generated as part of the 2026-06 cognitive packet router + hybrid work in the inseme COP kernel.
 Updated for Ophelia COP adoption._
+
+
+<!-- BEGIN_AUTO: backlinks -->
+### Backlinks
+
+*These documents link to this file:*
+- [Corpus Status — inseme](corpus-status.md)
+- [Research Index — Inseme](index.md)
+
+<!-- END_AUTO: backlinks -->
