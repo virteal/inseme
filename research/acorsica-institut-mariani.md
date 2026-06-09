@@ -67,11 +67,21 @@ ou électoral.
 
 > L’interconnexion documentaire ne vaut pas confusion institutionnelle.
 
+## Référence transversale
+
+État consolidé au 2026-06-09 : cette note est la déclinaison locale, pour Inseme, de la
+clarification globale
+[C.O.R.S.I.C.A., Institut Mariani et corpus personnel](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/acorsica-et-corpus.md).
+En cas de divergence apparente, lire d'abord la note globale, puis la présente note pour les
+implications propres à l'infrastructure civique multi-instance et à ses usages politiques
+juridiquement séparés.
 
 <!-- BEGIN_AUTO: backlinks -->
+
 ### Backlinks
 
-*These documents link to this file:*
+_These documents link to this file:_
+
 - [Lien avec C.O.R.S.I.C.A. et l’Institut Mariani](../acorsica-institut-mariani.md)
 - [Corpus Status — inseme](corpus-status.md)
 - [Research Index — Inseme](index.md)
