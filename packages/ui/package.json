@@ -6,7 +6,7 @@
   "module": "./src/index.js",
   "exports": {
     ".": "./src/index.js",
-    "./style.css": "./src/index.css",
+    "./style.css": "./style.css",
     "./components/*": "./src/components/*.js"
   },
   "peerDependencies": {

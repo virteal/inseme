@@ -197,6 +197,22 @@ export default {
       description:
         "La machine doit s'observer elle-même : comment ses propres Stabilisateurs et ses propres modes d'exploration évoluent-ils ? Quelles nouvelles formes d'empêchement apparaissent à cause de ses propres dispositifs ?",
       async run(ctx) {
+        // Concrete support in COP kernel (see artifacts.js + continuation.js + jobScheduler + cogitorCooperation):
+        // - lookupReusableArtifact(cacheKey, {minStability: 'stable'}) for capitalizing intermediary results across branches without recompute.
+        // - applyRetentionPolicy / runRetentionSweep for GC + legal policies (right to forget, fixed years, until_superseded, legal_hold, forever).
+        // - Artifacts carry cache_key + retention_policy + legal_hold + stability_level + derives_from.
+        // - Obsolescence (markContinuationObsolete / jobScheduler.markObsolete) for dead-end pruning by AI/human judgment.
+        // - Fork/join via cogitorCooperation + stack framing for dynamic tree walk (deep or broad).
+        ctx.emit({
+          type: "capitalisation.mecanismes.actives",
+          data: {
+            cache: "lookupReusableArtifact by cacheKey (cross-branch reuse)",
+            retention:
+              "retentionPolicy + expiresAt + legalHold + sweep (forget vs keep-forever vs superseded)",
+            judgment: "agent-decided obsolescence on continuations/jobs for pruning dead ends",
+            tree: "forkCogitor / createForkedCogitorContinuation + stack framing for branching paths",
+          },
+        });
         ctx.emit({
           type: "machine.meta-exploration",
           data: {
@@ -204,6 +220,14 @@ export default {
               "Une Machine à explorer qui ne s'explore pas elle-même finit par se rigidifier ou par devenir un vecteur d'empêchement.",
           },
         });
+      },
+    },
+    {
+      name: "arbitrage-et-jugement-par-agents",
+      description:
+        "Arbitration/judgment (AI or human) to choose paths, prune dead-ends, decide merges, apply retention or obsolescence. Not pure algo — explicit agent decisions published as events/artifacts.",
+      async run(ctx) {
+        // In practice: agents subscribe to exploration events, emit decisions that call markObsolete, applyRetention, or create new high-priority continuations.
       },
     },
 

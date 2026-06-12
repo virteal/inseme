@@ -66,6 +66,14 @@ const config = {
   },
 };
 
+if (!config.input.map || config.input.map.length === 0) {
+  console.warn(
+    "\n⚠️  [Magistral] No nodes in map. Routing will fail until you add some via /v1/magistral/map/add or edit registry/maps/default.json"
+  );
+  console.warn("   Tip: Use the UI Explore tab to probe a provider and add models, then Save Map.");
+  console.warn("   Or set a custom map via --map or MAGISTRAL_MAP env.\n");
+}
+
 // Spawn Pilot
 const pilotExt = path.extname(pilotPath);
 const isJs = pilotExt === ".js" || pilotExt === ".mjs" || pilotExt === ".ts";

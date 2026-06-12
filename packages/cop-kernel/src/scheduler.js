@@ -71,7 +71,34 @@ export class COPScheduler {
     for (const entry of this.pending.values()) {
       if (entry.timeoutId) clearTimeout(entry.timeoutId);
     }
+    this.pending.clear();
     console.log("[COPScheduler] Stopped");
+  }
+
+  /**
+   * Full reset for tests / bac-à-sable scenarios.
+   * Stops timers + subscriptions, clears all pending work and per-topic buses.
+   * Prevents accumulation of setInterval / setTimeout / listener leaks when
+   * many scenarios or schedulers are created in the same process (the main
+   * source of OOM in heavy router + federation runs).
+   */
+  resetForTest() {
+    this.stop();
+
+    // Drop pending continuations (their timeoutIds already cleared above)
+    this.pending.clear();
+
+    // Clean per-topic SubBuses (they may hold registrations on the underlying bus)
+    for (const sub of this.topicBuses.values()) {
+      if (sub && typeof sub.clear === "function") {
+        try {
+          sub.clear();
+        } catch (e) {}
+      }
+    }
+    this.topicBuses.clear();
+
+    console.log("[COPScheduler] Reset for test (timers, pending, topic buses cleared)");
   }
 
   /**

@@ -6,6 +6,10 @@
  * Design goals (aligned with the corpus influences):
  * - Actor-oriented: events as messages between autonomous agents.
  * - ARPANET / mesh / Fractanet: decentralized, routable, partition-tolerant packet-like events.
+ *   See also cogentia/research/cognitive_packet_switching.md and cogentia_continuation_packet_routing.md:
+ *   the Bus (with SubBus per-topic scoping + federation + propagateInterest) + Scheduler act as the
+ *   "cognitive packet router" / switching fabric for continuation packets (envelope routing without
+ *   full payload inspection by the router; interest-based forwarding across Fractanet mesh nodes).
  * - RAIX: support for redundant paths and federated delivery.
  * - Genericity: usable at kernel, brique, platform, and future Inox edge levels without reinvention.
  *
@@ -122,7 +126,8 @@ export class COPBus {
    * Connect this bus to another bus (or a federation connector) for cross-node delivery.
    * In a real Fractanet this would be a network transport (Inox actor, WebSocket, etc.).
    *
-   * Safe against cycles (idempotent + no infinite recursion).
+   * Safe against cycles (idempotent peer registration + no infinite recursion thanks to
+   * viaFederation guard in _forwardToFederation).
    */
   federate(peerBus) {
     if (!peerBus || typeof peerBus.receiveFromFederation !== "function") {
@@ -176,6 +181,13 @@ export class COPBus {
   }
 
   async _forwardToFederation(event) {
+    if (event && event.viaFederation) {
+      // Do not re-forward events that arrived via federation. This prevents infinite
+      // ping-pong loops on bidirectional federations (the common pair pattern in
+      // bac-à-sable demos) while still allowing the receiving bus to deliver locally.
+      // For richer multi-hop mesh propagation, a hopCount or dedup set could be added.
+      return;
+    }
     if (this.federatedPeers.size === 0) return;
 
     const shouldForward = this._shouldForward(event);
@@ -229,6 +241,7 @@ class SubBus {
     this.listeners = new Map(); // clean eventType -> Set<handler>
     this.allListeners = new Set();
     this.interests = new Set(); // local interests for this sub-bus scope
+    this._parentUnsubs = new Map(); // eventType -> unsub from parent (prevents listener leak on root)
   }
 
   _namespacedType(type) {
@@ -245,24 +258,29 @@ class SubBus {
     }
     this.listeners.get(eventType).add(handler);
 
-    // Register on parent with namespaced type for cross-bus delivery
+    // Register on parent *once* per eventType (not per handler) to avoid leaking
+    // multiple wrappers on the root bus and duplicate deliveries.
     const nsType = this._namespacedType(eventType);
-    this.parent.subscribe(nsType, (event) => {
-      const cleanEvent = {
-        ...event,
-        type: eventType, // present the clean type to the subscriber
-        subBus: this.namespace,
-      };
-      // Deliver to local scoped handlers
-      const localHandlers = this.listeners.get(eventType) || new Set();
-      for (const h of localHandlers) {
-        try {
-          h(cleanEvent);
-        } catch (e) {
-          console.error(e);
+    if (!this._parentUnsubs.has(eventType)) {
+      // Register an async listener so that root COPBus's `await handler(...)`
+      // in publish will wait for our deliveries (including user handler).
+      const unsubFromParent = this.parent.subscribe(nsType, async (event) => {
+        const cleanEvent = {
+          ...event,
+          type: eventType, // present the clean type to the subscriber
+          subBus: this.namespace,
+        };
+        const localHandlers = this.listeners.get(eventType) || new Set();
+        for (const h of localHandlers) {
+          try {
+            await Promise.resolve(h(cleanEvent));
+          } catch (e) {
+            console.error(e);
+          }
         }
-      }
-    });
+      });
+      this._parentUnsubs.set(eventType, unsubFromParent);
+    }
 
     return () => this.unsubscribe(eventType, handler);
   }
@@ -270,24 +288,53 @@ class SubBus {
   subscribeAll(handler) {
     this.allListeners.add(handler);
 
-    this.parent.subscribeAll((event) => {
+    // Register a catch-all wrapper on parent. To make unsubscribe effective
+    // (stop delivery), we guard the call on the live set. The wrapper fn itself
+    // remains on the root (small leak of closure per subscribeAll), but this
+    // prevents the main debt of continued delivery after unsub and duplicate
+    // work. Full removal of wrappers would require storing the unsubs returned
+    // by parent.subscribeAll and calling on delete.
+    const wrapper = async (event) => {
       if (event.type && event.type.startsWith(this.namespace + "/")) {
+        if (!this.allListeners.has(handler)) return; // unsub was called
         const cleanType = event.type.replace(this.namespace + "/", "");
         const cleanEvent = {
           ...event,
           type: cleanType,
           subBus: this.namespace,
         };
-        handler(cleanEvent);
+        // Support async handlers; root will await this wrapper.
+        try {
+          await Promise.resolve(handler(cleanEvent));
+        } catch (e) {
+          console.error(e);
+        }
       }
-    });
+    };
+    this.parent.subscribeAll(wrapper);
 
     return () => this.allListeners.delete(handler);
   }
 
   unsubscribe(eventType, handler) {
     const set = this.listeners.get(eventType);
-    if (set) set.delete(handler);
+    if (set) {
+      set.delete(handler);
+      if (set.size === 0) {
+        // Last handler for this type removed: clean up the parent listener to
+        // avoid long-term accumulation of wrappers on the root bus (technical debt).
+        const unsub = this._parentUnsubs.get(eventType);
+        if (unsub) {
+          try {
+            unsub();
+          } catch (e) {
+            /* ignore */
+          }
+          this._parentUnsubs.delete(eventType);
+        }
+        this.listeners.delete(eventType);
+      }
+    }
   }
 
   async publish(event) {
@@ -327,6 +374,14 @@ class SubBus {
   }
 
   clear() {
+    // Best-effort cleanup of parent registrations to reduce leak surface when
+    // a SubBus is long-lived or reused across tests.
+    for (const unsub of this._parentUnsubs.values()) {
+      try {
+        unsub();
+      } catch (e) {}
+    }
+    this._parentUnsubs.clear();
     this.listeners.clear();
     this.allListeners.clear();
   }

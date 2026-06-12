@@ -147,7 +147,7 @@ Once the pilot prints `MAGISTRAL_READY: http://127.0.0.1:8082`, you can open the
 | `npm run dev:monitor` | Start the CLI monitor only          |
 | `npm run dev:pilot` | Raw launcher (if you need flags)     |
 
-> **Note**: As of late May 2026, Magistral is in `experimental` state (like most of the Inseme platform after the large 2025 refactoring). No brique is currently marked "active".
+> **Note**: As of June 2026, Magistral observability/control (metrics, disable/enable, Explore probe+add, polished Logs browser with filters/detail/freeze) is substantially complete and exposed uniformly via the modular UI for both the standalone pilot and embedded Sovereign usage (e.g. inside Ophelia via the embedded adapter when no local sovereign is registered for the room). Still `experimental` overall.
 
 ### 4. Admin Web UI & CLI Monitoring
 

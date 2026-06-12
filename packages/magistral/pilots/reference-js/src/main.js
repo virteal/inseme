@@ -102,6 +102,12 @@ async function boot() {
   const mapNodes = config.input?.map || [];
   const apiKeys = config.secrets?.API_KEYS || {};
 
+  if (!mapNodes || mapNodes.length === 0) {
+    console.warn(
+      "[Magistral] WARNING: map is empty. Use the Explore tab (or POST /v1/magistral/map/add) to populate before sending chat requests."
+    );
+  }
+
   // One shared router instance for the lifetime of this pilot
   const { route, registry, trafficLog, addNode, getMap } = createRouter({
     map: mapNodes,
@@ -351,17 +357,9 @@ async function boot() {
       return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
     }
 
-    // GET /__admin — serve the admin UI
+    // GET /__admin — serve the modern modular UI (same as root, for legacy links)
     if (url.pathname === "/__admin" && req.method === "GET") {
-      try {
-        const adminUrl = new URL("./admin.html", import.meta.url);
-        const fileContent = await Deno.readTextFile(adminUrl);
-        corsHeaders.set("Content-Type", "text/html");
-        return new Response(fileContent, { status: 200, headers: corsHeaders });
-      } catch (err) {
-        console.error("Failed to serve admin.html:", err);
-        return new Response("Admin UI HTML not found.", { status: 404 });
-      }
+      return serveUiFile("index.html");
     }
 
     // POST /v1/chat/completions

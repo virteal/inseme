@@ -1,0 +1,3 @@
+/* Entry point for @import "@inseme/ui/style.css" */
+/* Re-exports the actual styles from src so that package exports + legacy resolvers both work. */
+@import "./src/index.css";

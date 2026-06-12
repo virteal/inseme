@@ -59,9 +59,8 @@ export default {
         const { continuation } = ctx.genericity;
         const topicBus = ctx.busForCurrentTopic();
 
-        const scheduler = new (
-          await import("../../../packages/cop-kernel/src/scheduler.js")
-        ).COPScheduler(topicBus);
+        // Using bac-à-sable isolated factory for auto post-run reset (debt/ OOM hygiene).
+        const scheduler = ctx.createIsolatedScheduler(topicBus);
         scheduler.start();
 
         scheduler.register(continuation);
@@ -95,6 +94,13 @@ export default {
           );
         } else {
           console.log(`[GENERICITY-TEST] Still ${stillPending} continuation(s) pending.`);
+        }
+
+        // Clean up the per-test scheduler to avoid leaving timers/pending (debt mitigation).
+        if (scheduler && typeof scheduler.resetForTest === "function") {
+          scheduler.resetForTest();
+        } else if (scheduler && typeof scheduler.stop === "function") {
+          scheduler.stop();
         }
       },
     },

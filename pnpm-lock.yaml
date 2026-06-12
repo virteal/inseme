@@ -135,6 +135,9 @@ importers:
       openai:
         specifier: ^4.52.5
         version: 4.104.0(encoding@0.1.13)(ws@8.19.0)(zod@3.25.76)
+      qrcode:
+        specifier: ^1.5.3
+        version: 1.5.4
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -289,6 +292,9 @@ importers:
       openai:
         specifier: ^4.52.5
         version: 4.104.0(encoding@0.1.13)(ws@8.19.0)(zod@3.25.76)
+      qrcode:
+        specifier: ^1.5.3
+        version: 1.5.4
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -589,6 +595,28 @@ importers:
         specifier: ^6.20.0
         version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
+  packages/brique-auxilia:
+    dependencies:
+      '@supabase/supabase-js':
+        specifier: ^2.0.0
+        version: 2.90.1
+      qrcode:
+        specifier: ^1.5.3
+        version: 1.5.4
+      react:
+        specifier: ^18.2.0 || ^19.0.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0 || ^19.0.0
+        version: 18.3.1(react@18.3.1)
+      react-router-dom:
+        specifier: ^6.0.0 || ^7.0.0
+        version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+    devDependencies:
+      '@inseme/cop-host':
+        specifier: workspace:*
+        version: link:../cop-host
+
   packages/brique-blog:
     dependencies:
       '@inseme/cop-host':
@@ -753,6 +781,9 @@ importers:
       '@inseme/cop-host':
         specifier: workspace:*
         version: link:../cop-host
+      '@inseme/cop-kernel':
+        specifier: workspace:*
+        version: link:../cop-kernel
       '@inseme/cop-prolog':
         specifier: workspace:*
         version: link:../cop-prolog
@@ -829,7 +860,11 @@ importers:
         specifier: ^2.12.7
         version: 2.15.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
-  packages/cop-cli: {}
+  packages/cop-cli:
+    dependencies:
+      '@inseme/cop-kernel':
+        specifier: workspace:*
+        version: link:../cop-kernel
 
   packages/cop-core:
     dependencies:
@@ -5460,9 +5495,11 @@ packages:
 
   geoportal-access-lib@3.4.1:
     resolution: {integrity: sha512-ClyKb/NIJtCTz41ro+03+mlZ2HfyPVjRCc+6UdyZ8w0+2fLMi9yUrhK9UfiL0gZxwZGq0swBvl+1y9RJbNUfYA==}
+    bundledDependencies: []
 
   geoportal-extensions-leaflet@2.4.3:
     resolution: {integrity: sha512-gm92l4TC5kohCvuGcI+DRalwNoOTurQ3Yd70Z6HEcmjhOSTT/lTH24Kf+nWv967Z/nqHJtoJOgKpZSGcuxQLWQ==}
+    bundledDependencies: []
 
   get-amd-module-type@6.0.1:
     resolution: {integrity: sha512-MtjsmYiCXcYDDrGqtNbeIYdAl85n+5mSv2r3FbzER/YV3ZILw4HNNIw34HuV5pyl0jzs6GFYU1VHVEefhgcNHQ==}

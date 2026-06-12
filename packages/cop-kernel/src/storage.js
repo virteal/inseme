@@ -40,6 +40,8 @@ export const ERROR_CODES = {
  * @property {function(object): Promise<object>} events.insert - Insère un événement.
  * @property {object} artifacts - Interface pour les métadonnées des artefacts.
  * @property {function(object): Promise<object>} artifacts.insert - Insère une métadonnée d'artefact.
+ * @property {function(object): Promise<object[]>} [artifacts.list] - (Recommended for exploration/caching/GC) Query artifacts (by cacheKey, stability, taskId, retention, etc.).
+ * @property {function(string, string): Promise<object>} [artifacts.applyRetention] - Apply GC/retention decision to one artifact (mark superseded, legal hold, etc.).
  * @property {object} agentIdentities - Interface pour les identités des agents (CRUD).
  * @property {function(object): Promise<object>} agentIdentities.upsert - Insère ou met à jour une identité.
  * @property {function(string): Promise<object>} agentIdentities.getById - Récupère une identité par ID.
@@ -103,13 +105,17 @@ async function loadStorageCreator(storageType, options) {
 
       case "sqlite":
         if (isDeno) {
-          module = await import(/* @vite-ignore */ "./storage-implementations/denoSqliteStorage.js");
+          module = await import(
+            /* @vite-ignore */ "./storage-implementations/denoSqliteStorage.js"
+          );
           creatorFunctionName = "createDenoSqliteStorage";
         } else if (isNode) {
           module = await import(/* @vite-ignore */ "./storage-implementations/sqliteStorage.js");
           creatorFunctionName = "createNodeSqliteStorage";
         } else if (isBrowser) {
-          module = await import(/* @vite-ignore */ "./storage-implementations/browserSqliteStorage.js");
+          module = await import(
+            /* @vite-ignore */ "./storage-implementations/browserSqliteStorage.js"
+          );
           creatorFunctionName = "createBrowserSqliteStorage";
         }
         break;
@@ -126,7 +132,9 @@ async function loadStorageCreator(storageType, options) {
 
       case "file":
         if (isDeno) {
-          module = await import(/* @vite-ignore */ "./storage-implementations/denoFileBasedStorage.js");
+          module = await import(
+            /* @vite-ignore */ "./storage-implementations/denoFileBasedStorage.js"
+          );
           creatorFunctionName = "createDenoFileBasedStorage";
         } else if (isNode) {
           module = await import(/* @vite-ignore */ "./storage-implementations/fileBasedStorage.js");
@@ -230,8 +238,9 @@ export async function initStorage(options) {
         `Supabase storage failed to initialize due to missing credentials. Falling back to 'memory' storage.`
       );
       // Assurez-vous que createInMemoryStorage est importé et disponible
-      const { createInMemoryStorage } =
-        await import(/* @vite-ignore */ "./storage-implementations/inMemoryStorage.js");
+      const { createInMemoryStorage } = await import(
+        /* @vite-ignore */ "./storage-implementations/inMemoryStorage.js"
+      );
       const inMemoryFallbackStorage = createInMemoryStorage(currentOptions);
       inMemoryFallbackStorage.options = inMemoryFallbackStorage.options || {};
       inMemoryFallbackStorage.options.type = "memory";

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { getSupabase } from "../../lib/supabase.js";
-import { getThreadPath } from "../../lib/threads.js";
 import {
   isDeleted,
   getMetadata,
@@ -20,6 +19,7 @@ import {
   isSubPost,
   getThreadDepth,
   getThreadStats,
+  getThreadPath,
 } from "@inseme/cop-host";
 import {
   isPinnedPost,

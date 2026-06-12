@@ -13,7 +13,6 @@
 @import url("./buttons.css");
 @import url("./forms.css");
 @import url("./layout.css");
-@import url("./wiki.css");
 @import url("./landing.css");
 @import url("./footer.css");
 @import url("./ui-components.css");
@@ -22,6 +21,8 @@
 @import url("./provider-status.css");
 @import url("./survey-extras.css");
 @import url("./kanban.css");
+
+/* wiki.css was removed during refactoring; wiki-specific styles now live in brique-wiki or use prose from typography plugin */
 
 @import "tailwindcss";
 @import "@inseme/ui/style.css";

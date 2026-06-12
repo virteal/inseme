@@ -33,6 +33,51 @@ export function createInMemoryStorage(ERROR_CODES) {
         inMemoryData.artifacts.push(artifactRecord);
         return { ok: true, data: artifactRecord };
       },
+      // Basic query support for cache / exploration reuse / retention GC
+      async list(criteria = {}) {
+        let results = inMemoryData.artifacts;
+        if (criteria.cacheKey) {
+          results = results.filter(
+            (a) => a.cache_key === criteria.cacheKey || a.metadata?.cacheKey === criteria.cacheKey
+          );
+        }
+        if (criteria.stabilityLevel) {
+          results = results.filter(
+            (a) =>
+              a.stability_level === criteria.stabilityLevel ||
+              a.metadata?.stability === criteria.stabilityLevel
+          );
+        }
+        if (criteria.minStability) {
+          // simplistic ordering: stable > provisional > transient
+          const order = { stable: 3, provisional: 2, transient: 1 };
+          results = results.filter(
+            (a) =>
+              (order[a.stability_level || a.metadata?.stability] || 0) >=
+              (order[criteria.minStability] || 0)
+          );
+        }
+        if (criteria.taskId) {
+          results = results.filter((a) => a.task_id === criteria.taskId);
+        }
+        if (criteria.legalHold !== undefined) {
+          results = results.filter((a) => !!a.legal_hold === !!criteria.legalHold);
+        }
+        if (criteria.retentionPolicyType) {
+          results = results.filter(
+            (a) => a.retention_policy?.type === criteria.retentionPolicyType
+          );
+        }
+        return { ok: true, data: results };
+      },
+      async applyRetention(artifactId, action = "mark_superseded") {
+        const art = inMemoryData.artifacts.find((a) => a.id === artifactId);
+        if (!art) return { ok: false, error: "not found" };
+        if (action === "mark_superseded") art.stability_level = "superseded";
+        if (action === "apply_legal_hold") art.legal_hold = true;
+        if (action === "lift_legal_hold") art.legal_hold = false;
+        return { ok: true, data: art };
+      },
     },
 
     agentIdentities: {

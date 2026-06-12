@@ -30,7 +30,19 @@
  * - inseme research/ and sandbox/cop-continuation-bac-a-sable for practical usage patterns.
  */
 
-import { randomUUID } from "crypto";
+// Cross-environment UUID (node crypto, web crypto, or fallback).
+// Avoids top-level "import from 'crypto'" which breaks browser bundlers (Vite etc).
+function getRandomUUID() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  // Simple v4-like fallback (good enough for correlation/continuation IDs in browser contexts)
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
 
 /**
  * Creates a Continuation Descriptor.
@@ -66,11 +78,11 @@ export function createContinuationDescriptor(params = {}) {
   }
 
   const descriptor = {
-    continuationId: randomUUID(),
+    continuationId: getRandomUUID(),
     type: "cop/continuation", // as per spec §2.7.3 Reserved Type Name
     resumeTo, // "agent" field
     resumeIntent,
-    correlationId: correlationId || randomUUID(),
+    correlationId: correlationId || getRandomUUID(),
     channel,
     taskId,
     stepId,
@@ -241,6 +253,92 @@ export function attachContinuationToMessage(message, continuation) {
   };
 }
 
+// === l8 + "side" bridge for Cogitors as steps (user request: Cogitor as special l8 Step) ===
+
+/**
+ * Create an l8-compatible waitable for a Cogitor call.
+ *
+ * This gives COP an "l8 face": from inside l8.task/.step code, a remote or heterogeneous
+ * Cogitor (e.g. JVM agent speaking the packet protocol) can be treated as a local cooperative
+ * blocking Step.
+ *
+ * The returned object has a .promise that l8 code can pass to l8.wait(promise) (or integrate
+ * with l8's parole/promise support) to block the current l8 step until the result arrives.
+ *
+ * The caller is responsible for:
+ * - Emitting/sending the associated stack-call or continuation packet to the target Cogitor
+ *   (via runner.resume, emit, or direct).
+ * - When the result is delivered back (via the runner's deliverResult / continuation-input path,
+ *   or directly in an onPacket handler for 'continuation-input'), calling the .resolve(value)
+ *   or .reject(err) on the waitable.
+ *
+ * This closes the loop for "when a JVM needs results from external agents, with all benefits of l8".
+ *
+ * See also the lineage doc for full discussion and the "side" complementarity.
+ */
+export function createCogitorL8Waitable(targetCapability, stack = [], opts = {}) {
+  let resolveFn, rejectFn;
+  const promise = new Promise((resolve, reject) => {
+    resolveFn = resolve;
+    rejectFn = reject;
+  });
+
+  const cont = createContinuationDescriptor({
+    resumeTo: targetCapability,
+    state: { stack, ...(opts.state || {}) },
+    ...opts,
+  });
+
+  return {
+    promise,
+    continuation: cont,
+    resolve: resolveFn,
+    reject: rejectFn,
+    // Convenience: the stack frame packet you can emit/send to initiate the call.
+    // Requires import { createStackCallPacket } from './stdio.js' in caller if you use this.
+    // Or build manually.
+    buildStackCallPacket() {
+      // Lazy to avoid circular if not needed.
+      // In real use, caller does:
+      // import { createStackCallPacket } from './stdio.js';
+      // const pkt = createStackCallPacket({ stack, continuation: cont, verb: opts.verb || 'call', targetCapability });
+      return { stack, continuation: cont, verb: opts.verb || "call", targetCapability };
+    },
+  };
+}
+
+/**
+ * Simple promise wrapper for a Cogitor call, suitable for use inside "side" actions
+ * (from the sibling `side/` repo: sync-looking async via retry + slots + delayed writes).
+ *
+ * Example with side (outer retryable "cognitive function"):
+ *   Side(function (side) {
+ *     const result = side.slot(() => callCogitorAsPromise('my-cap', [data]));
+ *     // use result synchronously
+ *     if (side.once('finalize')) {
+ *       side.write(() => promoteStableArtifact(result));  // only on success
+ *     }
+ *     return result;
+ *   });
+ *
+ * The promise will "block" the side action (trigger retry + slot caching), exactly as
+ * any other async in side.slot.
+ *
+ * Complements l8: use l8 inside for fine-grained step trees of Cogitors; wrap the whole
+ * turn with side for purity until side effects (e.g. stable artifacts, real writes).
+ *
+ * This is the "final reconciliation" of asynchronicity (remote Cogitors) with synchronous API
+ * that the side repo aimed for, now applied to the COP + l8 world.
+ */
+export function callCogitorAsPromise(targetCapability, stack = [], opts = {}) {
+  const waitable = createCogitorL8Waitable(targetCapability, stack, opts);
+  // Caller must:
+  // 1. Send the call (using waitable.continuation or build the packet).
+  // 2. On result delivery for that continuation: waitable.resolve(value) or .reject(err).
+  // The promise then resolves for the side.slot or l8.wait.
+  return waitable.promise;
+}
+
 /**
  * Builds a COP Message used to trigger resumption of a Continuation.
  *
@@ -259,7 +357,7 @@ export function buildContinuationResumeMessage(params = {}) {
 
   return {
     cop_version: "0.1",
-    message_id: randomUUID(),
+    message_id: getRandomUUID(),
     correlation_id: continuation.correlationId || continuation.continuationId,
     from: from || "cop-scheduler",
     to: continuation.resumeTo,

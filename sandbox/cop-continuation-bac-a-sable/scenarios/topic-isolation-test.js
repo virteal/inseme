@@ -86,12 +86,9 @@ export default {
       async run(ctx) {
         const { topicBus1, topicBus2 } = ctx.isolation;
 
-        const scheduler1 = new (
-          await import("../../../packages/cop-kernel/src/scheduler.js")
-        ).COPScheduler(topicBus1);
-        const scheduler2 = new (
-          await import("../../../packages/cop-kernel/src/scheduler.js")
-        ).COPScheduler(topicBus2);
+        // Using bac-à-sable isolated factory for auto post-run reset (debt/ OOM hygiene).
+        const scheduler1 = ctx.createIsolatedScheduler(topicBus1);
+        const scheduler2 = ctx.createIsolatedScheduler(topicBus2);
 
         scheduler1.start();
         scheduler2.start();
@@ -127,8 +124,8 @@ export default {
           );
         }
 
-        scheduler1.stop();
-        scheduler2.stop();
+        scheduler1.resetForTest();
+        scheduler2.resetForTest();
       },
     },
   ],

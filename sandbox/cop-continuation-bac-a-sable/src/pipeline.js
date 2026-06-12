@@ -24,10 +24,25 @@ import {
   getBusForTopic,
   COPJobScheduler,
   defaultJobScheduler,
+  asCognitivePacket,
+  CapabilityRegistry,
+  defaultCapabilityRegistry,
+  cogentiaRoutePacket,
+  createCogentiaRouterAgent,
 } from "./cop-kernel-adapter.js";
+
+// Re-export reset for scenarios that want explicit control
+export { defaultScheduler, defaultJobScheduler };
 
 // Re-export for scenarios that import directly from pipeline
 export { createFractanetBus } from "./cop-kernel-adapter.js";
+export { asCognitivePacket } from "./cop-kernel-adapter.js";
+export { CapabilityRegistry, defaultCapabilityRegistry } from "./cop-kernel-adapter.js";
+export { cogentiaRoutePacket, createCogentiaRouterAgent } from "./cop-kernel-adapter.js";
+
+// The isolated scheduler factory is defined locally above (uses the imported COPScheduler).
+// Re-export the class for direct use if scenarios want to new() manually (but prefer createIsolatedScheduler).
+export { COPScheduler } from "./cop-kernel-adapter.js";
 
 /**
  * Exécute un scénario de test de continuations.
@@ -66,8 +81,56 @@ export async function runScenario(scenarioName, { scenariosDir }) {
     getBusForTopic: (topicId) =>
       getBusForTopic ? getBusForTopic(topicId) : defaultBus.forTopic(topicId),
 
+    // Cognitive Packet (envelope + payload) helper — enables bac-à-sable scenarios to
+    // experiment with the "Cognitive Packet Switching" / Cogentia-as-router model
+    // described in cogentia/research/*. The actual dispatch uses the COPBus (sub + federated)
+    // and schedulers as the switching/routing fabric.
+    //
+    // Wrapped here so it automatically emits cop.packet.created on a topic-scoped bus
+    // when possible (clean improvement: gives router agents a uniform subscription point).
+    asCognitivePacket: (opts = {}) => {
+      const b = context.busForCurrentTopic ? context.busForCurrentTopic() : null;
+      return asCognitivePacket({ ...opts, bus: opts.bus || b });
+    },
+
     scheduler: defaultScheduler,
     jobScheduler: defaultJobScheduler, // Higher-level COPJobScheduler (with backoff + obsolescence)
+
+    // Capability registry stub: allows router agents to make envelope-only decisions
+    // using requiredCapability etc. (see cognitive-packet-router-demo).
+    // In-memory stub by default; real version can be swapped in.
+    capabilityRegistry: defaultCapabilityRegistry,
+
+    // Reusable Cogentia router policy (first-class helper, extracted from demo).
+    // Wrapped to auto-inject the context's capabilityRegistry (and current topic bus if useful).
+    // Scenarios can do: await ctx.cogentiaRoutePacket(cognitivePacket, { forwardToBus });
+    cogentiaRoutePacket: (pkt, opts = {}) => {
+      const reg = context.capabilityRegistry || defaultCapabilityRegistry;
+      const b =
+        opts.forwardToBus || (context.busForCurrentTopic ? context.busForCurrentTopic() : null);
+      return cogentiaRoutePacket(pkt, { registry: reg, forwardToBus: b, ...opts });
+    },
+
+    // Factory for reactive router agent (subscribes and applies policy).
+    createCogentiaRouterAgent: (opts = {}) => {
+      const reg = opts.registry || context.capabilityRegistry || defaultCapabilityRegistry;
+      return createCogentiaRouterAgent({ registry: reg, ...opts });
+    },
+
+    // Isolated scheduler factory for bac-à-sable scenarios.
+    // Creates a fresh COPScheduler (optionally on a specific bus/topic).
+    // Tracked so that post-run hygiene can auto-reset it, preventing timer/pending
+    // accumulation when scenarios create multiple dedicated schedulers (the main
+    // source of OOM in heavy router + federation + RAIX runs).
+    // Usage in scenarios: const sched = ctx.createIsolatedScheduler(topicBus);
+    //   sched.start(); ... at end or rely on pipeline auto-reset.
+    createIsolatedScheduler: (bus = null) => {
+      const b = bus || (context.busForCurrentTopic ? context.busForCurrentTopic() : defaultBus);
+      const sched = new COPScheduler(b);
+      if (!context._isolatedSchedulers) context._isolatedSchedulers = [];
+      context._isolatedSchedulers.push(sched);
+      return sched;
+    },
 
     emit: (event) => {
       trace.push(event);
@@ -198,6 +261,41 @@ export async function runScenario(scenarioName, { scenariosDir }) {
   console.log("\n=== Exécution terminée ===");
   console.log(`Événements générés : ${trace.length}`);
   console.log(`Continuations actives en fin de run : ${activeContinuations.size}`);
+
+  // === Hygiene / technical debt prevention ===
+  // Reset default scheduler and jobScheduler after every scenario run.
+  // This stops timers, clears pending continuations/jobs, and per-topic sub-buses.
+  // Without this, repeated runs (or complex router + federation + RAIX scenarios)
+  // accumulate setInterval (5s global per started scheduler) + setTimeout + listener
+  // registrations → the main cause of OOM in the bac-à-sable.
+  // Scenarios can also call ctx.scheduler.resetForTest() explicitly if they create
+  // extra schedulers.
+  try {
+    if (defaultScheduler && typeof defaultScheduler.resetForTest === "function") {
+      defaultScheduler.resetForTest();
+    }
+    if (defaultJobScheduler && typeof defaultJobScheduler.resetForTest === "function") {
+      defaultJobScheduler.resetForTest();
+    }
+    if (defaultCapabilityRegistry && typeof defaultCapabilityRegistry.resetForTest === "function") {
+      defaultCapabilityRegistry.resetForTest();
+    }
+    // Reset any isolated schedulers created via createIsolatedScheduler during this run.
+    if (context._isolatedSchedulers && Array.isArray(context._isolatedSchedulers)) {
+      for (const sched of context._isolatedSchedulers) {
+        if (sched && typeof sched.resetForTest === "function") {
+          try {
+            sched.resetForTest();
+          } catch (e) {
+            /* ignore */
+          }
+        }
+      }
+      context._isolatedSchedulers.length = 0;
+    }
+  } catch (e) {
+    console.warn("[PIPELINE] post-run reset failed (non-fatal):", e && e.message);
+  }
 
   // Sauvegarde automatique de la trace (traçabilité forte)
   const traceFile = `trace-${scenarioName}-${Date.now()}.jsonl`;

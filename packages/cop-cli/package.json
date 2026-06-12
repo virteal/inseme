@@ -9,6 +9,9 @@
   "scripts": {
     "start": "node ./src/cli.js --help"
   },
+  "dependencies": {
+    "@inseme/cop-kernel": "workspace:*"
+  },
   "keywords": [
     "cop",
     "cli",

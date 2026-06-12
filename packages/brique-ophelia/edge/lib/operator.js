@@ -6,6 +6,19 @@
 import { buildSystemPrompt } from "./prompts.js";
 import { getAuthorizedTools, executeInternalTool } from "./tools.js";
 
+// Use COP from now on for Ophelia's agent orchestration
+import {
+  cogentiaRoutePacket,
+  CapabilityRegistry,
+  asCognitivePacket,
+  createTask,
+  startStep,
+  completeStep,
+  completeTask,
+} from "@inseme/cop-kernel";
+
+import { defaultBus as copDefaultBus } from "@inseme/cop-kernel";
+
 const TOOL_TRACE_PREFIX = "__TOOL_TRACE__";
 const PROVIDER_META_PREFIX = "__PROVIDER_INFO__";
 
@@ -134,6 +147,60 @@ export async function runOperator(runtime, body, options = {}) {
   const { openai, supabase, sql, identity, role, encoder, controller } = options;
   const isDebug = runtime.getConfig ? runtime.getConfig("DEBUG") === "true" : false;
 
+  // COP integration for the agent itself (hybrid: policy on bus-style + scheduler consult).
+  // Ophelia now uses COP "from now on" for its own orchestration: each turn consults
+  // cogentiaRoutePacket over a CapabilityRegistry populated from brique ROLES (mediator etc.),
+  // emits via asCognitivePacket (cop.packet.created), tracks the session as a COP Task,
+  // and each iteration as a COP Step (completeStep at end of turn). Policy decisions
+  // are envelope-only; payload is for the final LLM/handler. See cogentiaRouter + jobScheduler
+  // for the full hybrid (router agent on bus OR direct consult + routingPolicy inside scheduler).
+  const opheliaRegistry = new CapabilityRegistry();
+  // Populate from the brique's roles (mediator, analyst, etc.) -- these become "capabilities"
+  try {
+    const { ROLES: BRIOLES_ROLES } = await import("../roles/registry.js");
+    Object.values(BRIOLES_ROLES || {}).forEach((r) => {
+      if (r && r.id) {
+        opheliaRegistry.register(r.id, {
+          providers: [identity?.name || "ophelia"],
+          metadata: { description: r.description || r.name },
+        });
+      }
+    });
+  } catch (e) {
+    console.warn("[Operator] Could not load brique roles for COP registry:", e.message);
+    // Fallback minimal
+    opheliaRegistry.register("mediator", { providers: [identity?.name || "ophelia"] });
+  }
+
+  // Session-level packet (overwritten/refined per-iteration inside the loop)
+  let currentPolicyPacket = {
+    envelope: {
+      packetKind: "ophelia-turn",
+      requiredCapability: role?.id || "mediator",
+      riskLevel: "low",
+      provenance: { origin: "user-question", room: body?.room_id },
+    },
+    payload: { question: body?.question || "", historySummary: "compressed" },
+  };
+
+  // Use COP Task for the agent's reasoning session (Ophelia now uses COP for its own orchestration)
+  let opheliaSessionTask = null;
+  try {
+    opheliaSessionTask = await createTask({
+      taskType: "ophelia-reasoning",
+      workerAgentName: identity?.name || "ophelia",
+      rootCorrelationId: body?.room_id || null,
+      metadata: { room_id: body?.room_id, role: role?.id, question: body?.question?.slice(0, 100) },
+    });
+    if (isDebug)
+      console.log(
+        "[DEBUG][Operator] COP Task created for Ophelia session:",
+        opheliaSessionTask?.id
+      );
+  } catch (taskErr) {
+    console.warn("[Operator] Could not create COP task for session (continuing):", taskErr.message);
+  }
+
   if (isDebug) {
     console.log("[DEBUG][Operator] Starting runOperator");
     console.log("[DEBUG][Operator] Identity:", identity.name);
@@ -197,12 +264,91 @@ export async function runOperator(runtime, body, options = {}) {
     ":",
     tools.map((t) => t.function.name)
   );
+
+  // Note: COP per-iteration policy consult + packet emission (with asCognitivePacket + cogentiaRoutePacket)
+  // + step lifecycle now live *inside* the while loop (see below). This ensures each reasoning turn
+  // is a first-class cognitive packet, policy can react to role evolution, and we complete steps cleanly.
+  // Pre-loop setup (registry, task, initial currentPolicyPacket) remains above for the session.
   let iteration = 0;
   const maxIterations = 3;
 
   while (iteration < maxIterations) {
     iteration++;
     if (isDebug) console.log(`[DEBUG][Operator] Iteration ${iteration}/${maxIterations}`);
+
+    // === COP per-turn policy for Ophelia's agent (using COP "from now on") ===
+    // Each iteration is treated as a cognitive packet turn: envelope-only inspection
+    // of requiredCapability (current role), consult the opheliaRegistry (populated from brique ROLES),
+    // potentially switch/confirm via cogentiaRoutePacket (hybrid: direct consult here; could also
+    // be driven by a bus agent publishing cop.packet.routed that a scheduler listens to).
+    // We use asCognitivePacket so we get auto id/createdAt + canonical cop.packet.created emission.
+    let turnPacket;
+    try {
+      turnPacket = {
+        envelope: {
+          packetKind: "ophelia-turn",
+          requiredCapability: role?.id || "mediator",
+          riskLevel: "low",
+          provenance: { origin: "ophelia-iteration", room: room_id, iteration },
+          iteration,
+        },
+        payload: {
+          question: question || "",
+          historySummary: "compressed",
+          currentRole: role?.id,
+        },
+      };
+
+      const decision = await cogentiaRoutePacket(turnPacket, {
+        registry: opheliaRegistry,
+        // no forwardToBus: pure decision mode inside agent loop (hybrid consult)
+      });
+
+      if (decision && decision.action === "forwarded-to-handler" && decision.chosenCapability) {
+        const oldCap = turnPacket.envelope.requiredCapability;
+        if (decision.chosenCapability !== oldCap) {
+          turnPacket.envelope.requiredCapability = decision.chosenCapability;
+          turnPacket.envelope.lastRoutingDecision = decision;
+          if (isDebug) {
+            controller.enqueue(
+              encoder.encode(
+                `<Think>COOP policy (iter ${iteration}): switched capability ${decision.chosenCapability} (was ${oldCap})</Think>\n`
+              )
+            );
+          }
+        } else {
+          turnPacket.envelope.lastRoutingDecision = decision;
+        }
+      }
+
+      // Emit using asCognitivePacket: gets envelope hygiene + publishes cop.packet.created on the bus
+      const emitBus = fullRuntime.bus || copDefaultBus;
+      asCognitivePacket(turnPacket, { bus: emitBus, emit: true });
+
+      // Keep a ref for any post-loop or tool influence
+      currentPolicyPacket = turnPacket;
+    } catch (policyErr) {
+      console.warn(
+        "[Operator] COP policy consult failed for iter",
+        iteration,
+        ":",
+        policyErr.message
+      );
+    }
+
+    // COP Step for this reasoning turn (lifecycle tracked in cop-kernel storage)
+    let currentStep = null;
+    if (opheliaSessionTask) {
+      try {
+        currentStep = await startStep(opheliaSessionTask, {
+          name: `ophelia-turn-${iteration}`,
+          indexInTask: iteration,
+          inputHash: null,
+        });
+      } catch (stepErr) {
+        console.warn("[Operator] COP step creation failed:", stepErr.message);
+      }
+    }
 
     const model = userModel || "gpt-4o";
     if (isDebug) console.log("[DEBUG][Operator] Calling LLM with model:", model);
@@ -506,6 +652,26 @@ export async function runOperator(runtime, body, options = {}) {
         );
         return; // Break multi-turn as we depend on client
       }
+    }
+
+    // COP: complete the step for this turn (lifecycle + projection via emitTaskEvent inside mark)
+    if (currentStep) {
+      try {
+        await completeStep(currentStep.id || currentStep);
+        if (isDebug) console.log(`[DEBUG][Operator] COP step completed for iteration ${iteration}`);
+      } catch (compErr) {
+        console.warn("[Operator] completeStep failed for iter", iteration, ":", compErr.message);
+      }
+    }
+  }
+
+  // End of reasoning session: mark the COP task complete if we created one
+  if (opheliaSessionTask) {
+    try {
+      await completeTask(opheliaSessionTask.id || opheliaSessionTask);
+      if (isDebug) console.log("[DEBUG][Operator] COP task completed for Ophelia session");
+    } catch (taskCompErr) {
+      console.warn("[Operator] completeTask for session failed (non-fatal):", taskCompErr.message);
     }
   }
 }

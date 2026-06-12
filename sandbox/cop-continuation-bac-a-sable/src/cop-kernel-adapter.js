@@ -14,6 +14,13 @@ import { COPScheduler, defaultScheduler } from "../../../packages/cop-kernel/src
 
 import { COPJobScheduler } from "../../../packages/cop-kernel/src/jobScheduler.js";
 
+import {
+  CapabilityRegistry,
+  defaultCapabilityRegistry,
+} from "../../../packages/cop-kernel/src/capabilityRegistry.js";
+
+import { cogentiaRoutePacket } from "../../../packages/cop-kernel/src/cogentiaRouter.js";
+
 let realCall, realResume;
 
 try {
@@ -29,9 +36,16 @@ try {
 
 // Create a default higher-level JobScheduler wired to the low-level components.
 // This is the main stable entry point for scheduling resumable work with backoff/obsolescence.
+// Hybrid wiring: we also pass the capabilityRegistry so that JobScheduler can consult
+// policy decisions (e.g. requiredCapability satisfaction) during scheduling/obsolescence.
+// The primary "Cogentia router" policy still lives as a higher agent on the bus (via
+// cogentiaRoutePacket / createCogentiaRouterAgent), but the scheduler can react to or
+// validate using the same registry.
 const defaultJobScheduler = new COPJobScheduler({
   scheduler: defaultScheduler,
   bus: defaultBus,
+  capabilityRegistry: defaultCapabilityRegistry,
+  routingPolicy: cogentiaRoutePacket, // wire the reusable helper for deeper hybrid policy inside scheduling
   // store is intentionally left undefined for now (in-memory only).
   // When persistence is added to the kernel, it can be injected here.
 });
@@ -98,3 +112,24 @@ export async function resumeContinuationInSandbox(params) {
   console.log("[ADAPTER] Fallback local pour reprise");
   return { ok: true };
 }
+
+// Re-export the cognitive packet envelope+payload helper for bac-à-sable scenarios
+// to experiment with "Cogentia as cognitive continuation packet router" patterns
+// (see cogentia/research/cognitive_packet_switching.md and _continuation_packet_routing.md).
+// The actual routing uses the COPBus (sub-buses + federation) + Scheduler.
+export { asCognitivePacket } from "../../../packages/cop-kernel/src/Cop-kerneltasks.js";
+
+// Lightweight capability registry stub (for router policy decisions based on
+// envelope.requiredCapability). In-memory by default; resettable.
+// A future real impl could delegate to agentRegistry + capabilities from cop_agents.
+export {
+  CapabilityRegistry,
+  defaultCapabilityRegistry,
+} from "../../../packages/cop-kernel/src/capabilityRegistry.js";
+
+// Reusable Cogentia router helpers (the extracted policy function + agent factory).
+// Now first-class so it can be used outside the demo, wired to JobScheduler, etc.
+export {
+  cogentiaRoutePacket,
+  createCogentiaRouterAgent,
+} from "../../../packages/cop-kernel/src/cogentiaRouter.js";

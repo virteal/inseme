@@ -43,10 +43,21 @@ async function emitTaskEvent(busOrScheduler, eventType, payload) {
   if (!targetBus || typeof targetBus.publish !== "function") return;
 
   try {
+    const eventData = { ...payload };
+    // Further cop.packet.* wrapping of task events (as follow-up): include projection
+    // when the payload looks like a continuation/task with resume info. This allows
+    // routers/agents to subscribe uniformly to cop.packet.* alongside cop.task.*
+    if (payload && (payload.continuationId || payload.resumeTo || payload.waitForEvents)) {
+      eventData.packet = asCognitivePacket({
+        envelope: { packetKind: "task", taskId: payload.taskId, stepId: payload.stepId },
+        payload,
+        kind: "task",
+      });
+    }
     await targetBus.publish({
       type: `cop.task.${eventType}`,
       source: "cop-kernel/tasks",
-      data: payload,
+      data: eventData,
       timestamp: nowIso(),
     });
   } catch (e) {
@@ -375,3 +386,89 @@ export async function associateContinuationToTask(continuationId, taskId, stepId
     associatedAt: nowIso(),
   };
 }
+
+/**
+ * Thin helper to produce a "cognitive packet" style structure (envelope + payload)
+ * around a Continuation or Task event, for alignment with the Cognitive Packet Switching
+ * framing (see cogentia/research/cognitive_packet_switching.md and the continuation_packet_routing doc).
+ *
+ * The envelope is the routable part (inspectable by a "Cogentia router" / bus / scheduler
+ * without full payload interpretation). The payload is the cognitive content (here the
+ * continuation descriptor or task state).
+ *
+ * This is a convenience projection; the underlying COP model (Events + Artifacts + Bus publish
+ * of typed events on (per-topic) sub-buses + federation) already provides the switching.
+ * Routers subscribe to specific event types or use topic sub-buses / propagateInterest.
+ *
+ * Improvements (clean follow-up):
+ * - Generates id + timestamp in envelope if absent (better defaults).
+ * - Optional emission of `cop.packet.created` (and `cop.packet.routed` etc. by callers)
+ *   so external "Cogentia router agents" can subscribe uniformly without knowing
+ *   internal task/job event shapes.
+ * - Basic shape validation (warns on obvious misuse).
+ */
+export function asCognitivePacket({
+  envelope = {},
+  payload = {},
+  kind = "continuation",
+  bus = null,
+  emit = true,
+} = {}) {
+  if (!payload || typeof payload !== "object") {
+    console.warn("[asCognitivePacket] payload should be an object (continuation or task state)");
+  }
+
+  const now = nowIso();
+  const id =
+    envelope.id ||
+    (typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : "pkt-" + Date.now() + "-" + Math.random().toString(16).slice(2));
+
+  const packet = {
+    packetKind: kind,
+    envelope: {
+      protocol: "cognitive_packet.v0",
+      packetKind: kind,
+      id,
+      createdAt: envelope.createdAt || now,
+      ...envelope,
+      trace: envelope.trace || {
+        correlationId: payload.correlationId || payload.continuationId || payload.id,
+      },
+    },
+    payload,
+  };
+
+  // Optional emission for uniform router subscription point.
+  // Callers (or the bac-à-sable ctx wrapper) can pass a bus (e.g. topic-scoped).
+  // Falls back to the module's defaultBus if available (same pattern as emitTaskEvent).
+  if (emit) {
+    const targetBus = bus || defaultBus;
+    if (targetBus && typeof targetBus.publish === "function") {
+      // Fire and forget; don't block the caller on router emission.
+      targetBus
+        .publish({
+          type: "cop.packet.created",
+          source: "cop-kernel/asCognitivePacket",
+          data: { packet, kind },
+          timestamp: now,
+        })
+        .catch((e) => console.warn("[asCognitivePacket] emit failed:", e.message));
+    }
+  }
+
+  return packet;
+}
+
+// --- Ergonomic aliases for higher agents adopting COP (e.g. Ophelia "from now on") ---
+// These provide the startStep/completeStep names referenced in integration code and docs,
+// without introducing new implementation debt. They delegate to the storage-backed marks.
+
+export { createTaskStep as startStep };
+export { markTaskStepCompleted as completeStep };
+export { markTaskStepFailed as failStep };
+
+export { markTaskCompleted as completeTask };
+export { markTaskFailed as failTask };
+export { markTaskStarted as startTask };

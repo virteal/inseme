@@ -64,9 +64,9 @@ export default {
         const { topicBusA, topicBusB, topicId } = ctx.federation;
 
         // Create a dedicated scheduler for "Node Alpha" attached to its topic sub-bus
-        const schedulerAlpha = new (
-          await import("../../../packages/cop-kernel/src/scheduler.js")
-        ).COPScheduler(topicBusA);
+        // Using the bac-à-sable's isolated factory so the pipeline auto-resets it at end
+        // (helps with heavy multi-scheduler router + federation scenarios without OOM).
+        const schedulerAlpha = ctx.createIsolatedScheduler(topicBusA);
         schedulerAlpha.start();
 
         // Create a continuation that waits for a trigger from Beta
@@ -147,6 +147,15 @@ export default {
         }
 
         if (unsub) unsub();
+
+        // Clean up the dedicated scheduler created in this scenario to avoid
+        // leaving its 5s globalTimer + pending running (debt that contributes to OOM
+        // when many federation/RAIX scenarios are exercised).
+        if (schedulerAlpha && typeof schedulerAlpha.resetForTest === "function") {
+          schedulerAlpha.resetForTest();
+        } else if (schedulerAlpha && typeof schedulerAlpha.stop === "function") {
+          schedulerAlpha.stop();
+        }
 
         ctx.emit({
           type: "federation-demo.completed",

@@ -102,6 +102,18 @@ node index.js replay trace-xxx.jsonl
   deviennent automatiques.
 - Nouveaux helpers : `createFederatedTopicBusPair()`, `createFederatedBusPair()`,
   `propagateInterest()`.
+- Nouveaux scénarios de validation lourde (réponse directe à "add more scenario to the bac à sable,
+  we must be sure that COP works") :
+  - `job-scheduler-stress-test` — 120+ jobs, exponentialBackoff, 30+ markObsolete par "agents IA",
+    vérification événements cop.job.\* sur topic sub-buses, maths de backoff, cleanup.
+  - `raix-obsolescence-resilience` — Deux nœuds fédérés (topic sub-buses), obsolescence décidée par
+    agent sur A, remplacement via `createTaskWithInitialContinuation` +
+    `associateContinuationToTask` sur B. Démonstration RAIX + généricité kernel.
+  - `cognitive-packet-router-demo` (clean lightweight version) — Exercises `asCognitivePacket` +
+    explicit Cogentia-style router that decides routing **using only the envelope** (never the
+    payload). Uses federated topic sub-buses as the switching fabric. See
+    `packages/cop-kernel/docs/SESSION_RESUME_*.md` and the compatibility report for resumption
+    context.
 
 **Focus stratégique actuel : Construction du gabarit de la "Machine à explorer"**
 

@@ -29,5 +29,25 @@ export * from "./call.js";
 // See lineage in jobScheduler.js: l8 Task/Step scheduler → COP → future Inox implementation.
 export * from "./jobScheduler.js";
 
+// Capability registry stub for Cogentia-style envelope routing decisions
+// (inspects requiredCapability etc. without touching payload).
+export * from "./capabilityRegistry.js";
+
+// Reusable Cogentia router policy helpers (envelope-only + capability registry).
+// Extracted as first-class reusable helpers (see SESSION_RESUME follow-ups).
+export * from "./cogentiaRouter.js";
+
 // Timing & performance measurement helpers (wall time, CPU, human reaction times)
 export * from "./timing.js";
+
+// Stdio helpers for emitting/parsing continuation packets from any tool (data plane vs control plane).
+// Enables the "any tool can be a COP node" / Cogitor pattern + simple pipeable runners.
+// Primary factory: createReadlineCogitor (a Cogitor cogitates on cognitive packets + continuations + control plane).
+export * from "./stdio.js";
+
+// Cogitor-level cooperation helpers (fork/join, parent/child flows, merge for multiple subs).
+// Extends core with user-friendly APIs matching l8 Task parent/child + join patterns,
+// but operating at Cogitor level (using stack-calls + attached continuations for sub-invocations,
+// result delivery as closures, control for supervision, waitForEvents, runner orchestration).
+// See lineage doc for comparison to l8 Parole/Water/Fluid/Tasks + motivation.
+export * from "./cogitorCooperation.js";
