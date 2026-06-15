@@ -2969,13 +2969,22 @@ If an implementation:
 then it is aligned with the spirit and the letter of COP.
 
 <!-- BEGIN_AUTO: backlinks -->
-
 ### Backlinks
 
-_These documents link to this file:_
-
+*These documents link to this file:*
+- [Cogentia](https://github.com/JeanHuguesRobert/cogentia/blob/main/COGENTIA.md)
+- [Cogentia Commons — `kernel_extractor` Plugin Sub-Specification](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_kernel_extractor.md)
+- [Cogentia Commons — COMMUNITY.md Sub-Specification](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_community_manifest.md)
+- [Cogentia Commons — MVP Specification](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_mvp_spec.md)
+- [Cogentia Commons — Session Continuation Snapshot](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_continuation.md)
+- [Cogentia Commons — Structural Plugin Sub-Specifications](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_structural_plugins.md)
+- [Cogentia Commons — Substantive Plugin Sub-Specifications](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_substantive_plugins.md)
+- [Cogentia Commons — Workflows](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_workflows.md)
+- For researchers
+- [Research Index — Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md)
 - [Concept Index — inseme](../../research/concepts.md)
-- [Corpus Status — inseme](../../research/corpus-status.md)
+- [COOP — Tutorial and Near-Specification](../../research/coop_tutorial.md)
+- [COP Reactive Cognitive Extension](REACTIVE_COGNITIVE_EXTENSION.md)
+- [Reactive Cognitive COP Extension](../../research/reactive_cognitive_cop_extension.md)
 - [Research Index — Inseme](../../research/index.md)
-
 <!-- END_AUTO: backlinks -->

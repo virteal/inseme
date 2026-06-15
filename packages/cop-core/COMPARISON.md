@@ -262,12 +262,8 @@ Frameworks come and go.
 COP is designed to remain.
 
 <!-- BEGIN_AUTO: backlinks -->
-
 ### Backlinks
 
-_These documents link to this file:_
-
-- [Corpus Status — inseme](../../research/corpus-status.md)
+*These documents link to this file:*
 - [Research Index — Inseme](../../research/index.md)
-
 <!-- END_AUTO: backlinks -->

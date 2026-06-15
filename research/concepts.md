@@ -300,13 +300,5 @@ within the React and Vite frontend ecosystems.
 ### Backlinks
 
 *These documents link to this file:*
-- [🏗️ Inseme Modular System Architecture](../docs/MODULAR_SYSTEM.md)
-- [Cognitive Orchestration Protocol (COP)](../packages/cop-core/Architecture.md)
-- [COP Protocol Invariants](../packages/cop-core/Invariants.md)
-- [**The COP Manifesto**](../packages/cop-core/Manifesto.md)
-- [Spécification du Manifeste de Brique (brique.config.js)](../packages/cop-host/BRIQUE_SPEC.md)
-- [COP State of Play — Asynchronous Orchestration & Traceability](COP_STATE_OF_PLAY.md)
-- [Corpus Status — inseme](corpus-status.md)
 - [Research Index — Inseme](index.md)
-
 <!-- END_AUTO: backlinks -->

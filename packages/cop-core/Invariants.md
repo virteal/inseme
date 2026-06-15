@@ -190,13 +190,12 @@ These invariants are what make COP different.
 Violating any of them may produce a working system — but not a COP system.
 
 <!-- BEGIN_AUTO: backlinks -->
-
 ### Backlinks
 
-_These documents link to this file:_
-
+*These documents link to this file:*
+- [Fractanet — Generalized Control Planes for Heterogeneous Packet Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/fractanet.md)
 - [Concept Index — inseme](../../research/concepts.md)
-- [Corpus Status — inseme](../../research/corpus-status.md)
+- [COP Reactive Cognitive Extension](REACTIVE_COGNITIVE_EXTENSION.md)
+- [Reactive Cognitive COP Extension](../../research/reactive_cognitive_cop_extension.md)
 - [Research Index — Inseme](../../research/index.md)
-
 <!-- END_AUTO: backlinks -->

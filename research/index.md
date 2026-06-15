@@ -126,16 +126,13 @@ _Fork to explore alternatives. Challenge via issues._
 ### Backlinks
 
 *These documents link to this file:*
-- [🏗️ Inseme Modular System Architecture](../docs/MODULAR_SYSTEM.md)
-- [Cognitive Orchestration Protocol (COP)](../packages/cop-core/Architecture.md)
-- [COMPARISON.md](../packages/cop-core/COMPARISON.md)
-- [**FAQ.md**](../packages/cop-core/FAQ.md)
-- [COP Protocol Invariants](../packages/cop-core/Invariants.md)
-- [**The COP Manifesto**](../packages/cop-core/Manifesto.md)
-- [ROADMAP — Cognitive Orchestration Protocol (COP)](../packages/cop-core/ROADMAP.md)
-- [Spécification du Manifeste de Brique (brique.config.js)](../packages/cop-host/BRIQUE_SPEC.md)
-- [Concept Index — inseme](concepts.md)
+- [Research Index — barons-Mariani](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/index.md)
+- [Research Index — Cogentia](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/index.md)
+- [Research Index — FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/index.md)
+- [Research Index — Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md)
 - [Corpus Status — inseme](corpus-status.md)
-- [Cyrnea — State of Play (Initial Assessment)](CYRNEA_STATE_OF_PLAY.md)
-
+- [Carte globale du Corpus](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/corpus-map.md)
+- [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
+- [Research Index — Jean Hugues Noël Robert (Profile / Entry Point)](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md)
+- [Research Index — MareNostrum](https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/index.md)
 <!-- END_AUTO: backlinks -->

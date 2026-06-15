@@ -233,13 +233,12 @@ trusted, audited, composed, replayed, federated, shared, and sustained.
 COP is the foundation upon which a century of cognitive infrastructure can be built.
 
 <!-- BEGIN_AUTO: backlinks -->
-
 ### Backlinks
 
-_These documents link to this file:_
-
+*These documents link to this file:*
+- For citizens
+- For researchers
+- FractaVolta
 - [Concept Index — inseme](../../research/concepts.md)
-- [Corpus Status — inseme](../../research/corpus-status.md)
 - [Research Index — Inseme](../../research/index.md)
-
 <!-- END_AUTO: backlinks -->

@@ -219,9 +219,9 @@ descriptor, improve resumption reliability, add tests, design a resumption API, 
 ### Backlinks
 
 *These documents link to this file:*
+- [Cognitive Packet Switching](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packet_switching.md)
 - [Concept Index — inseme](concepts.md)
 - [COOP — Tutorial and Near-Specification](coop_tutorial.md)
-- [Corpus Status — inseme](corpus-status.md)
 - [Research Index — Inseme](index.md)
-
+- [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
 <!-- END_AUTO: backlinks -->

@@ -77,13 +77,11 @@ implications propres à l'infrastructure civique multi-instance et à ses usages
 juridiquement séparés.
 
 <!-- BEGIN_AUTO: backlinks -->
-
 ### Backlinks
 
-_These documents link to this file:_
-
+*These documents link to this file:*
 - [Lien avec C.O.R.S.I.C.A. et l’Institut Mariani](../acorsica-institut-mariani.md)
-- [Corpus Status — inseme](corpus-status.md)
 - [Research Index — Inseme](index.md)
-
+- [C.O.R.S.I.C.A., Institut Mariani et corpus personnel](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/acorsica-et-corpus.md)
+- [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
 <!-- END_AUTO: backlinks -->

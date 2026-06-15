@@ -324,12 +324,8 @@ The roadmap includes:
 COP aims to become the **standard protocol for distributed, durable, multi-agent AI systems**.
 
 <!-- BEGIN_AUTO: backlinks -->
-
 ### Backlinks
 
-_These documents link to this file:_
-
-- [Corpus Status — inseme](../../research/corpus-status.md)
+*These documents link to this file:*
 - [Research Index — Inseme](../../research/index.md)
-
 <!-- END_AUTO: backlinks -->
