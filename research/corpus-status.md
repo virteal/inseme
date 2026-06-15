@@ -77,11 +77,11 @@ graph LR
   r_inox -->|11| r_cogentia
   r_marenostrum -->|11| r_barons_mariani
   r_inox -->|10| r_fractavolta
+  r_jeanhuguesrobert -->|9| r_ubikia
   r_fractavolta -->|8| r_inox
   r_inox -->|8| r_marenostrum
   r_inox -->|7| r_inseme
   r_inseme -->|7| r_inox
-  r_jeanhuguesrobert -->|7| r_ubikia
   r_barons_mariani -->|6| r_fractavolta
   r_cogentia -->|5| r_fractavolta
   r_barons_mariani -->|4| r_inox
@@ -98,6 +98,7 @@ graph LR
   r_marenostrum -->|2| r_jeanhuguesrobert
   r_marenostrum -->|2| r_inseme
   r_marenostrum -->|2| r_inox
+  r_inseme -->|1| r_ubikia
   r_ubikia -->|1| r_cogentia
 ```
 <!-- END_AUTO: graph -->

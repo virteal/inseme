@@ -16,9 +16,9 @@ canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/ind
 
 ## Foundation
 
-Inseme is the **deployable platform** of the six-repo Cogentia corpus and the #PERTITELLU civic-tech
-agenda. Where the five sibling research repos (`barons-Mariani`, `marenostrum`, `cogentia`,
-`FractaVolta`, `Inox`) carry the _doctrine_, _methodology_, and _runtime substrate_, inseme carries
+Inseme is the **deployable platform** of the public Cogentia corpus and the #PERTITELLU civic-tech
+agenda. Where the sibling research repos (`barons-Mariani`, `marenostrum`, `cogentia`,
+`FractaVolta`, `Inox`, `ubikia`) carry the _doctrine_, _methodology_, _runtime substrate_, and _publication layer_, inseme carries
 the _running infrastructure_:
 
 - The **COP (Cognitive Orchestration Protocol)** runtime — see
@@ -42,7 +42,8 @@ _A map of what is, what is in progress, and what could be._ _See sibling indexes
 [MareNostrum](https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/index.md),
 [FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/index.md),
 [barons-Mariani](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/index.md),
-[Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md). Entry point:
+[Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md),
+[Ubikia](https://github.com/JeanHuguesRobert/ubikia/blob/main/research/index.md). Entry point:
 [profile / meta-node](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md)._
 
 ---
