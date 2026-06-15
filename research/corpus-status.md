@@ -27,15 +27,17 @@ _and_ _Open Objections_ — _are manually curated and preserved across refreshes
 
 <!-- BEGIN_AUTO: registered_repos -->
 
-| Repository       | research/index.md | Branch | Policy   |
-| ---------------- | ----------------- | ------ | -------- |
-| cogentia         | yes               | main   | all      |
-| FractaVolta      | yes               | main   | all      |
-| marenostrum      | yes               | main   | all      |
-| barons-Mariani   | yes               | main   | all      |
-| inseme           | yes               | main   | research |
-| Inox             | yes               | master | all      |
-| JeanHuguesRobert | yes               | main   | all      |
+| Repository       | research/index.md | Branch | Policy   | Visibility | Public presence |
+| ---------------- | ----------------- | ------ | -------- | ---------- | --------------- |
+| cogentia         | yes               | main   | all      | public     | full            |
+| FractaVolta      | yes               | main   | all      | public     | full            |
+| marenostrum      | yes               | main   | all      | public     | full            |
+| barons-Mariani   | yes               | main   | all      | public     | full            |
+| inseme           | yes               | main   | research | public     | full            |
+| Inox             | yes               | master | all      | public     | full            |
+| registre-mariani | yes               | main   | all      | private    | stub            |
+| ubikia           | yes               | main   | all      | public     | full            |
+| JeanHuguesRobert | yes               | main   | all      | public     | full            |
 
 <!-- END_AUTO: registered_repos -->
 
@@ -53,49 +55,52 @@ graph LR
   r_barons_mariani["barons-Mariani"]
   r_inseme["inseme"]
   r_inox["Inox"]
+  r_registre_mariani["registre-mariani"]
+  r_ubikia["ubikia"]
   r_jeanhuguesrobert["JeanHuguesRobert"]
-  r_jeanhuguesrobert -->|195| r_barons_mariani
-  r_jeanhuguesrobert -->|135| r_cogentia
-  r_cogentia -->|102| r_barons_mariani
-  r_jeanhuguesrobert -->|63| r_marenostrum
-  r_jeanhuguesrobert -->|62| r_fractavolta
-  r_jeanhuguesrobert -->|60| r_inseme
-  r_jeanhuguesrobert -->|55| r_inox
-  r_fractavolta -->|32| r_cogentia
-  r_fractavolta -->|31| r_marenostrum
-  r_cogentia -->|21| r_inseme
-  r_barons_mariani -->|20| r_cogentia
-  r_cogentia -->|20| r_marenostrum
+  r_jeanhuguesrobert -->|143| r_barons_mariani
+  r_cogentia -->|101| r_barons_mariani
+  r_jeanhuguesrobert -->|99| r_cogentia
+  r_jeanhuguesrobert -->|43| r_marenostrum
+  r_fractavolta -->|40| r_cogentia
+  r_fractavolta -->|37| r_marenostrum
+  r_jeanhuguesrobert -->|36| r_fractavolta
+  r_jeanhuguesrobert -->|30| r_inox
+  r_barons_mariani -->|27| r_cogentia
+  r_cogentia -->|22| r_inseme
+  r_cogentia -->|19| r_marenostrum
+  r_fractavolta -->|18| r_inseme
   r_fractavolta -->|18| r_barons_mariani
+  r_jeanhuguesrobert -->|16| r_inseme
   r_inseme -->|14| r_cogentia
-  r_barons_mariani -->|12| r_marenostrum
-  r_fractavolta -->|12| r_inseme
   r_marenostrum -->|12| r_fractavolta
+  r_marenostrum -->|12| r_cogentia
+  r_barons_mariani -->|11| r_marenostrum
   r_inox -->|11| r_barons_mariani
   r_inox -->|11| r_cogentia
-  r_marenostrum -->|10| r_barons_mariani
-  r_inox -->|9| r_fractavolta
-  r_marenostrum -->|9| r_cogentia
-  r_inox -->|7| r_marenostrum
+  r_marenostrum -->|11| r_barons_mariani
+  r_inox -->|10| r_fractavolta
+  r_fractavolta -->|8| r_inox
+  r_inox -->|8| r_marenostrum
   r_inox -->|7| r_inseme
   r_inseme -->|7| r_inox
-  r_cogentia -->|6| r_fractavolta
-  r_barons_mariani -->|5| r_fractavolta
+  r_jeanhuguesrobert -->|7| r_ubikia
+  r_barons_mariani -->|6| r_fractavolta
+  r_cogentia -->|5| r_fractavolta
   r_barons_mariani -->|4| r_inox
-  r_fractavolta -->|4| r_inox
-  r_cogentia -->|3| r_jeanhuguesrobert
+  r_barons_mariani -->|4| r_jeanhuguesrobert
+  r_cogentia -->|4| r_jeanhuguesrobert
   r_inseme -->|3| r_barons_mariani
   r_inseme -->|3| r_jeanhuguesrobert
-  r_barons_mariani -->|2| r_jeanhuguesrobert
   r_barons_mariani -->|2| r_inseme
   r_cogentia -->|2| r_inox
+  r_fractavolta -->|2| r_jeanhuguesrobert
+  r_inox -->|2| r_jeanhuguesrobert
   r_inseme -->|2| r_marenostrum
   r_inseme -->|2| r_fractavolta
+  r_marenostrum -->|2| r_jeanhuguesrobert
   r_marenostrum -->|2| r_inseme
   r_marenostrum -->|2| r_inox
-  r_fractavolta -->|1| r_jeanhuguesrobert
-  r_inox -->|1| r_jeanhuguesrobert
-  r_marenostrum -->|1| r_jeanhuguesrobert
 ```
 
 <!-- END_AUTO: graph -->
@@ -566,17 +571,15 @@ _Manually curated: objections received publicly, not yet fully resolved._
 - A formal "brique developer guide" consolidating BRIQUE_SPEC + concrete examples from
 - An "Ophélia mediator profile" — operational semantics of the AI mediator as it interfaces with
 - A `brique-` template generator (`cogentia.js init-brique <name>` or equivalent).
-- [🏗️ Inseme Modular System Architecture](../docs/MODULAR_SYSTEM.md)
-- [Cognitive Orchestration Protocol (COP)](../packages/cop-core/Architecture.md)
-- [COMPARISON.md](../packages/cop-core/COMPARISON.md)
-- [**FAQ.md**](../packages/cop-core/FAQ.md)
-- [COP Protocol Invariants](../packages/cop-core/Invariants.md)
-- [**The COP Manifesto**](../packages/cop-core/Manifesto.md)
-- [ROADMAP — Cognitive Orchestration Protocol (COP)](../packages/cop-core/ROADMAP.md)
-- [Spécification du Manifeste de Brique (brique.config.js)](../packages/cop-host/BRIQUE_SPEC.md)
-- [Concept Index — inseme](concepts.md)
+- [Research Index — barons-Mariani](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/index.md)
+- [Research Index — Cogentia](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/index.md)
+- [Research Index — FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/index.md)
+- [Research Index — Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md)
 - [Corpus Status — inseme](corpus-status.md)
-- [Cyrnea — State of Play (Initial Assessment)](CYRNEA_STATE_OF_PLAY.md)
+- [Carte globale du Corpus](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/corpus-map.md)
+- [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
+- [Research Index — Jean Hugues Noël Robert (Profile / Entry Point)](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md)
+- [Research Index — MareNostrum](https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/index.md)
 <!-- END_AUTO: possibilities -->
 
 ---
@@ -591,17 +594,6 @@ _Challenge via issues. Fork to explore alternatives._
 
 _These documents link to this file:_
 
-- [🏗️ Inseme Modular System Architecture](../docs/MODULAR_SYSTEM.md)
-- [Cognitive Orchestration Protocol (COP)](../packages/cop-core/Architecture.md)
-- [COMPARISON.md](../packages/cop-core/COMPARISON.md)
-- [**FAQ.md**](../packages/cop-core/FAQ.md)
-- [COP Protocol Invariants](../packages/cop-core/Invariants.md)
-- [**The COP Manifesto**](../packages/cop-core/Manifesto.md)
-- [ROADMAP — Cognitive Orchestration Protocol (COP)](../packages/cop-core/ROADMAP.md)
-- [Spécification du Manifeste de Brique (brique.config.js)](../packages/cop-host/BRIQUE_SPEC.md)
-- [Concept Index — inseme](concepts.md)
-- [Corpus Status — inseme](corpus-status.md)
-- [Cyrnea — State of Play (Initial Assessment)](CYRNEA_STATE_OF_PLAY.md)
 - [Research Index — Inseme](index.md)
-
+- [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
 <!-- END_AUTO: backlinks -->
