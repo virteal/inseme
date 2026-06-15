@@ -2781,4 +2781,4 @@ Le pilote Centre Corse fonctionne sur le **modèle associatif gratuit** de C.O.R
 - Contributions open source bénévoles
 - Subventions publiques (NGI, FEDER) pour le développement
 
-👉 Voir [FUNDING.md](../FUNDING.md) pour les détails du modèle économique.
+👉 Voir [FUNDING.md](FUNDING.md) pour les détails du modèle économique.

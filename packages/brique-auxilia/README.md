@@ -7,7 +7,7 @@ de recharge) d'en partager temporairement une fraction avec une personne proche 
 Service d'hospitalité conforme à la tradition d'accueil méditerranéenne, instanciation humaine du
 _store-and-forward_ des Energy Packet Networks (cadre FractaVolta).
 
-**Spécification complète** : voir [`AUXILIA_SPEC.md`](./AUXILIA_SPEC.md).
+**Spécification complète** : voir [`AUXILIA.md`](./AUXILIA.md).
 
 ## Statut
 
@@ -132,7 +132,7 @@ monde.
 
 ## Licence
 
-MIT — voir [`LICENSE`](./LICENSE).
+MIT — voir la métadonnée `license` dans [`package.json`](./package.json).
 
 ## Auteur
 
@@ -142,7 +142,7 @@ Projet soutenu par l'association C.O.R.S.I.C.A., dans le cadre du mouvement #PER
 
 ## Liens
 
-- Spec complète : [`AUXILIA_SPEC.md`](./AUXILIA_SPEC.md)
+- Spec complète : [`AUXILIA.md`](./AUXILIA.md)
 - Contrat des briques : [`packages/cop-host/BRIQUE_SPEC.md`](../cop-host/BRIQUE_SPEC.md)
 - Système modulaire `inseme` : [`docs/MODULAR_SYSTEM.md`](../../docs/MODULAR_SYSTEM.md)
 - Cadre conceptuel FractaVolta :

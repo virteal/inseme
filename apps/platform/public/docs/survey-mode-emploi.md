@@ -72,7 +72,7 @@ Ce guide pratique vous accompagne pas à pas pour utiliser la plateforme citoyen
 
 ## 6. Besoin d'aide ?
 
-- **Assistance** : contactez [Contact](contact) ou utilisez le bot Ophélia.
+- **Assistance** : contactez [Contact](/contact) ou utilisez le bot Ophélia.
 - **Communauté** : rejoignez le groupe Facebook Pertitellu pour des échanges informels.
 - **Tech** : ouvrez une issue GitHub dans le dépôt `JeanHuguesRobert/survey`.
 

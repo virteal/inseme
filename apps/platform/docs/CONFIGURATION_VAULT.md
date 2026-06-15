@@ -308,8 +308,8 @@ await loadConfig(true);
 
 ## Références
 
-- [Migration SQL](../supabase/migrations/20241201_instance_config.sql)
-- [Module Frontend](../src/lib/instanceConfig.js)
-- [Module Netlify Functions](../netlify/lib/instanceConfig.js)
-- [Module Edge Functions](../netlify/edge-functions/lib/instanceConfig.js)
-- [Module Scripts CLI](../scripts/lib/config.js)
+- [Migration SQL](../supabase/migrations/old_applied/20251205_instance_vault.sql)
+- [Module Frontend](../src/common/config/instanceConfig.client.js)
+- [Module Netlify Functions](../src/common/config/instanceConfig.backend.js)
+- [Module Edge Functions](../src/common/config/instanceConfig.edge.js)
+- [Module Core](../src/common/config/instanceConfig.core.js)

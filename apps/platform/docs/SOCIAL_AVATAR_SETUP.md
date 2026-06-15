@@ -33,26 +33,26 @@ Le système est composé de :
 
 **Backend (Netlify Functions)** :
 
-- [`netlify/lib/oauthProviders.js`](file:///c:/tweesic/survey/netlify/lib/oauthProviders.js) -
+- [`netlify/edge-functions/lib/lib/oauthProviders.js`](../netlify/edge-functions/lib/lib/oauthProviders.js) -
   Configuration des 3 providers (Facebook, GitHub, Google)
-- [`netlify/functions/oauth-providers.js`](file:///c:/tweesic/survey/netlify/functions/oauth-providers.js) -
+- [`netlify/functions/oauth-providers.js`](../netlify/functions/oauth-providers.js) -
   API pour lister les providers activés
-- [`netlify/functions/oauth-start.js`](file:///c:/tweesic/survey/netlify/functions/oauth-start.js) -
+- [`netlify/functions/oauth-start.js`](../netlify/functions/oauth-start.js) -
   Initie le flux OAuth
-- [`netlify/functions/oauth-complete.js`](file:///c:/tweesic/survey/netlify/functions/oauth-complete.js) -
+- [`netlify/functions/oauth-complete.js`](../netlify/functions/oauth-complete.js) -
   Finalise le flux et stocke l'avatar
-- [`netlify/functions/facebook-deauthorize.js`](file:///c:/tweesic/survey/netlify/functions/facebook-deauthorize.js) -
+- [`netlify/functions/facebook-deauthorize.js`](../netlify/functions/facebook-deauthorize.js) -
   Webhook RGPD pour Facebook
 
 **Frontend (React)** :
 
-- [`src/hooks/useSocialAvatar.js`](file:///c:/tweesic/survey/src/hooks/useSocialAvatar.js) - Hook
+- [`src/hooks/useSocialAvatar.js`](../src/hooks/useSocialAvatar.js) - Hook
   React pour gérer le flux OAuth
-- [`src/components/SocialAvatarButton.jsx`](file:///c:/tweesic/survey/src/components/SocialAvatarButton.jsx) -
+- [`src/components/SocialAvatarButton.jsx`](../src/components/SocialAvatarButton.jsx) -
   Bouton d'importation
-- [`src/pages/OAuthConsent.jsx`](file:///c:/tweesic/survey/src/pages/OAuthConsent.jsx) - Page de
+- [`src/pages/OAuthConsent.jsx`](../src/pages/OAuthConsent.jsx) - Page de
   consentement RGPD
-- [`src/pages/UserProfile.jsx`](file:///c:/tweesic/survey/src/pages/UserProfile.jsx) - Intégration
+- [`src/pages/UserProfile.jsx`](../src/pages/UserProfile.jsx) - Intégration
   dans le profil utilisateur
 
 **Base de données** :
@@ -67,7 +67,7 @@ Le système est composé de :
 ### 1. Démarrage du flux
 
 L'utilisateur clique sur "Importer depuis Facebook" dans
-[`UserProfile.jsx`](file:///c:/tweesic/survey/src/pages/UserProfile.jsx#L226-L234) :
+[`UserProfile.jsx`](../src/pages/UserProfile.jsx#L226-L234) :
 
 ```javascript
 <Link to="/oauth/consent?provider=facebook">Importer depuis Facebook</Link>
@@ -75,12 +75,12 @@ L'utilisateur clique sur "Importer depuis Facebook" dans
 
 ### 2. Page de consentement
 
-[`OAuthConsent.jsx`](file:///c:/tweesic/survey/src/pages/OAuthConsent.jsx) affiche les informations
+[`OAuthConsent.jsx`](../src/pages/OAuthConsent.jsx) affiche les informations
 RGPD et lance le flux via `useSocialAvatar.start()`.
 
 ### 3. Génération de l'URL d'autorisation
 
-[`oauth-start.js`](file:///c:/tweesic/survey/netlify/functions/oauth-start.js) :
+[`oauth-start.js`](../netlify/functions/oauth-start.js) :
 
 - Valide la session Supabase de l'utilisateur
 - Génère un `state` aléatoire sécurisé (protection CSRF)
@@ -95,9 +95,9 @@ L'utilisateur est redirigé vers Facebook pour autoriser l'accès à sa photo de
 
 Facebook redirige vers `/oauth/facebook/callback?code=...&state=...`
 
-[`useSocialAvatar.completeIfCallback()`](file:///c:/tweesic/survey/src/hooks/useSocialAvatar.js#L34-L82)
+[`useSocialAvatar.completeIfCallback()`](../src/hooks/useSocialAvatar.js#L34-L82)
 détecte le callback et appelle
-[`oauth-complete.js`](file:///c:/tweesic/survey/netlify/functions/oauth-complete.js) qui :
+[`oauth-complete.js`](../netlify/functions/oauth-complete.js) qui :
 
 - Valide le `state` stocké dans la base
 - Échange le `code` contre un `access_token` Facebook
@@ -111,7 +111,7 @@ détecte le callback et appelle
 
 ### 6. Affichage de l'avatar
 
-[`UserProfile.jsx`](file:///c:/tweesic/survey/src/pages/UserProfile.jsx#L193-L223) lit
+[`UserProfile.jsx`](../src/pages/UserProfile.jsx#L193-L223) lit
 `currentUser.metadata.avatarUrl` et affiche l'image.
 
 ---
@@ -147,7 +147,7 @@ détecte le callback et appelle
    - Dans Settings > Basic, section "Data Deletion Request URL"
    - URL : `https://votre-site.netlify.app/api/facebook-deauthorize`
    - Cette URL est gérée par
-     [`facebook-deauthorize.js`](file:///c:/tweesic/survey/netlify/functions/facebook-deauthorize.js)
+     [`facebook-deauthorize.js`](../netlify/functions/facebook-deauthorize.js)
 
 5. **Ajouter les variables d'environnement** :
 
@@ -369,7 +369,7 @@ google: {
 ### Consentement RGPD
 
 - Page de consentement explicite
-  ([`OAuthConsent.jsx`](file:///c:/tweesic/survey/src/pages/OAuthConsent.jsx))
+  ([`OAuthConsent.jsx`](../src/pages/OAuthConsent.jsx))
 - Tracking du consentement dans `metadata.facebook_consent` :
   - `requestedAt` : Quand le consentement a été demandé
   - `grantedAt` : Quand l'utilisateur a autorisé
@@ -378,7 +378,7 @@ google: {
 
 ### Webhook de déauthorisation Facebook
 
-[`facebook-deauthorize.js`](file:///c:/tweesic/survey/netlify/functions/facebook-deauthorize.js)
+[`facebook-deauthorize.js`](../netlify/functions/facebook-deauthorize.js)
 gère les demandes de suppression de données :
 
 - Vérifie la signature HMAC du `signed_request` Facebook
@@ -392,7 +392,7 @@ gère les demandes de suppression de données :
 ### L'avatar ne s'affiche pas
 
 - Vérifiez que `users.metadata.avatarUrl` contient une URL valide
-- Vérifiez les CORS dans la CSP ([`netlify.toml`](file:///c:/tweesic/survey/netlify.toml#L117))
+- Vérifiez les CORS dans la CSP ([`netlify.toml`](../netlify.toml#L117))
 - Pour Facebook : vérifiez que l'app est en mode "Live"
 
 ### Erreur "Invalid state"
@@ -410,7 +410,7 @@ gère les demandes de suppression de données :
 ### Le bouton n'apparaît pas
 
 - Vérifiez que les variables d'environnement sont bien définies
-- [`oauth-providers.js`](file:///c:/tweesic/survey/netlify/functions/oauth-providers.js) ne liste
+- [`oauth-providers.js`](../netlify/functions/oauth-providers.js) ne liste
   que les providers avec un `CLIENT_ID` configuré
 - Vérifiez la console du navigateur pour les erreurs
 

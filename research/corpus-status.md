@@ -56,19 +56,19 @@ graph LR
   r_ubikia["ubikia"]
   r_jeanhuguesrobert["JeanHuguesRobert"]
   r_jeanhuguesrobert -->|154| r_barons_mariani
-  r_jeanhuguesrobert -->|109| r_cogentia
+  r_jeanhuguesrobert -->|110| r_cogentia
   r_cogentia -->|101| r_barons_mariani
   r_jeanhuguesrobert -->|43| r_marenostrum
   r_fractavolta -->|41| r_cogentia
+  r_barons_mariani -->|39| r_cogentia
   r_fractavolta -->|37| r_marenostrum
   r_jeanhuguesrobert -->|34| r_fractavolta
-  r_barons_mariani -->|33| r_cogentia
   r_jeanhuguesrobert -->|24| r_inox
   r_cogentia -->|22| r_inseme
   r_cogentia -->|19| r_marenostrum
   r_fractavolta -->|18| r_inseme
   r_fractavolta -->|18| r_barons_mariani
-  r_inseme -->|14| r_cogentia
+  r_inseme -->|15| r_cogentia
   r_marenostrum -->|13| r_cogentia
   r_jeanhuguesrobert -->|12| r_inseme
   r_marenostrum -->|12| r_fractavolta

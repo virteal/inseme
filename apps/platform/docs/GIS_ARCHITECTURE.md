@@ -26,7 +26,7 @@ Ce système GIS s'inscrit dans une **architecture fédérée multi-instance** :
 - **Pas de `collectivite_id`** dans les tables : l'isolation est assurée par l'instance Supabase
 - **Hubs régionaux/nationaux** pour l'agrégation et la comparaison inter-instances
 - **Routage par sous-domaine** : `corte.lepp.fr`, `universita.lepp.fr`, `quartier-sud.corte.lepp.fr`
-- **100% gratuit et open source** — Voir [FUNDING.md](../FUNDING.md)
+- **100% gratuit et open source** — Voir [FUNDING.md](FUNDING.md)
 
 #### Hiérarchie géographique des instances
 

@@ -183,7 +183,7 @@ Also inspect, when present:
 - `.api-docs.md` — important API references;
 - `ARCHITECTURE.md` — system architecture;
 - `ROADMAP-TECH.md` — technical roadmap.
-- [`research/agent_configuration_layer.md`](research/agent_configuration_layer.md) — AGENTS.md, `.agents/`, and governed operational projections of the corpus.
+- [`cogentia/research/agent_configuration_layer.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/agent_configuration_layer.md) — AGENTS.md, `.agents/`, and governed operational projections of the corpus.
 
 If these files disagree with this document, preserve the conflict and report it. Do not silently choose one.
 
