@@ -55,23 +55,23 @@ graph LR
   r_registre_mariani["registre-mariani"]
   r_ubikia["ubikia"]
   r_jeanhuguesrobert["JeanHuguesRobert"]
-  r_jeanhuguesrobert -->|143| r_barons_mariani
+  r_jeanhuguesrobert -->|154| r_barons_mariani
+  r_jeanhuguesrobert -->|109| r_cogentia
   r_cogentia -->|101| r_barons_mariani
-  r_jeanhuguesrobert -->|99| r_cogentia
   r_jeanhuguesrobert -->|43| r_marenostrum
-  r_fractavolta -->|40| r_cogentia
+  r_fractavolta -->|41| r_cogentia
   r_fractavolta -->|37| r_marenostrum
-  r_jeanhuguesrobert -->|36| r_fractavolta
-  r_jeanhuguesrobert -->|30| r_inox
-  r_barons_mariani -->|27| r_cogentia
+  r_jeanhuguesrobert -->|34| r_fractavolta
+  r_barons_mariani -->|33| r_cogentia
+  r_jeanhuguesrobert -->|24| r_inox
   r_cogentia -->|22| r_inseme
   r_cogentia -->|19| r_marenostrum
   r_fractavolta -->|18| r_inseme
   r_fractavolta -->|18| r_barons_mariani
-  r_jeanhuguesrobert -->|16| r_inseme
   r_inseme -->|14| r_cogentia
+  r_marenostrum -->|13| r_cogentia
+  r_jeanhuguesrobert -->|12| r_inseme
   r_marenostrum -->|12| r_fractavolta
-  r_marenostrum -->|12| r_cogentia
   r_barons_mariani -->|11| r_marenostrum
   r_inox -->|11| r_barons_mariani
   r_inox -->|11| r_cogentia
@@ -87,9 +87,9 @@ graph LR
   r_barons_mariani -->|4| r_inox
   r_barons_mariani -->|4| r_jeanhuguesrobert
   r_cogentia -->|4| r_jeanhuguesrobert
+  r_barons_mariani -->|3| r_inseme
   r_inseme -->|3| r_barons_mariani
   r_inseme -->|3| r_jeanhuguesrobert
-  r_barons_mariani -->|2| r_inseme
   r_cogentia -->|2| r_inox
   r_fractavolta -->|2| r_jeanhuguesrobert
   r_inox -->|2| r_jeanhuguesrobert
@@ -98,6 +98,7 @@ graph LR
   r_marenostrum -->|2| r_jeanhuguesrobert
   r_marenostrum -->|2| r_inseme
   r_marenostrum -->|2| r_inox
+  r_ubikia -->|1| r_cogentia
 ```
 <!-- END_AUTO: graph -->
 
@@ -533,7 +534,6 @@ _Manually curated: objections received publicly, not yet fully resolved._
 - [Research Index — Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md)
 - [Corpus Status — inseme](corpus-status.md)
 - [Carte globale du Corpus](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/corpus-map.md)
-- [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
 - [Research Index — Jean Hugues Noël Robert (Profile / Entry Point)](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md)
 - [Research Index — MareNostrum](https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/index.md)
 <!-- END_AUTO: possibilities -->
