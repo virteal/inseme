@@ -55,10 +55,10 @@ graph LR
   r_registre_mariani["registre-mariani"]
   r_ubikia["ubikia"]
   r_jeanhuguesrobert["JeanHuguesRobert"]
-  r_jeanhuguesrobert -->|154| r_barons_mariani
+  r_jeanhuguesrobert -->|153| r_barons_mariani
   r_jeanhuguesrobert -->|110| r_cogentia
   r_cogentia -->|101| r_barons_mariani
-  r_jeanhuguesrobert -->|43| r_marenostrum
+  r_jeanhuguesrobert -->|44| r_marenostrum
   r_fractavolta -->|41| r_cogentia
   r_barons_mariani -->|39| r_cogentia
   r_fractavolta -->|37| r_marenostrum
