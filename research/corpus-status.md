@@ -58,21 +58,23 @@ graph LR
   r_jeanhuguesrobert -->|153| r_barons_mariani
   r_jeanhuguesrobert -->|110| r_cogentia
   r_cogentia -->|101| r_barons_mariani
+  r_barons_mariani -->|62| r_cogentia
   r_jeanhuguesrobert -->|45| r_marenostrum
   r_fractavolta -->|41| r_cogentia
-  r_barons_mariani -->|39| r_cogentia
   r_fractavolta -->|37| r_marenostrum
   r_jeanhuguesrobert -->|36| r_fractavolta
   r_jeanhuguesrobert -->|24| r_inox
+  r_barons_mariani -->|23| r_marenostrum
   r_cogentia -->|22| r_inseme
   r_cogentia -->|19| r_marenostrum
   r_fractavolta -->|18| r_inseme
   r_fractavolta -->|18| r_barons_mariani
+  r_barons_mariani -->|17| r_fractavolta
+  r_barons_mariani -->|16| r_inseme
   r_inseme -->|15| r_cogentia
   r_marenostrum -->|13| r_cogentia
   r_jeanhuguesrobert -->|12| r_inseme
   r_marenostrum -->|12| r_fractavolta
-  r_barons_mariani -->|11| r_marenostrum
   r_inox -->|11| r_barons_mariani
   r_inox -->|11| r_cogentia
   r_marenostrum -->|11| r_barons_mariani
@@ -82,14 +84,13 @@ graph LR
   r_inox -->|8| r_marenostrum
   r_inox -->|7| r_inseme
   r_inseme -->|7| r_inox
-  r_barons_mariani -->|6| r_fractavolta
+  r_barons_mariani -->|5| r_inox
+  r_barons_mariani -->|5| r_jeanhuguesrobert
   r_cogentia -->|5| r_fractavolta
-  r_barons_mariani -->|4| r_inox
-  r_barons_mariani -->|4| r_jeanhuguesrobert
   r_cogentia -->|4| r_jeanhuguesrobert
-  r_barons_mariani -->|3| r_inseme
   r_inseme -->|3| r_barons_mariani
   r_inseme -->|3| r_jeanhuguesrobert
+  r_barons_mariani -->|2| r_ubikia
   r_cogentia -->|2| r_inox
   r_fractavolta -->|2| r_jeanhuguesrobert
   r_inox -->|2| r_jeanhuguesrobert
