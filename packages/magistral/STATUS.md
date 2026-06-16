@@ -46,14 +46,20 @@ As of now (late May 2026), **no brique is marked "active"** — everything is `e
 - Cleaned up README with realistic current instructions
 - Created this STATUS.md
 
-**Next priorities**
+**Next priorities (updated 2026-06 during "finish" pass)**
 
-1. Improve the "Explore" tab experience (probe + add to map flow)
-2. Finish/polish the Logs browser in both UIs
-3. Make the Sovereign Node (`packages/models`) fully expose the same rich Magistral admin surface as
-   the standalone pilot
-4. Better error messages and onboarding when maps/blueprints are missing
+1. ~~Improve the "Explore" tab experience (probe + add to map flow)~~ — Legacy duplicate probe section removed from Nodes tab. Explore tab is now the dedicated/primary flow. Add-to-map works (with tier guess + auto metrics refresh after add). Further UX (pre-add editor form) possible but functional.
+2. ~~Finish/polish the Logs browser in both UIs~~ — Richer table (Time/Node/Tier/Status/Latency/Tokens + stream ⚡). Node + status filters (selects), row click → detail panel (preview, tokens, error, raw JSON). Scroll-to-bottom aware auto-pause ("frozen when scrolled up"). Clear + toggle. Server-side filter support already present; client re-filters current buffer.
+3. ~~Make the Sovereign Node (`packages/models`) fully expose the same rich...~~ — Sovereign serves the unified `magistral/ui/index.html` (same as pilot) at / and /__inspector. Feature detection loads sovereign + magistral modules automatically. Full parity for metrics/disable/explore/logs via shared code. (Old ai-inspector.html now legacy.)
+4. ~~Better error messages and onboarding when maps/blueprints are missing~~ — `scripts/launcher.js` and pilot `boot()` now emit clear warnings + actionable tips pointing at the Explore tab + editing `registry/maps/default.json`. Router throws descriptive exhaustion errors.
+
+**Work completed during this "finish Magistral" pass** also included:
+- Removed path duplication risk + legacy admin.html serving for __admin (now uses modern UI).
+- Onboarding warnings in launcher/pilot.
+- Small router comment clean.
+- Docs/STATUS updates.
+- Verified `npm test` + `npm run check` + router behavior.
 
 ---
 
-**Last updated:** 2026-05-28 — Work resumed after long pause.
+**Last updated:** 2026-06 — "finish" pass (Explore polish, Logs browser, Sovereign parity via unified UI, onboarding).
