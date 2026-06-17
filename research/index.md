@@ -122,7 +122,6 @@ _Ideas that trotte — no commitment, no deadline._
 
 _Priority established by first public commit. License: open-source per individual file/package._
 _Fork to explore alternatives. Challenge via issues._
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 
@@ -131,6 +130,7 @@ _Fork to explore alternatives. Challenge via issues._
 - [Research Index — Cogentia](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/index.md)
 - [Research Index — FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/index.md)
 - [Research Index — Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md)
+- [🗳️ Inseme Monorepo - Citizen Ecosystem & Liquid Democracy](../README.md)
 - [Corpus Status — inseme](corpus-status.md)
 - [Carte globale du Corpus](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/corpus-map.md)
 - [Research Index — Jean Hugues Noël Robert (Profile / Entry Point)](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md)

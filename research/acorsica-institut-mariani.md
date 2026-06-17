@@ -75,7 +75,6 @@ clarification globale
 En cas de divergence apparente, lire d'abord la note globale, puis la présente note pour les
 implications propres à l'infrastructure civique multi-instance et à ses usages politiques
 juridiquement séparés.
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 

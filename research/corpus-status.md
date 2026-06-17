@@ -24,7 +24,6 @@ _and_ _Open Objections_ — _are manually curated and preserved across refreshes
 ---
 
 ## Registered Repositories
-
 <!-- BEGIN_AUTO: registered_repos -->
 | Repository | research/index.md | Branch | Policy | Visibility | Public presence |
 |---|---|---|---|---|---|
@@ -38,11 +37,9 @@ _and_ _Open Objections_ — _are manually curated and preserved across refreshes
 | ubikia | yes | main | all | public | full |
 | JeanHuguesRobert | yes | main | all | public | full |
 <!-- END_AUTO: registered_repos -->
-
 ---
 
 ## Cross-Reference Graph
-
 <!-- BEGIN_AUTO: graph -->
 ```mermaid
 graph LR
@@ -57,9 +54,9 @@ graph LR
   r_jeanhuguesrobert["JeanHuguesRobert"]
   r_jeanhuguesrobert -->|155| r_barons_mariani
   r_jeanhuguesrobert -->|110| r_cogentia
-  r_cogentia -->|101| r_barons_mariani
+  r_cogentia -->|98| r_barons_mariani
   r_barons_mariani -->|62| r_cogentia
-  r_jeanhuguesrobert -->|45| r_marenostrum
+  r_jeanhuguesrobert -->|46| r_marenostrum
   r_fractavolta -->|41| r_cogentia
   r_fractavolta -->|37| r_marenostrum
   r_jeanhuguesrobert -->|36| r_fractavolta
@@ -73,10 +70,10 @@ graph LR
   r_barons_mariani -->|16| r_inseme
   r_inseme -->|15| r_cogentia
   r_marenostrum -->|13| r_cogentia
-  r_jeanhuguesrobert -->|12| r_inseme
   r_marenostrum -->|12| r_fractavolta
   r_inox -->|11| r_barons_mariani
   r_inox -->|11| r_cogentia
+  r_jeanhuguesrobert -->|11| r_inseme
   r_marenostrum -->|11| r_barons_mariani
   r_inox -->|10| r_fractavolta
   r_jeanhuguesrobert -->|9| r_ubikia
@@ -87,10 +84,10 @@ graph LR
   r_barons_mariani -->|5| r_inox
   r_barons_mariani -->|5| r_jeanhuguesrobert
   r_cogentia -->|5| r_fractavolta
+  r_barons_mariani -->|4| r_ubikia
   r_cogentia -->|4| r_jeanhuguesrobert
   r_inseme -->|3| r_barons_mariani
   r_inseme -->|3| r_jeanhuguesrobert
-  r_barons_mariani -->|2| r_ubikia
   r_cogentia -->|2| r_inox
   r_fractavolta -->|2| r_jeanhuguesrobert
   r_inox -->|2| r_jeanhuguesrobert
@@ -103,11 +100,9 @@ graph LR
   r_ubikia -->|1| r_cogentia
 ```
 <!-- END_AUTO: graph -->
-
 ---
 
 ## Concepts
-
 <!-- BEGIN_AUTO: concepts -->
 | Concept | Scope | Status | Type |
 |---|---|---|---|
@@ -126,9 +121,7 @@ graph LR
 | [Brique Spec / Multi-Instance](./concepts.md#brique-spec-multi-instance) | - | - | technical specification **Scope:** project-specific **Status:** Defined |
 | [Modular System](./concepts.md#modular-system) | - | - | frontend architecture **Scope:** repository-specific **Status:** Working |
 <!-- END_AUTO: concepts -->
-
 ## Concept Graph
-
 <!-- BEGIN_AUTO: concept_graph -->
 ```mermaid
 graph LR
@@ -474,11 +467,9 @@ graph LR
 
 *Referenced but undefined: `Democratic AI Safety`, `Cogentia Commons (déclinaison manuelle)`, `Fractanet / COP (déclinaison automatisée)`, `Stabilisateurs (anti-Ubik)`, `DHITL (couches 4/5)`, `Effet Ubik (opposé)`, `Machine à explorer (opposé symétrique)`, `FM-11 (outer optimizer capture)`, `Concentration de compute (85% frontier)`, `Invidia (densité sociale destructrice)`, `DHITL (Compute Exergy comme unité traçable)`, `Map vs territory`, `Operational memory`, `Traceable agency`, `Non-deterministic Cognitive Step`, `Causal Trace Replay`, `COP/HITL Profile`, `Rule 0 (seconde méthode)`, `DHITL Layer 5`, `Envelope (kind-agnostic metadata layer)`, `Payload (kind-specific content layer)`, `Continuation payload`, `Objection payload`, `Hypothesis payload`, `Decision payload`, `Failure payload`, `Routing payload`, `Source Document`, `DHITL`, `Capabilities approach (Sen, Nussbaum)`, `Spécificité de phase`, `Flexibilité d'usage (redistributive vs. predatory)`, `Auto-institution démocratique (Castoriadis)`, `Communs (Ostrom)`, `Mauss — gift / counter-gift`, `Democratic AI Safety (thesis kernel)`, `DHITL — Democratic Humans in the Loop`, `Cogentia Commons (auditable knowledge)`, `Traçabilité civique anti-mafieuse`, `Deterministic Replay (protocol layer only)`, `Energy Packet Network (FractaVolta)`, `Cognitive Packet envelope/payload (Cogentia)`, `Auxilia (Inseme brique — human-scale Fractanet exchange)`.*
 <!-- END_AUTO: concept_graph -->
-
 ---
 
 ## Published in this repo
-
 <!-- BEGIN_AUTO: published -->
 | Title                                                                                                                                                                                                                                                                                                               | Location  | Date        |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------- |
@@ -501,7 +492,6 @@ graph LR
 | [Cyrnea State of Play](CYRNEA_STATE_OF_PLAY.md) _(living assessment for the bar/conviviality app — AI + human collaborator reference)_                                                                                                                                                                              | this repo | 2026-05-28  |
 | [COOP — Tutorial and Near-Specification](coop_tutorial.md) _(auto-generated tutorial v0.1 — COP kernel, cognitive packet router, reusable helpers (cogentiaRoutePacket etc.), hybrid policy layer (bus agent + JobScheduler), bac-à-sable usage, emissions, resets; sufficient for extension or re-implementation)_ | this repo | 2026-06-04  |
 <!-- END_AUTO: published -->
-
 ---
 
 ## What Is Proved
@@ -525,7 +515,6 @@ _Manually curated: objections received publicly, not yet fully resolved._
 ---
 
 ## What Remains Possible
-
 <!-- BEGIN_AUTO: possibilities -->
 - A formal "brique developer guide" consolidating BRIQUE_SPEC + concrete examples from
 - An "Ophélia mediator profile" — operational semantics of the AI mediator as it interfaces with
@@ -534,23 +523,23 @@ _Manually curated: objections received publicly, not yet fully resolved._
 - [Research Index — Cogentia](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/index.md)
 - [Research Index — FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/index.md)
 - [Research Index — Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md)
+- [🗳️ Inseme Monorepo - Citizen Ecosystem & Liquid Democracy](../README.md)
 - [Corpus Status — inseme](corpus-status.md)
 - [Carte globale du Corpus](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/corpus-map.md)
 - [Research Index — Jean Hugues Noël Robert (Profile / Entry Point)](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md)
 - [Research Index — MareNostrum](https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/index.md)
 <!-- END_AUTO: possibilities -->
-
 ---
 
 _Generated with `cogentia.js corpus-status` —
 [scripts/cogentia.js](https://github.com/JeanHuguesRobert/cogentia/blob/main/scripts/cogentia.js)_
 _Challenge via issues. Fork to explore alternatives._
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 
 *These documents link to this file:*
 - [Rendre capable — noyau doctrinal provisoire](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/noyau_doctrinal_rendre_capable.md)
+- [🗳️ Inseme Monorepo - Citizen Ecosystem & Liquid Democracy](../README.md)
 - [Research Index — Inseme](index.md)
 - [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
 <!-- END_AUTO: backlinks -->

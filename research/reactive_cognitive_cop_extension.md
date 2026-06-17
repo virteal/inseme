@@ -499,8 +499,6 @@ layering constraint clearly and produces concrete artifact types.
    package.
 4. Later, update COP schemas only after the Inox seed clarifies the minimal runtime semantics.
 5. Track unresolved issues through GitHub Issues as continuation packets when implementation begins.
-
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 

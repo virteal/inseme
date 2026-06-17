@@ -528,7 +528,6 @@ changes._
 **Maintained collaboratively. Fork, challenge, improve.**
 
 ### #PERTITELLU | CORTI CAPITALE | Possibilism in Practice
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 

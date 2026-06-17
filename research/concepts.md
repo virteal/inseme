@@ -295,7 +295,6 @@ within the React and Vite frontend ecosystems.
 **Reference documents:**
 
 - [`docs/MODULAR_SYSTEM.md`](../docs/MODULAR_SYSTEM.md)
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 

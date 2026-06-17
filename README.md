@@ -26,6 +26,15 @@ See [fractavolta.com](https://fractavolta.com) for the integrated picture._
 
 ---
 
+## Quick Orientation
+
+- [`research/index.md`](research/index.md) — generated document catalog
+- [`research/corpus-status.md`](research/corpus-status.md) — generated status, backlinks, and navigation checks
+- [`packages/cop-kernel/PROFILE.md`](packages/cop-kernel/PROFILE.md) — current COP kernel profile
+- [`packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md`](packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md) — packet attractors, CogQueries, and pressure strategies
+
+---
+
 ## 🏗️ Modular Architecture
 
 Inseme is designed as a modular ecosystem of "Bricks" orchestrated by a central protocol. This
@@ -63,7 +72,9 @@ The ecosystem is composed of several specialized packages:
   [Inox](https://github.com/JeanHuguesRobert/Inox).
   [COP Implementation Profiles](packages/cop-core/ImplementationProfiles.md) (working-note) defines
   the documentation convention concrete COP implementations should follow; the kernel reference
-  profile lives in [`packages/cop-kernel/PROFILE.md`](packages/cop-kernel/PROFILE.md). Developer
+  profile lives in [`packages/cop-kernel/PROFILE.md`](packages/cop-kernel/PROFILE.md). The
+  [`cop-n8n` feasibility note](packages/cop-n8n/README.md) keeps visual workflow integration
+  exploratory until the kernel adapter boundary is stable. Developer
   convergence with [Cogentia](https://github.com/JeanHuguesRobert/cogentia) happens in
   [`sandbox/cop-continuation-bac-a-sable/`](sandbox/cop-continuation-bac-a-sable/) — a CLI + ~20
   scenarios (notaire, mairie, greffier, federation, …) injecting real `cop-kernel` primitives.

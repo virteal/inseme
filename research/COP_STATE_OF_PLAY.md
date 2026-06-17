@@ -214,7 +214,6 @@ observability.
 
 Ready when you are. What is the first concrete task inside B? (e.g., harden the continuation
 descriptor, improve resumption reliability, add tests, design a resumption API, etc.)
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 

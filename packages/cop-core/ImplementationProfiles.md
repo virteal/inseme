@@ -193,6 +193,8 @@ It should clarify how conversational state becomes durable COP state.
 
 Status: exploratory only.
 
+The feasibility note lives in [`../cop-n8n/README.md`](../cop-n8n/README.md).
+
 It should not be implemented before `cop-kernel` is stable enough to define what a visual adapter
 must preserve.
 
@@ -236,4 +238,5 @@ Immediate next steps:
 1. Link this file from `packages/cop-core/README.md`.
 2. Create or update a `cop-kernel` implementation profile document using this template.
 3. Add minimal replay/conformance tests for Task / Step / Continuation projections.
-4. Keep `cop-n8n` exploratory until `cop-kernel` can provide a stable adapter contract.
+4. Keep `cop-n8n` exploratory until `cop-kernel` can provide a stable adapter contract; maintain
+   the feasibility note in [`../cop-n8n/README.md`](../cop-n8n/README.md).
