@@ -300,4 +300,5 @@ within the React and Vite frontend ecosystems.
 
 *These documents link to this file:*
 - [Research Index — Inseme](index.md)
+- [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
 <!-- END_AUTO: backlinks -->
