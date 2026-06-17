@@ -79,7 +79,7 @@ This document should be read together with:
 ## Assisted genesis note
 
 This document emerged from a multi-agent conversation involving ChatGPT and Grok around the
-modernization of Toubkal inside the Jean Hugues Robert six-repository corpus.
+modernization of Toubkal inside the Jean Hugues Robert multi-repository corpus.
 
 A first direction proposed a JavaScript package `@inseme/reactive-cognitive`. That direction was
 then corrected: Reactive Sets are already present in the Inox design, and the deep implementation
