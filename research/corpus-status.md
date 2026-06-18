@@ -39,7 +39,7 @@ _and_ _Open Objections_ — _are manually curated and preserved across refreshes
 | ubikia           | yes               | main   | all      | public     | full            |
 | JeanHuguesRobert | yes               | main   | all      | public     | full            |
 
-## <!-- END_AUTO: registered_repos -->
+<!-- END_AUTO: registered_repos -->
 
 ## Cross-Reference Graph
 
@@ -56,7 +56,7 @@ graph LR
   r_registre_mariani["registre-mariani"]
   r_ubikia["ubikia"]
   r_jeanhuguesrobert["JeanHuguesRobert"]
-  r_jeanhuguesrobert -->|162| r_barons_mariani
+  r_jeanhuguesrobert -->|161| r_barons_mariani
   r_jeanhuguesrobert -->|105| r_cogentia
   r_cogentia -->|98| r_barons_mariani
   r_barons_mariani -->|62| r_cogentia
@@ -104,7 +104,7 @@ graph LR
   r_ubikia -->|1| r_cogentia
 ```
 
-## <!-- END_AUTO: graph -->
+<!-- END_AUTO: graph -->
 
 ## Concepts
 
@@ -510,7 +510,7 @@ _Referenced but undefined: `Democratic AI Safety`, `Cogentia Commons (déclinais
 `Energy Packet Network (FractaVolta)`, `Cognitive Packet envelope/payload (Cogentia)`,
 `Auxilia (Inseme brique — human-scale Fractanet exchange)`._
 
-## <!-- END_AUTO: concept_graph -->
+<!-- END_AUTO: concept_graph -->
 
 ## Published in this repo
 
@@ -537,7 +537,7 @@ _Referenced but undefined: `Democratic AI Safety`, `Cogentia Commons (déclinais
 | [Cyrnea State of Play](CYRNEA_STATE_OF_PLAY.md) _(living assessment for the bar/conviviality app — AI + human collaborator reference)_                                                                                                                                                                              | this repo | 2026-05-28  |
 | [COOP — Tutorial and Near-Specification](coop_tutorial.md) _(auto-generated tutorial v0.1 — COP kernel, cognitive packet router, reusable helpers (cogentiaRoutePacket etc.), hybrid policy layer (bus agent + JobScheduler), bac-à-sable usage, emissions, resets; sufficient for extension or re-implementation)_ | this repo | 2026-06-04  |
 
-## <!-- END_AUTO: published -->
+<!-- END_AUTO: published -->
 
 ## What Is Proved
 
