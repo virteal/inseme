@@ -10,6 +10,14 @@ affiliation: Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Co
 date: 2026-05-13
 creator: Jean Hugues Noël Robert, baron Mariani
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/index.md
+document_role: "index"
+document_kind: "research-index"
+visibility: "public"
+lifecycle_state: "active"
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "research-index"
+classification_confidence: "strong"
 ---
 
 # Research Index — Inseme
@@ -82,12 +90,12 @@ _Hosted elsewhere, intellectually connected here._
 | Title                                                                                                                                                                                                                 | Location         |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
 | [Discours de la seconde méthode](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/second_method.md) _(founding doctrine — names cogentia.js as canonical tooling)_                               | barons-Mariani   |
-| [DHITL — Democratic Humans in the Loop](https://github.com/JeanHuguesRobert/marenostrum/blob/main/DHITL.md) _(architectural axiom — Layer 4 = cognitive infrastructure where inseme briques operate)_                 | marenostrum      |
+| [DHITL — Democratic Humans in the Loop](https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/DHITL.md) _(architectural axiom — Layer 4 = cognitive infrastructure where inseme briques operate)_                 | marenostrum      |
 | [Cogentia Pipeline](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/pipeline.md) _(source-to-derived packet workflow followed by the reactive cognitive artifacts)_                                   | cogentia         |
 | [Cognitive Packets](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md) _(envelope/payload distinction used by COP reactive cognitive artifacts)_                                   | cogentia         |
 | [Cogentia Commons MVP Specification](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_mvp_spec.md) _(targets inseme as `brique-cogentia-commons`, see §12)_                           | cogentia         |
 | [Cogentia Workflows](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_workflows.md)                                                                                                           | cogentia         |
-| [Packetized Gravity Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/PGN.md) _(physical infrastructure layer the platform may eventually run on)_                                                  | FractaVolta      |
+| [Packetized Gravity Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/PGN.md) _(physical infrastructure layer the platform may eventually run on)_                                                  | FractaVolta      |
 | [Inox — language and runtime substrate](https://github.com/JeanHuguesRobert/Inox/blob/master/research/inox-spec.md) _(concatenative stack VM; future implementation target for `cop-core` and edge briques)_          | Inox             |
 | [Reactive Sets in Inox — Native Implementation Path](https://github.com/JeanHuguesRobert/Inox/blob/master/research/reactive_sets_inox_cop_implementation.md) _(native runtime path for the reactive cognitive layer)_ | Inox             |
 | [Jean Hugues Noël Robert — profile / corpus entry point](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md) _(meta-node — registry host, orientation, AI agent briefing)_              | JeanHuguesRobert |

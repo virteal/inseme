@@ -43,6 +43,14 @@ canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/coo
 last_stamped_at: 2026-06-04
 corpus_role: "derived"
 derived_product_type: "tutorial"
+document_role: "derived"
+document_kind: "derived-product"
+visibility: "public"
+lifecycle_state: "working"
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "derived-product"
+classification_confidence: "strong"
 ---
 
 > **Auto-generated tutorial.** This document was produced from the live COP kernel sources

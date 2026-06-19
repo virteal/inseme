@@ -11,6 +11,14 @@ license: CC BY-SA 4.0
 affiliation: Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica
 date: 2026-05-16
 creator: Jean Hugues Noël Robert, baron Mariani
+document_role: "index"
+document_kind: "concept-index"
+visibility: "public"
+lifecycle_state: "active"
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "concept-index"
+classification_confidence: "strong"
 ---
 
 # Concept Index — inseme

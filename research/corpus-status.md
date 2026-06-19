@@ -64,9 +64,9 @@ graph LR
   r_kudos["Kudos"]
   r_github[".github"]
   r_acorsica_org["acorsica.org"]
-  r_jeanhuguesrobert -->|166| r_barons_mariani
-  r_jeanhuguesrobert -->|100| r_cogentia
+  r_jeanhuguesrobert -->|165| r_barons_mariani
   r_cogentia -->|98| r_barons_mariani
+  r_jeanhuguesrobert -->|96| r_cogentia
   r_barons_mariani -->|62| r_cogentia
   r_jeanhuguesrobert -->|45| r_marenostrum
   r_fractavolta -->|41| r_cogentia
@@ -118,6 +118,7 @@ graph LR
   r_institut_mariani -->|2| r_barons_mariani
   r_institut_mariani -->|2| r_fractavolta
   r_jeanhuguesrobert -->|2| r_github
+  r_jeanhuguesrobert -->|2| r_acorsica_org
   r_marenostrum -->|2| r_jeanhuguesrobert
   r_marenostrum -->|2| r_inseme
   r_marenostrum -->|2| r_inox

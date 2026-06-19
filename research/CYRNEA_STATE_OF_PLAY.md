@@ -9,6 +9,14 @@ corpus_role: "source"
 canonical_url: "https://github.com/JeanHuguesRobert/inseme/blob/main/research/CYRNEA_STATE_OF_PLAY.md"
 last_stamped_at: "2026-06-01"
 language: "en"
+document_role: "source"
+document_kind: "working-note"
+visibility: "public"
+lifecycle_state: "working"
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "working-note"
+classification_confidence: "medium"
 ---
 
 # Cyrnea — State of Play (Initial Assessment)
