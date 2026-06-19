@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cop.dev/schemas/identity.subject.schema.json",
+  "title": "COP Identity Subject",
+  "description": "Initial schema for COP/Identity subject artifacts.",
+  "type": "object",
+  "required": [
+    "artifactType",
+    "subject_id",
+    "subject_kind",
+    "existence_status",
+    "identity_assurance"
+  ],
+  "properties": {
+    "artifactType": {
+      "const": "identity/subject"
+    },
+    "subject_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject_kind": {
+      "type": "string",
+      "enum": [
+        "natural_person_living",
+        "natural_person_deceased",
+        "legal_entity_collective",
+        "public_institution",
+        "unincorporated_collective",
+        "role_or_office",
+        "ai_agent",
+        "digital_twin",
+        "fictional_persona",
+        "technical_node",
+        "estate_or_legacy_corpus",
+        "unknown_or_unverified"
+      ]
+    },
+    "public_name": {
+      "type": "string"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "existence_status": {
+      "type": "string",
+      "enum": [
+        "living",
+        "deceased",
+        "active",
+        "inactive",
+        "dissolved",
+        "fictional",
+        "unknown"
+      ]
+    },
+    "legal_status": {
+      "type": "string"
+    },
+    "identity_assurance": {
+      "type": "object",
+      "required": ["level"],
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "self_declared",
+            "community_attested",
+            "organization_attested",
+            "state_attested",
+            "cryptographically_bound",
+            "multi_source_attested"
+          ]
+        },
+        "issuer": {
+          "type": "string"
+        },
+        "evidence_artifact_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "public_roots": {
+      "type": "object",
+      "properties": {
+        "dns": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "github": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "other": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "capacity": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
