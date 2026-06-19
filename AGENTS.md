@@ -47,7 +47,32 @@ Do not expand the scope silently. If the work reveals a new problem, create or p
 
 ## 3. Branch / PR discipline
 
-Use one branch or pull request per coherent transformation.
+Current solo-corpus rule: write directly to the default branch unless Jean Hugues Robert explicitly asks for a branch or a pull request.
+
+Rationale:
+
+1. Jean Hugues Robert is currently the sole active corpus operator.
+2. Branches add cognitive and operational complexity.
+3. By Occam's razor, unnecessary workflow layers should be avoided.
+4. The corpus already has traceability through source documents, commits, diffs, issues, future corrections and explicit continuation notes.
+
+Therefore agents MUST NOT create feature branches or pull requests by default.
+
+Prefer:
+
+- small direct commits to `main`;
+- coherent changes with explicit commit messages;
+- source documents before implementation when the concept is still unstable;
+- later corrections by explicit follow-up commits.
+
+Branches or PRs MAY be used only when:
+
+- Jean Hugues Robert explicitly asks for them;
+- the change is a high-risk refactor that should be isolated;
+- external collaboration requires review before integration;
+- repository protection rules make direct commits impossible.
+
+If a branch is used exceptionally, explain why in the work report.
 
 Avoid mixing:
 
