@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cop.dev/schemas/identity.mandate.schema.json",
+  "title": "COP Identity Mandate",
+  "description": "Initial schema for explicit mandates between COP subjects.",
+  "type": "object",
+  "required": [
+    "artifactType",
+    "mandate_id",
+    "principal_subject_id",
+    "representative_subject_id",
+    "representative_kind",
+    "scope",
+    "status"
+  ],
+  "properties": {
+    "artifactType": {
+      "const": "identity/mandate"
+    },
+    "mandate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "principal_subject_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "representative_subject_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "representative_kind": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "domain": { "type": "string" },
+        "community": { "type": "string" },
+        "jurisdiction": { "type": "string" },
+        "allowed_actions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "forbidden_actions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "suspended", "revoked", "expired", "draft"]
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "valid_until": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "revocation_policy": {
+      "type": "string"
+    },
+    "evidence_artifact_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
