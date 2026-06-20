@@ -322,7 +322,6 @@ The roadmap includes:
 - decentralized COPBuses for federated cognition
 
 COP aims to become the **standard protocol for distributed, durable, multi-agent AI systems**.
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 

@@ -188,11 +188,11 @@ such anchors, traceability of the log remains, but accountability dissolves.
 These invariants are what make COP different.
 
 Violating any of them may produce a working system — but not a COP system.
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 
 *These documents link to this file:*
+- [Rendre capable — noyau doctrinal provisoire](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/noyau_doctrinal_rendre_capable.md)
 - [Fractanet — Generalized Control Planes for Heterogeneous Packet Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/fractanet.md)
 - [Concept Index — inseme](../../research/concepts.md)
 - [COP Reactive Cognitive Extension](REACTIVE_COGNITIVE_EXTENSION.md)

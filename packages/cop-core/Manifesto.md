@@ -231,7 +231,6 @@ It is more than a specification. It is an **invitation** to build cognitive syst
 trusted, audited, composed, replayed, federated, shared, and sustained.
 
 COP is the foundation upon which a century of cognitive infrastructure can be built.
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 

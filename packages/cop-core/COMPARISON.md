@@ -260,7 +260,6 @@ COP makes cognitive systems:
 Frameworks come and go.
 
 COP is designed to remain.
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 

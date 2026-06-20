@@ -100,7 +100,6 @@ Le **Brique Compiler** (dans `cop-host`) utilisera ces manifestes pour :
 
 3.  **Validation de la Config** : Vérification au démarrage que l'instance possède les paramètres
     requis par les briques activées.
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 

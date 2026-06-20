@@ -152,7 +152,6 @@ The success of COP is measured by:
 The reference kernel will evolve.
 
 The protocol should not.
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 

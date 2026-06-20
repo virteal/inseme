@@ -2967,7 +2967,6 @@ If an implementation:
 - makes reasoning resumable and inspectable,
 
 then it is aligned with the spirit and the letter of COP.
-
 <!-- BEGIN_AUTO: backlinks -->
 ### Backlinks
 
