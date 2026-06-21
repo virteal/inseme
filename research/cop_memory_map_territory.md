@@ -283,18 +283,70 @@ This is philosophy and epistemology, but it is also operational engineering.
 
 An agent must not only receive a representation. It must know the kind of representation it is using, the action for which it is sufficient, and the point at which it must ask for a deeper or different representation.
 
-## 13. COP invariant
+## 13. Circumstances and situation
+
+The ordinary phrase "it depends on the circumstances" is a practical way to express the more technical idea of situated representation.
+
+```text
+circumstances = the concrete surrounding conditions that matter for judgment or action
+situation     = the structured context in which an agent, thing, event or representation exists and acts
+```
+
+The two notions are close. Their difference is mostly one of register and modelling discipline:
+
+```text
+circumstances = common language, immediately intelligible, flexible, non-technical
+situation     = philosophical, epistemological and architectural term, easier to formalize
+```
+
+For public explanation, "circumstances" is often preferable because it is ordinary language. For COP/Memory, "situation" is useful because it can be structured:
+
+```text
+time
+place
+agent
+role
+mandate
+task
+purpose
+risk level
+available traces
+accessible representations
+cost constraints
+privacy boundary
+confidence requirements
+```
+
+A representation is never merely partial. It is partial under circumstances. It is situated.
+
+The practical bridge is:
+
+```text
+ça dépend des circonstances
+= it depends on the situation
+= the representation is valid only relative to a context of use
+```
+
+COP should therefore allow both vocabularies:
+
+```text
+circumstances = human-facing language
+situation     = structured operational model
+```
+
+## 14. COP invariant
 
 ```text
 Never let a representation silently pass for the thing represented.
 Never let a thing be used by an agent without knowing through which representation it is being accessed.
 Never let an approximation silently pass as exhaustive knowledge.
+Never let a situated representation silently pass as context-free knowledge.
 ```
 
 The practical task of COP/Memory is not to eliminate representations.
-It is to make representations small, explicit, typed, bounded, traceable, approximate, contestable and expandable.
+It is to make representations small, explicit, typed, bounded, traceable, approximate, contestable, situated and expandable.
 
-## 14. Stable formula
+## 15. Stable formula
 
 ```text
 The absolute model protects truth conditions.
@@ -303,4 +355,5 @@ The map is useful only while it remains explicitly distinct from the territory.
 The map is useful because it is smaller, cheaper and more manipulable than the territory.
 The representation is useful only while it remains explicitly distinct from the thing represented.
 Every representation is an approximation; its usefulness depends on knowing its purpose, scope, method, confidence and omissions.
+Every useful representation is situated: it depends on the circumstances of action, interpretation and use.
 ```
