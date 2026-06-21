@@ -84,7 +84,53 @@ what is locally stable may not be morally ideal
 what is locally rational may remain tragically costly
 ```
 
-## 4. Attractors and circumstances
+## 4. Entropy, negentropy and free energy
+
+This local-equilibrium analogy approaches entropy and its complement often called negentropy, but the terms must remain separated.
+
+Entropy may describe disorder, uncertainty, multiplicity of possible microstates, missing information, or thermodynamic degradation depending on the domain.
+
+Negentropy should not be read as magical anti-entropy. In living systems, it usually means that local order is maintained by importing energy, matter and information, while exporting entropy to the environment.
+
+Free energy must not be confused with free energy in the political or economic sense of costless energy.
+
+There are several distinct meanings:
+
+```text
+thermodynamic free energy
+  = usable work potential under specified constraints
+
+variational free energy
+  = information-theoretic bound used in approximate Bayesian inference
+
+expected free energy
+  = action-selection objective balancing goal-directed behavior and information gain
+```
+
+None of these means perpetual motion.
+
+A living, cognitive or institutional system can preserve local order only by dissipating energy, consuming resources, simplifying representations, maintaining boundaries, updating beliefs, and exporting disorder or cost elsewhere.
+
+In COP terms:
+
+```text
+entropy_pressure      = drift toward disorder, uncertainty, degradation or unbounded complexity
+negentropic_work      = costly work that preserves usable order, memory, boundary or structure
+free_energy_budget    = locally available capacity to reduce uncertainty, preserve viability or perform useful work
+model_error_pressure  = mismatch between representation and situation
+active_inference      = action or model update that reduces costly mismatch under constraints
+```
+
+The practical point is:
+
+```text
+There is no free order.
+There is no free memory.
+There is no free representation.
+Every maintained structure has a cost.
+```
+
+## 5. Attractors and circumstances
 
 A situation can be read as a basin of constraints.
 
@@ -103,7 +149,7 @@ escape_condition    = what would allow the system to leave the local basin
 
 The escape condition is important. If one wants to change behavior, one often has to change the basin of constraints rather than merely condemn the observed action.
 
-## 5. Necessity is not absolution
+## 6. Necessity is not absolution
 
 The phrase "necessity makes law" must not become a universal excuse.
 
@@ -128,21 +174,26 @@ what evidence could falsify it
 
 Necessity can explain. It does not automatically justify.
 
-## 6. Practical invariant
+## 7. Practical invariant
 
 ```text
 Never judge a behavior without modelling the local constraint field.
 Never let a claim of necessity silently pass as moral absolution.
 Never confuse local equilibrium with global justice.
+Never confuse free energy with free energy in the sense of free lunch.
+Never describe local order without accounting for the cost of maintaining it.
 ```
 
-## 7. Stable formula
+## 8. Stable formula
 
 ```text
 Circumstances define the local constraint field.
 Necessity is the pressure exerted by that field.
 Behavior often settles into local equilibria.
 Judgment must distinguish explanation, justification and transformation.
+Entropy names a drift toward disorder, uncertainty or degradation depending on the domain.
+Negentropy names costly local ordering work, not a violation of entropy.
+Free energy names usable work potential or an information-theoretic bound, not costless energy.
 ```
 
 For COP/Memory:
@@ -150,4 +201,6 @@ For COP/Memory:
 ```text
 A situated judgment should not merely classify an act.
 It should expose the local constraints, the local equilibrium, the alternatives, and the conditions under which the judgment could change.
+A memory system should not merely preserve traces.
+It should expose the cost of preserving, retrieving, verifying, simplifying and using them.
 ```
