@@ -11,6 +11,7 @@ language: "en"
 related:
   - "research/cop_memory_profile.md"
   - "research/cop_memory_metadata_recursion.md"
+  - "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/Cogentia-and-Cogentigram.md"
 ---
 
 # COP Memory — Map and Territory
@@ -225,17 +226,75 @@ proof bundle    = representation designed for challenge and audit
 A representation can be useful, beautiful, actionable, probative or misleading.
 Its value depends on purpose, scale, freshness, confidence, provenance and omissions.
 
-## 11. COP invariant
+## 11. Representation as approximation
+
+A representation is necessarily partial.
+
+It selects, compresses, abstracts, normalizes, frames, filters and sometimes distorts. Even when it is useful, it remains an approximation of the thing represented.
+
+This point is already explicit in the Cogentia / Cogentigram / Cogentiscope triad:
+
+```text
+Cogentia     = the inferred persistent structural signature;
+Cogentigram  = a structured measurable representation of that signature;
+Cogentiscope = the instrument or protocol that produces the representation.
+```
+
+The Cogentigram is not Cogentia itself. It is a projection, produced by an instrument, under assumptions, with uncertainty, drift and limits.
+
+COP/Memory generalizes this beyond Cogentia:
+
+```text
+thing              -> representation
+person             -> profile / dossier / digital twin / cogentigram
+place              -> map / description / sensor model / heritage report
+object             -> photo / condition report / material trace summary
+event              -> log entry / witness statement / causal reconstruction
+corpus             -> index / summary / MemoryView / concept graph
+resource           -> descriptor / state view / temporal projection
+```
+
+The general rule is:
+
+```text
+Every representation must remain marked as a representation.
+Every representation should expose, when relevant, its approximation regime.
+```
+
+## 12. Approximation regime
+
+A useful representation should be able to declare its approximation regime:
+
+```text
+purpose       = why this representation exists
+scale         = level of detail retained
+scope         = what is inside / outside
+method        = how it was produced
+instrument    = human, AI agent, sensor, procedure, model, archive, measurement system
+confidence    = how reliable it is for the declared purpose
+uncertainty   = what is not known or unstable
+freshness     = whether the represented thing may have changed
+omissions     = what was deliberately or accidentally excluded
+bias_risks    = likely distortions or capture risks
+status        = draft, working view, audited view, probative bundle, obsolete view
+```
+
+This is philosophy and epistemology, but it is also operational engineering.
+
+An agent must not only receive a representation. It must know the kind of representation it is using, the action for which it is sufficient, and the point at which it must ask for a deeper or different representation.
+
+## 13. COP invariant
 
 ```text
 Never let a representation silently pass for the thing represented.
 Never let a thing be used by an agent without knowing through which representation it is being accessed.
+Never let an approximation silently pass as exhaustive knowledge.
 ```
 
 The practical task of COP/Memory is not to eliminate representations.
-It is to make representations small, explicit, typed, bounded, traceable and expandable.
+It is to make representations small, explicit, typed, bounded, traceable, approximate, contestable and expandable.
 
-## 12. Stable formula
+## 14. Stable formula
 
 ```text
 The absolute model protects truth conditions.
@@ -243,4 +302,5 @@ The MemoryView enables action.
 The map is useful only while it remains explicitly distinct from the territory.
 The map is useful because it is smaller, cheaper and more manipulable than the territory.
 The representation is useful only while it remains explicitly distinct from the thing represented.
+Every representation is an approximation; its usefulness depends on knowing its purpose, scope, method, confidence and omissions.
 ```
