@@ -136,10 +136,41 @@ The absolute model prevents category errors.
 The map enables action.
 The stop rules prevent infinite cartography.
 
-## 8. Stable formula
+## 8. Small manipulable maps
+
+The decisive advantage of a map is that it is a small object.
+
+The territory is not merely large. At the limit, the territory is indefinitely complex:
+
+```text
+one place opens into its material history
+one object opens into its production, use, wear and repairs
+one document opens into its sources, versions, interpretations and effects
+one decision opens into motives, pressures, mandates, evidence and consequences
+one corpus opens into a graph of traces, contexts and derived products
+```
+
+A full map of the territory would become the territory again, and therefore would no longer be usable as a map.
+
+A practical MemoryView must therefore be:
+
+```text
+small enough to fit in attention
+cheap enough to compute or retrieve
+clear enough to orient action
+explicit enough about what it omits
+expandable enough when the risk justifies it
+```
+
+This is the operational reason why COP/Memory needs pragmatic projections rather than direct exposure of the full trace graph.
+
+The agent does not need the universe. It needs a map sufficient for the next action, with a visible path for expansion if the map becomes insufficient.
+
+## 9. Stable formula
 
 ```text
 The absolute model protects truth conditions.
 The MemoryView enables action.
 The map is useful only while it remains explicitly distinct from the territory.
+The map is useful because it is smaller, cheaper and more manipulable than the territory.
 ```
