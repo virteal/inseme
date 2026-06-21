@@ -334,19 +334,58 @@ circumstances = human-facing language
 situation     = structured operational model
 ```
 
-## 14. COP invariant
+## 14. Situated judgment and moral ambiguity
+
+Circumstances matter not only for knowledge. They also matter for judgment.
+
+The same visible behavior can be evaluated very differently depending on the situation:
+
+```text
+an act of violence        -> aggression, defense, rescue, revenge, sacrifice, coercion
+refusal to obey           -> irresponsibility, courage, resistance, disloyalty, survival
+secrecy                   -> manipulation, protection, prudence, betrayal, tactical necessity
+destruction               -> vandalism, liberation, sabotage, healing, ecological defense
+```
+
+The behavior is not enough. Judgment requires a situated interpretation of the act, its causes, constraints, alternatives, intentions, pressures, risks and consequences.
+
+This is why a non-manichean narrative is often more realistic than a simple good/evil classification.
+In a film such as *Princess Mononoke*, the same character can appear right or wrong depending on the local configuration of life, violence, survival, loyalty, injury, revenge, protection and ecological balance.
+The value of the action is not readable from the gesture alone. It depends on the circumstances.
+
+COP/Memory should therefore distinguish:
+
+```text
+behavior_trace      = what was observed or recorded
+situated_context    = the circumstances that make the behavior intelligible
+interpretation      = the current reading of the behavior
+judgment            = an evaluative conclusion under explicit criteria
+revision_condition  = what new information could change the judgment
+```
+
+A judgment is therefore a representation too. It must remain marked as situated, partial and revisable.
+
+Practical rule:
+
+```text
+Never evaluate a behavior without exposing the circumstances that make the evaluation intelligible.
+Never let a moral judgment silently pass as a context-free property of an act or person.
+```
+
+## 15. COP invariant
 
 ```text
 Never let a representation silently pass for the thing represented.
 Never let a thing be used by an agent without knowing through which representation it is being accessed.
 Never let an approximation silently pass as exhaustive knowledge.
 Never let a situated representation silently pass as context-free knowledge.
+Never let a situated judgment silently pass as a context-free moral truth.
 ```
 
 The practical task of COP/Memory is not to eliminate representations.
 It is to make representations small, explicit, typed, bounded, traceable, approximate, contestable, situated and expandable.
 
-## 15. Stable formula
+## 16. Stable formula
 
 ```text
 The absolute model protects truth conditions.
@@ -356,4 +395,5 @@ The map is useful because it is smaller, cheaper and more manipulable than the t
 The representation is useful only while it remains explicitly distinct from the thing represented.
 Every representation is an approximation; its usefulness depends on knowing its purpose, scope, method, confidence and omissions.
 Every useful representation is situated: it depends on the circumstances of action, interpretation and use.
+A judgment is also a representation: it must remain tied to the circumstances that make it intelligible.
 ```
