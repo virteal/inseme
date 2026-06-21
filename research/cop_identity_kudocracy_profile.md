@@ -74,7 +74,61 @@ unknown_or_unverified
 
 The legal expression "personne morale" is institutionally established in French law, but conceptually problematic. It may be clearer to speak of `legal_entity_collective`, `non_living_legal_subject`, or `constructed_legal_subject`.
 
-## 4. Kudocracy constitutional rule
+## 4. Identified things
+
+Identity is not limited to subjects.
+
+COP also needs stable identifiers for things that may be referenced, routed, versioned, audited, replayed, challenged or used as evidence.
+
+A `Subject` may act or bear rights, roles, capacities and mandates. An `IdentifiedThing` may be referenced, versioned, routed, audited or used as evidence, without thereby becoming a civic subject.
+
+Initial identified thing kinds:
+
+```text
+cop_event
+cop_artifact
+cop_topic
+cop_task
+cop_step
+cop_continuation
+proposal
+proposal_version
+public_decision
+vote_session
+mandate_record
+capacity_record
+role_record
+influence_trace
+civic_protection_report
+ledger_record
+signature_key
+credential
+proof_or_evidence
+dns_root
+repository
+corpus
+source_document
+derived_artifact
+software_package
+runtime_node
+physical_place
+physical_object
+sensor_or_device
+resource_stream
+external_reference
+```
+
+Rule:
+
+```text
+Subjects can act or bear rights, roles, capacities and mandates.
+Identified things can be referenced, versioned, routed, audited or used as evidence.
+A thing must not be treated as a subject unless a profile explicitly grants it subject status.
+```
+
+This distinction prevents category errors, such as treating a software package, a repository, a proposal, a vote session, a DNS root or a public ledger record as if it were a citizen, a mandataire or a living person.
+
+## 5. Kudocracy constitutional rule
 
 In Kudocracy, sovereign civic voting belongs only to living natural persons who have capacity in the relevant scope.
 
@@ -87,11 +141,12 @@ one digital twin != one living citizen
 
 Other subjects may contribute, recommend, certify, audit, publish, operate systems, preserve archives, or represent a bounded mandate, but they must not be confused with living citizens.
 
-## 5. Subject / actor / role / mandate / act
+## 6. Subject / actor / role / mandate / act
 
 Definitions:
 
-- `Subject`: entity that can be identified or referenced.
+- `Subject`: entity that can be identified or referenced as bearer of a status, role, capacity, mandate, influence or act.
+- `IdentifiedThing`: non-subject object that may need stable reference, versioning, routing, audit, replay or evidential status.
 - `Actor`: subject causing or performing an event.
 - `Role`: contextual position, such as citizen, chair, auditor, operator, candidate, trustee.
 - `Capacity`: right or ability to perform a class of acts in a scope.
@@ -106,7 +161,9 @@ A governance-critical event must not only say who acted.
 It must say in what capacity, at what title, for whom, under what mandate, and under what publicity rule.
 ```
 
-## 6. Capacity
+A governance-critical reference must say what is referenced, which version or hash is meant, and whether the reference is normative, evidential, informative or operational.
+
+## 7. Capacity
 
 Capacity is scope-bound. A subject may exist without being able to perform a given act.
 
@@ -118,7 +175,7 @@ Examples:
 - a digital twin may represent a corpus but not produce a sovereign living will;
 - an association may publish recommendations but not count as a citizen.
 
-## 7. Mandate
+## 8. Mandate
 
 Mandates are explicit, bounded, revocable and auditable.
 
@@ -136,7 +193,7 @@ A mandate must identify:
 
 An AI agent may be mandated to suggest, summarize, compare or alert. It must not be silently allowed to vote as a living citizen.
 
-## 8. Public civic act
+## 9. Public civic act
 
 Kudocracy starts from the principle of public civic acts. The ideal vote is public, because a robust democracy should protect citizens sufficiently for them to assume their opinions.
 
@@ -160,7 +217,7 @@ influence trace reference
 civic protection reference, if any
 ```
 
-## 9. Influence trace
+## 10. Influence trace
 
 Because Kudocracy distinguishes suggestion, recommendation, delegation and prescription, a vote may carry an influence trace.
 
@@ -173,7 +230,7 @@ delegation = bounded transfer of decision power
 prescription = prohibited for sovereign civic acts
 ```
 
-## 10. Digital twin rule
+## 11. Digital twin rule
 
 A digital twin is not a living natural person.
 
@@ -202,7 +259,7 @@ Formula:
 A digital twin may preserve interpretive continuity; it does not possess living sovereignty.
 ```
 
-## 11. Profile placement
+## 12. Profile placement
 
 Recommended structure:
 
@@ -214,16 +271,16 @@ COP/Core
   + COP/Kudocracy
 ```
 
-`COP/Identity` handles subjects, capacities and mandates.
+`COP/Identity` handles subjects, identified things, capacities and mandates.
 
 `COP/Kudocracy` handles public civic acts, proposals, votes, influence traces, civic protection and public audit.
 
-## 12. Continuation
+## 13. Continuation
 
 Next steps:
 
 1. Add operational profile documents under `packages/cop-core/`.
-2. Add minimal JSON schemas for subject and mandate.
+2. Add minimal JSON schemas for subject, identified thing and mandate.
 3. Add Kudocracy schemas for public decision, influence trace and civic protection report.
 4. Add TypeScript types.
 5. Add validation helpers.
