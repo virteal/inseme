@@ -151,7 +151,111 @@ COP should distinguish:
 
 Correction should create new traces rather than mutate old ones.
 
-## 8. Suggested artifacts
+## 8. Mutable resources, immutable states, temporal views
+
+Some memory objects are not simple immutable things.
+
+A journal, registry, corpus, law code, public feed, sensor stream or official gazette is a named resource that evolves over time.
+
+COP/Memory should therefore distinguish:
+
+```text
+NamedResource      = stable identity for an evolving resource
+ResourceState      = immutable observed state of that resource at a given time or range
+ChangeEvent        = append-only event that changes or extends the resource
+TemporalView       = query result such as latest known state or state at date T
+MaterializedView   = cached projection of a TemporalView
+```
+
+The named resource is mutable by nature. The states and change events should be immutable.
+
+Examples:
+
+```text
+journal-officiel              -> NamedResource
+journal-officiel@2026-06-21   -> ResourceState or TemporalView
+article/version hash          -> immutable content object
+publication event             -> ChangeEvent
+latest-known                  -> TemporalView query, not a stored truth by itself
+```
+
+The practical rule is:
+
+```text
+Do not store every full version by default.
+Store immutable change units, periodic checkpoints, and enough indexes to answer temporal queries.
+```
+
+## 9. Temporal query modes
+
+COP/Memory should support at least three temporal access modes:
+
+```text
+latest_known(resource_id)
+state_at(resource_id, time)
+changes_between(resource_id, t1, t2)
+```
+
+Additional modes may be useful:
+
+```text
+state_known_at(resource_id, transaction_time)
+state_valid_at(resource_id, valid_time)
+state_decided_at(resource_id, decision_time)
+```
+
+This introduces bitemporal or tritemporal distinctions:
+
+```text
+valid_time       = when the fact is true in the world or target domain
+transaction_time = when COP recorded or accepted the fact
+decision_time    = when a human or institution decided the interpretation
+```
+
+For legal, civic and governance memory, these timelines must not be collapsed.
+
+Example:
+
+```text
+A law may be published on date P,
+become valid on date V,
+be recorded by COP on date T,
+and later be reinterpreted by a decision on date D.
+```
+
+A query must state which time axis it uses.
+
+## 10. Memento-like access pattern
+
+For evolving resources, COP/Memory can borrow the pattern of time-based access:
+
+```text
+Original Resource -> stable identity
+TimeGate          -> resolver able to answer temporal access
+Memento           -> frozen prior state
+TimeMap           -> index of known prior states
+```
+
+COP equivalent:
+
+```text
+NamedResource   -> stable evolving thing
+TemporalResolver -> component that answers state_at/latest_known
+ResourceState   -> immutable state or checkpoint
+StateMap        -> index of known states/checkpoints/change ranges
+```
+
+The resolver may reconstruct a state from:
+
+- append-only events;
+- deltas;
+- checkpoints;
+- external archives;
+- cached materialized views.
+
+The result must indicate whether it is exact, reconstructed, partial, stale or best-effort.
+
+## 11. Suggested artifacts
 
 Initial artifact types:
 
@@ -164,9 +268,14 @@ cop/consolidation-record
 cop/trace-temperature
 cop/retention-policy
 cop/invalidation-record
+cop/named-resource
+cop/resource-state
+cop/change-event-descriptor
+cop/temporal-view
+cop/state-map
 ```
 
-## 9. Suggested events
+## 12. Suggested events
 
 Initial event types:
 
@@ -181,15 +290,26 @@ memory.trace.temperature_changed
 memory.trace.invalidated
 memory.trace.archived
 memory.trace.decayed
+resource.state.observed
+resource.change.appended
+resource.view.materialized
+resource.view.invalidated
+resource.checkpoint.created
 ```
 
-## 10. Core invariant
+## 13. Core invariant
 
 ```text
 A memory trace may become easier or harder to retrieve, more or less salient, more or less trusted, and more or less consolidated; but its original durable inscription must remain distinguishable from every later interpretation, projection or summary.
 ```
 
-## 11. Continuation
+Additional invariant for evolving resources:
+
+```text
+A mutable resource is not itself a mutable content object. It is a stable identity whose immutable states, change events and temporal views must remain distinguishable.
+```
+
+## 14. Continuation
 
 Next work:
 
@@ -197,4 +317,6 @@ Next work:
 2. connect ni: content addressing to COP artifacts;
 3. define hot/warm/cold/frozen projection policies;
 4. specify invalidation and consolidation events;
-5. integrate with existing COP audit and continuation mechanisms.
+5. integrate with existing COP audit and continuation mechanisms;
+6. define schemas for NamedResource, ResourceState, TemporalView and StateMap;
+7. specify bitemporal access policies for civic and legal memory.
