@@ -66,11 +66,11 @@ graph LR
   r_acorsica_org["acorsica.org"]
   r_jeanhuguesrobert -->|174| r_barons_mariani
   r_cogentia -->|98| r_barons_mariani
-  r_jeanhuguesrobert -->|85| r_cogentia
+  r_jeanhuguesrobert -->|87| r_cogentia
   r_barons_mariani -->|62| r_cogentia
   r_jeanhuguesrobert -->|44| r_fractavolta
-  r_jeanhuguesrobert -->|43| r_marenostrum
   r_fractavolta -->|41| r_cogentia
+  r_jeanhuguesrobert -->|41| r_marenostrum
   r_fractavolta -->|37| r_marenostrum
   r_barons_mariani -->|23| r_marenostrum
   r_jeanhuguesrobert -->|23| r_inseme
