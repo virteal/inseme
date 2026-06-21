@@ -255,7 +255,126 @@ The resolver may reconstruct a state from:
 
 The result must indicate whether it is exact, reconstructed, partial, stale or best-effort.
 
-## 11. Suggested artifacts
+## 11. Pragmatic memory layer
+
+A complete memory model may be too expensive or too complex to manipulate directly.
+
+COP/Memory therefore needs an intermediate pragmatic layer between the absolute model and actual agent work.
+
+```text
+absolute memory model -> bounded MemoryView -> agent action
+```
+
+The absolute model preserves distinctions: Events, Artifacts, traces, descriptors, metadata, provenance, temporal states, caches, views and audit records.
+
+The pragmatic layer exposes only what is useful for a given task, budget, risk level and time horizon.
+
+### 11.1 MemoryView
+
+A `MemoryView` is a bounded projection of memory prepared for a human or AI agent.
+
+It is not the memory itself.
+
+It is a task-relative, cost-aware, confidence-aware and privacy-aware window into memory.
+
+A useful `MemoryView` should declare:
+
+- why the trace is returned;
+- which locality axes were used;
+- which time horizon applies;
+- how much recursion depth is allowed;
+- whether provenance and audit are included;
+- whether private or sensitive traces were excluded;
+- what the approximate retrieval and interpretation cost is;
+- what confidence, freshness and temperature signals are available.
+
+### 11.2 Practical access levels
+
+Initial levels:
+
+```text
+L0 pointer        = id, kind, title, temperature, confidence
+L1 descriptor     = content address, media type, size, fetch hints
+L2 summary        = task-specific summary and relevance reason
+L3 context        = related events, artifacts, subjects, topics and temporal scope
+L4 provenance     = generated-by, attributed-to, derived-from, verification state
+L5 audit          = hashes, signatures, ledger records, challengeable evidence
+L6 deep expansion = recursive metadata and linked traces, explicitly requested
+```
+
+Default agent access should usually be L0-L2 or L0-L3.
+
+L4-L6 should be requested explicitly or triggered by risk, governance, legal, historical or probative use.
+
+### 11.3 Cost classes
+
+Memory access should expose rough cost classes:
+
+```text
+cheap       = local projection or hot cache
+moderate    = indexed retrieval or shallow reconstruction
+expensive   = deep traversal, external fetch, temporal reconstruction
+critical    = audit/probative reconstruction requiring stronger guarantees
+```
+
+The agent should be able to ask:
+
+```text
+get me the cheapest sufficient memory view
+get me the strongest probative view
+get me the latest known state
+get me the state at date T, with confidence and gaps
+expand one level deeper
+```
+
+### 11.4 Relative sufficiency
+
+The pragmatic layer should not ask whether the returned memory is complete in the absolute sense.
+
+It should ask whether it is sufficient for the current action.
+
+```text
+sufficient_for_reading
+sufficient_for_drafting
+sufficient_for_private_reasoning
+sufficient_for_public_claim
+sufficient_for_commit
+sufficient_for_vote
+sufficient_for_legal_or_probative_use
+```
+
+A memory view can be acceptable for private reasoning while insufficient for a public claim.
+
+A memory view can be acceptable for drafting while insufficient for a signed act.
+
+A memory view can be acceptable for a cheap suggestion while insufficient for a recommendation or mandate.
+
+### 11.5 Stop rules
+
+To avoid infinite fractal expansion, every MemoryView must have stop rules.
+
+Examples:
+
+```text
+max_depth
+max_items
+max_tokens
+max_cost
+max_latency
+privacy_boundary
+probative_threshold
+freshness_threshold
+confidence_threshold
+human_review_required
+```
+
+The practical invariant is:
+
+```text
+The agent should never manipulate the whole memory graph by default. It should manipulate a bounded MemoryView whose limits are explicit.
+```
+
+## 12. Suggested artifacts
 
 Initial artifact types:
 
@@ -273,9 +392,12 @@ cop/resource-state
 cop/change-event-descriptor
 cop/temporal-view
 cop/state-map
+cop/memory-view
+cop/access-policy
+cop/cost-policy
 ```
 
-## 12. Suggested events
+## 13. Suggested events
 
 Initial event types:
 
@@ -295,9 +417,13 @@ resource.change.appended
 resource.view.materialized
 resource.view.invalidated
 resource.checkpoint.created
+memory.view.requested
+memory.view.materialized
+memory.view.expanded
+memory.view.rejected_as_insufficient
 ```
 
-## 13. Core invariant
+## 14. Core invariant
 
 ```text
 A memory trace may become easier or harder to retrieve, more or less salient, more or less trusted, and more or less consolidated; but its original durable inscription must remain distinguishable from every later interpretation, projection or summary.
@@ -309,7 +435,13 @@ Additional invariant for evolving resources:
 A mutable resource is not itself a mutable content object. It is a stable identity whose immutable states, change events and temporal views must remain distinguishable.
 ```
 
-## 14. Continuation
+Additional invariant for pragmatic memory:
+
+```text
+An agent should not consume the absolute memory graph by default. It should consume a bounded, task-relative MemoryView with explicit limits, sufficiency criteria and expansion rules.
+```
+
+## 15. Continuation
 
 Next work:
 
@@ -319,4 +451,5 @@ Next work:
 4. specify invalidation and consolidation events;
 5. integrate with existing COP audit and continuation mechanisms;
 6. define schemas for NamedResource, ResourceState, TemporalView and StateMap;
-7. specify bitemporal access policies for civic and legal memory.
+7. specify bitemporal access policies for civic and legal memory;
+8. define schemas for MemoryView, access policy, cost policy and sufficiency profiles.
