@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+import { accessSync, constants } from "node:fs";
+import { join } from "node:path";
+import { spawnSync } from "node:child_process";
+
+const lintStaged = join(process.cwd(), "node_modules", "lint-staged", "bin", "lint-staged.js");
+
+try {
+  accessSync(lintStaged, constants.R_OK);
+} catch {
+  console.warn("[inseme] lint-staged is not installed at repository root. Run pnpm install to enable pre-commit checks.");
+  process.exit(0);
+}
+
+const result = spawnSync(process.execPath, [lintStaged], {
+  cwd: process.cwd(),
+  stdio: "inherit",
+  env: process.env,
+  shell: false,
+});
+
+if (result.error) {
+  console.error(`[inseme] Failed to run lint-staged: ${result.error.message}`);
+  process.exit(1);
+}
+
+process.exit(result.status ?? 1);

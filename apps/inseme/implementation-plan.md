@@ -78,10 +78,10 @@ We will introduce a registry to manage room identities and custom settings.
 
 ### Deployment Automation
 
-We will provide scripts to automate instance setup in `/scripts/`:
+We will provide Node.js scripts to automate instance setup in `/scripts/`:
 
-- `setup-standalone.sh`: Configures environment and database for a dedicated organization.
-- `setup-saas.sh`: Initializes the multi-tenant registry and security policies.
+- `setup-standalone.js`: Configures environment and database for a dedicated organization.
+- `setup-saas.js`: Initializes the multi-tenant registry and security policies.
 
 ### SaaS Entry Flow
 

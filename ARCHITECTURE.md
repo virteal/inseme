@@ -169,7 +169,7 @@ identités de l'IA.
 │   │       ├── applied-migrations/
 │   │       └── migrations/
 │   └── platform/
-│       ├── .husky/
+│       ├── .githooks/
 │       ├── .netlify/
 │       │   ├── blobs-serve/
 │       │   ├── functions-internal/

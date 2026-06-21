@@ -220,7 +220,7 @@ hospitality / data+ battery sharing), brique-democracy, brique-map.
 **Build / Dev Tooling:**
 
 - pnpm + Turbo monorepo.
-- Husky + lint-staged + ESLint 9 + Prettier.
+- Node Git hooks + lint-staged + ESLint 9 + Prettier.
 - Playwright + Vitest.
 - Netlify CLI for local Edge simulation.
 - Tunnel scripts (ngrok/cloudflare?) for mobile testing.
