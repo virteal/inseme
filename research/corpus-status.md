@@ -64,14 +64,15 @@ graph LR
   r_kudos["Kudos"]
   r_github[".github"]
   r_acorsica_org["acorsica.org"]
-  r_jeanhuguesrobert -->|172| r_barons_mariani
+  r_jeanhuguesrobert -->|174| r_barons_mariani
   r_cogentia -->|98| r_barons_mariani
   r_jeanhuguesrobert -->|85| r_cogentia
   r_barons_mariani -->|62| r_cogentia
-  r_jeanhuguesrobert -->|51| r_marenostrum
-  r_jeanhuguesrobert -->|42| r_fractavolta
+  r_jeanhuguesrobert -->|45| r_fractavolta
+  r_jeanhuguesrobert -->|43| r_marenostrum
   r_fractavolta -->|41| r_cogentia
   r_fractavolta -->|37| r_marenostrum
+  r_jeanhuguesrobert -->|27| r_inseme
   r_barons_mariani -->|23| r_marenostrum
   r_cogentia -->|22| r_inseme
   r_jeanhuguesrobert -->|20| r_kudos
@@ -82,7 +83,6 @@ graph LR
   r_barons_mariani -->|17| r_fractavolta
   r_barons_mariani -->|16| r_inseme
   r_inseme -->|15| r_cogentia
-  r_jeanhuguesrobert -->|15| r_inseme
   r_marenostrum -->|13| r_cogentia
   r_marenostrum -->|12| r_fractavolta
   r_inox -->|11| r_barons_mariani
@@ -524,6 +524,10 @@ graph LR
 | [COP Reactive Cognitive Extension](../packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md) _(operational COP-core protocol note derived from the source document)_                                                                                                                                                    | this repo | 2026-06-01  |
 | [COP Implementation Profiles](../packages/cop-core/ImplementationProfiles.md) _(working-note — documentation convention for concrete COP implementations; companion to the kernel profile)_                                                                                                                         | this repo | 2026-06-01  |
 | [COP Identity / Kudocracy Profile](cop_identity_kudocracy_profile.md) _(source document — subjects, capacities, mandates, public civic acts and civic audit traces for Kudocracy-sensitive COP profiles)_                                                                                                            | this repo | 2026-06-19  |
+| [COP Memory Profile](cop_memory_profile.md) _(source document — pragmatic memory layer for COP profiles, identified things, traces, and operational recurrence)_                                                                                                                                                    | this repo | 2026-06-21  |
+| [COP Memory — Map and Territory](cop_memory_map_territory.md) _(source document — representation, approximation, manipulable maps, and situated judgment for COP memory)_                                                                                                                                            | this repo | 2026-06-21  |
+| [COP Memory Metadata and Recursive Trace Layers](cop_memory_metadata_recursion.md) _(source document — metadata recursion, trace layers, and auditability of memory representations)_                                                                                                                                | this repo | 2026-06-21  |
+| [COP Memory — Necessity and Local Equilibrium](cop_memory_necessity_local_equilibrium.md) _(source document — necessity, entropy, negentropy, free energy, and local equilibrium for COP memory)_                                                                                                                    | this repo | 2026-06-21  |
 | [Modular System Architecture — the Brique pattern](../docs/MODULAR_SYSTEM.md)                                                                                                                                                                                                                                       | this repo | 2025-12     |
 | [BRIQUE_SPEC — the brique manifest contract](../packages/cop-host/BRIQUE_SPEC.md)                                                                                                                                                                                                                                   | this repo | 2025-12     |
 | [Multi-Instance Architecture](../packages/cop-host/docs/MULTI_INSTANCE.md)                                                                                                                                                                                                                                          | this repo | 2025-12     |
