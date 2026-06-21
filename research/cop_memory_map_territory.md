@@ -166,11 +166,81 @@ This is the operational reason why COP/Memory needs pragmatic projections rather
 
 The agent does not need the universe. It needs a map sufficient for the next action, with a visible path for expansion if the map becomes insufficient.
 
-## 9. Stable formula
+## 9. Thing and representation
+
+The map/territory distinction is itself a special case of a more fundamental distinction:
+
+```text
+thing           = what is, happened, exists, persists, or leaves traces
+representation  = an image, model, name, description, map, memory, symbol, metadata record or view of that thing
+```
+
+A representation can point to a thing, describe it, simplify it, simulate it, orient action toward it, or preserve a trace of it.
+It is not the thing itself.
+
+This is the invariant expressed by Magritte's pipe:
+
+```text
+This is not a pipe.
+It is a representation of a pipe.
+```
+
+For COP/Memory, the same applies to every object:
+
+```text
+A MemoryView of an event is not the event.
+A summary of an artifact is not the artifact.
+Metadata about a thing is not the thing.
+A provenance graph is not the activity it describes.
+A digital twin is not the living person.
+A map of a place is not the place.
+A model of a corpus is not the corpus.
+```
+
+The representation may itself become a thing in COP if it is stored, hashed, cited, audited, versioned, criticized or reused.
+This is the fractal point:
+
+```text
+thing -> representation -> represented thing for another representation
+```
+
+The recursion is legitimate only if each level keeps its status explicit.
+
+## 10. Representation status
+
+Every pragmatic memory object should therefore indicate, explicitly or implicitly, its representation status:
+
+```text
+pointer         = minimal reference to a thing
+label           = human-readable name
+summary         = compressed representation
+map             = spatial, causal, semantic or procedural orientation aid
+model           = structured representation with predictive or explanatory use
+projection      = derived state from traces
+metadata record = claims about a thing
+memory view     = bounded task-relative representation
+proof bundle    = representation designed for challenge and audit
+```
+
+A representation can be useful, beautiful, actionable, probative or misleading.
+Its value depends on purpose, scale, freshness, confidence, provenance and omissions.
+
+## 11. COP invariant
+
+```text
+Never let a representation silently pass for the thing represented.
+Never let a thing be used by an agent without knowing through which representation it is being accessed.
+```
+
+The practical task of COP/Memory is not to eliminate representations.
+It is to make representations small, explicit, typed, bounded, traceable and expandable.
+
+## 12. Stable formula
 
 ```text
 The absolute model protects truth conditions.
 The MemoryView enables action.
 The map is useful only while it remains explicitly distinct from the territory.
 The map is useful because it is smaller, cheaper and more manipulable than the territory.
+The representation is useful only while it remains explicitly distinct from the thing represented.
 ```
