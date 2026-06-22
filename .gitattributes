@@ -1,0 +1,6 @@
+# Canonical text format for GitHub, Node.js, and Linux deployments.
+* text=auto eol=lf
+
+# Native Windows launchers keep CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
