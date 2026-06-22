@@ -99,14 +99,17 @@ Le **Brique Compiler** (dans `cop-host`) utilisera ces manifestes pour :
     `App.jsx` pour enregistrer dynamiquement les routes et les menus si la feature est activée.
 
 3.  **Validation de la Config** : Vérification au démarrage que l'instance possède les paramètres
-    requis par les briques activées.
+requis par les briques activées.
 <!-- BEGIN_AUTO: backlinks -->
+
 ### Backlinks
 
-*These documents link to this file:*
+_These documents link to this file:_
+
 - [Cogentia Commons — MVP Specification](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_mvp_spec.md)
 - For citizens
 - [brique-auxilia](../brique-auxilia/README.md)
 - [Concept Index — inseme](../../research/concepts.md)
+- [Inseme](../../README.md)
 - [Research Index — Inseme](../../research/index.md)
 <!-- END_AUTO: backlinks -->

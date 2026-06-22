@@ -222,13 +222,17 @@ observability.
 
 Ready when you are. What is the first concrete task inside B? (e.g., harden the continuation
 descriptor, improve resumption reliability, add tests, design a resumption API, etc.)
+
 <!-- BEGIN_AUTO: backlinks -->
+
 ### Backlinks
 
-*These documents link to this file:*
+_These documents link to this file:_
+
 - [Cognitive Packet Switching](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packet_switching.md)
 - [Concept Index — inseme](concepts.md)
 - [COOP — Tutorial and Near-Specification](coop_tutorial.md)
+- [Inseme](../README.md)
 - [Research Index — Inseme](index.md)
 - [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
 <!-- END_AUTO: backlinks -->

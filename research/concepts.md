@@ -304,8 +304,11 @@ within the React and Vite frontend ecosystems.
 
 - [`docs/MODULAR_SYSTEM.md`](../docs/MODULAR_SYSTEM.md)
 <!-- BEGIN_AUTO: backlinks -->
+
 ### Backlinks
 
-*These documents link to this file:*
+_These documents link to this file:_
+
+- [Inseme](../README.md)
 - [Research Index — Inseme](index.md)
 <!-- END_AUTO: backlinks -->

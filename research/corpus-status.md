@@ -24,28 +24,34 @@ _and_ _Open Objections_ — _are manually curated and preserved across refreshes
 ---
 
 ## Registered Repositories
+
 <!-- BEGIN_AUTO: registered_repos -->
-| Repository | research/index.md | Branch | Policy | Visibility | Public presence |
-|---|---|---|---|---|---|
-| cogentia | yes | main | all | public | full |
-| FractaVolta | yes | main | all | public | full |
-| marenostrum | yes | main | all | public | full |
-| barons-Mariani | yes | main | all | public | full |
-| inseme | yes | main | research | public | full |
-| Inox | yes | master | all | public | full |
-| registre-mariani | yes | main | all | private | stub |
-| ubikia | yes | main | all | public | full |
-| JeanHuguesRobert | yes | main | all | public | full |
-| privai | yes | main | all | public | full |
-| gouvernance | yes | main | all | public | full |
-| marianivillage | yes | main | all | public | full |
-| institut-mariani | yes | main | all | public | full |
-| Kudos | yes | main | all | public | full |
-| .github | yes | main | all | public | full |
-| acorsica.org | yes | main | all | public | full |
+
+| Repository       | research/index.md | Branch | Policy   | Visibility | Public presence |
+| ---------------- | ----------------- | ------ | -------- | ---------- | --------------- |
+| cogentia         | yes               | main   | all      | public     | full            |
+| FractaVolta      | yes               | main   | all      | public     | full            |
+| marenostrum      | yes               | main   | all      | public     | full            |
+| barons-Mariani   | yes               | main   | all      | public     | full            |
+| inseme           | yes               | main   | research | public     | full            |
+| Inox             | yes               | master | all      | public     | full            |
+| registre-mariani | yes               | main   | all      | private    | stub            |
+| ubikia           | yes               | main   | all      | public     | full            |
+| JeanHuguesRobert | yes               | main   | all      | public     | full            |
+| privai           | yes               | main   | all      | public     | full            |
+| gouvernance      | yes               | main   | all      | public     | full            |
+| marianivillage   | yes               | main   | all      | public     | full            |
+| institut-mariani | yes               | main   | all      | public     | full            |
+| Kudos            | yes               | main   | all      | public     | full            |
+| .github          | yes               | main   | all      | public     | full            |
+| acorsica.org     | yes               | main   | all      | public     | full            |
+
 <!-- END_AUTO: registered_repos -->
+
 ## Cross-Reference Graph
+
 <!-- BEGIN_AUTO: graph -->
+
 ```mermaid
 graph LR
   r_cogentia["cogentia"]
@@ -143,28 +149,36 @@ graph LR
   r_marianivillage -->|1| r_institut_mariani
   r_ubikia -->|1| r_cogentia
 ```
+
 <!-- END_AUTO: graph -->
+
 ## Concepts
+
 <!-- BEGIN_AUTO: concepts -->
-| Concept | Scope | Status | Type |
-|---|---|---|---|
-| [Cogentia](./concepts.md#cogentia) | - | - | abstract concept / agentivity class **Scope:** Global **Status:** Working |
-| [Cogentigram](./concepts.md#cogentigram) | - | - | representation / map **Scope:** Global **Status:** Working |
-| [COP (Continuous Operation Protocol)](./concepts.md#cop-continuous-operation-protocol) | - | - | protocol / runtime **Scope:** Global **Status:** Canonical |
-| [Briques](./concepts.md#briques) | - | - | modular component **Scope:** Global **Status:** Operational |
-| [Kudocracy](./concepts.md#kudocracy) | - | - | governance system **Scope:** Global **Status:** Defined |
-| [Agora](./concepts.md#agora) | - | - | system model **Scope:** Global **Status:** Defined |
-| [Ophélia](./concepts.md#ophelia) | - | - | agent **Scope:** Global **Status:** Operational |
-| [COP Invariants](./concepts.md#cop-invariants) | - | - | protocol constraints / architectural invariants **Scope:** Global **Status:** Canonical |
-| [Non-deterministic Cognitive Step (Agentic Step)](./concepts.md#non-deterministic-cognitive-step-agentic-step) | - | - | process concept **Scope:** Global **Status:** Working |
-| [Human Enacted Decision Artifact](./concepts.md#human-enacted-decision-artifact) | - | - | artifact type / imputability anchor **Scope:** Global **Status:** Working |
-| [Causal Trace Replay (Auditable Causal Reconstruction)](./concepts.md#causal-trace-replay-auditable-causal-reconstruction) | - | - | audit / replay mechanism **Scope:** Global **Status:** Working |
-| [COP (Cognitive Orchestration Protocol)](./concepts.md#cop-cognitive-orchestration-protocol) | - | - | protocol / runtime **Scope:** Global **Status:** Canonical |
-| [Brique Spec / Multi-Instance](./concepts.md#brique-spec-multi-instance) | - | - | technical specification **Scope:** project-specific **Status:** Defined |
-| [Modular System](./concepts.md#modular-system) | - | - | frontend architecture **Scope:** repository-specific **Status:** Working |
+
+| Concept                                                                                                                    | Scope | Status | Type                                                                                    |
+| -------------------------------------------------------------------------------------------------------------------------- | ----- | ------ | --------------------------------------------------------------------------------------- |
+| [Cogentia](./concepts.md#cogentia)                                                                                         | -     | -      | abstract concept / agentivity class **Scope:** Global **Status:** Working               |
+| [Cogentigram](./concepts.md#cogentigram)                                                                                   | -     | -      | representation / map **Scope:** Global **Status:** Working                              |
+| [COP (Continuous Operation Protocol)](./concepts.md#cop-continuous-operation-protocol)                                     | -     | -      | protocol / runtime **Scope:** Global **Status:** Canonical                              |
+| [Briques](./concepts.md#briques)                                                                                           | -     | -      | modular component **Scope:** Global **Status:** Operational                             |
+| [Kudocracy](./concepts.md#kudocracy)                                                                                       | -     | -      | governance system **Scope:** Global **Status:** Defined                                 |
+| [Agora](./concepts.md#agora)                                                                                               | -     | -      | system model **Scope:** Global **Status:** Defined                                      |
+| [Ophélia](./concepts.md#ophelia)                                                                                           | -     | -      | agent **Scope:** Global **Status:** Operational                                         |
+| [COP Invariants](./concepts.md#cop-invariants)                                                                             | -     | -      | protocol constraints / architectural invariants **Scope:** Global **Status:** Canonical |
+| [Non-deterministic Cognitive Step (Agentic Step)](./concepts.md#non-deterministic-cognitive-step-agentic-step)             | -     | -      | process concept **Scope:** Global **Status:** Working                                   |
+| [Human Enacted Decision Artifact](./concepts.md#human-enacted-decision-artifact)                                           | -     | -      | artifact type / imputability anchor **Scope:** Global **Status:** Working               |
+| [Causal Trace Replay (Auditable Causal Reconstruction)](./concepts.md#causal-trace-replay-auditable-causal-reconstruction) | -     | -      | audit / replay mechanism **Scope:** Global **Status:** Working                          |
+| [COP (Cognitive Orchestration Protocol)](./concepts.md#cop-cognitive-orchestration-protocol)                               | -     | -      | protocol / runtime **Scope:** Global **Status:** Canonical                              |
+| [Brique Spec / Multi-Instance](./concepts.md#brique-spec-multi-instance)                                                   | -     | -      | technical specification **Scope:** project-specific **Status:** Defined                 |
+| [Modular System](./concepts.md#modular-system)                                                                             | -     | -      | frontend architecture **Scope:** repository-specific **Status:** Working                |
+
 <!-- END_AUTO: concepts -->
+
 ## Concept Graph
+
 <!-- BEGIN_AUTO: concept_graph -->
+
 ```mermaid
 graph LR
   c_civilizational_stakes["Civilizational Stakes"]
@@ -505,12 +519,49 @@ graph LR
   click c_cogentigram "https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/concepts.md#cogentigram" "Open Cogentigram"
 ```
 
-*Orphan concepts: `Civilizational Stakes` (cogentia), `Cogentia` (cogentia), `Cogentia Commons` (cogentia), `Sovereign Digital Twin` (cogentia), `Agent-Resumable CLI` (cogentia), `Kernel Extractor` (cogentia), `KYS (Know Your System) / Psychocognitive Analysis` (cogentia), `Cogentia Workflows` (cogentia), `IPN (Inference Packet Network)` (FractaVolta), `EPN (Energy Packet Network)` (FractaVolta), `PGN (Power Generation Node)` (FractaVolta), `Packet Attractors` (FractaVolta), `The Unconscious Grid` (FractaVolta), `Mariani Village` (FractaVolta), `Value-Shaped Solar` (FractaVolta), `Containerized Compute (Tera)` (FractaVolta), `Traceable Governance` (FractaVolta), `DHITL (Democratic Human In The Loop)` (marenostrum), `CXU (Compute and Exergy Unit)` (marenostrum), `Safe Compute Exergy` (marenostrum), `Constellia` (marenostrum), `Corsica Forest Synergies` (marenostrum), `Sun to Sovereignty` (marenostrum), `Civilizational Stakes` (barons-Mariani), `Cogentia` (barons-Mariani), `Potentics` (barons-Mariani), `Cognitive Waves` (barons-Mariani), `Mimetic Desynchronization` (barons-Mariani), `Invidia` (barons-Mariani), `Transition Markets` (barons-Mariani), `The Uchronian Museum` (barons-Mariani), `Possibilism` (barons-Mariani), `Territoires Possibilistes` (barons-Mariani), `The Second Method` (barons-Mariani), `Projet Minesteggio` (barons-Mariani), `Discret Holography` (barons-Mariani), `COP (Continuous Operation Protocol)` (inseme), `Briques` (inseme), `Kudocracy` (inseme), `Agora` (inseme), `Ophélia` (inseme), `COP (Cognitive Orchestration Protocol)` (inseme), `Brique Spec / Multi-Instance` (inseme), `Modular System` (inseme), `Reactive sets` (Inox), `Actors` (Inox), `Dialects` (Inox).*
+_Orphan concepts: `Civilizational Stakes` (cogentia), `Cogentia` (cogentia), `Cogentia Commons`
+(cogentia), `Sovereign Digital Twin` (cogentia), `Agent-Resumable CLI` (cogentia),
+`Kernel Extractor` (cogentia), `KYS (Know Your System) / Psychocognitive Analysis` (cogentia),
+`Cogentia Workflows` (cogentia), `IPN (Inference Packet Network)` (FractaVolta),
+`EPN (Energy Packet Network)` (FractaVolta), `PGN (Power Generation Node)` (FractaVolta),
+`Packet Attractors` (FractaVolta), `The Unconscious Grid` (FractaVolta), `Mariani Village`
+(FractaVolta), `Value-Shaped Solar` (FractaVolta), `Containerized Compute (Tera)` (FractaVolta),
+`Traceable Governance` (FractaVolta), `DHITL (Democratic Human In The Loop)` (marenostrum),
+`CXU (Compute and Exergy Unit)` (marenostrum), `Safe Compute Exergy` (marenostrum), `Constellia`
+(marenostrum), `Corsica Forest Synergies` (marenostrum), `Sun to Sovereignty` (marenostrum),
+`Civilizational Stakes` (barons-Mariani), `Cogentia` (barons-Mariani), `Potentics` (barons-Mariani),
+`Cognitive Waves` (barons-Mariani), `Mimetic Desynchronization` (barons-Mariani), `Invidia`
+(barons-Mariani), `Transition Markets` (barons-Mariani), `The Uchronian Museum` (barons-Mariani),
+`Possibilism` (barons-Mariani), `Territoires Possibilistes` (barons-Mariani), `The Second Method`
+(barons-Mariani), `Projet Minesteggio` (barons-Mariani), `Discret Holography` (barons-Mariani),
+`COP (Continuous Operation Protocol)` (inseme), `Briques` (inseme), `Kudocracy` (inseme), `Agora`
+(inseme), `Ophélia` (inseme), `COP (Cognitive Orchestration Protocol)` (inseme),
+`Brique Spec / Multi-Instance` (inseme), `Modular System` (inseme), `Reactive sets` (Inox), `Actors`
+(Inox), `Dialects` (Inox)._
 
-*Referenced but undefined: `Democratic AI Safety`, `Cogentia Commons (déclinaison manuelle)`, `Fractanet / COP (déclinaison automatisée)`, `Stabilisateurs (anti-Ubik)`, `DHITL (couches 4/5)`, `Effet Ubik (opposé)`, `Machine à explorer (opposé symétrique)`, `FM-11 (outer optimizer capture)`, `Concentration de compute (85% frontier)`, `Invidia (densité sociale destructrice)`, `DHITL (Compute Exergy comme unité traçable)`, `Map vs territory`, `Operational memory`, `Traceable agency`, `Non-deterministic Cognitive Step`, `Causal Trace Replay`, `COP/HITL Profile`, `Rule 0 (seconde méthode)`, `DHITL Layer 5`, `Envelope (kind-agnostic metadata layer)`, `Payload (kind-specific content layer)`, `Continuation payload`, `Objection payload`, `Hypothesis payload`, `Decision payload`, `Failure payload`, `Routing payload`, `Source Document`, `DHITL`, `Capabilities approach (Sen, Nussbaum)`, `Spécificité de phase`, `Flexibilité d'usage (redistributive vs. predatory)`, `Auto-institution démocratique (Castoriadis)`, `Communs (Ostrom)`, `Mauss — gift / counter-gift`, `Democratic AI Safety (thesis kernel)`, `DHITL — Democratic Humans in the Loop`, `Cogentia Commons (auditable knowledge)`, `Traçabilité civique anti-mafieuse`, `Deterministic Replay (protocol layer only)`, `Energy Packet Network (FractaVolta)`, `Cognitive Packet envelope/payload (Cogentia)`, `Auxilia (Inseme brique — human-scale Fractanet exchange)`.*
+_Referenced but undefined: `Democratic AI Safety`, `Cogentia Commons (déclinaison manuelle)`,
+`Fractanet / COP (déclinaison automatisée)`, `Stabilisateurs (anti-Ubik)`, `DHITL (couches 4/5)`,
+`Effet Ubik (opposé)`, `Machine à explorer (opposé symétrique)`, `FM-11 (outer optimizer capture)`,
+`Concentration de compute (85% frontier)`, `Invidia (densité sociale destructrice)`,
+`DHITL (Compute Exergy comme unité traçable)`, `Map vs territory`, `Operational memory`,
+`Traceable agency`, `Non-deterministic Cognitive Step`, `Causal Trace Replay`, `COP/HITL Profile`,
+`Rule 0 (seconde méthode)`, `DHITL Layer 5`, `Envelope (kind-agnostic metadata layer)`,
+`Payload (kind-specific content layer)`, `Continuation payload`, `Objection payload`,
+`Hypothesis payload`, `Decision payload`, `Failure payload`, `Routing payload`, `Source Document`,
+`DHITL`, `Capabilities approach (Sen, Nussbaum)`, `Spécificité de phase`,
+`Flexibilité d'usage (redistributive vs. predatory)`, `Auto-institution démocratique (Castoriadis)`,
+`Communs (Ostrom)`, `Mauss — gift / counter-gift`, `Democratic AI Safety (thesis kernel)`,
+`DHITL — Democratic Humans in the Loop`, `Cogentia Commons (auditable knowledge)`,
+`Traçabilité civique anti-mafieuse`, `Deterministic Replay (protocol layer only)`,
+`Energy Packet Network (FractaVolta)`, `Cognitive Packet envelope/payload (Cogentia)`,
+`Auxilia (Inseme brique — human-scale Fractanet exchange)`._
+
 <!-- END_AUTO: concept_graph -->
+
 ## Published in this repo
+
 <!-- BEGIN_AUTO: published -->
+
 | Title                                                                                                                                                                                                                                                                                                               | Location  | Date        |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------- |
 | [Lien avec C.O.R.S.I.C.A. et l’Institut Mariani](acorsica-institut-mariani.md) _(institutional boundary note — Inseme, C.O.R.S.I.C.A. and Institut Mariani)_                                                                                                                                                        | this repo | 2026-06-03  |
@@ -523,11 +574,11 @@ graph LR
 | [Reactive Cognitive COP Extension](reactive_cognitive_cop_extension.md) _(Toubkal/Inox/COP source document: Packet Attractors, pressure strategies, control/data plane)_                                                                                                                                            | this repo | 2026-06-01  |
 | [COP Reactive Cognitive Extension](../packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md) _(operational COP-core protocol note derived from the source document)_                                                                                                                                                    | this repo | 2026-06-01  |
 | [COP Implementation Profiles](../packages/cop-core/ImplementationProfiles.md) _(working-note — documentation convention for concrete COP implementations; companion to the kernel profile)_                                                                                                                         | this repo | 2026-06-01  |
-| [COP Identity / Kudocracy Profile](cop_identity_kudocracy_profile.md) _(source document — subjects, capacities, mandates, public civic acts and civic audit traces for Kudocracy-sensitive COP profiles)_                                                                                                            | this repo | 2026-06-19  |
+| [COP Identity / Kudocracy Profile](cop_identity_kudocracy_profile.md) _(source document — subjects, capacities, mandates, public civic acts and civic audit traces for Kudocracy-sensitive COP profiles)_                                                                                                           | this repo | 2026-06-19  |
 | [COP Memory Profile](cop_memory_profile.md) _(source document — pragmatic memory layer for COP profiles, identified things, traces, and operational recurrence)_                                                                                                                                                    | this repo | 2026-06-21  |
-| [COP Memory — Map and Territory](cop_memory_map_territory.md) _(source document — representation, approximation, manipulable maps, and situated judgment for COP memory)_                                                                                                                                            | this repo | 2026-06-21  |
-| [COP Memory Metadata and Recursive Trace Layers](cop_memory_metadata_recursion.md) _(source document — metadata recursion, trace layers, and auditability of memory representations)_                                                                                                                                | this repo | 2026-06-21  |
-| [COP Memory — Necessity and Local Equilibrium](cop_memory_necessity_local_equilibrium.md) _(source document — necessity, entropy, negentropy, free energy, and local equilibrium for COP memory)_                                                                                                                    | this repo | 2026-06-21  |
+| [COP Memory — Map and Territory](cop_memory_map_territory.md) _(source document — representation, approximation, manipulable maps, and situated judgment for COP memory)_                                                                                                                                           | this repo | 2026-06-21  |
+| [COP Memory Metadata and Recursive Trace Layers](cop_memory_metadata_recursion.md) _(source document — metadata recursion, trace layers, and auditability of memory representations)_                                                                                                                               | this repo | 2026-06-21  |
+| [COP Memory — Necessity and Local Equilibrium](cop_memory_necessity_local_equilibrium.md) _(source document — necessity, entropy, negentropy, free energy, and local equilibrium for COP memory)_                                                                                                                   | this repo | 2026-06-21  |
 | [Modular System Architecture — the Brique pattern](../docs/MODULAR_SYSTEM.md)                                                                                                                                                                                                                                       | this repo | 2025-12     |
 | [BRIQUE_SPEC — the brique manifest contract](../packages/cop-host/BRIQUE_SPEC.md)                                                                                                                                                                                                                                   | this repo | 2025-12     |
 | [Multi-Instance Architecture](../packages/cop-host/docs/MULTI_INSTANCE.md)                                                                                                                                                                                                                                          | this repo | 2025-12     |
@@ -536,7 +587,9 @@ graph LR
 | [COP State of Play — Asynchronous Orchestration & Traceability](COP_STATE_OF_PLAY.md) _(living document — focus on async, event-driven, strongly traceable aspects of COP; sync apps temporarily deprioritized)_                                                                                                    | this repo | 2026-05     |
 | [Cyrnea State of Play](CYRNEA_STATE_OF_PLAY.md) _(living assessment for the bar/conviviality app — AI + human collaborator reference)_                                                                                                                                                                              | this repo | 2026-05-28  |
 | [COOP — Tutorial and Near-Specification](coop_tutorial.md) _(auto-generated tutorial v0.1 — COP kernel, cognitive packet router, reusable helpers (cogentiaRoutePacket etc.), hybrid policy layer (bus agent + JobScheduler), bac-à-sable usage, emissions, resets; sufficient for extension or re-implementation)_ | this repo | 2026-06-04  |
+
 <!-- END_AUTO: published -->
+
 ## What Is Proved
 
 _Manually curated: claims demonstrated by the published work in this corpus._
@@ -558,7 +611,9 @@ _Manually curated: objections received publicly, not yet fully resolved._
 ---
 
 ## What Remains Possible
+
 <!-- BEGIN_AUTO: possibilities -->
+
 - A formal "brique developer guide" consolidating BRIQUE_SPEC + concrete examples from
 - An "Ophélia mediator profile" — operational semantics of the AI mediator as it interfaces with
 - A `brique-` template generator (`cogentia.js init-brique <name>` or equivalent).
@@ -566,24 +621,28 @@ _Manually curated: objections received publicly, not yet fully resolved._
 - [Research Index — Cogentia](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/index.md)
 - [Research Index — FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/index.md)
 - [Research Index — Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md)
-- [🗳️ Inseme Monorepo - Citizen Ecosystem & Liquid Democracy](../README.md)
 - [Corpus Status — inseme](corpus-status.md)
+- [Inseme](../README.md)
 - [Corpus Start Here — Carte globale du Corpus](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/corpus-map.md)
 - [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
 - [Research Index — Jean Hugues Noël Robert (Profile / Entry Point)](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md)
 - [Research Index — MareNostrum](https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/index.md)
 <!-- END_AUTO: possibilities -->
+
 ---
 
 _Generated with `cogentia.js corpus-status` —
 [scripts/cogentia.js](https://github.com/JeanHuguesRobert/cogentia/blob/main/scripts/cogentia.js)_
 _Challenge via issues. Fork to explore alternatives._
+
 <!-- BEGIN_AUTO: backlinks -->
+
 ### Backlinks
 
-*These documents link to this file:*
+_These documents link to this file:_
+
 - [Rendre capable — noyau doctrinal provisoire](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/noyau_doctrinal_rendre_capable.md)
-- [🗳️ Inseme Monorepo - Citizen Ecosystem & Liquid Democracy](../README.md)
+- [Inseme](../README.md)
 - [Research Index — Inseme](index.md)
 - [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
 <!-- END_AUTO: backlinks -->

@@ -26,8 +26,8 @@ classification_confidence: "strong"
 
 Inseme is the **deployable platform** of the public Cogentia corpus and the #PERTITELLU civic-tech
 agenda. Where the sibling research repos (`barons-Mariani`, `marenostrum`, `cogentia`,
-`FractaVolta`, `Inox`, `ubikia`) carry the _doctrine_, _methodology_, _runtime substrate_, and _publication layer_, inseme carries
-the _running infrastructure_:
+`FractaVolta`, `Inox`, `ubikia`) carry the _doctrine_, _methodology_, _runtime substrate_, and
+_publication layer_, inseme carries the _running infrastructure_:
 
 - The **COP (Cognitive Orchestration Protocol)** runtime — see
   [`packages/cop-core/Architecture.md`](../packages/cop-core/Architecture.md), the canonical
@@ -72,11 +72,11 @@ _Platform-level specifications and architectural documents._
 | [Reactive Cognitive COP Extension](reactive_cognitive_cop_extension.md) _(Toubkal/Inox/COP source document: Packet Attractors, pressure strategies, control/data plane)_                                                                                                                                            | this repo | 2026-06-01  |
 | [COP Reactive Cognitive Extension](../packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md) _(operational COP-core protocol note derived from the source document)_                                                                                                                                                    | this repo | 2026-06-01  |
 | [COP Implementation Profiles](../packages/cop-core/ImplementationProfiles.md) _(working-note — documentation convention for concrete COP implementations; companion to the kernel profile)_                                                                                                                         | this repo | 2026-06-01  |
-| [COP Identity / Kudocracy Profile](cop_identity_kudocracy_profile.md) _(source document — subjects, capacities, mandates, public civic acts and civic audit traces for Kudocracy-sensitive COP profiles)_                                                                                                            | this repo | 2026-06-19  |
+| [COP Identity / Kudocracy Profile](cop_identity_kudocracy_profile.md) _(source document — subjects, capacities, mandates, public civic acts and civic audit traces for Kudocracy-sensitive COP profiles)_                                                                                                           | this repo | 2026-06-19  |
 | [COP Memory Profile](cop_memory_profile.md) _(source document — pragmatic memory layer for COP profiles, identified things, traces, and operational recurrence)_                                                                                                                                                    | this repo | 2026-06-21  |
-| [COP Memory — Map and Territory](cop_memory_map_territory.md) _(source document — representation, approximation, manipulable maps, and situated judgment for COP memory)_                                                                                                                                            | this repo | 2026-06-21  |
-| [COP Memory Metadata and Recursive Trace Layers](cop_memory_metadata_recursion.md) _(source document — metadata recursion, trace layers, and auditability of memory representations)_                                                                                                                                | this repo | 2026-06-21  |
-| [COP Memory — Necessity and Local Equilibrium](cop_memory_necessity_local_equilibrium.md) _(source document — necessity, entropy, negentropy, free energy, and local equilibrium for COP memory)_                                                                                                                    | this repo | 2026-06-21  |
+| [COP Memory — Map and Territory](cop_memory_map_territory.md) _(source document — representation, approximation, manipulable maps, and situated judgment for COP memory)_                                                                                                                                           | this repo | 2026-06-21  |
+| [COP Memory Metadata and Recursive Trace Layers](cop_memory_metadata_recursion.md) _(source document — metadata recursion, trace layers, and auditability of memory representations)_                                                                                                                               | this repo | 2026-06-21  |
+| [COP Memory — Necessity and Local Equilibrium](cop_memory_necessity_local_equilibrium.md) _(source document — necessity, entropy, negentropy, free energy, and local equilibrium for COP memory)_                                                                                                                   | this repo | 2026-06-21  |
 | [Modular System Architecture — the Brique pattern](../docs/MODULAR_SYSTEM.md)                                                                                                                                                                                                                                       | this repo | 2025-12     |
 | [BRIQUE_SPEC — the brique manifest contract](../packages/cop-host/BRIQUE_SPEC.md)                                                                                                                                                                                                                                   | this repo | 2025-12     |
 | [Multi-Instance Architecture](../packages/cop-host/docs/MULTI_INSTANCE.md)                                                                                                                                                                                                                                          | this repo | 2025-12     |
@@ -95,12 +95,12 @@ _Hosted elsewhere, intellectually connected here._
 | Title                                                                                                                                                                                                                 | Location         |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
 | [Discours de la seconde méthode](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/second_method.md) _(founding doctrine — names cogentia.js as canonical tooling)_                               | barons-Mariani   |
-| [DHITL — Democratic Humans in the Loop](https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/DHITL.md) _(architectural axiom — Layer 4 = cognitive infrastructure where inseme briques operate)_                 | marenostrum      |
+| [DHITL — Democratic Humans in the Loop](https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/DHITL.md) _(architectural axiom — Layer 4 = cognitive infrastructure where inseme briques operate)_        | marenostrum      |
 | [Cogentia Pipeline](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/pipeline.md) _(source-to-derived packet workflow followed by the reactive cognitive artifacts)_                                   | cogentia         |
 | [Cognitive Packets](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md) _(envelope/payload distinction used by COP reactive cognitive artifacts)_                                   | cogentia         |
 | [Cogentia Commons MVP Specification](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_mvp_spec.md) _(targets inseme as `brique-cogentia-commons`, see §12)_                           | cogentia         |
 | [Cogentia Workflows](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_workflows.md)                                                                                                           | cogentia         |
-| [Packetized Gravity Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/PGN.md) _(physical infrastructure layer the platform may eventually run on)_                                                  | FractaVolta      |
+| [Packetized Gravity Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/PGN.md) _(physical infrastructure layer the platform may eventually run on)_                                         | FractaVolta      |
 | [Inox — language and runtime substrate](https://github.com/JeanHuguesRobert/Inox/blob/master/research/inox-spec.md) _(concatenative stack VM; future implementation target for `cop-core` and edge briques)_          | Inox             |
 | [Reactive Sets in Inox — Native Implementation Path](https://github.com/JeanHuguesRobert/Inox/blob/master/research/reactive_sets_inox_cop_implementation.md) _(native runtime path for the reactive cognitive layer)_ | Inox             |
 | [Jean Hugues Noël Robert — profile / corpus entry point](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md) _(meta-node — registry host, orientation, AI agent briefing)_              | JeanHuguesRobert |
@@ -135,16 +135,19 @@ _Ideas that trotte — no commitment, no deadline._
 
 _Priority established by first public commit. License: open-source per individual file/package._
 _Fork to explore alternatives. Challenge via issues._
+
 <!-- BEGIN_AUTO: backlinks -->
+
 ### Backlinks
 
-*These documents link to this file:*
+_These documents link to this file:_
+
 - [Research Index — barons-Mariani](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/index.md)
 - [Research Index — Cogentia](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/index.md)
 - [Research Index — FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/index.md)
 - [Research Index — Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md)
-- [🗳️ Inseme Monorepo - Citizen Ecosystem & Liquid Democracy](../README.md)
 - [Corpus Status — inseme](corpus-status.md)
+- [Inseme](../README.md)
 - [Corpus Start Here — Carte globale du Corpus](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/corpus-map.md)
 - [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
 - [Research Index — Jean Hugues Noël Robert (Profile / Entry Point)](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md)

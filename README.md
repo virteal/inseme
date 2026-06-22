@@ -1,218 +1,232 @@
-# 🗳️ Inseme Monorepo - Citizen Ecosystem & Liquid Democracy
+# Inseme
 
-Welcome to the **Inseme** repository, an **open-source** and **neutral** digital infrastructure
-dedicated to citizen participation, augmented deliberation, and democratic transparency.
+Inseme is an open-source monorepo for civic participation, collective intelligence, and durable
+cognitive orchestration. It contains deployable applications, reusable civic modules ("briques"),
+the Cognitive Orchestration Protocol (COP), AI mediation and routing components, and the research
+documents that explain how those pieces fit together.
 
-This project brings together the tools of the **#PERTITELLU** citizen movement (Corte, Corsica) and
-aims to provide free solutions to empower citizens.
+The repository is not a single finished product. It is an active engineering and research workspace:
+the three host applications are usable development surfaces, the brique ecosystem has mixed
+maturity, COP Core is the protocol specification, and `cop-kernel` is still a prototype
+reference-runtime candidate.
 
-_Inseme operates the **civic layer (Layer 4)** of the FractaVolta four-layer stack (energy / compute
-/ cognition / civic), as the **platform layer** of a multi-repository public corpus. Inseme keeps its own
-identity — neutral, MIT-licensed, governed by its citizen community. The corpus framing simply
-names where it interoperates with the rest of the corpus. The common methodology — *Discours de la
-seconde méthode* — lives in
-[barons-Mariani/research/second_method.md](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/second_method.md).
-See [fractavolta.com](https://fractavolta.com) for the integrated picture._
+Inseme is developed in Corte, Corsica, in connection with the **#PERTITELLU** civic initiative and
+with support from **C.O.R.S.I.C.A.** and the **Institut Mariani**. Its software is intended to
+remain politically neutral: it provides infrastructure for citizens, collectives, and institutions
+rather than supporting a party, candidate, or electoral campaign.
 
-| Repository                                                           | Role                                                                                                                                                                                                                           |
-| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [MareNostrum](https://github.com/JeanHuguesRobert/marenostrum)       | Strategic framework. CXU specification, DHITL axiom, Mediterranean solar commons.                                                                                                                                              |
-| [FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta)       | Engineering firm + software publisher + stack operator. EPN, DC-native nodes, PGN, IPN, Mariani Village.                                                                                                                       |
-| [Cogentia](https://github.com/JeanHuguesRobert/cogentia)             | Cognitive infrastructure tooling. `cogentia.js` CLI, Cogentia Commons methodology, continuation protocol.                                                                                                                      |
-| **inseme**                                                           | **Platform — COP runtime, briques, Kudocracy.Survey, Inseme Agora, Ophélia AI mediator, Atlas of Biodiversity. MIT-licensed, governed by citizens.**                                                                           |
-| [barons-Mariani](https://github.com/JeanHuguesRobert/barons-Mariani) | Political and institutional framework. Plan 2038, _Discours de la seconde méthode_.                                                                                                                                            |
-| [Inox](https://github.com/JeanHuguesRobert/Inox)                     | Language and runtime substrate. Concatenative stack VM, strict control/data plane separation. Intended runtime for the agents and nodes of the future _Fractanet_. JS today, WASM and C/C++ next, ESP32 bare-metal eventually. |
-| [Ubikia](https://github.com/JeanHuguesRobert/ubikia)                 | Editorial derivation and publication layer. Source-first derived products, personas, platform packages, and publication ledger.                                                                                                  |
+## Start Here
 
----
+| Need                                 | Entry point                                                                                                                                 |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Understand the repository            | [`research/index.md`](research/index.md) and [`docs/MODULAR_SYSTEM.md`](docs/MODULAR_SYSTEM.md)                                             |
+| Run the broad civic platform         | [`apps/platform`](apps/platform) with `pnpm platform:dev`                                                                                   |
+| Run the Inseme Agora                 | [`apps/inseme`](apps/inseme) with `pnpm inseme:dev`                                                                                         |
+| Run Cyrnea                           | [`apps/cyrnea`](apps/cyrnea) with `pnpm cyrnea:dev`                                                                                         |
+| Read the COP specification           | [`packages/cop-core/README.md`](packages/cop-core/README.md)                                                                                |
+| Inspect the COP runtime profile      | [`packages/cop-kernel/PROFILE.md`](packages/cop-kernel/PROFILE.md)                                                                          |
+| Exercise COP continuations           | [`sandbox/cop-continuation-bac-a-sable`](sandbox/cop-continuation-bac-a-sable)                                                              |
+| Inspect AI routing                   | [`packages/magistral/STATUS.md`](packages/magistral/STATUS.md)                                                                              |
+| Review current implementation status | [`research/COP_STATE_OF_PLAY.md`](research/COP_STATE_OF_PLAY.md) and [`research/CYRNEA_STATE_OF_PLAY.md`](research/CYRNEA_STATE_OF_PLAY.md) |
+| Navigate the corpus                  | [`research/corpus-status.md`](research/corpus-status.md) and [`research/concepts.md`](research/concepts.md)                                 |
 
-## Quick Orientation
+## Repository Architecture
 
-- [`research/index.md`](research/index.md) — generated document catalog
-- [`research/corpus-status.md`](research/corpus-status.md) — generated status, backlinks, and navigation checks
-- [`packages/cop-kernel/PROFILE.md`](packages/cop-kernel/PROFILE.md) — current COP kernel profile
-- [`packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md`](packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md) — packet attractors, CogQueries, and pressure strategies
+### Host applications
 
----
+- **`apps/platform`**: the broad civic platform (Kudocracy.Survey), including consultations, groups,
+  social publishing, civic acts, maps, biodiversity, wiki/RAG, multi-instance operation,
+  administration, and federation experiments.
+- **`apps/inseme`**: the Agora and assembly-oriented application, focused on direct and liquid
+  democracy, shared rooms, voting, wiki integration, and Ophélia mediation.
+- **`apps/cyrnea`**: a PWA for bars, cafes, and community venues, combining presence, conversation,
+  games, music, a local gazette, and a venue-specific Ophélia experience.
 
-## 🏗️ Modular Architecture
+All three applications use React and Vite. Supabase supplies PostgreSQL, authentication, realtime,
+and storage; Netlify functions and edge functions provide deployment and server-side integration.
 
-Inseme is designed as a modular ecosystem of "Bricks" orchestrated by a central protocol. This
-ensures flexibility, sovereignty, and collective intelligence.
+### Briques
 
-> **[Read the Detailed Modular System Documentation](docs/MODULAR_SYSTEM.md)**
+Briques are reusable functional modules composed into host applications by `cop-host`. Important
+current modules include:
 
----
+- `brique-actes`: civic acts, requests, proofs, responsibility, and publication workflows;
+- `brique-communes`: communes, territorial data, and consultation ingestion;
+- `brique-kudocracy`: voting and delegation interfaces;
+- `brique-map`: GIS, citizen mapping, and biodiversity layers;
+- `brique-ophelia`: AI mediation, prompts, tools, RAG, and provider integration;
+- `brique-wiki`, `brique-blog`, `brique-fil`, and `brique-group`: knowledge and social publishing;
+- `brique-cyrnea`: the principal venue and conviviality feature package;
+- `brique-tasks` and `brique-auxilia`: task surfaces and digital hospitality experiments.
 
-## 🏛️ Repository Structure
+See [`packages/cop-host/BRIQUE_SPEC.md`](packages/cop-host/BRIQUE_SPEC.md) for the brique contract.
+The maturity of individual briques varies; some are active application dependencies while others
+remain experimental or skeletal.
 
-The project is organized as a monorepo (Turbo) to facilitate code sharing between the different
-components of the ecosystem:
+### Cognitive Orchestration Protocol
 
-### 📱 Applications (`/apps`)
+COP is the repository's protocol for durable, replayable, and auditable cognitive work. Its main
+concepts are **Event**, **Topic**, **Task**, **Step**, **Artifact**, and **Continuation**.
 
-- **`apps/platform` (Kudocracy.Survey)**: The consultation and engagement platform.
-  - **Focus**: Consultations, Collaborative Wiki, Citizen Gazette, Social Café.
-  - **Architecture**: Multi-instance (Corte, Bastia, Università di Corsica, etc.).
-- **`apps/inseme` (The Agora)**: Direct and liquid democracy tool.
-  - **Focus**: Physical/remote assemblies, instant voting, digital gestures.
-  - **AI**: Ophélia (AI Mediator) integrated via Edge Functions.
-- **`apps/cyrnea` (Cyrnea)**: Social and gamified experience for community spaces (Bars, Cafés).
-  - **Focus**: Bar animation, local AI assistant (Ophélia), Citizen Gazette, PWA for clients.
-  - **Tech**: React + Vite + Netlify Edge Functions (AI).
+- **`packages/cop-core`** contains the canonical data model, invariants, schemas, and interfaces. It
+  is a protocol specification and intentionally does not execute workflows.
+- **`packages/cop-kernel`** experiments with runtime concerns: buses, schedulers, jobs, artifacts,
+  continuations, storage adapters, and agent/node helpers. Its implementation profile explicitly
+  classifies it as a prototype/reference-runtime candidate rather than a complete conformant
+  runtime.
+- **`packages/cop-host`** composes briques into applications and generates application registries.
+- **`packages/cop-cli`**, `cop-prolog`, and related directories provide integration and tooling
+  surfaces.
+- **`sandbox/cop-continuation-bac-a-sable`** runs real `cop-kernel` primitives through resumable,
+  traceable scenarios. It is the main implementation laboratory for continuations, federation,
+  schedulers, and long-lived workflows.
 
-### 📦 Key Packages (`/packages`)
+The current gaps and priorities are maintained in
+[`research/COP_STATE_OF_PLAY.md`](research/COP_STATE_OF_PLAY.md), not hidden behind a product-ready
+claim.
 
-The ecosystem is composed of several specialized packages:
+### AI and model routing
 
-- **`packages/cop-*`**: Cognitive Orchestration Protocol (Kernel, CLI, Host). The
-  [Reactive Cognitive Extension](packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md) (v0.1,
-  operational note) defines the protocol surface for packet attractors, CogQueries, and pressure
-  strategies; native implementation is delegated to
-  [Inox](https://github.com/JeanHuguesRobert/Inox).
-  [COP Implementation Profiles](packages/cop-core/ImplementationProfiles.md) (working-note) defines
-  the documentation convention concrete COP implementations should follow; the kernel reference
-  profile lives in [`packages/cop-kernel/PROFILE.md`](packages/cop-kernel/PROFILE.md). The
-  [`cop-n8n` feasibility note](packages/cop-n8n/README.md) keeps visual workflow integration
-  exploratory until the kernel adapter boundary is stable. Developer
-  convergence with [Cogentia](https://github.com/JeanHuguesRobert/cogentia) happens in
-  [`sandbox/cop-continuation-bac-a-sable/`](sandbox/cop-continuation-bac-a-sable/) — a CLI + ~20
-  scenarios (notaire, mairie, greffier, federation, …) injecting real `cop-kernel` primitives.
-- **`packages/brique-*`**: Functional modules (Wiki, Blog, Tasks, Group, **Map**, **Auxilia** —
-  digital hospitality for mobile data and battery, etc.).
-- **`packages/models`**: Sovereign LLM controller for local inference.
-- **`packages/kudocracy`**: Core governance models and liquid democracy logic.
-- **`packages/ui`**: Shared design system and component library.
+- **Ophélia** is the neutral AI mediator used by the applications and briques. It supports
+  provider-neutral prompts, tools, RAG, local-model paths, and role-specific behavior.
+- **`packages/models`** manages local and remote model definitions and the Sovereign node.
+- **`packages/magistral`** provides model routing, fallback, metrics, probing, maps, logs, and a
+  shared operator UI. Its current operational status is documented in
+  [`packages/magistral/STATUS.md`](packages/magistral/STATUS.md).
 
-#### 🗺️ Brique-Map Module
+## Current Functional Surface
 
-The `packages/brique-map` package provides the complete GIS infrastructure:
+The monorepo currently includes:
 
-- **CitizenMap**: Interactive mapping component with IGN integration
-- **BiodiversityLayer**: Specialized layer for biodiversity observations
-- **BiodiversityFilters**: Real-time filtering UI components
-- **Location Services**: Geocoding, address search, and coordinate parsing
+- consultations, proposals, voting, delegation, and assemblies;
+- citizen publishing, groups, gazettes, wiki, and collaborative knowledge tools;
+- civic acts, demands, proofs, deadlines, responsibility, and transparency views;
+- GIS, IGN/Leaflet integration, territorial data, and a biodiversity atlas with GBIF ingestion;
+- multi-instance configuration for communes, organizations, and venues;
+- AI mediation, multi-provider model access, RAG, Prolog experiments, and local model routing;
+- COP event, artifact, task, step, continuation, scheduler, storage, and federation experiments;
+- a scenario-driven laboratory for replayable long-running human/AI workflows.
 
----
+This feature inventory describes code present in the repository. It does not imply equal production
+maturity across every surface.
 
-## 🎯 Key Features
-
-### 1. 💬 Ophélia — The AI Mediator
-
-Ophélia is the platform's AI. She answers questions, helps formulate ideas, guides users through
-processes, and facilitates consensus during debates without ever imposing herself.
-
-### 2. 🗳️ Liquid Democracy (Kudocracy)
-
-Allows users to submit proposals, vote, and delegate their voice to a trusted person on a specific
-topic. The Agora (`apps/inseme`) pushes this concept further with real-time digital gestures.
-
-### 3. 🌿 Atlas of Biodiversity
-
-A comprehensive Geographic Information System (GIS) for biodiversity observation and citizen
-science. Features interactive mapping, real-time filtering, GBIF data integration, and citizen
-contribution tools.
-
-- **Interactive Maps**: Leaflet-based with IGN layers and custom biodiversity markers
-- **Citizen Contributions**: Submit and validate wildlife observations
-- **Data Integration**: GBIF/INPN import with spatial-temporal filtering
-- **Real-time Filtering**: By species, date, location, and validation status
-- **Open Data**: GeoJSON API for external integrations
-
-> **[📋 Full Documentation](docs/biodiversite-guide-demarrage.md)** |
-> **[🧪 Testing Guide](docs/biodiversite-tests-validation.md)**
-
-### 4. 🛡️ Digital Sovereignty
-
-Built-in support for local LLMs via `@kudocracy/models`, ensuring that sensitive data and democratic
-deliberations stay within your infrastructure.
-
----
-
-## 🚀 Technology (Modern Stack)
-
-- **Frontend**: React (v18/v19) + Vite + Tailwind CSS.
-- **Backend Realtime**: Supabase (PostgreSQL, Realtime, Auth).
-- **GIS & Mapping**: Leaflet + React-Leaflet + PostGIS + IGN Geoportal.
-- **AI Orchestration**: Multi-provider support (OpenAI, Local LLMs via GGUF).
-- **Multi-Instance**: Dynamic subdomain-based resolution for per-commune deployment.
-  [See Multi-Instance Doc](packages/cop-host/docs/MULTI_INSTANCE.md).
-
----
-
-## 🛠️ Installation & Development
+## Development
 
 ### Prerequisites
 
-- Node.js (v20+ recommended)
-- Netlify CLI (`npm install netlify-cli -g`)
+- **Node.js 24** (the root `.node-version` is canonical; applications require `>=24 <25`);
+- **pnpm 10.28.2** (declared by the root `packageManager` field);
+- Netlify CLI for local function/edge-function backends;
+- Supabase CLI only when working on local database migrations or services.
 
-### Quick Setup
+### Install
 
-1. **Clone the repository**:
+```bash
+git clone https://github.com/JeanHuguesRobert/inseme.git
+cd inseme
+corepack enable
+pnpm install
+```
 
-   ```bash
-   git clone https://github.com/JeanHuguesRobert/inseme.git
-   cd inseme
-   ```
+Installation runs the repository's Git-hook setup through the root `prepare` script.
 
-2. **Install dependencies**:
+### Run applications
 
-   ```bash
-   pnpm install
-   ```
+```bash
+# Frontend development servers
+pnpm platform:dev
+pnpm inseme:dev
+pnpm cyrnea:dev
 
-3. **Launch an application**:
+# Netlify-backed local environments
+pnpm platform:backend
+pnpm inseme:backend
+pnpm cyrnea:backend
 
-   ```bash
-   # For the Citizen Platform (Survey)
-   pnpm run platform:dev
+# Cyrnea environment diagnostics
+pnpm cyrnea:doctor
+```
 
-   # For the Inseme Agora
-   pnpm run inseme:dev
-   ```
+Configuration is application-specific. Do not commit local `.env` files or provider credentials.
+Start from the relevant app documentation and examples, including
+[`apps/platform/.env.example`](apps/platform/.env.example) and
+[`apps/platform/instances/QUICKSTART.md`](apps/platform/instances/QUICKSTART.md).
 
-4. **Setup the Biodiversity Atlas** (optional):
+### Build
 
-   ```bash
-   # Apply database migrations
-   supabase db push
+```bash
+pnpm platform:build
+pnpm inseme:build
+pnpm cyrnea:build
+```
 
-   # Import sample data from GBIF
-   node scripts/import_gbif.js
+Application builds compile their selected briques before invoking Vite.
 
-   # Test the API
-   curl "http://localhost:8888/api/biodiversity/observations"
-   ```
+### Focused verification
 
-   > **[📋 Complete Setup Guide](docs/biodiversite-guide-demarrage.md)**
+```bash
+# Repository-wide JavaScript lint
+pnpm lint
+
+# COP specification and kernel
+pnpm --filter @inseme/cop-core exec vitest run
+pnpm --filter @inseme/cop-kernel test
+
+# Continuation laboratory
+pnpm --dir sandbox/cop-continuation-bac-a-sable test
+
+# Cyrnea unit and integration suites
+pnpm --filter @inseme/app-cyrnea test
+
+# Magistral router
+pnpm --filter @inseme/magistral test
+```
+
+Some suites require browsers, local services, credentials, or provider access. Prefer targeted
+package tests while working, then broaden verification according to the changed surface.
+
+## Biodiversity and GIS
+
+The biodiversity module combines Leaflet/React-Leaflet, IGN layers, Supabase/PostGIS-oriented data,
+GBIF imports, citizen observations, validation, filtering, and GeoJSON-facing APIs.
+
+- [Getting started](docs/biodiversite-guide-demarrage.md)
+- [Tests and validation](docs/biodiversite-tests-validation.md)
+- [GIS and territorial context](docs/atlas-biodiversite-contexte-sig.md)
+
+## Research and Corpus Context
+
+Inseme is the deployable software surface of a larger public corpus. The neighboring repositories
+carry complementary responsibilities:
+
+| Repository                                                           | Primary role                                                                        |
+| -------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| [Cogentia](https://github.com/JeanHuguesRobert/cogentia)             | Corpus tooling, continuations, local indexing, and Cogentia Commons methodology     |
+| [MareNostrum](https://github.com/JeanHuguesRobert/marenostrum)       | Strategic framework, DHITL, CXU, and Mediterranean commons research                 |
+| [FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta)       | Engineering, physical/digital node infrastructure, and Fractanet deployment context |
+| [barons-Mariani](https://github.com/JeanHuguesRobert/barons-Mariani) | Political, institutional, and methodological source documents                       |
+| [Inox](https://github.com/JeanHuguesRobert/Inox)                     | Language and runtime substrate; possible future native implementation path          |
+| [Ubikia](https://github.com/JeanHuguesRobert/ubikia)                 | Derived products, editorial transformation, and publication traces                  |
+
+The common methodological reference is the
+[_Discours de la seconde méthode_](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/second_method.md).
+The institutional boundary between Inseme, C.O.R.S.I.C.A., and the Institut Mariani is documented in
+[`research/acorsica-institut-mariani.md`](research/acorsica-institut-mariani.md).
+
+## Governance and Licensing
+
+Inseme's civic infrastructure is intended to remain neutral, inspectable, and reusable. Human
+validation and responsibility must remain explicit in civic, legal, institutional, and public
+workflows; AI output is not automatically an enacted decision.
+
+Licensing is declared per package and document. Most software packages use the MIT license, while
+research documents commonly carry CC BY-SA 4.0 frontmatter. Check the relevant package or file
+before redistribution.
+
+**Author:** Jean Hugues Noël Robert
+
+**Location:** Corte, Corsica
 
 ---
 
-## ⚖️ Neutrality, Ethics & Legal Framework
-
-Inseme is a **neutral** and **independent** infrastructure. It does not finance, promote, or support
-any political party, electoral campaign, candidate, or list. It provides digital tools usable by any
-citizen, collective, or institution wishing to strengthen local democracy.
-
-The ethical principles, governance of Ophélia, and legal constraints (data protection, democratic
-processes, usage in social spaces like bars) are tracked in the technical roadmap:
-
-- See [ROADMAP-TECH.md](./ROADMAP-TECH.md), section **“Éthique & Gouvernance d’Ophélia (P2)”** and
-  **“Gouvernance applicative via Kudocracy (P3)”**.
-
----
-
-## 📜 License & Author
-
-This project is licensed under the **MIT License**.
-
-**Author: Jean Hugues Noël Robert**
-
-- Project supported by the **C.O.R.S.I.C.A.** association.
-- [LePP.fr](https://lepp.fr) community.
-- Made with ❤️ in Corte, Corsica.
-
----
-
-### #PERTITELLU | CORTI CAPITALE
+**#PERTITELLU | CORTI CAPITALE**
