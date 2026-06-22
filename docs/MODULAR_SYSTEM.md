@@ -96,13 +96,10 @@ inseme/
 ---
 
 ### #PERTITELLU | CORTI CAPITALE
-
 <!-- BEGIN_AUTO: backlinks -->
-
 ### Backlinks
 
-_These documents link to this file:_
-
+*These documents link to this file:*
 - [Cogentia Commons — MVP Specification](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cogentia_commons_mvp_spec.md)
 - [brique-auxilia](../packages/brique-auxilia/README.md)
 - [Concept Index — inseme](../research/concepts.md)

@@ -83,13 +83,10 @@ clarification globale
 En cas de divergence apparente, lire d'abord la note globale, puis la présente note pour les
 implications propres à l'infrastructure civique multi-instance et à ses usages politiques
 juridiquement séparés.
-
 <!-- BEGIN_AUTO: backlinks -->
-
 ### Backlinks
 
-_These documents link to this file:_
-
+*These documents link to this file:*
 - [Inseme](../README.md)
 - [Lien avec C.O.R.S.I.C.A. et l’Institut Mariani](../acorsica-institut-mariani.md)
 - [Research Index — Inseme](index.md)

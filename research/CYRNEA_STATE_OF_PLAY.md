@@ -536,13 +536,10 @@ changes._
 **Maintained collaboratively. Fork, challenge, improve.**
 
 ### #PERTITELLU | CORTI CAPITALE | Possibilism in Practice
-
 <!-- BEGIN_AUTO: backlinks -->
-
 ### Backlinks
 
-_These documents link to this file:_
-
+*These documents link to this file:*
 - [Inseme](../README.md)
 - [Research Index — Inseme](index.md)
 - [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
