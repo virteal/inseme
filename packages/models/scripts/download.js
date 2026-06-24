@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { SOVEREIGN_MODELS } from "../registry.js";
+import { SOVEREIGN_MODELS, EMBEDDING_MODELS } from "../registry.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -10,9 +10,28 @@ const REPO_ROOT = path.resolve(__dirname, "..", "..", "..");
 const ROOT_MODELS_DIR = path.join(REPO_ROOT, "models");
 
 async function downloadModel(id) {
+  // Check if it's an embedding model first
+  const embeddingModel = EMBEDDING_MODELS[id];
+  if (embeddingModel) {
+    console.log(`--- Embedding Model : ${embeddingModel.name} ---`);
+    console.log(`Provider: ${embeddingModel.provider}`);
+    console.log(`Description: ${embeddingModel.description}`);
+    console.log(`\nDimensions: ${embeddingModel.native_dimensions} → ${embeddingModel.output_dimensions} (${embeddingModel.dimension_method.toUpperCase()})`);
+    console.log(`Policy: ${embeddingModel.policy_version}`);
+    console.log(`\n📦 Installation:`);
+    console.log(`  ${embeddingModel.install_command}`);
+    console.log(`\n📖 Documentation: ${embeddingModel.url}`);
+    console.log(`\n⚠️  Les embeddings nécessitent le provider '${embeddingModel.provider}' d'être installé et actif.`);
+    return;
+  }
+
   const model = SOVEREIGN_MODELS[id];
   if (!model) {
     console.error("Modèle inconnu :", id);
+    console.error("\nModèles disponibles (LLM):");
+    Object.keys(SOVEREIGN_MODELS).forEach(key => console.log(`  - ${key}`));
+    console.error("\nModèles disponibles (Embeddings):");
+    Object.keys(EMBEDDING_MODELS).forEach(key => console.log(`  - ${key}`));
     return;
   }
 
@@ -37,5 +56,25 @@ async function downloadModel(id) {
   console.log(`curl -L "${model.url}" -o "${targetPath}"`);
 }
 
-const modelId = process.argv[2] || "qwen-2.5-coder-1.5b";
-downloadModel(modelId);
+const modelId = process.argv[2] || "help";
+
+if (modelId === "help" || modelId === "--help" || modelId === "-h") {
+  console.log(`
+🏛️ Kudocracy Model Downloader
+
+Usage:
+  node scripts/download.js [model-id]
+
+Modèles LLM (GGUF):
+${Object.keys(SOVEREIGN_MODELS).map(key => `  ${key.padEnd(25)} ${SOVEREIGN_MODELS[key].name}`).join('\n')}
+
+Modèles d'Embeddings:
+${Object.keys(EMBEDDING_MODELS).map(key => `  ${key.padEnd(25)} ${EMBEDDING_MODELS[key].name}`).join('\n')}
+
+Exemples:
+  node scripts/download.js qwen-2.5-coder-1.5b
+  node scripts/download.js qwen3-embedding-4b
+`);
+} else {
+  downloadModel(modelId);
+}

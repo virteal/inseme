@@ -15,6 +15,7 @@ import {
   probeProviderModels,
   sanitizeNodeForPersistence,
 } from "../../magistral/src/router.js";
+import OllamaEmbeddingProvider from "./providers/ollama.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -92,6 +93,13 @@ const LLAMA_BASE_URL = `http://${LLAMA_HOST}:${LLAMA_PORT}`;
 
 let llamaProcess = null;
 let tts = null;
+
+// --- Embeddings Configuration ---
+const EMBEDDINGS_ENABLED = process.env.MAGISTRAL_EMBEDDINGS_ENABLED === "true";
+const EMBEDDING_PROVIDER = process.env.MAGISTRAL_EMBEDDING_PROVIDER || "ollama";
+const EMBEDDING_MODEL = process.env.MAGISTRAL_EMBEDDING_MODEL || "mxbai-embed-large";
+const EMBEDDING_DIMENSIONS = parseInt(process.env.MAGISTRAL_EMBEDDING_DIMENSIONS || "1024", 10);
+const EMBEDDING_POLICY = process.env.MAGISTRAL_EMBEDDING_POLICY || "magistral-mxbai-embed-1024-v1";
 
 // --- Service Registration ---
 function getLocalIp() {
@@ -539,13 +547,42 @@ function startServer() {
     if (req.method === "GET" && pathname === "/health") {
       const llmOk = await llamaAlive();
       const ttsOk = !!tts;
+
+      // Check embeddings availability
+      let embeddingsOk = false;
+      let embeddingsInfo = null;
+      if (EMBEDDINGS_ENABLED && EMBEDDING_PROVIDER === "ollama") {
+        try {
+          embeddingsInfo = await OllamaEmbeddingProvider.getProviderInfo(EMBEDDING_MODEL);
+          embeddingsOk = embeddingsInfo.available;
+        } catch {
+          embeddingsOk = false;
+        }
+      }
+
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(
         JSON.stringify({
-          status: llmOk && ttsOk ? "ok" : "degraded",
+          status: (llmOk && ttsOk) || embeddingsOk ? "ok" : "degraded",
+          service: "magistral",
+          capabilities: {
+            chat_completions: true,
+            completions: true,
+            tts: ttsOk,
+            embeddings: embeddingsOk,
+          },
           llm: llmOk,
           tts: ttsOk,
           llama_port: LLAMA_PORT,
+          ...(embeddingsOk && {
+            embeddings: {
+              enabled: true,
+              provider: EMBEDDING_PROVIDER,
+              model: EMBEDDING_MODEL,
+              dimensions: EMBEDDING_DIMENSIONS,
+              policy: EMBEDDING_POLICY,
+            },
+          }),
         })
       );
       return;
@@ -565,22 +602,50 @@ function startServer() {
             owned_by: "magistral",
             created: Date.now(),
           });
+
+          // Add embedding models if enabled
+          if (EMBEDDINGS_ENABLED && EMBEDDING_PROVIDER === "ollama") {
+            const embeddingInfo = await OllamaEmbeddingProvider.getProviderInfo(EMBEDDING_MODEL);
+            if (embeddingInfo.available) {
+              data.data.push({
+                id: EMBEDDING_MODEL,
+                object: "model",
+                owned_by: "local",
+                created: Date.now(),
+                capabilities: ["embeddings"],
+                dimensions: EMBEDDING_DIMENSIONS,
+                policy: EMBEDDING_POLICY,
+                provider: "ollama",
+              });
+            }
+          }
         }
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(data));
       } catch (e) {
         console.error("[AI] /v1/models error:", e);
         // Fallback stub if Llama is down but node is alive
+        const fallbackModels = [
+          { id: currentModel, object: "model", owned_by: "sovereign", created: Date.now() },
+          { id: "magistral", object: "model", owned_by: "magistral", created: Date.now() },
+        ];
+
+        // Add embedding models if enabled
+        if (EMBEDDINGS_ENABLED && EMBEDDING_PROVIDER === "ollama") {
+          fallbackModels.push({
+            id: EMBEDDING_MODEL,
+            object: "model",
+            owned_by: "local",
+            created: Date.now(),
+            capabilities: ["embeddings"],
+            dimensions: EMBEDDING_DIMENSIONS,
+            policy: EMBEDDING_POLICY,
+            provider: "ollama",
+          });
+        }
+
         res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({
-            object: "list",
-            data: [
-              { id: currentModel, object: "model", owned_by: "sovereign", created: Date.now() },
-              { id: "magistral", object: "model", owned_by: "magistral", created: Date.now() },
-            ],
-          })
-        );
+        res.end(JSON.stringify({ object: "list", data: fallbackModels }));
       }
       return;
     }
@@ -1105,6 +1170,131 @@ function startServer() {
         console.error("[AI] /v1/audio/speech error:", e);
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: e.message }));
+      }
+      return;
+    }
+
+    // --- Embeddings API (POST /v1/embeddings) ---
+    if (req.method === "POST" && parsedUrl.pathname === "/v1/embeddings") {
+      if (!EMBEDDINGS_ENABLED) {
+        res.writeHead(503, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            error: {
+              type: "embeddings_disabled",
+              message: "Embeddings are not enabled. Set MAGISTRAL_EMBEDDINGS_ENABLED=true",
+            },
+          })
+        );
+        return;
+      }
+
+      try {
+        const body = await jsonBody(req);
+        const model = body.model || EMBEDDING_MODEL;
+        let input = body.input;
+
+        // Normalize input to array
+        if (!input) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "Missing 'input' field" }));
+          return;
+        }
+
+        const inputs = Array.isArray(input) ? input : [input];
+
+        // Validate dimensions request
+        const requestedDim = body.dimensions || EMBEDDING_DIMENSIONS;
+        if (requestedDim !== EMBEDDING_DIMENSIONS) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              error: {
+                type: "invalid_dimensions",
+                message: `Requested dimensions ${requestedDim} not supported. Current policy requires ${EMBEDDING_DIMENSIONS}`,
+              },
+            })
+          );
+          return;
+        }
+
+        // Generate embeddings via provider
+        let embeddings;
+        if (EMBEDDING_PROVIDER === "ollama") {
+          try {
+            const rawEmbeddings = await OllamaEmbeddingProvider.embedMany(inputs, model);
+
+            // Ensure dimensions match using MRL truncation
+            embeddings = rawEmbeddings.map((emb) =>
+              OllamaEmbeddingProvider.ensureDimensions(emb, EMBEDDING_DIMENSIONS)
+            );
+          } catch (providerError) {
+            // Check if it's a connection error
+            if (
+              providerError.message.includes("ECONNREFUSED") ||
+              providerError.message.includes("fetch failed")
+            ) {
+              res.writeHead(503, { "Content-Type": "application/json" });
+              res.end(
+                JSON.stringify({
+                  error: {
+                    type: "embedding_provider_unavailable",
+                    message: `Embedding provider '${EMBEDDING_PROVIDER}' is not available. Ensure Ollama is running on ${OllamaEmbeddingProvider.DEFAULT_OLLAMA_URL}`,
+                  },
+                })
+              );
+              return;
+            }
+            throw providerError;
+          }
+        } else {
+          res.writeHead(501, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              error: {
+                type: "unsupported_provider",
+                message: `Embedding provider '${EMBEDDING_PROVIDER}' not implemented`,
+              },
+            })
+          );
+          return;
+        }
+
+        // Build OpenAI-compatible response
+        const tokenCount = inputs.reduce((sum, text) => sum + text.length, 0); // rough estimate
+
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            object: "list",
+            model,
+            data: embeddings.map((embedding, index) => ({
+              object: "embedding",
+              index,
+              embedding,
+            })),
+            usage: {
+              prompt_tokens: tokenCount,
+              total_tokens: tokenCount,
+            },
+          })
+        );
+      } catch (e) {
+        console.error("[AI] /v1/embeddings error:", e);
+        const errorCode =
+          e.message.includes("dimension") || e.message.includes("Embedding")
+            ? "embedding_generation_failed"
+            : "internal_error";
+
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            error: {
+              type: errorCode,
+              message: e.message,
+            },
+          })
+        );
       }
       return;
     }

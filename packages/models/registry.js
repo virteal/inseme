@@ -54,6 +54,47 @@ export const SOVEREIGN_TTS = {
   },
 };
 
+/**
+ * Embedding models for semantic search and vector operations.
+ *
+ * These models are managed via external providers (Ollama, llama.cpp, etc.).
+ * They are not GGUF files in the models/ directory like SOVEREIGN_MODELS.
+ *
+ * Provider support:
+ * - ollama: Requires `ollama pull <model>` from https://ollama.com
+ * - llama.cpp: Requires manual download and embedding endpoint support
+ */
+export const EMBEDDING_MODELS = {
+  "mxbai-embed-large": {
+    name: "MXBai Embed Large",
+    provider: "ollama",
+    ollama_name: "mxbai-embed-large",
+    url: "https://ollama.com/library/mxbai-embed-large",
+    description: "Modèle d'embeddings haute performance basé sur MXBai. Dimensions natives: 1024.",
+    native_dimensions: 1024,
+    output_dimensions: 1024,
+    dimension_method: "native",
+    policy_version: "magistral-mxbai-embed-1024-v1",
+    install_command: "ollama pull mxbai-embed-large",
+    tags: ["local", "sovereign", "embeddings", "multilingual"],
+    available: true,
+  },
+  // "qwen3-embedding-4b": {
+  //   name: "Qwen3 Embedding 4B",
+  //   provider: "ollama",
+  //   ollama_name: "qwen3-embedding-4b",
+  //   url: "https://ollama.com/library/qwen3-embedding-4b",
+  //   description: "Modèle d'embeddings multilingue haute performance. Dimensions natives: 2560, sorties configurées à 1536 via MRL.",
+  //   native_dimensions: 2560,
+  //   output_dimensions: 1536,
+  //   dimension_method: "mrl", // Matryoshka Representation Learning
+  //   policy_version: "magistral-qwen3-embedding-1536-v1",
+  //   install_command: "ollama pull qwen3-embedding-4b",
+  //   tags: ["local", "sovereign", "embeddings", "multilingual"],
+  //   available: false, // Not available in Ollama yet
+  // },
+};
+
 export const getModelByTag = (tag) => {
   return Object.values(SOVEREIGN_MODELS).filter((m) => m.tags.includes(tag));
 };

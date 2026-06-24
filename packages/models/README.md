@@ -35,6 +35,7 @@ Manages a catalog of optimized models (GGUF) tested for stability and performanc
 - **Stop the server**: `npm run llm:down`
 - **Check status**: `npm run llm:status`
 - **Inference test**: `npm run llm:test`
+- **Download model**: `npm run model:download [model-id]`
 
 ### Advanced Options
 
@@ -51,14 +52,68 @@ npm run llm:up -- --model llama-3.2-3b --port 8081 --threads 4
 ```
 packages/models/
 ├── src/
-│   └── llm.js         # Main controller (CLI & Process Manager)
+│   ├── ai.js          # Unified AI server (LLM + TTS + Embeddings)
+│   └── providers/
+│       └── ollama.js  # Ollama embedding provider
 ├── scripts/
-│   ├── download.js    # JS utility to list models
+│   ├── download.js    # JS utility to list/download models
 │   └── download.py    # Python download script (HuggingFace)
 ├── tests/             # Test suite (Unit, Integration, Real)
 ├── registry.js        # Catalog of supported models
+├── docs/
+│   ├── magistral-embeddings.md
+│   └── cogentia-embedding-continuations.md
 └── package.json       # Scripts and dependencies
 ```
+
+---
+
+## 🔍 Embeddings (Semantic Search)
+
+The package now supports **local text embeddings** via an OpenAI-compatible API.
+
+### Quick Setup with Ollama
+
+```bash
+# 1. Install Ollama (https://ollama.com/download)
+# 2. Pull the embedding model
+ollama pull qwen3-embedding-4b
+
+# 3. Start the AI server with embeddings enabled
+MAGISTRAL_EMBEDDINGS_ENABLED=true npm run llm:up
+
+# 4. Test embeddings
+curl http://127.0.0.1:8880/v1/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{"model": "qwen3-embedding-4b", "input": "La Corse doit viser une autonomie de capacité."}'
+```
+
+### Supported Embedding Models
+
+| Model | Provider | Dimensions | Method |
+|-------|----------|------------|--------|
+| qwen3-embedding-4b | Ollama | 1536 | MRL (2560→1536) |
+
+View all available models:
+```bash
+npm run model:download help
+```
+
+### Configuration
+
+```bash
+MAGISTRAL_EMBEDDINGS_ENABLED=true
+MAGISTRAL_EMBEDDINGS_PROVIDER=ollama
+MAGISTRAL_EMBEDDING_MODEL=qwen3-embedding-4b
+MAGISTRAL_EMBEDDING_DIMENSIONS=1536
+MAGISTRAL_EMBEDDING_POLICY=magistral-qwen3-embedding-1536-v1
+MAGISTRAL_OLLAMA_URL=http://127.0.0.1:11434
+```
+
+### Documentation
+
+- [Magistral Embeddings API](docs/magistral-embeddings.md)
+- [Cogentia Continuation Pattern](docs/cogentia-embedding-continuations.md)
 
 ---
 
