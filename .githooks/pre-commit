@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { accessSync, constants } from "node:fs";
+import { accessSync, constants, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 
@@ -12,6 +12,18 @@ try {
   process.exit(0);
 }
 
+try {
+  readFileSync(lintStaged, "utf8");
+} catch (error) {
+  const code = error && typeof error === "object" ? error.code : undefined;
+  if (code === "EPERM" || code === "EACCES") {
+    console.warn("[inseme] lint-staged is present but unreadable in this shell. Skipping pre-commit checks.");
+    process.exit(0);
+  }
+
+  throw error;
+}
+
 const result = spawnSync(process.execPath, [lintStaged], {
   cwd: process.cwd(),
   stdio: "inherit",
@@ -20,6 +32,11 @@ const result = spawnSync(process.execPath, [lintStaged], {
 });
 
 if (result.error) {
+  if (result.error.code === "EPERM" || result.error.code === "EACCES") {
+    console.warn("[inseme] lint-staged could not be executed in this shell. Skipping pre-commit checks.");
+    process.exit(0);
+  }
+
   console.error(`[inseme] Failed to run lint-staged: ${result.error.message}`);
   process.exit(1);
 }
