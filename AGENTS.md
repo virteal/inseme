@@ -49,12 +49,17 @@ Do not expand the scope silently. If the work reveals a new problem, create or p
 
 Current solo-corpus rule: write directly to the default branch unless Jean Hugues Robert explicitly asks for a branch or a pull request.
 
+This repository follows **Optimistic Mainline Governance** by reference:
+
+- [`cogentia/research/optimistic_mainline_governance.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/optimistic_mainline_governance.md)
+
 Rationale:
 
 1. Jean Hugues Robert is currently the sole active corpus operator.
 2. Branches add cognitive and operational complexity.
 3. By Occam's razor, unnecessary workflow layers should be avoided.
 4. The corpus already has traceability through source documents, commits, diffs, issues, future corrections and explicit continuation notes.
+5. Direct-main work remains legitimate only when scoped, reversible, inspectable by diff and reported.
 
 Therefore agents MUST NOT create feature branches or pull requests by default.
 
@@ -70,7 +75,8 @@ Branches or PRs MAY be used only when:
 - Jean Hugues Robert explicitly asks for them;
 - the change is a high-risk refactor that should be isolated;
 - external collaboration requires review before integration;
-- repository protection rules make direct commits impossible.
+- repository protection rules make direct commits impossible;
+- the change affects COP invariants, security, irreversible migrations, package structure, or several subsystems at once.
 
 If a branch is used exceptionally, explain why in the work report.
 
@@ -209,6 +215,7 @@ Also inspect, when present:
 - `ARCHITECTURE.md` — system architecture;
 - `ROADMAP-TECH.md` — technical roadmap.
 - [`cogentia/research/agent_configuration_layer.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/agent_configuration_layer.md) — AGENTS.md, `.agents/`, and governed operational projections of the corpus.
+- [`cogentia/research/optimistic_mainline_governance.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/optimistic_mainline_governance.md) — direct agent work on `main` under trace, reversibility and scoped authorization.
 
 If these files disagree with this document, preserve the conflict and report it. Do not silently choose one.
 
@@ -223,6 +230,7 @@ Issue:
 Files changed:
 Tests run:
 Known risks:
+Reversibility:
 Next step:
 Human validation needed: yes/no
 ```
