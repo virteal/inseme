@@ -35,7 +35,7 @@ _and_ _Open Objections_ — _are manually curated and preserved across refreshes
 | Inox | yes | master | all | public | full |
 | registre-mariani | yes | main | all | private | stub |
 | ubikia | yes | main | all | public | full |
-| operium | no | main | all | public | full |
+| operium | yes | main | all | public | full |
 | JeanHuguesRobert | yes | main | all | public | full |
 | privai | yes | main | all | public | full |
 | gouvernance | yes | main | all | public | full |
@@ -66,26 +66,26 @@ graph LR
   r_kudos["Kudos"]
   r_github[".github"]
   r_acorsica_org["acorsica.org"]
-  r_jeanhuguesrobert -->|179| r_barons_mariani
+  r_jeanhuguesrobert -->|175| r_barons_mariani
+  r_jeanhuguesrobert -->|142| r_cogentia
   r_cogentia -->|98| r_barons_mariani
-  r_jeanhuguesrobert -->|90| r_cogentia
-  r_barons_mariani -->|62| r_cogentia
-  r_jeanhuguesrobert -->|44| r_fractavolta
-  r_fractavolta -->|41| r_cogentia
+  r_barons_mariani -->|63| r_cogentia
+  r_fractavolta -->|45| r_cogentia
   r_jeanhuguesrobert -->|41| r_marenostrum
   r_fractavolta -->|37| r_marenostrum
-  r_jeanhuguesrobert -->|26| r_inseme
+  r_jeanhuguesrobert -->|34| r_fractavolta
   r_barons_mariani -->|23| r_marenostrum
   r_cogentia -->|22| r_inseme
+  r_jeanhuguesrobert -->|20| r_inox
   r_cogentia -->|19| r_marenostrum
-  r_jeanhuguesrobert -->|19| r_inox
-  r_jeanhuguesrobert -->|19| r_kudos
   r_fractavolta -->|18| r_inseme
   r_fractavolta -->|18| r_barons_mariani
+  r_jeanhuguesrobert -->|18| r_kudos
   r_barons_mariani -->|17| r_fractavolta
+  r_inseme -->|17| r_cogentia
   r_barons_mariani -->|16| r_inseme
-  r_inseme -->|15| r_cogentia
-  r_marenostrum -->|13| r_cogentia
+  r_jeanhuguesrobert -->|15| r_inseme
+  r_marenostrum -->|14| r_cogentia
   r_marenostrum -->|12| r_fractavolta
   r_inox -->|11| r_barons_mariani
   r_inox -->|11| r_cogentia
@@ -95,20 +95,18 @@ graph LR
   r_inox -->|8| r_marenostrum
   r_inox -->|7| r_inseme
   r_inseme -->|7| r_inox
-  r_jeanhuguesrobert -->|6| r_gouvernance
   r_jeanhuguesrobert -->|6| r_ubikia
   r_barons_mariani -->|5| r_inox
   r_barons_mariani -->|5| r_jeanhuguesrobert
   r_cogentia -->|5| r_fractavolta
-  r_jeanhuguesrobert -->|5| r_privai
+  r_jeanhuguesrobert -->|5| r_gouvernance
   r_barons_mariani -->|4| r_ubikia
   r_cogentia -->|4| r_jeanhuguesrobert
+  r_jeanhuguesrobert -->|4| r_privai
   r_marianivillage -->|4| r_fractavolta
   r_github -->|3| r_gouvernance
   r_inseme -->|3| r_barons_mariani
   r_inseme -->|3| r_jeanhuguesrobert
-  r_jeanhuguesrobert -->|3| r_institut_mariani
-  r_jeanhuguesrobert -->|3| r_marianivillage
   r_kudos -->|3| r_barons_mariani
   r_cogentia -->|2| r_inox
   r_fractavolta -->|2| r_jeanhuguesrobert
@@ -119,10 +117,15 @@ graph LR
   r_inseme -->|2| r_fractavolta
   r_institut_mariani -->|2| r_barons_mariani
   r_institut_mariani -->|2| r_fractavolta
+  r_jeanhuguesrobert -->|2| r_operium
+  r_jeanhuguesrobert -->|2| r_institut_mariani
+  r_jeanhuguesrobert -->|2| r_marianivillage
   r_marenostrum -->|2| r_jeanhuguesrobert
   r_marenostrum -->|2| r_inseme
   r_marenostrum -->|2| r_inox
+  r_operium -->|2| r_cogentia
   r_privai -->|2| r_institut_mariani
+  r_ubikia -->|2| r_cogentia
   r_github -->|1| r_institut_mariani
   r_gouvernance -->|1| r_jeanhuguesrobert
   r_gouvernance -->|1| r_cogentia
@@ -143,7 +146,6 @@ graph LR
   r_jeanhuguesrobert -->|1| r_acorsica_org
   r_kudos -->|1| r_institut_mariani
   r_marianivillage -->|1| r_institut_mariani
-  r_ubikia -->|1| r_cogentia
 ```
 <!-- END_AUTO: graph -->
 ## Concepts
@@ -379,6 +381,19 @@ graph LR
   c_pathologie_du_secret -.-> c_dhitl_democratic_humans_in_the_loop
   c_pathologie_du_secret -.-> c_cogentia_commons_auditable_knowledge
   c_pathologie_du_secret -.-> c_tracabilite_civique_anti_mafieuse
+  c_possibilism --> c_projet_minesteggio
+  c_machine_a_explorer --> c_projet_minesteggio
+  c_autonomie_de_capacite --> c_projet_minesteggio
+  c_the_uchronian_museum --> c_projet_minesteggio
+  c_projet_minesteggio --> c_museologie_capacitaire
+  c_projet_minesteggio --> c_indice_de_friction_administrative
+  c_projet_minesteggio --> c_indice_de_capacite_retrouvee
+  c_projet_minesteggio --> c_grille_de_remise_en_service
+  c_projet_minesteggio -.-> c_machine_a_empecher
+  c_projet_minesteggio -.-> c_stabilisateurs_anti_ubik_proceduraux
+  c_projet_minesteggio -.-> c_projet_minesteggio
+  c_projet_minesteggio -.-> c_the_second_method
+  c_projet_minesteggio -.-> c_kudos
   c_traceable_agency --> c_cogentia
   c_cogentia --> c_cogentigram
   c_cogentia --> c_operational_memory
@@ -507,9 +522,9 @@ graph LR
   click c_cogentigram "https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/concepts.md#cogentigram" "Open Cogentigram"
 ```
 
-*Orphan concepts: `Civilizational Stakes` (cogentia), `Cogentia` (cogentia), `Cogentia Commons` (cogentia), `Sovereign Digital Twin` (cogentia), `Agent-Resumable CLI` (cogentia), `Kernel Extractor` (cogentia), `KYS (Know Your System) / Psychocognitive Analysis` (cogentia), `Cogentia Workflows` (cogentia), `IPN (Inference Packet Network)` (FractaVolta), `EPN (Energy Packet Network)` (FractaVolta), `PGN (Power Generation Node)` (FractaVolta), `Packet Attractors` (FractaVolta), `The Unconscious Grid` (FractaVolta), `Mariani Village` (FractaVolta), `Value-Shaped Solar` (FractaVolta), `Containerized Compute (Tera)` (FractaVolta), `Traceable Governance` (FractaVolta), `DHITL (Democratic Human In The Loop)` (marenostrum), `CXU (Compute and Exergy Unit)` (marenostrum), `Safe Compute Exergy` (marenostrum), `Constellia` (marenostrum), `Corsica Forest Synergies` (marenostrum), `Sun to Sovereignty` (marenostrum), `Civilizational Stakes` (barons-Mariani), `Cogentia` (barons-Mariani), `Potentics` (barons-Mariani), `Cognitive Waves` (barons-Mariani), `Mimetic Desynchronization` (barons-Mariani), `Invidia` (barons-Mariani), `Transition Markets` (barons-Mariani), `The Uchronian Museum` (barons-Mariani), `Possibilism` (barons-Mariani), `Territoires Possibilistes` (barons-Mariani), `The Second Method` (barons-Mariani), `Projet Minesteggio` (barons-Mariani), `Discret Holography` (barons-Mariani), `COP (Continuous Operation Protocol)` (inseme), `Briques` (inseme), `Kudocracy` (inseme), `Agora` (inseme), `Ophélia` (inseme), `COP (Cognitive Orchestration Protocol)` (inseme), `Brique Spec / Multi-Instance` (inseme), `Modular System` (inseme), `Reactive sets` (Inox), `Actors` (Inox), `Dialects` (Inox).*
+*Orphan concepts: `Civilizational Stakes` (cogentia), `Cogentia` (cogentia), `Cogentia Commons` (cogentia), `Sovereign Digital Twin` (cogentia), `Agent-Resumable CLI` (cogentia), `Kernel Extractor` (cogentia), `KYS (Know Your System) / Psychocognitive Analysis` (cogentia), `Cogentia Workflows` (cogentia), `IPN (Inference Packet Network)` (FractaVolta), `EPN (Energy Packet Network)` (FractaVolta), `PGN (Power Generation Node)` (FractaVolta), `Packet Attractors` (FractaVolta), `The Unconscious Grid` (FractaVolta), `Mariani Village` (FractaVolta), `Value-Shaped Solar` (FractaVolta), `Containerized Compute (Tera)` (FractaVolta), `Traceable Governance` (FractaVolta), `DHITL (Democratic Human In The Loop)` (marenostrum), `CXU (Compute and Exergy Unit)` (marenostrum), `Safe Compute Exergy` (marenostrum), `Constellia` (marenostrum), `Corsica Forest Synergies` (marenostrum), `Sun to Sovereignty` (marenostrum), `Civilizational Stakes` (barons-Mariani), `Cogentia` (barons-Mariani), `Potentics` (barons-Mariani), `Cognitive Waves` (barons-Mariani), `Mimetic Desynchronization` (barons-Mariani), `Invidia` (barons-Mariani), `Transition Markets` (barons-Mariani), `The Uchronian Museum` (barons-Mariani), `Possibilism` (barons-Mariani), `Territoires Possibilistes` (barons-Mariani), `The Second Method` (barons-Mariani), `Discret Holography` (barons-Mariani), `COP (Continuous Operation Protocol)` (inseme), `Briques` (inseme), `Kudocracy` (inseme), `Agora` (inseme), `Ophélia` (inseme), `COP (Cognitive Orchestration Protocol)` (inseme), `Brique Spec / Multi-Instance` (inseme), `Modular System` (inseme), `Reactive sets` (Inox), `Actors` (Inox), `Dialects` (Inox).*
 
-*Referenced but undefined: `Democratic AI Safety`, `Cogentia Commons (déclinaison manuelle)`, `Fractanet / COP (déclinaison automatisée)`, `Stabilisateurs (anti-Ubik)`, `DHITL (couches 4/5)`, `Effet Ubik (opposé)`, `Machine à explorer (opposé symétrique)`, `FM-11 (outer optimizer capture)`, `Concentration de compute (85% frontier)`, `Invidia (densité sociale destructrice)`, `DHITL (Compute Exergy comme unité traçable)`, `Map vs territory`, `Operational memory`, `Traceable agency`, `Non-deterministic Cognitive Step`, `Causal Trace Replay`, `COP/HITL Profile`, `Rule 0 (seconde méthode)`, `DHITL Layer 5`, `Envelope (kind-agnostic metadata layer)`, `Payload (kind-specific content layer)`, `Continuation payload`, `Objection payload`, `Hypothesis payload`, `Decision payload`, `Failure payload`, `Routing payload`, `Source Document`, `DHITL`, `Capabilities approach (Sen, Nussbaum)`, `Spécificité de phase`, `Flexibilité d'usage (redistributive vs. predatory)`, `Auto-institution démocratique (Castoriadis)`, `Communs (Ostrom)`, `Mauss — gift / counter-gift`, `Democratic AI Safety (thesis kernel)`, `DHITL — Democratic Humans in the Loop`, `Cogentia Commons (auditable knowledge)`, `Traçabilité civique anti-mafieuse`, `Deterministic Replay (protocol layer only)`, `Energy Packet Network (FractaVolta)`, `Cognitive Packet envelope/payload (Cogentia)`, `Auxilia (Inseme brique — human-scale Fractanet exchange)`.*
+*Referenced but undefined: `Democratic AI Safety`, `Cogentia Commons (déclinaison manuelle)`, `Fractanet / COP (déclinaison automatisée)`, `Stabilisateurs (anti-Ubik)`, `DHITL (couches 4/5)`, `Effet Ubik (opposé)`, `Machine à explorer (opposé symétrique)`, `FM-11 (outer optimizer capture)`, `Concentration de compute (85% frontier)`, `Invidia (densité sociale destructrice)`, `DHITL (Compute Exergy comme unité traçable)`, `Map vs territory`, `Operational memory`, `Traceable agency`, `Non-deterministic Cognitive Step`, `Causal Trace Replay`, `COP/HITL Profile`, `Rule 0 (seconde méthode)`, `DHITL Layer 5`, `Envelope (kind-agnostic metadata layer)`, `Payload (kind-specific content layer)`, `Continuation payload`, `Objection payload`, `Hypothesis payload`, `Decision payload`, `Failure payload`, `Routing payload`, `Source Document`, `DHITL`, `Capabilities approach (Sen, Nussbaum)`, `Spécificité de phase`, `Flexibilité d'usage (redistributive vs. predatory)`, `Auto-institution démocratique (Castoriadis)`, `Communs (Ostrom)`, `Mauss — gift / counter-gift`, `Democratic AI Safety (thesis kernel)`, `DHITL — Democratic Humans in the Loop`, `Cogentia Commons (auditable knowledge)`, `Traçabilité civique anti-mafieuse`, `Muséologie capacitaire`, `Indice de friction administrative`, `Indice de capacité retrouvée`, `Grille de remise en service`, `Deterministic Replay (protocol layer only)`, `Energy Packet Network (FractaVolta)`, `Cognitive Packet envelope/payload (Cogentia)`, `Auxilia (Inseme brique — human-scale Fractanet exchange)`.*
 <!-- END_AUTO: concept_graph -->
 ## Published in this repo
 <!-- BEGIN_AUTO: published -->
@@ -571,7 +586,6 @@ _Manually curated: objections received publicly, not yet fully resolved._
 - [Corpus Status — inseme](corpus-status.md)
 - [Inseme](../README.md)
 - [Corpus Start Here — Carte globale du Corpus](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/corpus-map.md)
-- [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
 - [Research Index — Jean Hugues Noël Robert (Profile / Entry Point)](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md)
 - [Research Index — MareNostrum](https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/index.md)
 <!-- END_AUTO: possibilities -->
@@ -587,5 +601,4 @@ _Challenge via issues. Fork to explore alternatives._
 - [Rendre capable — noyau doctrinal provisoire](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/noyau_doctrinal_rendre_capable.md)
 - [Inseme](../README.md)
 - [Research Index — Inseme](index.md)
-- [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
 <!-- END_AUTO: backlinks -->
