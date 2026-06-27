@@ -66,50 +66,43 @@ graph LR
   r_kudos["Kudos"]
   r_github[".github"]
   r_acorsica_org["acorsica.org"]
-  r_jeanhuguesrobert -->|178| r_barons_mariani
-  r_jeanhuguesrobert -->|137| r_cogentia
-  r_cogentia -->|98| r_barons_mariani
+  r_cogentia -->|97| r_barons_mariani
   r_barons_mariani -->|63| r_cogentia
+  r_jeanhuguesrobert -->|63| r_barons_mariani
   r_fractavolta -->|45| r_cogentia
-  r_jeanhuguesrobert -->|39| r_marenostrum
   r_fractavolta -->|37| r_marenostrum
-  r_jeanhuguesrobert -->|32| r_fractavolta
-  r_barons_mariani -->|23| r_marenostrum
+  r_jeanhuguesrobert -->|34| r_cogentia
+  r_barons_mariani -->|22| r_marenostrum
   r_cogentia -->|22| r_inseme
   r_cogentia -->|19| r_marenostrum
-  r_jeanhuguesrobert -->|19| r_inox
-  r_jeanhuguesrobert -->|19| r_kudos
   r_fractavolta -->|18| r_inseme
-  r_fractavolta -->|18| r_barons_mariani
   r_barons_mariani -->|17| r_fractavolta
+  r_fractavolta -->|17| r_barons_mariani
   r_inseme -->|17| r_cogentia
   r_barons_mariani -->|16| r_inseme
-  r_jeanhuguesrobert -->|15| r_inseme
+  r_jeanhuguesrobert -->|16| r_marenostrum
   r_marenostrum -->|14| r_cogentia
   r_marenostrum -->|12| r_fractavolta
   r_inox -->|11| r_barons_mariani
   r_inox -->|11| r_cogentia
   r_marenostrum -->|11| r_barons_mariani
   r_inox -->|10| r_fractavolta
+  r_jeanhuguesrobert -->|9| r_fractavolta
   r_fractavolta -->|8| r_inox
   r_inox -->|8| r_marenostrum
   r_inox -->|7| r_inseme
   r_inseme -->|7| r_inox
-  r_jeanhuguesrobert -->|6| r_gouvernance
-  r_jeanhuguesrobert -->|6| r_ubikia
+  r_jeanhuguesrobert -->|6| r_inseme
+  r_jeanhuguesrobert -->|6| r_inox
   r_barons_mariani -->|5| r_inox
   r_barons_mariani -->|5| r_jeanhuguesrobert
   r_cogentia -->|5| r_fractavolta
-  r_jeanhuguesrobert -->|5| r_privai
   r_barons_mariani -->|4| r_ubikia
   r_cogentia -->|4| r_jeanhuguesrobert
   r_marianivillage -->|4| r_fractavolta
   r_github -->|3| r_gouvernance
   r_inseme -->|3| r_barons_mariani
   r_inseme -->|3| r_jeanhuguesrobert
-  r_jeanhuguesrobert -->|3| r_institut_mariani
-  r_jeanhuguesrobert -->|3| r_marianivillage
-  r_jeanhuguesrobert -->|3| r_operium
   r_kudos -->|3| r_barons_mariani
   r_cogentia -->|2| r_inox
   r_fractavolta -->|2| r_jeanhuguesrobert
@@ -120,6 +113,7 @@ graph LR
   r_inseme -->|2| r_fractavolta
   r_institut_mariani -->|2| r_barons_mariani
   r_institut_mariani -->|2| r_fractavolta
+  r_jeanhuguesrobert -->|2| r_ubikia
   r_marenostrum -->|2| r_jeanhuguesrobert
   r_marenostrum -->|2| r_inseme
   r_marenostrum -->|2| r_inox
@@ -142,8 +136,7 @@ graph LR
   r_institut_mariani -->|1| r_cogentia
   r_institut_mariani -->|1| r_marenostrum
   r_institut_mariani -->|1| r_inox
-  r_jeanhuguesrobert -->|1| r_github
-  r_jeanhuguesrobert -->|1| r_acorsica_org
+  r_jeanhuguesrobert -->|1| r_operium
   r_kudos -->|1| r_institut_mariani
   r_marianivillage -->|1| r_institut_mariani
 ```
@@ -583,7 +576,6 @@ _Manually curated: objections received publicly, not yet fully resolved._
 - [Research Index — Cogentia](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/index.md)
 - [Research Index — FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/index.md)
 - [Research Index — Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md)
-- [Corpus Status — inseme](corpus-status.md)
 - [Inseme](../README.md)
 - [Corpus Start Here — Carte globale du Corpus](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/corpus-map.md)
 - [Research Index — Jean Hugues Noël Robert (Profile / Entry Point)](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md)

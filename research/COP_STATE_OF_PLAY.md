@@ -231,5 +231,4 @@ descriptor, improve resumption reliability, add tests, design a resumption API, 
 - [COOP — Tutorial and Near-Specification](coop_tutorial.md)
 - [Inseme](../README.md)
 - [Research Index — Inseme](index.md)
-- [Documents - All Tracked Repos](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/documents.md)
 <!-- END_AUTO: backlinks -->
