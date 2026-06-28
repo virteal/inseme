@@ -16,6 +16,7 @@ import {
   sanitizeNodeForPersistence,
 } from "../../magistral/src/router.js";
 import OllamaEmbeddingProvider from "./providers/ollama.js";
+import OpenAIEmbeddingProvider from "./providers/openai.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -551,12 +552,23 @@ function startServer() {
       // Check embeddings availability
       let embeddingsOk = false;
       let embeddingsInfo = null;
-      if (EMBEDDINGS_ENABLED && EMBEDDING_PROVIDER === "ollama") {
-        try {
-          embeddingsInfo = await OllamaEmbeddingProvider.getProviderInfo(EMBEDDING_MODEL);
-          embeddingsOk = embeddingsInfo.available;
-        } catch {
-          embeddingsOk = false;
+      if (EMBEDDINGS_ENABLED) {
+        if (EMBEDDING_PROVIDER === "ollama") {
+          try {
+            embeddingsInfo = await OllamaEmbeddingProvider.getProviderInfo(EMBEDDING_MODEL);
+            embeddingsOk = embeddingsInfo.available;
+          } catch {
+            embeddingsOk = false;
+          }
+        } else if (EMBEDDING_PROVIDER === "openai") {
+          try {
+            embeddingsInfo = await OpenAIEmbeddingProvider.checkAvailability(
+              process.env.OPENAI_API_KEY
+            );
+            embeddingsOk = embeddingsInfo.available;
+          } catch {
+            embeddingsOk = false;
+          }
         }
       }
 
@@ -604,18 +616,31 @@ function startServer() {
           });
 
           // Add embedding models if enabled
-          if (EMBEDDINGS_ENABLED && EMBEDDING_PROVIDER === "ollama") {
-            const embeddingInfo = await OllamaEmbeddingProvider.getProviderInfo(EMBEDDING_MODEL);
-            if (embeddingInfo.available) {
+          if (EMBEDDINGS_ENABLED) {
+            if (EMBEDDING_PROVIDER === "ollama") {
+              const embeddingInfo = await OllamaEmbeddingProvider.getProviderInfo(EMBEDDING_MODEL);
+              if (embeddingInfo.available) {
+                data.data.push({
+                  id: EMBEDDING_MODEL,
+                  object: "model",
+                  owned_by: "local",
+                  created: Date.now(),
+                  capabilities: ["embeddings"],
+                  dimensions: EMBEDDING_DIMENSIONS,
+                  policy: EMBEDDING_POLICY,
+                  provider: "ollama",
+                });
+              }
+            } else if (EMBEDDING_PROVIDER === "openai") {
               data.data.push({
                 id: EMBEDDING_MODEL,
                 object: "model",
-                owned_by: "local",
+                owned_by: "openai",
                 created: Date.now(),
                 capabilities: ["embeddings"],
                 dimensions: EMBEDDING_DIMENSIONS,
                 policy: EMBEDDING_POLICY,
-                provider: "ollama",
+                provider: "openai",
               });
             }
           }
@@ -631,17 +656,30 @@ function startServer() {
         ];
 
         // Add embedding models if enabled
-        if (EMBEDDINGS_ENABLED && EMBEDDING_PROVIDER === "ollama") {
-          fallbackModels.push({
-            id: EMBEDDING_MODEL,
-            object: "model",
-            owned_by: "local",
-            created: Date.now(),
-            capabilities: ["embeddings"],
-            dimensions: EMBEDDING_DIMENSIONS,
-            policy: EMBEDDING_POLICY,
-            provider: "ollama",
-          });
+        if (EMBEDDINGS_ENABLED) {
+          if (EMBEDDING_PROVIDER === "ollama") {
+            fallbackModels.push({
+              id: EMBEDDING_MODEL,
+              object: "model",
+              owned_by: "local",
+              created: Date.now(),
+              capabilities: ["embeddings"],
+              dimensions: EMBEDDING_DIMENSIONS,
+              policy: EMBEDDING_POLICY,
+              provider: "ollama",
+            });
+          } else if (EMBEDDING_PROVIDER === "openai") {
+            fallbackModels.push({
+              id: EMBEDDING_MODEL,
+              object: "model",
+              owned_by: "openai",
+              created: Date.now(),
+              capabilities: ["embeddings"],
+              dimensions: EMBEDDING_DIMENSIONS,
+              policy: EMBEDDING_POLICY,
+              provider: "openai",
+            });
+          }
         }
 
         res.writeHead(200, { "Content-Type": "application/json" });
@@ -1245,6 +1283,70 @@ function startServer() {
               );
               return;
             }
+            throw providerError;
+          }
+        } else if (EMBEDDING_PROVIDER === "openai") {
+          try {
+            const result = await OpenAIEmbeddingProvider.embedMany(inputs, model, {
+              apiKey: process.env.OPENAI_API_KEY,
+              dimensions: EMBEDDING_DIMENSIONS,
+            });
+
+            embeddings = result.embeddings;
+          } catch (providerError) {
+            // Check if it's an API key error
+            if (
+              providerError.message.includes("401") ||
+              providerError.message.includes("authentication") ||
+              providerError.message.includes("API key")
+            ) {
+              res.writeHead(401, { "Content-Type": "application/json" });
+              res.end(
+                JSON.stringify({
+                  error: {
+                    type: "authentication_error",
+                    message: `Invalid OpenAI API key. Set OPENAI_API_KEY environment variable.`,
+                  },
+                })
+              );
+              return;
+            }
+
+            // Check if rate limited
+            if (
+              providerError.message.includes("429") ||
+              providerError.message.includes("rate limit")
+            ) {
+              res.writeHead(429, { "Content-Type": "application/json" });
+              res.end(
+                JSON.stringify({
+                  error: {
+                    type: "rate_limited",
+                    message: `OpenAI API rate limit exceeded. Please try again later.`,
+                  },
+                })
+              );
+              return;
+            }
+
+            // Check if connection error
+            if (
+              providerError.message.includes("ECONNREFUSED") ||
+              providerError.message.includes("fetch failed") ||
+              providerError.message.includes("ENOTFOUND")
+            ) {
+              res.writeHead(503, { "Content-Type": "application/json" });
+              res.end(
+                JSON.stringify({
+                  error: {
+                    type: "embedding_provider_unavailable",
+                    message: `Embedding provider 'openai' is not available. Check your internet connection.`,
+                  },
+                })
+              );
+              return;
+            }
+
             throw providerError;
           }
         } else {
