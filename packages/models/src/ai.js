@@ -101,6 +101,7 @@ const EMBEDDING_PROVIDER = process.env.MAGISTRAL_EMBEDDING_PROVIDER || "ollama";
 const EMBEDDING_MODEL = process.env.MAGISTRAL_EMBEDDING_MODEL || "mxbai-embed-large";
 const EMBEDDING_DIMENSIONS = parseInt(process.env.MAGISTRAL_EMBEDDING_DIMENSIONS || "1024", 10);
 const EMBEDDING_POLICY = process.env.MAGISTRAL_EMBEDDING_POLICY || "magistral-mxbai-embed-1024-v1";
+const ROUTER_ONLY = process.env.MAGISTRAL_ROUTER_ONLY === "true";
 
 // --- Service Registration ---
 function getLocalIp() {
@@ -381,6 +382,36 @@ function isMagistralEnabled() {
 
 let _magistralRouter = null;
 
+function loadMagistralMap() {
+  const inlineJson = process.env.MAGISTRAL_MAP_JSON || "";
+  if (inlineJson.trim()) {
+    const parsed = JSON.parse(inlineJson);
+    if (!Array.isArray(parsed)) throw new Error("MAGISTRAL_MAP_JSON must be a JSON array");
+    return parsed;
+  }
+
+  const configuredPath = process.env.MAGISTRAL_MAP_PATH || process.env.MAGISTRAL_MAP || "";
+  const mapPath = configuredPath
+    ? resolveMagistralMapPath(configuredPath)
+    : path.resolve(__dirname, "..", "..", "magistral", "registry", "maps", "default.json");
+
+  const parsed = JSON.parse(fs.readFileSync(mapPath, "utf-8"));
+  if (!Array.isArray(parsed)) throw new Error(`Magistral map must be a JSON array: ${mapPath}`);
+  return parsed;
+}
+
+function resolveMagistralMapPath(value) {
+  const clean = String(value || "").trim();
+  if (!clean) return "";
+  if (path.isAbsolute(clean)) return clean;
+  const filename = clean.endsWith(".json") ? clean : `${clean}.json`;
+  return path.resolve(__dirname, "..", "..", "magistral", "registry", "maps", filename);
+}
+
+function includeLocalFallback() {
+  return process.env.MAGISTRAL_INCLUDE_LOCAL_FALLBACK !== "false";
+}
+
 function getMagistralRouter() {
   if (_magistralRouter) return _magistralRouter;
 
@@ -394,23 +425,12 @@ function getMagistralRouter() {
 
   let cloudNodes = [];
   try {
-    const mapPath = path.resolve(
-      __dirname,
-      "..",
-      "..",
-      "magistral",
-      "registry",
-      "maps",
-      "default.json"
-    );
-    cloudNodes = JSON.parse(fs.readFileSync(mapPath, "utf-8")).filter(
-      (n) => !n.url.includes("8081")
-    ); // dedupe: local-llama is already added below
-  } catch {
-    /* magistral registry not found — sovereign-only mode */
+    cloudNodes = loadMagistralMap().filter((n) => !n.url.includes("8081")); // dedupe: local-llama is already added below
+  } catch (error) {
+    console.warn(`[Magistral] Failed to load map: ${error.message}`);
   }
 
-  const map = [...cloudNodes, localFallback];
+  const map = includeLocalFallback() ? [...cloudNodes, localFallback] : cloudNodes;
   const apiKeys = {
     GROQ_API_KEY: process.env.GROQ_API_KEY || "",
     TOGETHER_API_KEY: process.env.TOGETHER_API_KEY || "",
@@ -546,8 +566,9 @@ function startServer() {
     }
 
     if (req.method === "GET" && pathname === "/health") {
-      const llmOk = await llamaAlive();
+      const llmOk = ROUTER_ONLY ? false : await llamaAlive();
       const ttsOk = !!tts;
+      const magistralOk = isMagistralEnabled();
 
       // Check embeddings availability
       let embeddingsOk = false;
@@ -575,11 +596,13 @@ function startServer() {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(
         JSON.stringify({
-          status: (llmOk && ttsOk) || embeddingsOk ? "ok" : "degraded",
+          status: magistralOk || (llmOk && ttsOk) || embeddingsOk ? "ok" : "degraded",
           service: "magistral",
           capabilities: {
-            chat_completions: true,
-            completions: true,
+            chat_completions: magistralOk || llmOk,
+            completions: llmOk,
+            magistral_router: magistralOk,
+            router_only: ROUTER_ONLY,
             tts: ttsOk,
             embeddings: embeddingsOk,
           },
@@ -1652,18 +1675,24 @@ async function main() {
   // Load instance config (API keys, etc.) before starting
   await loadInstanceConfig();
 
-  if (!(await llamaAlive())) {
+  if (!ROUTER_ONLY && !(await llamaAlive())) {
     launchLlamaServer();
     const ok = await waitForLlama();
     if (!ok) {
       console.error("[AI] llama-server failed to start within timeout.");
       process.exit(1);
     }
-  } else {
+  } else if (!ROUTER_ONLY) {
     console.log(`[AI] llama-server already running on ${LLAMA_BASE_URL}`);
+  } else {
+    console.log("[AI] Router-only mode enabled; skipping llama-server startup.");
   }
 
-  await initTTS();
+  if (!ROUTER_ONLY) {
+    await initTTS();
+  } else {
+    console.log("[AI] Router-only mode enabled; skipping TTS startup.");
+  }
   startServer();
 
   process.on("SIGINT", () => {
