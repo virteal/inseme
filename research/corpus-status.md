@@ -32,6 +32,7 @@ _and_ _Open Objections_ — _are manually curated and preserved across refreshes
 | marenostrum | yes | main | all | public | full |
 | barons-Mariani | yes | main | all | public | full |
 | inseme | yes | main | research | public | full |
+| survey | yes | main | all | public | full |
 | Inox | yes | master | all | public | full |
 | registre-mariani | yes | main | all | private | stub |
 | ubikia | yes | main | all | public | full |
@@ -54,6 +55,7 @@ graph LR
   r_marenostrum["marenostrum"]
   r_barons_mariani["barons-Mariani"]
   r_inseme["inseme"]
+  r_survey["survey"]
   r_inox["Inox"]
   r_registre_mariani["registre-mariani"]
   r_ubikia["ubikia"]
