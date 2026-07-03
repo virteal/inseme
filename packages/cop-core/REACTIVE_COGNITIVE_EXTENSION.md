@@ -39,6 +39,8 @@ the low-level runtime. Native implementation is delegated to Inox.
 
 - [Reactive Cognitive COP Extension](../../research/reactive_cognitive_cop_extension.md) — source
   document;
+- [Packet Attractor — Fractanet Distributed Demand and Capability Routing](../../research/packet_attractor_fractanet.md)
+  — canonical crystallization of `cop/packet-attractor`;
 - [COP — Cognitive Orchestration Protocol](Architecture.md) — canonical COP specification;
 - [COP Invariants](Invariants.md) — protocol invariants;
 - [Cognitive Packets](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md)

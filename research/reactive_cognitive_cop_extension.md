@@ -80,7 +80,9 @@ This document should be read together with:
 - [Toubkal](https://github.com/ReactiveSets/toubkal) — original Reactive Sets / Pipelets dataflow
   framework;
 - [Reactive Sets in Inox — Native Implementation Path](https://github.com/JeanHuguesRobert/Inox/blob/master/research/reactive_sets_inox_cop_implementation.md)
-  — sibling Inox-side artifact.
+  — sibling Inox-side artifact;
+- [Packet Attractor — Fractanet Distributed Demand and Capability Routing](packet_attractor_fractanet.md)
+  — canonical crystallization of `cop/packet-attractor` for Fractanet routing.
 
 ---
 
