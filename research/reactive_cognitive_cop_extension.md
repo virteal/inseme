@@ -514,9 +514,11 @@ layering constraint clearly and produces concrete artifact types.
 
 *These documents link to this file:*
 - [Rendre capable — noyau doctrinal provisoire](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/noyau_doctrinal_rendre_capable.md)
+- [Concept Index — FractaVolta](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/concepts.md)
 - [Fractanet — Generalized Control Planes for Heterogeneous Packet Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/fractanet.md)
 - [Reactive Sets in Inox — Native Implementation Path](https://github.com/JeanHuguesRobert/Inox/blob/master/research/reactive_sets_inox_cop_implementation.md)
 - [Research Index — Inox](https://github.com/JeanHuguesRobert/Inox/blob/master/research/index.md)
 - [COP Reactive Cognitive Extension](../packages/cop-core/REACTIVE_COGNITIVE_EXTENSION.md)
+- [Packet Attractor — Fractanet Distributed Demand and Capability Routing](packet_attractor_fractanet.md)
 - [Research Index — Inseme](index.md)
 <!-- END_AUTO: backlinks -->
