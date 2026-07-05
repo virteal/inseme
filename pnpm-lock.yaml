@@ -899,6 +899,9 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.39.0
         version: 2.90.1
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
       glob:
         specifier: ^10.3.10
         version: 10.5.0
@@ -908,6 +911,15 @@ importers:
       lucide-react:
         specifier: ^0.563.0
         version: 0.563.0(react@18.3.1)
+      minimist:
+        specifier: ^1.2.8
+        version: 1.2.8
+      ngrok:
+        specifier: ^5.0.0-beta.2
+        version: 5.0.0-beta.2
+      qrcode:
+        specifier: ^1.5.4
+        version: 1.5.4
       react-router-dom:
         specifier: ^6.20.0
         version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

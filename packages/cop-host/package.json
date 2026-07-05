@@ -5,12 +5,17 @@
   "main": "./src/index.js",
   "module": "./src/index.js",
   "type": "module",
+  "bin": {
+    "cop-tunnel": "./src/tunnel/runtime.js"
+  },
   "exports": {
     ".": "./src/index.js",
     "./backend": "./src/backend.js",
     "./backend.js": "./src/backend.js",
     "./config/*": "./src/config/*",
     "./runtime/*": "./src/runtime/*",
+    "./tunnel": "./src/tunnel/runtime.js",
+    "./tunnel/runtime.js": "./src/tunnel/runtime.js",
     "./utils/node-proxy": "./src/utils/node-proxy.js",
     "./utils/node-proxy.js": "./src/utils/node-proxy.js",
     "./constants": "./src/constants.js",
@@ -20,7 +25,11 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
     "glob": "^10.3.10",
+    "dotenv": "^17.2.3",
     "lucide-react": "^0.563.0",
+    "minimist": "^1.2.8",
+    "ngrok": "^5.0.0-beta.2",
+    "qrcode": "^1.5.4",
     "react-router-dom": "^6.20.0",
     "undici": "^7.18.2",
     "@axiomhq/js": "^1.3.1",
