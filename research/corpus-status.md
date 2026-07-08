@@ -78,11 +78,11 @@ graph LR
   r_jeanhuguesrobert -->|34| r_cogentia
   r_barons_mariani -->|22| r_marenostrum
   r_cogentia -->|22| r_inseme
-  r_fractavolta -->|20| r_inseme
+  r_fractavolta -->|22| r_inseme
   r_inseme -->|20| r_cogentia
   r_cogentia -->|19| r_marenostrum
+  r_fractavolta -->|18| r_barons_mariani
   r_barons_mariani -->|17| r_fractavolta
-  r_fractavolta -->|17| r_barons_mariani
   r_barons_mariani -->|16| r_inseme
   r_jeanhuguesrobert -->|16| r_marenostrum
   r_marenostrum -->|14| r_cogentia
@@ -96,7 +96,7 @@ graph LR
   r_jeanhuguesrobert -->|9| r_fractavolta
   r_fractavolta -->|8| r_inox
   r_inox -->|8| r_marenostrum
-  r_inseme -->|6| r_fractavolta
+  r_inseme -->|8| r_fractavolta
   r_jeanhuguesrobert -->|6| r_inseme
   r_jeanhuguesrobert -->|6| r_inox
   r_barons_mariani -->|5| r_inox
@@ -546,6 +546,7 @@ graph LR
 | [COP Memory — Map and Territory](cop_memory_map_territory.md) _(source document — representation, approximation, manipulable maps, and situated judgment for COP memory)_                                                                                                                                           | this repo | 2026-06-21  |
 | [COP Memory Metadata and Recursive Trace Layers](cop_memory_metadata_recursion.md) _(source document — metadata recursion, trace layers, and auditability of memory representations)_                                                                                                                               | this repo | 2026-06-21  |
 | [COP Memory — Necessity and Local Equilibrium](cop_memory_necessity_local_equilibrium.md) _(source document — necessity, entropy, negentropy, free energy, and local equilibrium for COP memory)_                                                                                                                   | this repo | 2026-06-21  |
+| [COP FractaLog Profile](cop_fractalog_profile.md) _(source document — agent-bound logs, custody, inheritance, restricted traces and delayed transparency for COP)_                                                                                                                                                  | this repo | 2026-07-06  |
 | [Modular System Architecture — the Brique pattern](../docs/MODULAR_SYSTEM.md)                                                                                                                                                                                                                                       | this repo | 2025-12     |
 | [BRIQUE_SPEC — the brique manifest contract](../packages/cop-host/BRIQUE_SPEC.md)                                                                                                                                                                                                                                   | this repo | 2025-12     |
 | [Multi-Instance Architecture](../packages/cop-host/docs/MULTI_INSTANCE.md)                                                                                                                                                                                                                                          | this repo | 2025-12     |
