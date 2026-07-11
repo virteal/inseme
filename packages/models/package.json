@@ -13,7 +13,7 @@
     "sovereign:down": "node src/ai.js --stop --port 8880",
     "sovereign:status": "node src/ai.js --status --port 8880",
     "sovereign:tts": "node ../../scripts/tts.js",
-    "model:pull": "conda run -n inseme python scripts/download.py",
+    "model:pull": "node ../../scripts/conda-run.js --env inseme python scripts/download.py",
     "model:list": "node scripts/download.js",
     "test": "node --test tests/*.test.js"
   },

@@ -29,6 +29,18 @@ Manages a catalog of optimized models (GGUF) tested for stability and performanc
 
 ---
 
+## 🐍 Conda (env `inseme`)
+
+Conda is **not** loaded at PowerShell startup (saves ~30s per `pwsh`). It is only needed here for `model:pull` / Python download scripts.
+
+```powershell
+# Interactive inseme Python work:
+. ..\..\scripts\use-conda.ps1 -Env inseme
+
+# Or npm (uses conda-run.ps1, no profile hook):
+npm run model:pull
+```
+
 ## 🚀 Quick Commands
 
 - **Start the server**: `npm run llm:up` (Uses the default Qwen 2.5 Coder 1.5B model)
