@@ -151,3 +151,6 @@ _Fork to explore alternatives. Challenge via issues._
 - [Research Index — Jean Hugues Noël Robert (Profile / Entry Point)](https://github.com/JeanHuguesRobert/JeanHuguesRobert/blob/main/research/index.md)
 - [Research Index — MareNostrum](https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/index.md)
 <!-- END_AUTO: backlinks -->
+## Newly indexed working corpus (July 2026)
+
+- [COP Mission Stigmergy and Rational Exploration](cop_mission_stigmergy_exploration.md)
