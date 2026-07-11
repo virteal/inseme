@@ -164,3 +164,20 @@ Cognition should not.
 
 COP exists to ensure that reasoning, decisions, and coordination outlive any single model, vendor,
 or runtime.
+
+---
+
+### Applied Possibilism: The Spirit Behind COP
+
+COP is not merely a technical specification — it embodies a practice-oriented philosophy called **Applied Possibilism: The Joyful Exploration of the Possible.**
+
+Where frameworks control, COP enables exploration. Where optimization demands efficiency, possibilism values discovery. The protocol provides:
+
+- **Deterministic replay** → Exploration is documented and learnable
+- **Stateless agents** → Cognition externalized, exploration shared
+- **Stigmergic attractors** → Exploration is guided, not prescribed
+- **Continuations** → Exploration can pause and resume
+
+> COP is not a framework for control. It is a protocol for joyful, systematic exploration of what's possible.
+
+For the full philosophical and practice framework, see [Applied Possibilism](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/applied_possibilism.md).
