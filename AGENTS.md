@@ -6,6 +6,19 @@ It is intentionally short. Agents should read it before modifying code, document
 
 ---
 
+## 0. Shared baseline and read order
+
+Before acting here:
+
+1. read this repository-local `AGENTS.md`;
+2. read the shared [`cogentia/AGENTS.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/AGENTS.md);
+3. inspect any closer package-level rule files;
+4. apply the most specific and most restrictive applicable mandate.
+
+The shared baseline supplies the default corpus workflow. This file specializes it for Inseme, COP, the monorepo, and implementation work; it does not silently widen permissions.
+
+---
+
 ## 1. Repository priority
 
 `inseme` is the platform repository of the corpus.
@@ -51,6 +64,7 @@ Current solo-corpus rule: write directly to the default branch unless Jean Hugue
 
 This repository follows **Optimistic Mainline Governance** by reference:
 
+- [`cogentia/AGENTS.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/AGENTS.md)
 - [`cogentia/research/optimistic_mainline_governance.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/optimistic_mainline_governance.md)
 
 Rationale:
@@ -214,6 +228,7 @@ Also inspect, when present:
 - `.api-docs.md` — important API references;
 - `ARCHITECTURE.md` — system architecture;
 - `ROADMAP-TECH.md` — technical roadmap.
+- [`cogentia/AGENTS.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/AGENTS.md) — shared operational baseline and default read order.
 - [`cogentia/research/agent_configuration_layer.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/agent_configuration_layer.md) — AGENTS.md, `.agents/`, and governed operational projections of the corpus.
 - [`cogentia/research/optimistic_mainline_governance.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/optimistic_mainline_governance.md) — direct agent work on `main` under trace, reversibility and scoped authorization.
 
