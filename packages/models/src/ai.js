@@ -431,10 +431,44 @@ function getMagistralRouter() {
   }
 
   const map = includeLocalFallback() ? [...cloudNodes, localFallback] : cloudNodes;
+
+  function loadEnvFromFile(envPath) {
+    try {
+      if (fs.existsSync(envPath)) {
+        const content = fs.readFileSync(envPath, "utf-8");
+        const lines = content.split("\n");
+        for (const line of lines) {
+          const match = line.match(/^\s*(?:export\s+)?([\w.-]+)\s*=\s*(.*)\s*$/);
+          if (match) {
+            const key = match[1];
+            let val = match[2].trim();
+            if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
+            if (val.startsWith("'") && val.endsWith("'")) val = val.slice(1, -1);
+            if (!process.env[key] || process.env[key] === "") {
+              process.env[key] = val;
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn(`[Magistral] Failed to load env from ${envPath}:`, e.message);
+    }
+  }
+
+  // Load candidate env files in production/dev environments
+  loadEnvFromFile(path.resolve(MAGISTRAL_DIR, "../../../survey/.env"));
+  loadEnvFromFile("/srv/cogentia/secrets/guide.env");
+  loadEnvFromFile("/srv/cogentia/secrets/ona.env");
+  loadEnvFromFile("/etc/cogentia/guide.env");
+  loadEnvFromFile("/etc/cogentia/ona.env");
+
   const apiKeys = {
-    GROQ_API_KEY: process.env.GROQ_API_KEY || "",
+    GROQ_API_KEY: process.env.GROQ_API_KEY || process.env.GROC_API_KEY || "",
     TOGETHER_API_KEY: process.env.TOGETHER_API_KEY || "",
     OPENAI_API_KEY: process.env.OPENAI_API_KEY || "",
+    MISTRAL_API_KEY: process.env.MISTRAL_API_KEY || "",
+    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY || "",
+    GEMINI_API_KEY: process.env.GEMINI_API_KEY || "",
   };
 
   _magistralRouter = createRouter({ map, apiKeys, log: console.warn });
@@ -770,6 +804,44 @@ function startServer() {
         const logs = trafficLog.tail(limit);
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ logs }));
+        return;
+      }
+
+      // GET .../magistral/competition
+      if (req.method === "GET" && pathname.endsWith("/magistral/competition")) {
+        const resultsPath = path.resolve(MAGISTRAL_DIR, "competition-results.json");
+        if (fs.existsSync(resultsPath)) {
+          const content = fs.readFileSync(resultsPath, "utf-8");
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(content);
+        } else {
+          res.writeHead(404, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              error: "No competition results found. Run scripts/run-competition.js first.",
+            })
+          );
+        }
+        return;
+      }
+
+      // POST .../magistral/competition/run
+      if (req.method === "POST" && pathname.endsWith("/magistral/competition/run")) {
+        const { spawn } = await import("child_process");
+        const scriptPath = path.resolve(MAGISTRAL_DIR, "scripts", "run-competition.js");
+
+        console.log("[Magistral] Triggering model competition benchmark...");
+        const child = spawn(process.execPath, [scriptPath], {
+          cwd: MAGISTRAL_DIR,
+          detached: true,
+          stdio: "ignore",
+        });
+        child.unref();
+
+        res.writeHead(202, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({ success: true, message: "Competition run started in background." })
+        );
         return;
       }
 

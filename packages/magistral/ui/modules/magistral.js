@@ -114,11 +114,48 @@ export function initMagistral(apiEndpoint) {
         </div>
     `;
 
+  const leaderboardTab = `
+        <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Model Competition Leaderboard</h2>
+                    <p class="text-[10px] text-slate-500 mt-0.5" id="leaderboard-updated-at">Last run: never</p>
+                </div>
+                <div class="flex gap-2">
+                    <button id="run-competition-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded text-[10px] font-semibold transition-colors">Run Competition</button>
+                    <button id="refresh-leaderboard-btn" class="text-[10px] text-sky-400 hover:text-sky-300">Refresh</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-[11px]">
+                    <thead class="text-slate-500 border-b border-slate-800">
+                        <tr>
+                            <th class="pb-2 font-medium text-center">Rank</th>
+                            <th class="pb-2 font-medium">Model / Node</th>
+                            <th class="pb-2 font-medium text-center">Comp. Score</th>
+                            <th class="pb-2 font-medium text-center">Quality Score</th>
+                            <th class="pb-2 font-medium text-center">Speed</th>
+                            <th class="pb-2 font-medium text-center">Avg Latency</th>
+                            <th class="pb-2 font-medium text-center">Success Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body" class="text-slate-300 divide-y divide-slate-800/50">
+                        <tr><td colspan="7" class="py-2 text-center text-slate-600">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="leaderboard-details" class="space-y-2 mt-4">
+                <!-- Collapsible detail blocks for each model -->
+            </div>
+        </div>
+    `;
+
   return {
     sidebar: sidebar,
     tabs: [
       { id: "nodes", label: "Nodes", content: nodesTab },
       { id: "explore", label: "Explore", content: exploreTab },
+      { id: "leaderboard", label: "Leaderboard", content: leaderboardTab },
       { id: "logs", label: "Logs", content: logsTab },
     ],
     onLoad: () => setupMagistralLogic(apiEndpoint),
@@ -147,6 +184,12 @@ function setupMagistralLogic(apiEndpoint) {
     logStatusFilter: document.getElementById("log-status-filter"),
     logsContainer: document.getElementById("logs-container"),
     logDetail: document.getElementById("log-detail"),
+    // Leaderboard elements
+    leaderboardBody: document.getElementById("leaderboard-body"),
+    refreshLeaderboardBtn: document.getElementById("refresh-leaderboard-btn"),
+    runCompetitionBtn: document.getElementById("run-competition-btn"),
+    leaderboardUpdatedAt: document.getElementById("leaderboard-updated-at"),
+    leaderboardDetails: document.getElementById("leaderboard-details"),
   };
 
   let autoRefreshTimer = null;
@@ -521,6 +564,137 @@ function setupMagistralLogic(apiEndpoint) {
   if (els.logNodeFilter) els.logNodeFilter.addEventListener("change", () => loadLogs(true));
   if (els.logStatusFilter) els.logStatusFilter.addEventListener("change", () => loadLogs(true));
 
+  // Leaderboard Logic (Active Competition)
+  async function loadLeaderboard() {
+    try {
+      const data = await apiFetch("/v1/magistral/competition").catch(() => null);
+      if (!data || !data.leaderboard || data.leaderboard.length === 0) {
+        els.leaderboardBody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-4 text-center text-slate-500">
+              No competition results found.<br/>
+              <span class="text-[10px]">Click "Run Competition" to launch a benchmark suite in the background.</span>
+            </td>
+          </tr>
+        `;
+        if (els.leaderboardDetails) els.leaderboardDetails.innerHTML = "";
+        if (els.leaderboardUpdatedAt) els.leaderboardUpdatedAt.textContent = "Last run: never";
+        return;
+      }
+
+      if (data.generatedAt && els.leaderboardUpdatedAt) {
+        els.leaderboardUpdatedAt.textContent = `Last run: ${new Date(data.generatedAt).toLocaleString()}`;
+      }
+
+      els.leaderboardBody.innerHTML = data.leaderboard
+        .map((item, index) => {
+          const scoreClass =
+            item.competitiveScore > 50 ? "text-emerald-400 font-bold" : "text-amber-400";
+          return `
+            <tr class="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
+                <td class="py-2 font-mono text-slate-500 text-center font-bold">#${index + 1}</td>
+                <td class="py-2 font-mono text-slate-200 font-medium">${item.nodeId} <span class="text-[10px] text-slate-500">(${item.model})</span></td>
+                <td class="py-2 text-center ${scoreClass} font-mono">${item.competitiveScore}%</td>
+                <td class="py-2 text-center text-slate-300 font-mono">${item.avgScore}%</td>
+                <td class="py-2 text-center text-slate-300 font-mono">${item.avgSpeed}/s</td>
+                <td class="py-2 text-center text-slate-400 font-mono">${item.avgLatency}ms</td>
+                <td class="py-2 text-center text-slate-400 font-mono">${item.successRate}%</td>
+            </tr>
+          `;
+        })
+        .join("");
+
+      if (els.leaderboardDetails) {
+        els.leaderboardDetails.innerHTML = `
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-500 mt-4 mb-2">Detailed Task Breakdown</h3>
+          <div class="space-y-3">
+            ${data.leaderboard
+              .map(
+                (item) => `
+              <div class="rounded-lg border border-slate-800 bg-black/40 p-3 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono font-semibold text-slate-300">${item.nodeId}</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">Score: ${item.competitiveScore}%</span>
+                </div>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left text-[10px] text-slate-400">
+                    <thead>
+                      <tr class="border-b border-slate-800 text-slate-500">
+                        <th class="pb-1 font-medium">Task</th>
+                        <th class="pb-1 font-medium text-center">Status</th>
+                        <th class="pb-1 font-medium text-center">Latency</th>
+                        <th class="pb-1 font-medium text-center">Speed</th>
+                        <th class="pb-1 font-medium text-center">Quality</th>
+                        <th class="pb-1 font-medium">Evaluation Details</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/30">
+                      ${item.results
+                        .map(
+                          (r) => `
+                        <tr>
+                          <td class="py-1.5 font-medium">${r.testName}</td>
+                          <td class="py-1.5 text-center">${r.success ? '<span class="text-emerald-400">✓</span>' : '<span class="text-red-400">❌</span>'}</td>
+                          <td class="py-1.5 text-center font-mono">${r.latency}ms</td>
+                          <td class="py-1.5 text-center font-mono">${r.tokensPerSec}/s</td>
+                          <td class="py-1.5 text-center font-mono">${r.score}%</td>
+                          <td class="py-1.5 text-[9px] text-slate-500 font-mono">${r.details || ""}</td>
+                        </tr>
+                      `
+                        )
+                        .join("")}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `;
+      }
+    } catch (e) {
+      console.error("Leaderboard Error:", e);
+      els.leaderboardBody.innerHTML = `<tr><td colspan="7" class="py-2 text-center text-red-400">Error loading leaderboard: ${e.message}</td></tr>`;
+    }
+  }
+
+  if (els.runCompetitionBtn) {
+    els.runCompetitionBtn.addEventListener("click", async () => {
+      try {
+        els.runCompetitionBtn.disabled = true;
+        els.runCompetitionBtn.textContent = "Running...";
+        els.runCompetitionBtn.className =
+          "bg-amber-600 text-white px-2.5 py-1 rounded text-[10px] font-semibold";
+
+        await apiFetch("/v1/magistral/competition/run", { method: "POST" });
+        alert(
+          "Model competition benchmark started in the background! Please wait ~30 seconds, then click Refresh."
+        );
+      } catch (e) {
+        alert("Failed to start competition: " + e.message);
+      } finally {
+        setTimeout(() => {
+          els.runCompetitionBtn.disabled = false;
+          els.runCompetitionBtn.textContent = "Run Competition";
+          els.runCompetitionBtn.className =
+            "bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded text-[10px] font-semibold transition-colors";
+        }, 5000);
+      }
+    });
+  }
+
+  if (els.refreshLeaderboardBtn) {
+    els.refreshLeaderboardBtn.addEventListener("click", loadLeaderboard);
+  }
+
+  // Reload leaderboard when tab is clicked
+  window.addEventListener("tab-changed", (e) => {
+    if (e.detail.tabId === "leaderboard") {
+      loadLeaderboard();
+    }
+  });
+
   // Auto Refresh Loop (respects isLogsPaused for the container scroll state)
   setInterval(() => {
     if (document.getElementById("nodes")?.classList.contains("active")) {
@@ -530,12 +704,19 @@ function setupMagistralLogic(apiEndpoint) {
     if (logsTabEl?.classList.contains("active") && isAutoRefresh && !isLogsPaused) {
       loadLogs(true);
     }
+    const leaderboardTabEl = document.getElementById("leaderboard");
+    if (leaderboardTabEl?.classList.contains("active")) {
+      loadLeaderboard();
+    }
   }, 2500);
 
   // Initial Load
   loadMetrics();
   // Kick an initial logs load (will also populate node filter)
-  setTimeout(() => loadLogs(false), 300);
+  setTimeout(() => {
+    loadLogs(false);
+    loadLeaderboard();
+  }, 300);
 
   setupLogsFreeze();
 }

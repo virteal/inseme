@@ -255,6 +255,8 @@ function getApiKeyForNode(node, apiKeys) {
   if (url.includes("together.xyz") || url.includes("together.ai")) return apiKeys.TOGETHER_API_KEY;
   if (url.includes("openai.com")) return apiKeys.OPENAI_API_KEY;
   if (url.includes("anthropic.com")) return apiKeys.ANTHROPIC_API_KEY;
+  if (url.includes("mistral.ai")) return apiKeys.MISTRAL_API_KEY;
+  if (url.includes("googleapis.com") || url.includes("google.com")) return apiKeys.GEMINI_API_KEY;
   return null;
 }
 
@@ -302,6 +304,9 @@ export function createRouter({
       if (apiKey) headers["Authorization"] = `Bearer ${apiKey}`;
 
       const nodePayload = { ...payload, model: node.model };
+      if (node.url.includes("googleapis.com") || node.url.includes("google.com")) {
+        delete nodePayload.max_tokens;
+      }
 
       // Base log entry
       const logEntry = {
