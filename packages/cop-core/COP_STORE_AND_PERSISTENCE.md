@@ -1,608 +1,372 @@
 ---
-title: "COP Store, Persistence, and Memory Boundaries"
-subtitle: "Normative consolidation of durable truth, projections, bounded memory views, and backend adapters"
+title: "COP Store — Minimal Persistence Model"
+subtitle: "Occam consolidation of Events, Artifacts, Views, and adapters"
 author: "Jean Hugues Noël Robert, baron Mariani"
 affiliation: "Institut Mariani / C.O.R.S.I.C.A."
 license: "CC BY-SA 4.0"
 date: "2026-07-14"
-version: "0.1"
-status: "working-source — normative consolidation candidate"
+version: "0.2"
+status: "working-source — human validation required"
 document_role: "source"
 document_kind: "protocol-architecture-note"
 visibility: "public"
 lifecycle_state: "working"
 human_validation_required: true
+issue: 16
 related_documents:
   - "packages/cop-core/Architecture.md"
   - "packages/cop-core/Invariants.md"
   - "packages/cop-core/COP_PERSISTENCE.md"
   - "packages/cop-core/src/types.ts"
   - "packages/cop-kernel/src/storage.js"
-  - "research/cop_memory_map_territory.md"
-  - "research/cop_mission_stigmergy_exploration.md"
 tags:
   - cop
   - store
   - persistence
-  - memory
-  - projections
+  - occam
+  - lean
   - event-sourcing
-  - fractanet
-  - consolidation
 ---
 
-# COP Store, Persistence, and Memory Boundaries
+# COP Store — Minimal Persistence Model
 
-## 1. Purpose
+## 1. Decision
 
-This note consolidates terminology that became ambiguous during the early evolution of COP.
+COP should start from the smallest model that preserves its invariants.
 
-The earlier corpus used the word **Store** for several different things:
+Earlier drafts multiplied stores, services, registries and layers before evidence showed that they were independent protocol entities. That direction is superseded by this note.
+
+The rule is:
+
+> Do not turn a useful function into a protocol entity until an invariant requires it.
+
+COP begins with two durable primitives and one derived form:
 
 ```text
-projection state
-artifact retrieval
-event persistence
-backend adapters
-application CRUD
-agent context
-memory access
+Event
+Artifact
+View
 ```
 
-These meanings must now be separated.
+Only the first two are durable core objects.
 
-COP is not required to preserve an obsolete ambiguity merely because it appeared in an earlier draft or reference implementation. Earlier documents remain valuable as historical traces, but an explicitly newer source may supersede their terminology while preserving the protocol invariants.
-
-The consolidation rule is:
-
-> Preserve history as evidence; preserve invariants as law; revise categories when a better model is discovered.
-
-This note does not erase previous specifications. It declares which interpretation should guide future specification and implementation work.
+A `View` is a derived answer. It is not authoritative truth and is not necessarily persisted.
 
 ---
 
-## 2. Normative decisions
+## 2. The two durable primitives
 
-### Decision 1 — Durable truth is not the COP Store
+### 2.1 Event
 
-COP durable truth is composed of:
+An `Event` is an immutable record that something was asserted, observed, requested, decided or changed.
 
-```text
-immutable append-only Events
-+
-immutable Artifacts
+Minimum properties:
+
+```ts
+interface COPEvent {
+  id: string;
+  streamId: string;
+  streamSeq: number;
+  type: string;
+  schemaVersion: string;
+  createdAt: string;
+  payload: JsonValue;
+  artifactIds?: string[];
+  parentEventIds?: string[];
+  metadata?: Record<string, JsonValue>;
+}
 ```
 
-All meaningful observable state must remain explainable from those durable traces.
+`streamId` is an ordering scope. It does not imply the existence of a separate stored `Topic` entity.
 
-The durable event log and artifact set are therefore not merely one projection backend among others. They are the reconstructive basis of COP.
-
-### Decision 2 — `COP/Persistence` is the umbrella service layer
-
-`COP/Persistence` is the backend-independent service contract that exposes durable and derived storage capabilities.
-
-It may include:
+Required properties:
 
 ```text
-EventStore
-ArtifactStore
-DescriptorStore
-ProjectionStore
-ResourceStore
-PolicyStore
-IndexStore
-CacheStore
-TemporalResolver
-MemoryViewService
-ExportImportService
-CapabilityService
-ReplicationService
+immutable after append
+strictly ordered within one stream
+idempotently appendable
+explicitly versioned
+causally linkable
 ```
 
-A concrete implementation may support only a conformant subset, but it must report its actual guarantees honestly.
+### 2.2 Artifact
 
-### Decision 3 — `COPStore` means projection store
+An `Artifact` is immutable content that is too large, reusable, independently addressable or independently verifiable to live only inside an Event payload.
 
-From this note onward, the unqualified term **COPStore** should designate the COP projection layer:
+Minimum properties:
 
-```text
-Events + Artifacts
-       ↓ replay / projectors
-COPStore
-       ↓
-rebuildable observable state
+```ts
+interface COPArtifact {
+  id: string;
+  type: string;
+  schemaVersion: string;
+  createdAt: string;
+  contentName?: string;
+  payload?: JsonValue;
+  mediaType?: string;
+  size?: number;
+  metadata?: Record<string, JsonValue>;
+}
 ```
 
-A `COPStore` stores or exposes derived state such as:
+The exact bytes may be local, remote or content-addressed. Backend locations are retrieval details, not semantic identities.
+
+Corrections create a new Event or Artifact. They do not mutate durable history.
+
+---
+
+## 3. View
+
+A `View` is any representation derived from Events and Artifacts for a situated purpose.
+
+Examples:
 
 ```text
-Topic state
-Task state
-Step state
-Mission state
-current map state
-continuation indexes
-agent dashboards
-materialized temporal views
+current task state
+mission summary
+map of a terrain
+continuation queue
+search result
+historical state at a date
+bounded memory supplied to an agent
+human-readable dashboard
 ```
 
-A projection is not authoritative truth. It may be invalidated, destroyed, and rebuilt.
+A View may be computed, cached or materialized. These are implementation choices.
 
-`COPStore` may therefore be implemented as, or as a facade over, `COPProjectionStore`.
+A useful generic form is:
 
-### Decision 4 — Agents receive `COPReadOnlyStore`
+```ts
+interface COPView<T = JsonValue> {
+  kind: string;
+  value: T;
+  asOf?: string;
+  sourceEventIds?: string[];
+  sourceArtifactIds?: string[];
+  partial?: boolean;
+  stale?: boolean;
+  confidence?: number;
+  metadata?: Record<string, JsonValue>;
+}
+```
 
-Ordinary agents should consume read-only projections.
-
-They should not directly mutate Topics, Tasks, Steps, Missions, Maps, or other projected state.
-
-Their normal production paths are:
+The core distinction is:
 
 ```text
+Event and Artifact = durable traces
+View               = disposable map
+```
+
+---
+
+## 4. Minimal COPStore
+
+`COPStore` is the persistence boundary for the two durable primitives.
+
+```ts
+interface COPStore {
+  append(event: COPEventDraft): Promise<COPEvent>;
+
+  events(input: {
+    streamId: string;
+    fromSeq?: number;
+    toSeq?: number;
+    limit?: number;
+  }): Promise<COPEvent[]>;
+
+  put(artifact: COPArtifactDraft): Promise<COPArtifact>;
+
+  getArtifact(artifactId: string): Promise<COPArtifact | null>;
+}
+```
+
+This is the required conceptual interface.
+
+Implementations may add queries, subscriptions, enumeration, export, import, replication, indexes, caches, snapshots or transactions. Those capabilities do not become mandatory core entities merely because an implementation offers them.
+
+A projector is simply a function over Store reads:
+
+```ts
+type COPProjector<T> = (
+  events: COPEvent[],
+  artifacts: ReadonlyMap<string, COPArtifact>
+) => COPView<T>;
+```
+
+Agents normally:
+
+```text
+read a View
 emit an Event
-produce an immutable Artifact
-request or extend a bounded MemoryView
+produce an Artifact
 ```
 
-Projectors and infrastructure services transform durable traces into projections.
-
-### Decision 5 — `COP/Memory` is above persistence
-
-Persistence answers:
-
-```text
-What traces and contents exist?
-Where can they be retrieved?
-How can they be verified?
-What projections can be rebuilt?
-```
-
-Memory answers:
-
-```text
-What bounded representation is useful for this human, agent, mission, risk level, and cost budget?
-```
-
-`COP/Memory` therefore builds task-relative and mission-relative views above persistence, indexes, projections, temporal resolution, policies, and provenance.
-
-A `MemoryView` is a map. It is not the territory and it is not the complete durable graph.
-
-### Decision 6 — backend adapters are not protocol categories
-
-SQLite, Postgres, Supabase, object stores, filesystems, Git, IPFS, Syncthing, NATS persistence, and future Fractanet nodes are implementation circumstances.
-
-They may implement one or more persistence ports. They must not become COP identities or semantic categories.
-
-### Decision 7 — the historical kernel `StorageInterface` is an adapter facade
-
-`packages/cop-kernel/src/storage.js` currently exposes a broad `StorageInterface` containing events, artifacts, tasks, steps, identities, file storage, and caches.
-
-This interface should be treated as a historical implementation facade, not as the normative meaning of `COPStore` or `COP/Persistence`.
-
-It may remain temporarily for compatibility while adapters are progressively split behind the newer service ports.
+They do not mutate projected state directly.
 
 ---
 
-## 3. Canonical terminology
+## 5. What is removed from the core
 
-| Term | Canonical meaning |
-|---|---|
-| Event log | Append-only durable sequence of COP Events |
-| Artifact set | Immutable durable contents produced or consumed by COP |
-| `COP/Persistence` | Umbrella backend-independent persistence service layer |
-| `EventStore` | Durable append and retrieval of Events |
-| `ArtifactStore` | Durable storage and retrieval of immutable Artifacts |
-| `DescriptorStore` | Backend-independent content identity, verification, and fetch hints |
-| `ResourceStore` | Registry and immutable states of evolving named resources |
-| `PolicyStore` | Retrieval of versioned retention, access, cost, and replication policies |
-| `ProjectionStore` | Rebuildable derived state |
-| `COPStore` | COP-facing projection store or projection facade |
-| `COPReadOnlyStore` | Read-only projection view supplied to ordinary agents |
-| `IndexStore` | Rebuildable search and traversal indexes |
-| `CacheStore` | Evictable optimization state |
-| `TemporalResolver` | Situated views of evolving resources across declared time axes |
-| `MemoryViewService` | Production of bounded, governed, task-relative memory maps |
-| `ExportImportService` | Backend-independent migration, recovery, and archival packages |
-| `CapabilityService` | Honest declaration of implementation guarantees |
-| `ReplicationService` | Incremental synchronization between autonomous persistence domains |
-| backend adapter | Replaceable implementation of one or more ports |
-
----
-
-## 4. Layer model
+The following names may remain useful in applications, schemas or documentation, but they are not independent COP Store primitives by default:
 
 ```text
-┌──────────────────────────────────────────────────────────────┐
-│                     Humans and Agents                        │
-└──────────────────────────────┬───────────────────────────────┘
-                               │
-                    bounded governed views
-                               │
-┌──────────────────────────────▼───────────────────────────────┐
-│                         COP/Memory                           │
-│ MemoryViews, maps, relevance, confidence, temporal scope,    │
-│ provenance, privacy, cost, sufficiency, mission context      │
-└──────────────────────────────┬───────────────────────────────┘
-                               │
-                projections, indexes, durable reads
-                               │
-┌──────────────────────────────▼───────────────────────────────┐
-│                      COP/Persistence                         │
-│ EventStore, ArtifactStore, DescriptorStore, ResourceStore,   │
-│ PolicyStore, ProjectionStore, IndexStore, CacheStore,        │
-│ TemporalResolver, ExportImport, Capability, Replication      │
-└──────────────────────────────┬───────────────────────────────┘
-                               │
-                      adapter interfaces
-                               │
-┌──────────────┬───────────────┴───────────────┬───────────────┐
-│ SQLite/local │ Postgres/Supabase coordination│ object storage│
-│ filesystem   │ mirrors and operational views │ peer nodes    │
-└──────────────┴───────────────────────────────┴───────────────┘
-```
-
-The layers are related but not interchangeable.
-
-```text
-backend ≠ adapter ≠ persistence contract ≠ projection ≠ memory view
-```
-
----
-
-## 5. Core interfaces
-
-### 5.1 Persistence facade
-
-```ts
-interface COPPersistence {
-  events: COPEventStore;
-  artifacts: COPArtifactStore;
-  descriptors: COPDescriptorStore;
-  projections: COPProjectionStore;
-  exportImport: COPExportImportService;
-  capabilities: COPCapabilityService;
-
-  resources?: COPResourceStore;
-  policies?: COPPolicyStore;
-  indexes?: COPIndexStore;
-  caches?: COPCacheStore;
-  temporal?: COPTemporalResolver;
-  memoryViews?: COPMemoryViewService;
-  replication?: COPReplicationService;
-}
-```
-
-This facade describes available services. It is not required to imply one process, one database, one provider, or one physical node.
-
-### 5.2 Read-only projection store
-
-```ts
-interface COPReadOnlyStore {
-  getTopic(id: string): Promise<COPTopic | null>;
-  getTask(id: string): Promise<COPTask | null>;
-  listTasksByTopic(input: {
-    topicId: string;
-    status?: TaskStatus[];
-  }): Promise<COPTask[]>;
-  getSteps(taskId: string): Promise<COPStep[]>;
-  getProjection<T>(key: ProjectionKey): Promise<T | null>;
-}
-```
-
-### 5.3 Full projection store
-
-```ts
-interface COPStore extends COPReadOnlyStore {
-  putProjection<T>(input: {
-    key: ProjectionKey;
-    value: T;
-    sourceEventId?: string;
-    sourceEventSeq?: number;
-    sourceArtifactIds?: string[];
-    rebuildable: true;
-    stale?: boolean;
-  }): Promise<void>;
-
-  invalidateProjection(key: ProjectionKey): Promise<void>;
-  rebuildProjection(key: ProjectionKey): Promise<ProjectionRebuildResult>;
-}
-```
-
-Only trusted projector and infrastructure components should normally receive the mutating projection interface.
-
-### 5.4 Agent context
-
-Target form:
-
-```ts
-interface AgentContext {
-  bus: COPBus;
-  store: COPReadOnlyStore;
-  artifacts: COPArtifactReader;
-  memory?: COPMemoryViewService;
-
-  emit(input: COPEventDraft): Promise<AppendEventResult>;
-  produceArtifact(input: ProduceArtifactInput): Promise<PutArtifactResult>;
-  now(): ISODateTime;
-}
-```
-
-An ordinary agent should not directly call:
-
-```text
-saveTopic
-saveTask
-saveStep
-putProjection
-invalidateProjection
-```
-
-Those calls bypass the event-sourced boundary when used as primary mutation paths.
-
----
-
-## 6. Data placement rules
-
-| Object or state | Primary durable representation | Derived or access representation |
-|---|---|---|
-| Topic lifecycle | Events | Topic projection |
-| Task lifecycle | Events | Task projection |
-| Step lifecycle | Events | Step projection |
-| Continuation | Immutable Artifact plus lifecycle Events | continuation index/projection |
-| Mission mandate | Immutable Artifact | mission projection |
-| Mission lifecycle | Events | current mission projection |
-| Stigmergic trace | Event and/or immutable Artifact | map and search projections |
-| Map schema | Immutable Artifact | schema index |
-| Map observations | Events and immutable evidence Artifacts | current map projection |
-| Stabilized map snapshot | Immutable Artifact | MemoryView source |
-| Evolving external resource | NamedResource plus immutable ResourceStates and ChangeEvents | TemporalView |
-| Embedding or full-text index | Rebuildable index | search result |
-| Agent context | MemoryView plus read-only projections | ephemeral runtime input |
-| Large binary content | Artifact descriptor plus backend object | fetch through hints |
-| Policy | Versioned immutable Artifact | PolicyStore resolution view |
-
-The key rule is:
-
-> Mutable operational state is projected; durable change is recorded; durable content is immutable.
-
----
-
-## 7. Maps, territory, and bounded memory
-
-COP persistence preserves traces of the territory.
-
-COP projections reconstruct useful maps.
-
-COP memory selects a bounded map for a situated observer.
-
-```text
-Territory
-  ≠ durable trace graph
-  ≠ global projection graph
-  ≠ MemoryView
-```
-
-A `MemoryView` must declare, where relevant:
-
-```text
-purpose
-requesting agent or human
-mission or task
-scope
-time range
-time axis
-included sources
-excluded or inaccessible regions
-confidence
-freshness
-staleness
-cost limit
-privacy limit
-sufficiency
-provenance expansion level
-```
-
-The service must be able to answer that a requested map is insufficient rather than silently presenting a partial map as the territory.
-
----
-
-## 8. Domains, hosts, and Fractanet
-
-A future COP/Fractanet profile should distinguish:
-
-```text
-MemoryDomain
-Host
-Node
-Replica
-Custodian
 Topic
+Task
+Step
 Mission
 Map
+Continuation
+NamedResource
+ResourceState
+Policy
+Descriptor
+ProjectionStore
+MemoryViewService
+TemporalResolver
+ReplicationService
+ExportImportService
+CapabilityService
+IndexStore
+CacheStore
+ResourceStore
+PolicyStore
 ```
 
-These categories must not collapse into one another.
+Their lean interpretation is:
 
-In particular:
-
-```text
-one community ≠ one physical database
-one database ≠ one memory domain
-one memory domain ≠ one host
-one host ≠ one authority
-```
-
-A `MemoryDomain` is a governed logical scope. A `Host` is a deployment circumstance. Several domains may share one host, and one domain may be replicated across several hosts.
-
-The logical memory should be globally resolvable where authorized, but it should not be globally centralized or fully replicated by default.
-
----
-
-## 9. Replication boundary
-
-Export/import and replication are distinct.
-
-```text
-Export/import
-= explicit transfer of a bounded durable graph or package
-
-Replication
-= incremental synchronization between autonomous stores or domains
-```
-
-A future `COPReplicationService` should support at least:
-
-```ts
-interface COPReplicationService {
-  advertiseHeads(input: ReplicationScope): Promise<ReplicationHead[]>;
-  computeDelta(input: ReplicationRequest): Promise<ReplicationDelta>;
-  exportDelta(input: ReplicationDeltaRequest): Promise<ReplicationEnvelope>;
-  importDelta(input: ReplicationEnvelope): Promise<ReplicationResult>;
-  acknowledge(input: ReplicationAcknowledgement): Promise<void>;
-  listConflicts(input: ReplicationScope): Promise<COPConflict[]>;
-}
-```
-
-Replication must preserve:
-
-```text
-event identity
-artifact identity
-content verification
-topic-local ordering
-idempotency
-source domain
-policy constraints
-conflict visibility
-```
-
-A replication conflict must not be confused with an epistemic contradiction. Both are first-class, but they are different kinds of conflict.
-
----
-
-## 10. Compatibility and migration
-
-### 10.1 No immediate breaking rename
-
-Existing implementations may temporarily retain the broad historical `COPStore` and `StorageInterface` shapes.
-
-They should be marked as compatibility facades and progressively adapted.
-
-### 10.2 Target migration sequence
-
-```text
-1. Stabilize terminology in source specifications.
-2. Add COPReadOnlyStore and COPProjectionStore interfaces.
-3. Keep the historical COPStore as a deprecated compatibility facade.
-4. Route ordinary agents through COPReadOnlyStore.
-5. Move artifact writes behind ArtifactStore.
-6. Move event append behind EventStore.
-7. Restrict projection mutation to projectors and infrastructure.
-8. Split backend adapters by persistence port where useful.
-9. Add conformance tests for durable truth and rebuildability.
-10. Introduce COP/Memory and COP/Fractanet profiles additively.
-```
-
-### 10.3 Deprecation rule
-
-A historical interface may remain available while it is used, but documentation must stop presenting it as the ideal architecture.
-
-Compatibility is a migration concern, not an ontological commitment.
-
----
-
-## 11. Volatile fallback
-
-A persistence adapter must not silently replace requested durable storage with volatile in-memory storage when semantic durability is required.
-
-Fallback must be governed by an explicit policy such as:
-
-```text
-allow_volatile_fallback
-require_durable
-require_offline_durable
-fail_closed
-```
-
-The result must expose the actual guarantee obtained.
-
-```text
-requested durable + obtained volatile + reported success without warning
-= non-conformant
-```
-
----
-
-## 12. Supersession map
-
-This note amends earlier interpretations as follows.
-
-| Earlier formulation | Consolidated interpretation |
+| Former entity | Lean interpretation |
 |---|---|
-| `COPStore` as broad mutable repository | compatibility facade; target meaning is projection store |
-| agents receive full mutable store | agents receive `COPReadOnlyStore` plus explicit event/artifact production ports |
-| `saveTask`, `saveStep`, `saveTopic` as normal agent mutation | deprecated as primary mutation path; emit Events instead |
-| artifacts mixed into projection CRUD | artifacts belong to `ArtifactStore` |
-| one storage interface equals persistence model | implementation facade only |
-| memory equals everything retrievable | memory is a bounded, governed view built above persistence |
-| backend location as practical identity | backend locations are fetch hints, not durable identities |
-| one instance equals one database | deployment choice, not protocol identity |
+| Topic | stream identifier and optional View |
+| Task / Step / Mission | event and artifact schemas plus derived Views |
+| Map | a View; stabilized snapshots may be Artifacts |
+| Continuation | an Artifact schema plus lifecycle Events |
+| Policy | configuration or versioned Artifact |
+| Descriptor | Artifact metadata or a descriptor Artifact when independently useful |
+| Projection | a View |
+| MemoryView | a bounded View |
+| temporal resolution | a projector/query producing a View |
+| index / cache | adapter implementation detail |
+| export / import | procedure built over Store reads and writes |
+| replication | Store-to-Store synchronization procedure |
+| capability discovery | adapter metadata |
+
+No name is forbidden. It simply receives no core ontological status without proof.
 
 ---
 
-## 13. Invariants preserved
+## 6. Entity admission test
 
-This consolidation changes categories, not COP's constitutional invariants.
+A new core entity is admitted only when all four conditions hold:
 
-It preserves:
+1. It cannot be represented faithfully as an Event, Artifact, View, schema or metadata.
+2. It carries an invariant required across conformant implementations.
+3. It has an independent identity and lifecycle that affect interoperability.
+4. Removing it would break replay, integrity, auditability or exchange — not merely convenience.
 
-```text
-immutable Events
-immutable Artifacts
-topic-local ordering
-at-least-once delivery
-idempotent projectors
-stateless agents
-coordination through Events and Artifacts
-deterministic replay of recorded traces
-explicit schema versioning
-transparency over hidden convenience
-human anchoring for consequential decisions
-```
+Otherwise it remains outside the core.
+
+Compact rule:
+
+> Every new core noun carries the burden of proof.
 
 ---
 
-## 14. Open questions
+## 7. Adapters and physical storage
 
-The following remain open for later specification:
+SQLite, Postgres, Supabase, filesystems, object stores, Git, IPFS, peer nodes and future Fractanet mechanisms are adapters or deployment choices.
+
+A single adapter may implement all four Store methods. Several adapters may cooperate behind one Store.
+
+The protocol does not require one service per function.
 
 ```text
-Should ResourceStore be mandatory at a higher conformance level?
-Should policies always be ordinary immutable Artifacts with a specialized resolver?
-How are encrypted descriptors replicated without leaking metadata?
-What is the minimum domain identity model for COP/Fractanet?
-How are partial map schemas transformed across heterogeneous submaps?
-Which replication conflicts can be merged automatically?
-How are secret traces preserved while access remains revocable?
-How are MemoryView sufficiency claims audited?
-What is the exact deprecation schedule for the historical kernel StorageInterface?
+one interface
+≠ one process
+≠ one database
+≠ one provider
+≠ one machine
 ```
 
-These questions should be explored without reopening the boundaries fixed in this note unless evidence shows that the boundaries themselves are defective.
+The adapter must report failures honestly. A request for durable storage must not silently fall back to volatile memory and still claim equivalent success.
 
 ---
 
-## 15. Consolidated formula
+## 8. Fractanet without premature ontology
+
+Fractanet may later add locality, federation, replication, discovery and governed domains.
+
+For now these should be explored as capabilities over the same primitives:
 
 ```text
-Events record durable change.
-Artifacts preserve immutable content.
-COP/Persistence keeps both retrievable, verifiable, exportable, and replicable.
-COPStore reconstructs operational maps.
-COP/Memory selects bounded maps for situated agents and missions.
-Fractanet distributes governed memory domains across replaceable hosts and peers.
+Store A Events/Artifacts
+        ↕
+verified incremental exchange
+        ↕
+Store B Events/Artifacts
 ```
 
-Or, more compactly:
+A separate `MemoryDomain`, `Replica`, `Custodian` or `ReplicationService` should be introduced only when concrete experiments reveal an invariant that cannot be expressed through identifiers, metadata, policy Artifacts and synchronization procedures.
 
-> The durable traces are not the Store; the Store is a rebuildable map; Memory is a bounded view of that map; the backend remains a replaceable circumstance.
+---
+
+## 9. Smallest implementation experiment
+
+The next implementation should not begin by refactoring every existing package.
+
+Build one minimal reference Store with:
+
+```text
+append Event
+read ordered Events by stream
+put Artifact
+get Artifact
+restart without data loss
+replay one projector into one View
+```
+
+Suggested first adapter:
+
+```text
+SQLite
+```
+
+Suggested first demonstration:
+
+```text
+one Mission represented only by Events and Artifacts
+→ replay
+→ current Mission View
+→ bounded agent context
+```
+
+Only after this experiment should another interface or entity be added.
+
+---
+
+## 10. Supersession
+
+This version supersedes version 0.1 of this document.
+
+In particular, it withdraws the proposal to establish a large umbrella composed of separately named Store and Service ports before implementation evidence exists.
+
+It also withdraws the claim that `COPStore` should mean only `ProjectionStore`.
+
+The simpler meaning is now:
+
+> `COPStore` durably stores Events and Artifacts. Projectors derive Views.
+
+Existing specifications and code remain evidence of exploration, not compatibility obligations.
+
+---
+
+## 11. Consolidated formula
+
+```text
+Events record change.
+Artifacts preserve content.
+The Store keeps both durable.
+Projectors derive Views.
+Views guide situated action.
+Adapters remain replaceable.
+Everything else must earn its place.
+```
