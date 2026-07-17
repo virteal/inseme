@@ -1,14 +1,26 @@
 ---
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop-n8n/README.md
-author: "Jean Hugues Noel Robert, baron Mariani"
-affiliation: "Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica"
-license: "MIT"
-status: "feasibility-note"
-last_stamped_at: 2026-06-17
+author: Jean Hugues Noel Robert, baron Mariani
+affiliation: Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica
+license: MIT
+status: feasibility-note
+last_stamped_at: 2026-06-17T00:00:00.000Z
 related:
   - ../cop-core/ImplementationProfiles.md
   - ../cop-core/Invariants.md
   - ../cop-kernel/PROFILE.md
+title: '`cop-n8n` Feasibility Note'
+date: unknown
+provenance:
+  origin_type: unknown
+  origin_repository: unknown
+  origin_ref: unknown
+  origin_date: unknown
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+update_policy: UP-DEFAULT-REVIEWED
 ---
 
 # `cop-n8n` Feasibility Note

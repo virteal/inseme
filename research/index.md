@@ -1,23 +1,33 @@
 ---
-title: "Research Index — Inseme"
-description:
-  "The deployable platform — bricks, COP runtime, and the civic-tech infrastructure of #PERTITELLU"
+title: Research Index — Inseme
+description: 'The deployable platform — bricks, COP runtime, and the civic-tech infrastructure of #PERTITELLU'
 layout: default
 nav_order: 1
-last_modified_at: 2026-07-06
+last_modified_at: 2026-07-06T00:00:00.000Z
 license: CC BY-SA 4.0
 affiliation: Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica
-date: 2026-05-13
+date: 2026-05-13T00:00:00.000Z
 creator: Jean Hugues Noël Robert, baron Mariani
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/index.md
-document_role: "index"
-document_kind: "research-index"
-visibility: "public"
-lifecycle_state: "active"
-classification_source: "cogentia.js"
-classification_version: "1"
-classification_rule: "research-index"
-classification_confidence: "strong"
+document_role: index
+document_kind: research-index
+visibility: public
+lifecycle_state: active
+classification_source: cogentia.js
+classification_version: '1'
+classification_rule: research-index
+classification_confidence: strong
+author: unknown
+provenance:
+  origin_type: unknown
+  origin_repository: unknown
+  origin_ref: unknown
+  origin_date: unknown
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+update_policy: UP-DEFAULT-REVIEWED
 ---
 
 # Research Index — Inseme

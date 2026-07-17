@@ -1,24 +1,34 @@
 ---
-title: "Concept Index — inseme"
-description:
-  "Typed concept registry for humans and AI agents; structure only, not semantic authority."
+title: Concept Index — inseme
+description: Typed concept registry for humans and AI agents; structure only, not semantic authority.
 layout: default
 nav_order: 3
-last_modified_at: 2026-05-16
+last_modified_at: 2026-05-16T00:00:00.000Z
 canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/research/concepts.md
-last_stamped_at: 2026-06-01
+last_stamped_at: 2026-06-01T00:00:00.000Z
 license: CC BY-SA 4.0
 affiliation: Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica
-date: 2026-05-16
+date: 2026-05-16T00:00:00.000Z
 creator: Jean Hugues Noël Robert, baron Mariani
-document_role: "index"
-document_kind: "concept-index"
-visibility: "public"
-lifecycle_state: "active"
-classification_source: "cogentia.js"
-classification_version: "1"
-classification_rule: "concept-index"
-classification_confidence: "strong"
+document_role: index
+document_kind: concept-index
+visibility: public
+lifecycle_state: active
+classification_source: cogentia.js
+classification_version: '1'
+classification_rule: concept-index
+classification_confidence: strong
+author: unknown
+provenance:
+  origin_type: unknown
+  origin_repository: unknown
+  origin_ref: unknown
+  origin_date: unknown
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+update_policy: UP-DEFAULT-REVIEWED
 ---
 
 # Concept Index — inseme
