@@ -1,3 +1,23 @@
+---
+title: Universal Tunnel Script
+author: unknown
+date: "2026-07-05"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: 1f30be5
+  origin_date: "2026-07-05"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # Universal Tunnel Script
 
 Standalone tunnel runtime for development OAuth testing and public access. Originally part of
