@@ -1,3 +1,23 @@
+---
+title: 🍷 Cyrnea - L'IA au Comptoir
+author: unknown
+date: "2026-01-23"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: aa91d3e
+  origin_date: "2026-01-23"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # 🍷 Cyrnea - L'IA au Comptoir
 
 **Cyrnea** est l'application mobile de l'écosystème **Inseme**, conçue pour réenchanter les lieux de
@@ -46,10 +66,9 @@ L'outil de pilotage pour le tenancier :
 
 ### 5. 🕹️ Recruit : Le Jeu d'Engagement Citoyen
 
-**Recruit** est un "serious game" optionnel intégré à Cyrnea, conçu pour transformer
-l'engagement civique en une expérience ludique et collective. Inspiré par des jeux comme Pokémon
-Go, il encourage les joueurs à interagir avec leur environnement local pour atteindre des objectifs
-citoyens.
+**Recruit** est un "serious game" optionnel intégré à Cyrnea, conçu pour transformer l'engagement
+civique en une expérience ludique et collective. Inspiré par des jeux comme Pokémon Go, il encourage
+les joueurs à interagir avec leur environnement local pour atteindre des objectifs citoyens.
 
 > Pour en savoir plus sur la vision et les mécaniques du jeu, consultez le document
 > [**Projet Recruit**](./Projet_Recruit.md).

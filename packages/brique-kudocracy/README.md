@@ -1,8 +1,30 @@
+---
+title: 🗳️ @inseme/brique-kudocracy - Voting & Liquid Democracy
+author: unknown
+date: "2026-01-09"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: abb374c
+  origin_date: "2026-01-09"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # 🗳️ @inseme/brique-kudocracy - Voting & Liquid Democracy
 
-**@inseme/brique-kudocracy** is the core governance and decision-making engine for the Inseme monorepo. It implements advanced voting systems and liquid democracy principles.
+**@inseme/brique-kudocracy** is the core governance and decision-making engine for the Inseme
+monorepo. It implements advanced voting systems and liquid democracy principles.
 
-This module allows communities to propose ideas, debate them, and reach consensus through various voting mechanisms and delegation systems.
+This module allows communities to propose ideas, debate them, and reach consensus through various
+voting mechanisms and delegation systems.
 
 > For an overview of the ecosystem (Agora, IA, Multi-instances), see the
 > [global repository README](../../README.md).
@@ -14,13 +36,19 @@ This module allows communities to propose ideas, debate them, and reach consensu
 It provides the tools necessary for modern, transparent, and scalable collective decision-making.
 
 ### 1. 💡 Proposition Management
-Citizens can create, edit, and search for propositions. Each proposition serves as a focal point for debate and consensus-building.
+
+Citizens can create, edit, and search for propositions. Each proposition serves as a focal point for
+debate and consensus-building.
 
 ### 2. 💧 Liquid Democracy
-Implements dynamic vote delegation, allowing citizens to trust experts or peers on specific topics while retaining the ability to vote directly at any time.
+
+Implements dynamic vote delegation, allowing citizens to trust experts or peers on specific topics
+while retaining the ability to vote directly at any time.
 
 ### 3. 🛡️ Rule-Based Governance
-Uses a logic-based engine (Prolog-compatible) to manage complex governance rules, ensuring that every vote and delegation follows the community's established charter.
+
+Uses a logic-based engine (Prolog-compatible) to manage complex governance rules, ensuring that
+every vote and delegation follows the community's established charter.
 
 ---
 
@@ -28,7 +56,8 @@ Uses a logic-based engine (Prolog-compatible) to manage complex governance rules
 
 - **Voting Dashboard**: Real-time visualization of ongoing consultations and voting trends.
 - **Delegation Manager**: Interface to manage trusted delegates and topical delegations.
-- **AI Recommendation**: Ophélia-assisted voting recommendations based on past preferences and group consensus.
+- **AI Recommendation**: Ophélia-assisted voting recommendations based on past preferences and group
+  consensus.
 - **Governance Settings**: Customizable rules for voting thresholds, periods, and delegation chains.
 
 ---
@@ -52,7 +81,8 @@ packages/brique-kudocracy/
 
 ## ⚖️ Neutrality & Commitment
 
-This infrastructure is a **neutral** technological tool. It is designed to ensure digital independence and does not support any specific ideology or candidate.
+This infrastructure is a **neutral** technological tool. It is designed to ensure digital
+independence and does not support any specific ideology or candidate.
 
 ---
 

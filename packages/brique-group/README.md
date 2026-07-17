@@ -1,8 +1,30 @@
+---
+title: 👥 @inseme/brique-group - Community & Group Management
+author: unknown
+date: "2026-01-09"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: abb374c
+  origin_date: "2026-01-09"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # 👥 @inseme/brique-group - Community & Group Management
 
-**@inseme/brique-group** is the organizational foundation for collective action within the Inseme monorepo. It manages the creation, administration, and lifecycle of community groups.
+**@inseme/brique-group** is the organizational foundation for collective action within the Inseme
+monorepo. It manages the creation, administration, and lifecycle of community groups.
 
-Whether it's a neighborhood association, a project team, or a local interest group, this module provides the necessary tools for self-organization and membership management.
+Whether it's a neighborhood association, a project team, or a local interest group, this module
+provides the necessary tools for self-organization and membership management.
 
 > For an overview of the ecosystem (Agora, IA, Multi-instances), see the
 > [global repository README](../../README.md).
@@ -14,12 +36,16 @@ Whether it's a neighborhood association, a project team, or a local interest gro
 It enables citizens to form autonomous groups and manage their internal organization transparently.
 
 ### 1. 🏗️ Group Creation & Lifecycle
-Tools to easily spin up new groups, define their purpose, and manage their visibility within the platform.
+
+Tools to easily spin up new groups, define their purpose, and manage their visibility within the
+platform.
 
 ### 2. 🛡️ Group Administration
+
 A dedicated interface for group administrators to manage settings, members, and internal roles.
 
 ### 3. 🤝 Community Discovery
+
 Allows users to browse and join existing groups, fostering connections and collaborative projects.
 
 ---
@@ -47,7 +73,8 @@ packages/brique-group/
 
 ## ⚖️ Neutrality & Commitment
 
-This infrastructure is a **neutral** technological tool. It is designed to ensure digital independence and does not support any specific ideology or candidate.
+This infrastructure is a **neutral** technological tool. It is designed to ensure digital
+independence and does not support any specific ideology or candidate.
 
 ---
 

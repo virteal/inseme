@@ -1,8 +1,30 @@
+---
+title: 📖 @inseme/brique-wiki - Collaborative Knowledge Base
+author: unknown
+date: "2026-01-09"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: abb374c
+  origin_date: "2026-01-09"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # 📖 @inseme/brique-wiki - Collaborative Knowledge Base
 
-**@inseme/brique-wiki** is the collective memory and documentation module for the Inseme monorepo. It enables federated knowledge sharing and collaborative editing.
+**@inseme/brique-wiki** is the collective memory and documentation module for the Inseme monorepo.
+It enables federated knowledge sharing and collaborative editing.
 
-This module allows communities to build a shared repository of information, ranging from municipal reports to neighborhood guides and practical local knowledge.
+This module allows communities to build a shared repository of information, ranging from municipal
+reports to neighborhood guides and practical local knowledge.
 
 > For an overview of the ecosystem (Agora, IA, Multi-instances), see the
 > [global repository README](../../README.md).
@@ -11,16 +33,23 @@ This module allows communities to build a shared repository of information, rang
 
 ## 🎯 What is it for?
 
-It serves as the "Common Memory" of the community, ensuring that information is accessible, verifiable, and persistent.
+It serves as the "Common Memory" of the community, ensuring that information is accessible,
+verifiable, and persistent.
 
 ### 1. 🤝 Collaborative Editing
-Enables multi-user documentation with version tracking and AI-assisted title optimization and proposal generation.
+
+Enables multi-user documentation with version tracking and AI-assisted title optimization and
+proposal generation.
 
 ### 2. 🌐 Wiki Federation
-Supports knowledge sharing across different instances, allowing communities to subscribe to and sync relevant pages from other wikis.
+
+Supports knowledge sharing across different instances, allowing communities to subscribe to and sync
+relevant pages from other wikis.
 
 ### 3. 🤖 AI-Powered Research
-Deeply integrated with Ophélia for semantic search and automated summaries, making it easy to find information within thousands of pages.
+
+Deeply integrated with Ophélia for semantic search and automated summaries, making it easy to find
+information within thousands of pages.
 
 ---
 
@@ -53,7 +82,8 @@ packages/brique-wiki/
 
 ## ⚖️ Neutrality & Commitment
 
-This infrastructure is a **neutral** technological tool. It is designed to ensure digital independence and does not support any specific ideology or candidate.
+This infrastructure is a **neutral** technological tool. It is designed to ensure digital
+independence and does not support any specific ideology or candidate.
 
 ---
 

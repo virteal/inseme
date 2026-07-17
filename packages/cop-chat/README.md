@@ -1,6 +1,27 @@
+---
+title: 💬 @inseme/cop-chat - Cognitive Chat Types
+author: unknown
+date: "2026-01-09"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: abb374c
+  origin_date: "2026-01-09"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # 💬 @inseme/cop-chat - Cognitive Chat Types
 
-**@inseme/cop-chat** provides shared type definitions and interfaces for the chat and communication components within the Inseme monorepo.
+**@inseme/cop-chat** provides shared type definitions and interfaces for the chat and communication
+components within the Inseme monorepo.
 
 > For an overview of the ecosystem (Agora, IA, Multi-instances), see the
 > [global repository README](../../README.md).
@@ -9,7 +30,8 @@
 
 ## 🎯 What is it for?
 
-This package ensures type safety and consistency across all chat-related modules, defining how messages, sessions, and participants are represented in the Cognitive Orchestration Protocol (COP).
+This package ensures type safety and consistency across all chat-related modules, defining how
+messages, sessions, and participants are represented in the Cognitive Orchestration Protocol (COP).
 
 ---
 
@@ -25,7 +47,8 @@ packages/cop-chat/
 
 ## ⚖️ Neutrality & Commitment
 
-This infrastructure is a **neutral** technological tool. It is designed to ensure digital independence and does not support any specific ideology or candidate.
+This infrastructure is a **neutral** technological tool. It is designed to ensure digital
+independence and does not support any specific ideology or candidate.
 
 ---
 

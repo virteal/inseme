@@ -1,3 +1,23 @@
+---
+title: Inseme
+author: unknown
+date: "2026-06-22"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: e40bdb9
+  origin_date: "2026-06-22"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # Inseme
 
 Inseme is an open-source monorepo for civic participation, collective intelligence, and durable

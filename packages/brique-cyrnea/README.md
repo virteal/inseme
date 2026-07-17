@@ -1,3 +1,23 @@
+---
+title: 🍻 @inseme/brique-cyrnea - Social Conviviality & Bar Management
+author: unknown
+date: "2026-02-17"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: 0856bca
+  origin_date: "2026-02-17"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # 🍻 @inseme/brique-cyrnea - Social Conviviality & Bar Management
 
 **@inseme/brique-cyrnea** is the "Conviviality" module of the Inseme monorepo. It is designed to

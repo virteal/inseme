@@ -1,3 +1,23 @@
+---
+title: "@inseme/room"
+author: unknown
+date: "2026-01-18"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: 8301d4f
+  origin_date: "2026-01-18"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # @inseme/room
 
 **@inseme/room** is the "Organic Assembly" protocol. It provides a real-time democratic space where

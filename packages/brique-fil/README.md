@@ -1,8 +1,30 @@
+---
+title: 🗞️ @inseme/brique-fil - Hyperlocal News & Discussion Feed
+author: unknown
+date: "2026-01-09"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: abb374c
+  origin_date: "2026-01-09"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # 🗞️ @inseme/brique-fil - Hyperlocal News & Discussion Feed
 
-**@inseme/brique-fil** is the real-time social and information hub for the Inseme monorepo. It manages the flow of community news, alerts, and discussions.
+**@inseme/brique-fil** is the real-time social and information hub for the Inseme monorepo. It
+manages the flow of community news, alerts, and discussions.
 
-This module provides a streamlined, chronological feed of events and posts, allowing citizens to stay informed and engage with their local community.
+This module provides a streamlined, chronological feed of events and posts, allowing citizens to
+stay informed and engage with their local community.
 
 > For an overview of the ecosystem (Agora, IA, Multi-instances), see the
 > [global repository README](../../README.md).
@@ -11,16 +33,22 @@ This module provides a streamlined, chronological feed of events and posts, allo
 
 ## 🎯 What is it for?
 
-It acts as the "Digital Town Square," facilitating immediate communication and awareness within the neighborhood.
+It acts as the "Digital Town Square," facilitating immediate communication and awareness within the
+neighborhood.
 
 ### 1. 📢 Real-Time Alerts
+
 Fast dissemination of important local information, from municipal notices to community alerts.
 
 ### 2. 🗣️ Community Engagement
-Allows citizens to post updates, share news, and react to community events through a simple, intuitive interface.
+
+Allows citizens to post updates, share news, and react to community events through a simple,
+intuitive interface.
 
 ### 3. 🤖 AI Moderation & Curation
-Integrated with Ophélia for content classification, automated summaries, and helpful context provision for feed items.
+
+Integrated with Ophélia for content classification, automated summaries, and helpful context
+provision for feed items.
 
 ---
 
@@ -52,7 +80,8 @@ packages/brique-fil/
 
 ## ⚖️ Neutrality & Commitment
 
-This infrastructure is a **neutral** technological tool. It is designed to ensure digital independence and does not support any specific ideology or candidate.
+This infrastructure is a **neutral** technological tool. It is designed to ensure digital
+independence and does not support any specific ideology or candidate.
 
 ---
 

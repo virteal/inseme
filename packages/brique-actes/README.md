@@ -1,8 +1,30 @@
+---
+title: 📄 @inseme/brique-actes - Municipal Acts & Citizen Requests
+author: unknown
+date: "2026-01-09"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: abb374c
+  origin_date: "2026-01-09"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # 📄 @inseme/brique-actes - Municipal Acts & Citizen Requests
 
-**@inseme/brique-actes** is the administrative transparency module for the Inseme monorepo. It manages the lifecycle of municipal acts and formal citizen requests.
+**@inseme/brique-actes** is the administrative transparency module for the Inseme monorepo. It
+manages the lifecycle of municipal acts and formal citizen requests.
 
-This module ensures that administrative decisions are public, searchable, and that citizens can track the status of their requests in real-time.
+This module ensures that administrative decisions are public, searchable, and that citizens can
+track the status of their requests in real-time.
 
 > For an overview of the ecosystem (Agora, IA, Multi-instances), see the
 > [global repository README](../../README.md).
@@ -11,16 +33,23 @@ This module ensures that administrative decisions are public, searchable, and th
 
 ## 🎯 What is it for?
 
-It bridges the gap between the administration and the citizens by providing a transparent workflow for documents and requests.
+It bridges the gap between the administration and the citizens by providing a transparent workflow
+for documents and requests.
 
 ### 1. 🔍 Administrative Transparency
-Search and browse through municipal acts (council minutes, decrees, official notices) with full traceability and PDF export capabilities.
+
+Search and browse through municipal acts (council minutes, decrees, official notices) with full
+traceability and PDF export capabilities.
 
 ### 2. 📝 Citizen Request Management
-Allows citizens to submit formal requests and track their progress through a clear, logged timeline of administrative actions.
+
+Allows citizens to submit formal requests and track their progress through a clear, logged timeline
+of administrative actions.
 
 ### 3. 📊 Accountability Logs
-Every action taken by an official is logged in a "Responsibility Log," ensuring high standards of accountability and public auditability.
+
+Every action taken by an official is logged in a "Responsibility Log," ensuring high standards of
+accountability and public auditability.
 
 ---
 
@@ -28,7 +57,8 @@ Every action taken by an official is logged in a "Responsibility Log," ensuring 
 
 - **Acts Dashboard**: A centralized view for all official municipal documents.
 - **Request Tracking**: Real-time status updates for citizen demands.
-- **AI-Assisted Search**: Tools to quickly find specific acts or statuses (`tool-search-actes`, `tool-get-demande-status`).
+- **AI-Assisted Search**: Tools to quickly find specific acts or statuses (`tool-search-actes`,
+  `tool-get-demande-status`).
 - **Export Tools**: Generate official PDF or CSV exports of acts and reports.
 
 ---
@@ -50,7 +80,8 @@ packages/brique-actes/
 
 ## ⚖️ Neutrality & Commitment
 
-This infrastructure is a **neutral** technological tool. It is designed to ensure digital independence and does not support any specific ideology or candidate.
+This infrastructure is a **neutral** technological tool. It is designed to ensure digital
+independence and does not support any specific ideology or candidate.
 
 ---
 

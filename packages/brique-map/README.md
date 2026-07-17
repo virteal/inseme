@@ -1,8 +1,30 @@
+---
+title: 🗺️ @inseme/brique-map - Citizen Cartography & GIS
+author: unknown
+date: "2026-01-09"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: abb374c
+  origin_date: "2026-01-09"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # 🗺️ @inseme/brique-map - Citizen Cartography & GIS
 
-**@inseme/brique-map** is the geospatial visualization module for the Inseme monorepo. It provides an interactive map for tracking community events, incidents, and municipal points of interest.
+**@inseme/brique-map** is the geospatial visualization module for the Inseme monorepo. It provides
+an interactive map for tracking community events, incidents, and municipal points of interest.
 
-This module empowers citizens and administrations to visualize local data geographically, facilitating better coordination and awareness.
+This module empowers citizens and administrations to visualize local data geographically,
+facilitating better coordination and awareness.
 
 > For an overview of the ecosystem (Agora, IA, Multi-instances), see the
 > [global repository README](../../README.md).
@@ -11,16 +33,22 @@ This module empowers citizens and administrations to visualize local data geogra
 
 ## 🎯 What is it for?
 
-It provides a spatial dimension to community information, making it easier to understand local context and needs.
+It provides a spatial dimension to community information, making it easier to understand local
+context and needs.
 
 ### 1. 📍 Incident & Event Mapping
+
 Real-time visualization of community-reported incidents and upcoming events on an interactive map.
 
 ### 2. 🏢 Municipal GIS Integration
-Display of official municipal data, including Points of Interest (POIs) and municipal events, directly on the citizen map.
+
+Display of official municipal data, including Points of Interest (POIs) and municipal events,
+directly on the citizen map.
 
 ### 3. ✍️ Citizen Contributions
-Allows citizens to contribute geographical data, such as marking the location of an incident or suggesting a new point of interest.
+
+Allows citizens to contribute geographical data, such as marking the location of an incident or
+suggesting a new point of interest.
 
 ---
 
@@ -50,7 +78,8 @@ packages/brique-map/
 
 ## ⚖️ Neutrality & Commitment
 
-This infrastructure is a **neutral** technological tool. It is designed to ensure digital independence and does not support any specific ideology or candidate.
+This infrastructure is a **neutral** technological tool. It is designed to ensure digital
+independence and does not support any specific ideology or candidate.
 
 ---
 

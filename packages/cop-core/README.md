@@ -1,3 +1,23 @@
+---
+title: COP Core — Cognitive Orchestration Protocol
+author: unknown
+date: "2026-07-12"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: cb5c9e3
+  origin_date: "2026-07-12"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # COP Core — Cognitive Orchestration Protocol
 
 `cop-core` is the **reference specification package** for the Cognitive Orchestration Protocol
@@ -41,7 +61,8 @@ COP is deliberately minimal. It does **not**:
 
 Those concerns belong to **runtimes** built on top of COP.
 
-See also [`ImplementationProfiles.md`](ImplementationProfiles.md) for the rule separating COP Core from concrete runtimes, interfaces, adapters, and integration surfaces.
+See also [`ImplementationProfiles.md`](ImplementationProfiles.md) for the rule separating COP Core
+from concrete runtimes, interfaces, adapters, and integration surfaces.
 
 ---
 
@@ -80,7 +101,8 @@ Any technology stack can implement these interfaces:
 - Edge runtimes
 - In-memory test harnesses
 
-Concrete realizations should be documented as implementation profiles. See [`ImplementationProfiles.md`](ImplementationProfiles.md).
+Concrete realizations should be documented as implementation profiles. See
+[`ImplementationProfiles.md`](ImplementationProfiles.md).
 
 ---
 
@@ -115,7 +137,8 @@ Examples:
 
 Profiles define **additional semantics**, not new execution rules.
 
-Implementation profiles document concrete runtimes or surfaces that realize COP responsibilities. They must not silently redefine COP. See [`ImplementationProfiles.md`](ImplementationProfiles.md).
+Implementation profiles document concrete runtimes or surfaces that realize COP responsibilities.
+They must not silently redefine COP. See [`ImplementationProfiles.md`](ImplementationProfiles.md).
 
 ---
 
@@ -169,15 +192,19 @@ or runtime.
 
 ### Applied Possibilism: The Spirit Behind COP
 
-COP is not merely a technical specification — it embodies a practice-oriented philosophy called **Applied Possibilism: The Joyful Exploration of the Possible.**
+COP is not merely a technical specification — it embodies a practice-oriented philosophy called
+**Applied Possibilism: The Joyful Exploration of the Possible.**
 
-Where frameworks control, COP enables exploration. Where optimization demands efficiency, possibilism values discovery. The protocol provides:
+Where frameworks control, COP enables exploration. Where optimization demands efficiency,
+possibilism values discovery. The protocol provides:
 
 - **Deterministic replay** → Exploration is documented and learnable
 - **Stateless agents** → Cognition externalized, exploration shared
 - **Stigmergic attractors** → Exploration is guided, not prescribed
 - **Continuations** → Exploration can pause and resume
 
-> COP is not a framework for control. It is a protocol for joyful, systematic exploration of what's possible.
+> COP is not a framework for control. It is a protocol for joyful, systematic exploration of what's
+> possible.
 
-For the full philosophical and practice framework, see [Applied Possibilism](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/applied_possibilism.md).
+For the full philosophical and practice framework, see
+[Applied Possibilism](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/applied_possibilism.md).

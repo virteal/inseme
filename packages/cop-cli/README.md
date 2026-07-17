@@ -1,3 +1,23 @@
+---
+title: 💻 cop-cli - Cognitive Orchestration Protocol CLI
+author: unknown
+date: "2026-06-12"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: "9167494"
+  origin_date: "2026-06-12"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # 💻 cop-cli - Cognitive Orchestration Protocol CLI
 
 **cop-cli** is the command-line interface for interacting with the Cognitive Orchestration Protocol

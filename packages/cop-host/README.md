@@ -1,3 +1,23 @@
+---
+title: "@inseme/cop-host"
+author: unknown
+date: "2026-07-05"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: 1f30be5
+  origin_date: "2026-07-05"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # @inseme/cop-host
 
 Cœur de l'infrastructure d'hébergement et de runtime pour l'écosystème Inseme.

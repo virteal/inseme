@@ -1,3 +1,23 @@
+---
+title: 🏛️ @kudocracy/models - Sovereign LLM Controller
+author: unknown
+date: "2026-07-12"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: 4a5b548
+  origin_date: "2026-07-12"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # 🏛️ @kudocracy/models - Sovereign LLM Controller
 
 **@kudocracy/models** is the sovereign Large Language Model (LLM) manager for the Inseme monorepo.
@@ -31,7 +51,8 @@ Manages a catalog of optimized models (GGUF) tested for stability and performanc
 
 ## 🐍 Conda (env `inseme`)
 
-Conda is **not** loaded at PowerShell startup (saves ~30s per `pwsh`). It is only needed here for `model:pull` / Python download scripts.
+Conda is **not** loaded at PowerShell startup (saves ~30s per `pwsh`). It is only needed here for
+`model:pull` / Python download scripts.
 
 ```powershell
 # Interactive inseme Python work:
@@ -102,11 +123,12 @@ curl http://127.0.0.1:8880/v1/embeddings \
 
 ### Supported Embedding Models
 
-| Model | Provider | Dimensions | Method |
-|-------|----------|------------|--------|
-| qwen3-embedding-4b | Ollama | 1536 | MRL (2560→1536) |
+| Model              | Provider | Dimensions | Method          |
+| ------------------ | -------- | ---------- | --------------- |
+| qwen3-embedding-4b | Ollama   | 1536       | MRL (2560→1536) |
 
 View all available models:
+
 ```bash
 npm run model:download help
 ```

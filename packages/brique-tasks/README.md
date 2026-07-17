@@ -1,8 +1,31 @@
+---
+title: ✅ @inseme/brique-tasks - Missions & Collaborative Kanban
+author: unknown
+date: "2026-01-09"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: abb374c
+  origin_date: "2026-01-09"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # ✅ @inseme/brique-tasks - Missions & Collaborative Kanban
 
-**@inseme/brique-tasks** is the project management and task tracking module for the Inseme monorepo. It organizes collective efforts into actionable missions and visualizes progress through Kanban boards.
+**@inseme/brique-tasks** is the project management and task tracking module for the Inseme monorepo.
+It organizes collective efforts into actionable missions and visualizes progress through Kanban
+boards.
 
-This module is designed for community projects, volunteer coordination, and municipal task management, ensuring that collective goals are met with transparency.
+This module is designed for community projects, volunteer coordination, and municipal task
+management, ensuring that collective goals are met with transparency.
 
 > For an overview of the ecosystem (Agora, IA, Multi-instances), see the
 > [global repository README](../../README.md).
@@ -11,7 +34,8 @@ This module is designed for community projects, volunteer coordination, and muni
 
 ## 🎯 What is it for?
 
-It turns discussion into action by providing a structured environment for managing tasks and responsibilities.
+It turns discussion into action by providing a structured environment for managing tasks and
+responsibilities.
 
 ### 1. 📋 Mission & Task Management
 
@@ -23,7 +47,8 @@ An interactive Kanban board for real-time visualization of task statuses (To Do,
 
 ### 3. 🤖 AI-Assisted Coordination
 
-Integrated with Ophélia for searching tasks, providing status updates, and helping users find missions that match their interests.
+Integrated with Ophélia for searching tasks, providing status updates, and helping users find
+missions that match their interests.
 
 ---
 
@@ -31,7 +56,8 @@ Integrated with Ophélia for searching tasks, providing status updates, and help
 
 - **Kanban Board**: Drag-and-drop interface for managing task flow.
 - **Mission Dashboard**: Overview of ongoing community projects and their progress.
-- **AI Tooling**: Tools for interacting with tasks via the AI assistant (`tool-search-tasks`, `tool-get-task-status`).
+- **AI Tooling**: Tools for interacting with tasks via the AI assistant (`tool-search-tasks`,
+  `tool-get-task-status`).
 - **Interactive UI**: Smooth animations and transitions powered by Framer Motion.
 
 ---
@@ -53,7 +79,8 @@ packages/brique-tasks/
 
 ## ⚖️ Neutrality & Commitment
 
-This infrastructure is a **neutral** technological tool. It is designed to ensure digital independence and does not support any specific ideology or candidate.
+This infrastructure is a **neutral** technological tool. It is designed to ensure digital
+independence and does not support any specific ideology or candidate.
 
 ---
 

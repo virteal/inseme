@@ -1,8 +1,32 @@
+---
+title: 🧬 Inseme - L'Agora Participative v3.0
+author: unknown
+date: "2026-01-01"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: f99e4bf
+  origin_date: "2026-01-01"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # 🧬 Inseme - L'Agora Participative v3.0
 
-**Inseme** est l'outil de démocratie directe et liquide du monorepo Inseme. Il facilite la participation à distance à des assemblées physiques, inspiré par les principes de la démocratie directe et liquide. Cette version modernisée intègre l'intelligence artificielle (Ophélia) et des technologies temps réel pour une délibération fluide et proactive.
+**Inseme** est l'outil de démocratie directe et liquide du monorepo Inseme. Il facilite la
+participation à distance à des assemblées physiques, inspiré par les principes de la démocratie
+directe et liquide. Cette version modernisée intègre l'intelligence artificielle (Ophélia) et des
+technologies temps réel pour une délibération fluide et proactive.
 
-> Pour une vue d'ensemble de l'écosystème (Plateforme, Wiki, Gazette), consultez le [README global du dépôt](../../README.md).
+> Pour une vue d'ensemble de l'écosystème (Plateforme, Wiki, Gazette), consultez le
+> [README global du dépôt](../../README.md).
 
 ---
 
@@ -10,17 +34,21 @@
 
 Inseme permet aux participants de s'engager sans barrières bureaucratiques :
 
-- **Accès Liquide** : Participez instantanément en tant qu'**Invité** (anonyme) avec un pseudonyme, ou devenez **Membre** pour conserver votre historique.
-- **Médiation IA (Ophélia)** : Une agente intelligente qui anime, résume et structure les débats. Elle intervient de manière proactive pour faciliter le consensus.
+- **Accès Liquide** : Participez instantanément en tant qu'**Invité** (anonyme) avec un pseudonyme,
+  ou devenez **Membre** pour conserver votre historique.
+- **Médiation IA (Ophélia)** : Une agente intelligente qui anime, résume et structure les débats.
+  Elle intervient de manière proactive pour faciliter le consensus.
 - **Délégation Dynamique** : Système de procuration et de délégation de vote en temps réel.
-- **Gestuelle Digitale** : Vote instantané via une interface optimisée (Accord, Désaccord, Besoin d'air, Demande de parole).
+- **Gestuelle Digitale** : Vote instantané via une interface optimisée (Accord, Désaccord, Besoin
+  d'air, Demande de parole).
 - **Visioconférence Native** : Intégration Jitsi Meet pour une latence minimale.
 
 ---
 
 ## 🚀 Technologie (Modern Stack)
 
-- **Frontend** : [React](https://reactjs.org/) + [Vite](https://vitejs.dev/) + [Tailwind CSS](https://tailwindcss.com/)
+- **Frontend** : [React](https://reactjs.org/) + [Vite](https://vitejs.dev/) +
+  [Tailwind CSS](https://tailwindcss.com/)
 - **Backend Realtime** : [Supabase](https://supabase.com/) (PostgreSQL, Realtime, Auth)
 - **AI Agent** : OpenAI GPT-4o orchestré via **Netlify Edge Functions** (Deno).
 - **Media** : [Jitsi Meet SDK](https://jitsi.org/) pour la vidéo temps réel.
@@ -35,7 +63,8 @@ Ophélia est une participante active au service de l'assemblée :
 - **Synthèse** : Elle résume les échanges complexes pour aider à la décision.
 - **Neutralité** : Elle ne prend pas parti, elle facilite le processus démocratique.
 - **Mémoire** : Elle accède aux archives et au contexte des sessions précédentes.
-- **Interface Chat** : Pilotez l'assemblée avec des commandes comme `inseme ?` pour proposer un vote.
+- **Interface Chat** : Pilotez l'assemblée avec des commandes comme `inseme ?` pour proposer un
+  vote.
 
 ---
 
@@ -65,7 +94,8 @@ Ophélia est une participante active au service de l'assemblée :
 
 ## ⚖️ Neutralité & Engagement
 
-Comme tous les outils du projet Inseme, cette application est une infrastructure **neutre**. Elle ne soutient aucun candidat ou liste électorale.
+Comme tous les outils du projet Inseme, cette application est une infrastructure **neutre**. Elle ne
+soutient aucun candidat ou liste électorale.
 
 ---
 

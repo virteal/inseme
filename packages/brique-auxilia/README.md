@@ -1,3 +1,23 @@
+---
+title: brique-auxilia
+author: unknown
+date: "2026-06-15"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: 14af0ca
+  origin_date: "2026-06-15"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # brique-auxilia
 
 > **Auxilia** — brique d'hospitalité numérique (data & power) pour téléphones portables.

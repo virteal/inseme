@@ -1,6 +1,28 @@
+---
+title: ⚖️ @inseme/kudocracy - Governance Models & Logic
+author: unknown
+date: "2026-01-09"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: abb374c
+  origin_date: "2026-01-09"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # ⚖️ @inseme/kudocracy - Governance Models & Logic
 
-**@inseme/kudocracy** is the core logic and model definition package for the governance systems in the Inseme monorepo. It defines the fundamental rules and structures that drive the platform's democratic processes.
+**@inseme/kudocracy** is the core logic and model definition package for the governance systems in
+the Inseme monorepo. It defines the fundamental rules and structures that drive the platform's
+democratic processes.
 
 > For an overview of the ecosystem (Agora, IA, Multi-instances), see the
 > [global repository README](../../README.md).
@@ -9,15 +31,21 @@
 
 ## 🎯 What is it for?
 
-It serves as the "Rulebook" for the Inseme platform, defining how governance is structured and how collective decisions are reached.
+It serves as the "Rulebook" for the Inseme platform, defining how governance is structured and how
+collective decisions are reached.
 
 ### 1. 🏗️ Governance Model Definitions
-Defines the structure of various governance models (e.g., Liquid Democracy, Consensus-based) and their associated parameters.
+
+Defines the structure of various governance models (e.g., Liquid Democracy, Consensus-based) and
+their associated parameters.
 
 ### 2. 🧩 Collective Logic
-Implements the core logic for processing votes, managing delegations, and determining outcomes based on community-defined rules.
+
+Implements the core logic for processing votes, managing delegations, and determining outcomes based
+on community-defined rules.
 
 ### 3. 🛡️ Integrity Verification
+
 Provides tools for ensuring the integrity and auditability of the decision-making process.
 
 ---
@@ -37,7 +65,8 @@ packages/kudocracy/
 
 ## ⚖️ Neutrality & Commitment
 
-This infrastructure is a **neutral** technological tool. It is designed to ensure digital independence and does not support any specific ideology or candidate.
+This infrastructure is a **neutral** technological tool. It is designed to ensure digital
+independence and does not support any specific ideology or candidate.
 
 ---
 

@@ -1,3 +1,23 @@
+---
+title: COP Continuation Bac-à-Sable
+author: unknown
+date: "2026-06-12"
+document_role: source
+document_kind: documentation
+visibility: public
+lifecycle_state: working
+update_policy: UP-DEFAULT-REVIEWED
+provenance:
+  origin_type: repository
+  origin_repository: JeanHuguesRobert/inseme
+  origin_ref: "9167494"
+  origin_date: "2026-06-12"
+  derived_from: []
+review:
+  status: unreviewed
+  reviewed_by: []
+---
+
 # COP Continuation Bac-à-Sable
 
 **CLI unique, automatisable et testable** dont le but est de **faire converger** le Cognitive
