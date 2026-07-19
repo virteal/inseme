@@ -3,7 +3,7 @@ title: Research Index — Inseme
 description: 'The deployable platform — bricks, COP runtime, and the civic-tech infrastructure of #PERTITELLU'
 layout: default
 nav_order: 1
-last_modified_at: 2026-07-06T00:00:00.000Z
+last_modified_at: 2026-07-19T00:00:00.000Z
 license: CC BY-SA 4.0
 affiliation: Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica
 date: 2026-05-13T00:00:00.000Z
@@ -97,6 +97,7 @@ _Platform-level specifications and architectural documents._
 | [COP State of Play — Asynchronous Orchestration & Traceability](COP_STATE_OF_PLAY.md) _(living document — focus on async, event-driven, strongly traceable aspects of COP; sync apps temporarily deprioritized)_                                                                                                    | this repo | 2026-05     |
 | [Cyrnea State of Play](CYRNEA_STATE_OF_PLAY.md) _(living assessment for the bar/conviviality app — AI + human collaborator reference)_                                                                                                                                                                              | this repo | 2026-05-28  |
 | [COOP — Tutorial and Near-Specification](coop_tutorial.md) _(auto-generated tutorial v0.1 — COP kernel, cognitive packet router, reusable helpers (cogentiaRoutePacket etc.), hybrid policy layer (bus agent + JobScheduler), bac-à-sable usage, emissions, resets; sufficient for extension or re-implementation)_ | this repo | 2026-06-04  |
+| [Instance personnelle, démocratie et match non achetable](personal_instance_democracy_and_non_capturable_match.md) _(strategic positioning — personal TwinRoot vs personal-agent race; private life vs mandataire obligations; OpenClaw-class runtimes under mandate; non-capturable match invariants)_ | this repo | 2026-07-19  |
 
 ---
 
@@ -131,6 +132,11 @@ _Hosted elsewhere, intellectually connected here._
 - COP v0.3+ extensions — federation events (`cop_nodes`, `cop_agents`, `cop_events` per
   `apps/platform/supabase/migrations/cop/applied/schema_v0-2-0.sql`).
 - Per-instance deployment hardening — multi-instance auth, vault, federation consultations.
+- Native personal instance JHN + COP/Mandate vertical slice —
+  [inseme#17](https://github.com/JeanHuguesRobert/inseme/issues/17); strategic positioning in
+  [personal_instance_democracy_and_non_capturable_match.md](personal_instance_democracy_and_non_capturable_match.md).
+- Migration lepp.fr deploy source survey → inseme (`apps/platform`) — plan pending as companion to
+  personal-instance work.
 
 ---
 
@@ -164,3 +170,4 @@ _Fork to explore alternatives. Challenge via issues._
 ## Newly indexed working corpus (July 2026)
 
 - [COP Mission Stigmergy and Rational Exploration](cop_mission_stigmergy_exploration.md)
+- [Instance personnelle, démocratie et match non achetable](personal_instance_democracy_and_non_capturable_match.md)
