@@ -139,7 +139,23 @@ Les champs `deployment_kind`, `subject_kind`, `host_domain` sont dans le JSON / 
 
 ## Phase 1 — Projet Supabase JHN
 
-### 1.1 Création
+### 1.0 Projet créé (dogfooding 2026-07)
+
+| Champ | Valeur |
+|-------|--------|
+| Project ref | `ndiysuhzmztatpxbkezn` |
+| Project URL | `https://ndiysuhzmztatpxbkezn.supabase.co` |
+| Bootstrap | **SQL Editor manuel** (CLI Supabase non fiable sur la machine de dev) |
+| Config locale | `instances/jhn.json` + `.env` (gitignorés) |
+
+**Clés API :** Supabase expose désormais `sb_publishable_…` / `sb_secret_…` **en plus** des JWT legacy `anon` / `service_role`. Les deux formats coexistent. Pour `apps/platform` + Netlify Edge :
+
+- jour 1 : essayer la publishable key dans `VITE_SUPABASE_ANON_KEY` ;
+- si auth / Realtime / edge bloquent : Dashboard → **Settings → API Keys** → copier aussi le JWT **anon** `eyJ…` et l’utiliser dans les env.
+
+Ne **pas** coller de `service_role` / `sb_secret_` dans le chat, le git, ou le front.
+
+### 1.1 Création (référence si recréation)
 
 1. https://supabase.com/dashboard → **New project**
 2. Organisation : C.O.R.S.I.C.A. (ou la vôtre)
@@ -148,34 +164,47 @@ Les champs `deployment_kind`, `subject_kind`, `host_domain` sont dans le JSON / 
 5. Mot de passe DB : stocké hors git (gestionnaire de secrets)
 6. Noter :
    - Project URL : `https://xxxxx.supabase.co`
-   - `anon` `public` key
-   - `service_role` key (**secret**, Netlify only)
+   - publishable **et/ou** `anon` JWT
+   - secret **ou** `service_role` (**secret**, Netlify only)
 
-### 1.2 Schéma (ordre prudent)
+### 1.2 Schéma — chemin **manuel uniquement** (CLI hors service)
 
-Le dossier migrations est historique (`old_applied`, `old_unused`, COP). Pour un **projet neuf** :
+La CLI Supabase n’est **pas** le chemin retenu ici (`supabase` absent / instable sur la machine de dev).  
+**Ne pas** exécuter `supabase/schema.sql` tel quel : c’est un dump de contexte, pas un script d’install.
 
-**Option A — recommandée si `schema.sql` est à jour et cohérent :**
+#### Jour 1 — bootstrap minimal (recommandé)
 
-```bash
-cd apps/platform
-# Lier le projet (project-ref = id court Supabase)
-npx supabase link --project-ref <PROJECT_REF>
-# Appliquer le dump de référence si vous l’utilisez comme bootstrap
-# ou rejouer old_applied dans l’ordre chronologique puis COP
+1. Ouvrir le projet :  
+   https://supabase.com/dashboard/project/ndiysuhzmztatpxbkezn/sql/new  
+2. Coller **tout** le fichier :
+
+```text
+apps/platform/instances/sql/jhn-bootstrap-minimal.sql
 ```
 
-**Option B — bootstrap SQL Editor (manuel) :**
+3. Run. Vérifier que le `SELECT` final affiche `community_name`, `deployment_kind`, `app_url`, `supabase_project_ref`.
 
-1. Ouvrir SQL Editor du projet JHN.
-2. Appliquer dans l’ordre raisonnable :
-   - `supabase/migrations/old_applied/20251204_consolidated_schema.sql` et dépendances users si besoin
-   - autres `old_applied/*.sql` **additifs** nécessaires à platform (vault, registry optionnel, feed, schema_versioning…)
-   - `supabase/migrations/20251206_add_cop_core.sql` (+ idempotency, step claim)
-   - `supabase/migrations/cop/applied/*.sql` si le vertical COP est voulu dès le jour 1
-3. Ignorer `old_unused/` sauf besoin métier explicite.
+Ce script crée :
 
-**Critère d’acceptation Phase 1.2 :** l’app platform démarre en local contre ce projet sans erreur fatale de tables manquantes (`users`, `instance_config` au minimum).
+- `public.users` + RLS basique  
+- trigger `auth.users` → profil  
+- `public.instance_config` (vault)  
+- seed identité JHN  
+
+#### Plus tard — tables métier / COP (à la carte, SQL Editor)
+
+Quand l’app demande une table manquante, appliquer **un fichier à la fois** depuis :
+
+```text
+supabase/migrations/old_applied/   # civic / feed / registry…
+supabase/migrations/20251206_*.sql # COP core
+supabase/migrations/cop/applied/   # COP v0.2
+```
+
+Ordre indicatif si vous élargissez : vault/users (déjà fait) → feed → COP core → briques au besoin.  
+En cas d’erreur « already exists » : souvent OK ; noter et continuer.
+
+**Critère d’acceptation Phase 1.2 :** tables `users` et `instance_config` présentes ; seed JHN lisible.
 
 ### 1.3 Seed vault JHN
 
