@@ -320,8 +320,10 @@ Ce document **ne** fixe **pas** de grille tarifaire.
 
 ## 8. Prochaines étapes liées
 
-1. **Plan de migration** lepp.fr : source de déploiement `survey` → `inseme` (`apps/platform`), inventaire schéma additif, staging, cutover.  
-2. **Instance JHN** : Supabase dédié, registry multi-apex (`host_domain = baronsmariani.org`), profil personal-twin, dogfooding TwinRoot + mandats.  
+1. **Instance JHN (priorité)** : runbook opérationnel
+   [`apps/platform/docs/RUNBOOK_JHN_PERSONAL_INSTANCE.md`](../apps/platform/docs/RUNBOOK_JHN_PERSONAL_INSTANCE.md)
+   — Supabase dédié, Netlify dédié (pas lepp.fr), DNS `jhn.baronsmariani.org`, smoke, puis TwinRoot / mandats.  
+2. **Plan de migration** lepp.fr / Pertitellu Corte : source `survey` → `inseme` (`apps/platform`), **après** stabilisation JHN.  
 3. **Phase 0 technique #17** : document d’architecture d’implémentation `research/inseme_jhn_personal_instance_and_agent_society.md` (terminologie déploiement vs cognitif, hibernation, schemas).  
 4. **Adapter runtime** (plus tard) : interface `ExecutionRuntime` + premier backend optionnel (tool maison ou claw-like) sous sandbox.
 

@@ -109,3 +109,7 @@ test_file_storage_data_*/
 # Cache HuggingFace et modèles (Couverture plus large)
 .cache/huggingface/
 **/.cache/huggingface/
+
+# Local personal instance config (may contain keys)
+apps/platform/instances/jhn.json
+apps/platform/instances/sql/jhn-vault.sql

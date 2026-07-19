@@ -53,7 +53,7 @@ export const INSTANCE_RESOLVER_EDGE_CONFIG = {
 };
 
 // --- Multi-instance resolution constants ---
-const BASE_DOMAINS = ["lepp.fr", "kudocracy.org", "inseme.org"];
+const BASE_DOMAINS = ["lepp.fr", "kudocracy.org", "inseme.org", "baronsmariani.org"];
 const IGNORED_SUBDOMAINS = ["www", "app", "api", "admin", "staging", "preview", "platform"];
 
 /**

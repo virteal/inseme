@@ -1,5 +1,10 @@
 # Guide Rapide : Provisionner une Instance
 
+> **Instance personnelle JHN (priorité dogfooding)** : voir le runbook dédié
+> [`docs/RUNBOOK_JHN_PERSONAL_INSTANCE.md`](../docs/RUNBOOK_JHN_PERSONAL_INSTANCE.md)
+> et le modèle [`jhn.example.json`](jhn.example.json). Ne pas utiliser ce guide community-only
+> pour JHN sans l’adapter (domaine `baronsmariani.org`, `deployment_kind: personal`).
+
 ## 🚀 Méthode Express (5 minutes)
 
 ### Étape 1 : Créer le projet Supabase

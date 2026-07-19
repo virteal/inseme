@@ -15,7 +15,7 @@
 // ============================================================================
 
 // Domaine de base pour la détection des sous-domaines
-const BASE_DOMAINS = ["lepp.fr", "kudocracy.org"];
+const BASE_DOMAINS = ["lepp.fr", "kudocracy.org", "inseme.org", "baronsmariani.org"];
 
 // Sous-domaines à ignorer (pas des instances)
 const IGNORED_SUBDOMAINS = ["www", "app", "api", "admin", "staging", "preview"];
