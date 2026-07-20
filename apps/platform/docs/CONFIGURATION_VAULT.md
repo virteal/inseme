@@ -137,6 +137,7 @@ Provisioning: `docs/PROVISIONING_GUIDE.md` (step-vault).
 | Store `your_anthropic_key_here` in vault | Leave empty until real key exists |
 | Commit secrets in SQL migrations | `push-env-to-vault` only |
 | Use Pertitellu service_role with JHN URL | Always pair URL + keys of one project |
+| Push `HTTP_PROXY` / `VITE_PROXY_URL` into vault | Keep proxies **workstation-only** (CSP + dogfood break otherwise) |
 
 ---
 

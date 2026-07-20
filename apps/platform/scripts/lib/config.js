@@ -113,9 +113,11 @@ const ENV_KEY_MAPPING = {
   magistral_embedding_dimensions: ["MAGISTRAL_EMBEDDING_DIMENSIONS"],
   magistral_embedding_policy: ["MAGISTRAL_EMBEDDING_POLICY"],
   magistral_embedding_timeout_ms: ["MAGISTRAL_EMBEDDING_TIMEOUT_MS"],
-  http_proxy: ["HTTP_PROXY"],
-  https_proxy: ["HTTPS_PROXY"],
-  proxy_url: ["VITE_PROXY_URL", "PROXY_URL"],
+  // Workstation-only network settings — do NOT map into instance vault by default
+  // (http_proxy / https_proxy / proxy_url break browser dogfood via CSP if pushed).
+  // http_proxy: ["HTTP_PROXY"],
+  // https_proxy: ["HTTPS_PROXY"],
+  // proxy_url: ["VITE_PROXY_URL", "PROXY_URL"],
   db_ssl_mode: ["DB_SSL_MODE"],
   debug: ["DEBUG"],
 
@@ -161,10 +163,22 @@ const AUTO_ENV_PREFIXES = [
   "OPENROUTER_",
   "CONTEXT7_",
   "LEGALIZE_",
-  "HTTP_",
-  "HTTPS_",
+  // Not HTTP_/HTTPS_ — those are workstation proxies (see WORKSTATION_ONLY_ENV)
   "DB_",
 ];
+
+/** Env names that must never be copied into instance_config (machine/network only). */
+const WORKSTATION_ONLY_ENV = new Set([
+  "HTTP_PROXY",
+  "HTTPS_PROXY",
+  "http_proxy",
+  "https_proxy",
+  "PROXY_URL",
+  "VITE_PROXY_URL",
+  "VITE_USE_PROXY",
+  "ALL_PROXY",
+  "NO_PROXY",
+]);
 
 const AUTO_ENV_KEYS = new Set([
   "APP_URL",
@@ -200,6 +214,7 @@ function isDefinedNonEmpty(v) {
 }
 
 function shouldAutoIncludeEnvVar(envName) {
+  if (WORKSTATION_ONLY_ENV.has(envName)) return false;
   if (AUTO_ENV_KEYS.has(envName)) return true;
   return AUTO_ENV_PREFIXES.some((p) => envName.startsWith(p));
 }

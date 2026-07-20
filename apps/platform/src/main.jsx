@@ -34,12 +34,16 @@ window.unwrap = unwrap;
  * et les faire passer par le proxy si nécessaire.
  */
 (function applyGlobalProxyPatches() {
-  const isLocal =
-    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-  const forceProxy = window.location.search.includes("proxy=1");
+  const forceProxy =
+    window.location.search.includes("proxy=1") ||
+    import.meta.env.VITE_USE_PROXY === "true" ||
+    import.meta.env.VITE_USE_PROXY === "1";
 
-  // On n'applique les patches que si on est en local ou si c'est forcé via l'URL
-  if (!isLocal && !forceProxy) return;
+  // Proxy is opt-in. Do NOT wrap all fetches on localhost just because a workstation
+  // proxy_url exists in .env/vault — that breaks CSP (connect-src) and is unnecessary
+  // when talking to https://*.supabase.co directly (normal JHN dogfood).
+  // Enable with ?proxy=1 or VITE_USE_PROXY=true when you intentionally tunnel via localhost:8889.
+  if (!forceProxy) return;
 
   // 1. Patch FETCH
   const originalFetch = window.fetch;
