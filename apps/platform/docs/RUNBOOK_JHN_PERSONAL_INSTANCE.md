@@ -201,8 +201,26 @@ supabase/migrations_legacy/          # archive Survey/Corte — référence, non
 supabase/schema.sql                  # dump de contexte, NE PAS exécuter
 ```
 
-**Vault / Pertitellu :** on importe uniquement des clés **publiques** (feature flags, map Corte, textes Ophélia, branding léger).  
-Les secrets (API keys, OAuth, service_role, URLs Supabase d’un autre projet) restent dans `inseme/.env` — **pas** de copie croisée de vault secret.
+**Vault / Pertitellu :** les clés **publiques** (features, map, branding) viennent d’une migration curatée.  
+Les **secrets** (API keys, OAuth, `service_role`) viennent de `inseme/.env` → vault via script (comme sur Pertitellu).  
+Pas de copie croisée des secrets *d’un autre projet Supabase*.
+
+#### Secrets → vault (edge functions)
+
+Les edge/backend lisent `instance_config` avec le client **service_role** (Netlify env : `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` du projet JHN).  
+Les autres clés (OpenAI, Anthropic, …) doivent être **dans le vault**, pas seulement dans le `.env` local.
+
+```powershell
+cd C:\tweesic\inseme\apps\platform
+# 1) Mettre SERVICE_ROLE JHN dans inseme/.env si absent :
+#    supabase projects api-keys --project-ref ndiysuhzmztatpxbkezn
+# 2) Dry-run puis apply
+node scripts/push-env-to-vault.js
+node scripts/push-env-to-vault.js --apply --verbose
+```
+
+RLS : les lignes `is_secret=true` ne sont **pas** lisibles en anon/authenticated (migration `…_instance_config_secret_rls`).  
+Service role contourne le RLS (edge admin).
 
 #### Ajouter une évolution de schéma (discipline)
 

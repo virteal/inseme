@@ -57,9 +57,16 @@ const ENV_KEY_MAPPING = {
   anthropic_api_key: ["ANTHROPIC_API_KEY"],
   anthropic_model: ["ANTHROPIC_MODEL"],
   zai_api_key: ["ZAI_API_KEY"],
-  mistral_api_key: ["MISTRAL_API_KEY"],
+  openrouter_api_key: ["OPENROUTER_API_KEY"],
+  mistral_api_key: ["MISTRAL_API_KEY", "MAGISTRAL_API_KEY"],
   gemini_api_key: ["GEMINI_API_KEY"],
   google_filesearch_api_key: ["GOOGLE_FILESEARCH_API_KEY", "GEMINI_API_KEY"],
+  context7_api_key: ["CONTEXT7_API_KEY"],
+  legalize_api_key: ["LEGALIZE_API_KEY"],
+  axiom_token: ["AXIOM_TOKEN", "VITE_AXIOM_TOKEN"],
+  axiom_org_id: ["AXIOM_ORG_ID", "VITE_AXIOM_ORG_ID"],
+  gradium_api_key: ["GRADIUM_API_KEY"],
+  cartesia_api_key: ["CARTESIA_API_KEY"],
 
   // GitHub
   github_token: ["GITHUB_TOKEN"],
@@ -547,11 +554,22 @@ export async function loadConfig(forceRefresh = false) {
     // 1.2) Lire config vault
     const dbConfig = await loadFromVault();
 
-    // 2) Aligner .env explicite -> vault
-    const to_align_env = [];
+    // 2) Aligner .env explicite -> vault (requires SERVICE_ROLE client)
+    const toAlign = {};
     for (const key of Object.keys(envExplicit)) {
       if (!hasOwn(dbConfig, key) || envExplicit[key] !== dbConfig[key]) {
-        to_align_env.push(key);
+        toAlign[key] = envExplicit[key];
+      }
+    }
+    if (Object.keys(toAlign).length > 0) {
+      if (getSupabaseForVault()) {
+        console.log(`[config] align .env → vault: ${Object.keys(toAlign).length} clés`);
+        await uploadToVault(toAlign);
+      } else {
+        console.warn(
+          `[config] ${Object.keys(toAlign).length} clés .env absentes/différentes du vault, ` +
+            `mais SUPABASE_SERVICE_ROLE_KEY manquant — pas d'upload (edge ne verra pas ces secrets)`
+        );
       }
     }
 
@@ -564,6 +582,37 @@ export async function loadConfig(forceRefresh = false) {
 
   console.log(`[config] ${Object.keys(configCache).length} configs chargées (runtime)`);
   return configCache;
+}
+
+/**
+ * Push an object of vault keys → instance_config (service role required).
+ * Values that look secret are stored with is_secret=true, is_public=false.
+ */
+export async function uploadConfig(vars) {
+  await uploadToVault(vars || {});
+}
+
+/**
+ * Push all explicit .env mappings into the vault (source of truth = process env / .env).
+ * Returns summary counts; never logs secret values.
+ */
+export async function pushEnvSecretsToVault() {
+  if (!getSupabaseForVault()) {
+    throw new Error(
+      "pushEnvSecretsToVault: SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY required (JHN project)"
+    );
+  }
+  const envExplicit = buildEnvExplicit();
+  // Never push VITE-only duplicates as separate public noise: buildEnvExplicit already collapses
+  await uploadToVault(envExplicit);
+  const db = await loadFromVault();
+  const secretKeys = Object.keys(envExplicit).filter((k) => isSecret(k, envExplicit[k]));
+  return {
+    envKeys: Object.keys(envExplicit).length,
+    vaultKeys: Object.keys(db).length,
+    secretKeys: secretKeys.length,
+    secretKeyNames: secretKeys,
+  };
 }
 
 export function getConfig(key, defaultValue = undefined) {
