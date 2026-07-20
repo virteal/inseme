@@ -14,7 +14,7 @@
     "lint:fix": "eslint . --fix",
     "inseme:dev": "pnpm --filter @inseme/app-inseme run dev",
     "inseme:backend": "node scripts/check-tunnel.js && netlify dev --cwd apps/inseme --port 8888",
-    "platform:dev": "pnpm run dev --filter platform",
+    "platform:dev": "pnpm --filter platform run dev",
     "platform:backend": "node scripts/check-tunnel.js && netlify dev --cwd apps/platform",
     "cyrnea:dev": "pnpm --filter @inseme/app-cyrnea run dev",
     "cyrnea:launch": "node scripts/cyrnea-launch.js",
@@ -31,7 +31,7 @@
     "sovereign:status": "pnpm --filter @inseme/models run sovereign:status",
     "compile:briques": "node packages/cop-host/scripts/compile-briques.js",
     "inseme:build": "pnpm --filter @inseme/app-inseme run build",
-    "platform:build": "pnpm run build --filter platform",
+    "platform:build": "pnpm --filter platform run build",
     "cyrnea:build": "pnpm --filter @inseme/app-cyrnea run build"
   },
   "devDependencies": {
