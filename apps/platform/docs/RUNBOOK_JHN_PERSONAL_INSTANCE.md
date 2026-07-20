@@ -167,44 +167,42 @@ Ne **pas** coller de `service_role` / `sb_secret_` dans le chat, le git, ou le f
    - publishable **et/ou** `anon` JWT
    - secret **ou** `service_role` (**secret**, Netlify only)
 
-### 1.2 Schéma — chemin **manuel uniquement** (CLI hors service)
+### 1.2 Schéma — chemin **CLI Supabase** (standard)
 
-La CLI Supabase n’est **pas** le chemin retenu ici (`supabase` absent / instable sur la machine de dev).  
-**Ne pas** exécuter `supabase/schema.sql` tel quel : c’est un dump de contexte, pas un script d’install.
+Page blanche → **migrations versionnées** + `db push`. Pas de collage SQL Editor pour les évolutions.
 
-#### Jour 1 — bootstrap minimal (recommandé)
-
-1. Ouvrir le projet :  
-   https://supabase.com/dashboard/project/ndiysuhzmztatpxbkezn/sql/new  
-2. Coller **tout** le fichier :
-
-```text
-apps/platform/instances/sql/jhn-bootstrap-minimal.sql
+```powershell
+cd C:\tweesic\inseme\apps\platform
+# déjà linké sur JHN (●)
+supabase migration list
+# Database password = mot de passe Postgres du projet (création Supabase)
+supabase db push
+supabase migration list   # local = remote
 ```
 
-3. Run. Vérifier que le `SELECT` final affiche `community_name`, `deployment_kind`, `app_url`, `supabase_project_ref`.
-
-Ce script crée :
-
-- `public.users` + RLS basique  
-- trigger `auth.users` → profil  
-- `public.instance_config` (vault)  
-- seed identité JHN  
-
-#### Plus tard — tables métier / COP (à la carte, SQL Editor)
-
-Quand l’app demande une table manquante, appliquer **un fichier à la fois** depuis :
+#### Layout
 
 ```text
-supabase/migrations/old_applied/   # civic / feed / registry…
-supabase/migrations/20251206_*.sql # COP core
-supabase/migrations/cop/applied/   # COP v0.2
+supabase/config.toml                 # supabase init
+supabase/migrations/                 # UNIQUEMENT ce que le CLI applique
+  20260720040000_baseline_personal_instance.sql
+  20260720040100_jhn_instance_identity.sql
+supabase/migrations_legacy/          # archive Survey/Corte — référence, non appliquée
+supabase/schema.sql                  # dump de contexte, NE PAS exécuter
 ```
 
-Ordre indicatif si vous élargissez : vault/users (déjà fait) → feed → COP core → briques au besoin.  
-En cas d’erreur « already exists » : souvent OK ; noter et continuer.
+#### Ajouter une évolution de schéma (discipline)
 
-**Critère d’acceptation Phase 1.2 :** tables `users` et `instance_config` présentes ; seed JHN lisible.
+```powershell
+cd C:\tweesic\inseme\apps\platform
+supabase migration new ma_evolution
+# éditer le fichier créé sous supabase/migrations/
+supabase db push
+```
+
+Ne **pas** modifier à la main le SQL Editor cloud pour le schéma (sauf urgence documentée + `db pull` / migration de rattrapage).
+
+**Critère d’acceptation Phase 1.2 :** `migration list` aligné ; tables `users` et `instance_config` présentes ; seed JHN lisible.
 
 ### 1.3 Seed vault JHN
 
