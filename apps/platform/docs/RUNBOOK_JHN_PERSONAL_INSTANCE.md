@@ -214,10 +214,14 @@ Les autres clés (OpenAI, Anthropic, …) doivent être **dans le vault**, pas s
 cd C:\tweesic\inseme\apps\platform
 # 1) Mettre SERVICE_ROLE JHN dans inseme/.env si absent :
 #    supabase projects api-keys --project-ref ndiysuhzmztatpxbkezn
-# 2) Dry-run puis apply
+# 2) Dry-run puis apply — copie complète des clés non vides / non-placeholder du .env
 node scripts/push-env-to-vault.js
 node scripts/push-env-to-vault.js --apply --verbose
 ```
+
+Politique « copie complète » : tout ce qui est réellement disponible dans `inseme/.env`
+(prefixes + mappings) part dans le vault. Placeholders vides (`ANTHROPIC_API_KEY=`,
+`your_…`, `sesame`) ne sont **pas** poussés (sinon le code croit avoir une clé).
 
 RLS : les lignes `is_secret=true` ne sont **pas** lisibles en anon/authenticated (migration `…_instance_config_secret_rls`).  
 Service role contourne le RLS (edge admin).

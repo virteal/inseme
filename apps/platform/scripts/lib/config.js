@@ -104,6 +104,20 @@ const ENV_KEY_MAPPING = {
   chromatic_project_token: ["CHROMATIC_PROJECT_TOKEN"],
   assistant_cloud_api_key: ["ASSISTANT_CLOUD_API_KEY"],
   assistant_cloud_api_url: ["ASSISTANT_CLOUD_API_URL"],
+  gradium_voice_id: ["GRADIUM_VOICE_ID"],
+  cartesia_voice_id: ["CARTESIA_VOICE_ID"],
+  magistral_api_key: ["MAGISTRAL_API_KEY"],
+  magistral_embeddings_enabled: ["MAGISTRAL_EMBEDDINGS_ENABLED"],
+  magistral_embedding_provider: ["MAGISTRAL_EMBEDDING_PROVIDER"],
+  magistral_embedding_model: ["MAGISTRAL_EMBEDDING_MODEL"],
+  magistral_embedding_dimensions: ["MAGISTRAL_EMBEDDING_DIMENSIONS"],
+  magistral_embedding_policy: ["MAGISTRAL_EMBEDDING_POLICY"],
+  magistral_embedding_timeout_ms: ["MAGISTRAL_EMBEDDING_TIMEOUT_MS"],
+  http_proxy: ["HTTP_PROXY"],
+  https_proxy: ["HTTPS_PROXY"],
+  proxy_url: ["VITE_PROXY_URL", "PROXY_URL"],
+  db_ssl_mode: ["DB_SSL_MODE"],
+  debug: ["DEBUG"],
 
   // COP
   cop_network_id: ["COP_NETWORK_ID"],
@@ -122,6 +136,7 @@ const AUTO_ENV_PREFIXES = [
   "ANTHROPIC_",
   "ZAI_",
   "MISTRAL_",
+  "MAGISTRAL_",
   "GEMINI_",
   "GOOGLE_",
   "GITHUB_",
@@ -140,6 +155,15 @@ const AUTO_ENV_PREFIXES = [
   "COP_",
   "POSTGRES_",
   "DATABASE_",
+  "AXIOM_",
+  "GRADIUM_",
+  "CARTESIA_",
+  "OPENROUTER_",
+  "CONTEXT7_",
+  "LEGALIZE_",
+  "HTTP_",
+  "HTTPS_",
+  "DB_",
 ];
 
 const AUTO_ENV_KEYS = new Set([
@@ -149,7 +173,23 @@ const AUTO_ENV_KEYS = new Set([
   "DEPLOY_PRIME_URL",
   "DATABASE_URL",
   "POSTGRES_URL",
+  "DEBUG",
+  "HTTP_PROXY",
+  "HTTPS_PROXY",
 ]);
+
+/** Values that must never be treated as real secrets/config in the vault. */
+function isPlaceholderValue(value) {
+  if (value === null || value === undefined) return true;
+  const s = String(value).trim();
+  if (s === "") return true;
+  if (/^your_[a-z0-9_]+/i.test(s)) return true;
+  if (/^(xxx+|changeme|replace_me|remplacer|placeholder|todo|tbd)$/i.test(s)) return true;
+  if (/^sk-ant-api\d*-?your/i.test(s)) return true;
+  // Local Magistral toy key sometimes left as "sesame"
+  if (s.toLowerCase() === "sesame") return true;
+  return false;
+}
 
 function hasOwn(obj, k) {
   return Object.prototype.hasOwnProperty.call(obj, k);
@@ -188,37 +228,38 @@ function parseValue(value, key) {
 /**
  * Env explicit = valeurs réellement présentes dans .env (explicites + auto whitelist).
  * Priorité : non-VITE > VITE.
+ * Skip empty / placeholder values so vault never pretends a key exists.
  */
 function buildEnvExplicit() {
   const envExplicit = {};
+  const sources = {};
 
   // 1) Mappings explicites (alias multiples)
   for (const [key, envNames] of Object.entries(ENV_KEY_MAPPING)) {
     for (const envName of envNames) {
       const raw = getEnvRawByName(envName);
-      if (raw === null) continue;
+      if (raw === null || isPlaceholderValue(raw)) continue;
 
       if (hasOwn(envExplicit, key)) {
-        const alreadyFromVite = String(envExplicit.__source?.[key] || "").startsWith("VITE_");
+        const alreadyFromVite = String(sources[key] || "").startsWith("VITE_");
         const currentIsVite = envName.startsWith("VITE_");
         if (alreadyFromVite && !currentIsVite) {
           envExplicit[key] = parseValue(raw, key);
-          envExplicit.__source[key] = envName;
+          sources[key] = envName;
         }
         continue;
       }
 
       envExplicit[key] = parseValue(raw, key);
-      envExplicit.__source = envExplicit.__source || {};
-      envExplicit.__source[key] = envName;
+      sources[key] = envName;
       break;
     }
   }
 
-  // 2) Auto whitelist
+  // 2) Auto whitelist — full workstation dump (complete copy policy)
   for (const [envName, raw] of Object.entries(process.env)) {
     if (!shouldAutoIncludeEnvVar(envName)) continue;
-    if (!isDefinedNonEmpty(raw)) continue;
+    if (!isDefinedNonEmpty(raw) || isPlaceholderValue(raw)) continue;
 
     let key = envNameToKey(envName);
 
@@ -230,9 +271,25 @@ function buildEnvExplicit() {
     if (hasOwn(envExplicit, key)) continue;
 
     envExplicit[key] = parseValue(raw, key);
+    sources[key] = envName;
   }
 
-  delete envExplicit.__source;
+  // Do not mirror Z.AI credentials under anthropic_* names (avoids false "we have Anthropic")
+  if (envExplicit.zai_api_key && envExplicit.anthropic_auth_token === envExplicit.zai_api_key) {
+    delete envExplicit.anthropic_auth_token;
+  }
+  if (envExplicit.anthropic_base_url && String(envExplicit.anthropic_base_url).includes("z.ai")) {
+    // Z.AI routing belongs with zai_*; keep vault honest about Anthropic
+    delete envExplicit.anthropic_base_url;
+  }
+  if (isPlaceholderValue(envExplicit.anthropic_api_key)) {
+    delete envExplicit.anthropic_api_key;
+  }
+
+  // 3) Any remaining process.env keys that look like app config (A-Z_) and are not
+  //    shell noise — only when FULL_ENV_VAULT_COPY=1 or always for known safe patterns.
+  //    Default: already covered by prefixes; MAGISTRAL_/AXIOM_/etc. added above.
+
   return envExplicit;
 }
 
@@ -594,9 +651,11 @@ export async function uploadConfig(vars) {
 
 /**
  * Push all explicit .env mappings into the vault (source of truth = process env / .env).
+ * Complete-copy policy: every non-empty, non-placeholder key available on the workstation
+ * (via mappings + whitelist prefixes) is upserted so the instance vault mirrors local capability.
  * Returns summary counts; never logs secret values.
  */
-export async function pushEnvSecretsToVault() {
+export async function pushEnvSecretsToVault({ clearEmptySecrets = true } = {}) {
   if (!getSupabaseForVault()) {
     throw new Error(
       "pushEnvSecretsToVault: SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY required (JHN project)"
@@ -605,6 +664,58 @@ export async function pushEnvSecretsToVault() {
   const envExplicit = buildEnvExplicit();
   // Never push VITE-only duplicates as separate public noise: buildEnvExplicit already collapses
   await uploadToVault(envExplicit);
+
+  // Clear vault rows that are secret but now empty/placeholder in .env (e.g. anthropic)
+  if (clearEmptySecrets) {
+    const supabase = getSupabaseForVault();
+    const { data: secretRows } = await supabase
+      .from("instance_config")
+      .select("key, value")
+      .eq("is_secret", true);
+
+    const toClear = [];
+    for (const row of secretRows || []) {
+      // If env has no real value for this vault key, null it out
+      const fromEnv = envExplicit[row.key];
+      const envNameUpper = row.key.toUpperCase();
+      const rawEnv =
+        process.env[envNameUpper] ??
+        process.env[`VITE_${envNameUpper}`] ??
+        null;
+      const envMissingOrPlaceholder =
+        (fromEnv === undefined || fromEnv === null || fromEnv === "") &&
+        (rawEnv === null || isPlaceholderValue(rawEnv));
+
+      if (envMissingOrPlaceholder && row.value) {
+        // Only clear if it looks like a leftover placeholder in vault
+        if (isPlaceholderValue(row.value) || String(row.value).length < 40) {
+          toClear.push(row.key);
+        }
+      }
+      // Explicit empty in .env for known key (anthropic_api_key=)
+      if (rawEnv !== null && isPlaceholderValue(rawEnv) && row.value) {
+        toClear.push(row.key);
+      }
+    }
+
+    const uniqueClear = [...new Set(toClear)];
+    if (uniqueClear.length > 0) {
+      const nowIso = new Date().toISOString();
+      await supabase.from("instance_config").upsert(
+        uniqueClear.map((key) => ({
+          key,
+          value: null,
+          value_json: null,
+          is_secret: true,
+          is_public: false,
+          updated_at: nowIso,
+        })),
+        { onConflict: "key" }
+      );
+      console.log(`[vault] cleared empty/placeholder secrets: ${uniqueClear.join(", ")}`);
+    }
+  }
+
   const db = await loadFromVault();
   const secretKeys = Object.keys(envExplicit).filter((k) => isSecret(k, envExplicit[k]));
   return {
@@ -612,6 +723,7 @@ export async function pushEnvSecretsToVault() {
     vaultKeys: Object.keys(db).length,
     secretKeys: secretKeys.length,
     secretKeyNames: secretKeys,
+    pushedKeys: Object.keys(envExplicit).sort(),
   };
 }
 
