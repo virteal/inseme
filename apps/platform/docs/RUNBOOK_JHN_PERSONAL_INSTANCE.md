@@ -24,16 +24,19 @@ related_documents:
 
 Disposer **en priorité** d’une instance personnelle pour Jean Hugues Noël Robert (JHN) :
 
-| Élément | Cible |
-|---------|--------|
-| URL publique | `https://jhn.baronsmariani.org` |
-| Code | monorepo **inseme**, app `apps/platform` |
-| Base de données | **nouveau** projet Supabase (pas la DB Corte) |
-| Site Netlify | **nouveau** site (ou site dédié preview/prod), **pas** le site lepp.fr / survey |
-| lepp.fr / Pertitellu Corte | **inchangé** jusqu’à bascule ultérieure |
+| Élément                    | Cible                                                                           |
+| -------------------------- | ------------------------------------------------------------------------------- |
+| URL publique               | `https://jhn.baronsmariani.org`                                                 |
+| Code                       | monorepo **inseme**, app `apps/platform`                                        |
+| Base de données            | **nouveau** projet Supabase (pas la DB Corte)                                   |
+| Site Netlify               | **nouveau** site (ou site dédié preview/prod), **pas** le site lepp.fr / survey |
+| lepp.fr / Pertitellu Corte | **inchangé** jusqu’à bascule ultérieure                                         |
 
-Doctrine : [personal_instance_democracy_and_non_capturable_match.md](../../research/personal_instance_democracy_and_non_capturable_match.md)  
-Vertical slice agents / TwinRoot : [inseme#17](https://github.com/JeanHuguesRobert/inseme/issues/17) (après smoke de l’instance).
+Doctrine :
+[personal_instance_democracy_and_non_capturable_match.md](../../research/personal_instance_democracy_and_non_capturable_match.md)  
+Vertical
+slice agents / TwinRoot : [inseme#17](https://github.com/JeanHuguesRobert/inseme/issues/17) (après
+smoke de l’instance).
 
 ---
 
@@ -123,9 +126,11 @@ cd apps/platform
 cp instances/jhn.example.json instances/jhn.json
 ```
 
-2. Éditer `instances/jhn.json` : coller `supabase_url` et `supabase_anon_key` **après** création du projet.  
+2. Éditer `instances/jhn.json` : coller `supabase_url` et `supabase_anon_key` **après** création du
+   projet.  
    **Ne jamais committer** `jhn.json` avec des secrets service-role.  
-   Le fichier exemple reste sans secrets ; `jhn.json` devrait rester gitignoré s’il contient des clés (sinon n’y mettre que l’anon key publique).
+   Le fichier exemple reste sans secrets ; `jhn.json` devrait rester gitignoré s’il contient des
+   clés (sinon n’y mettre que l’anon key publique).
 
 3. Vérifier le schéma actuel (contrainte legacy) :
 
@@ -133,7 +138,8 @@ cp instances/jhn.example.json instances/jhn.json
 community_type = "association"   # enum actuel ; métadonnées portent le sens personal-twin
 ```
 
-Les champs `deployment_kind`, `subject_kind`, `host_domain` sont dans le JSON / vault en **métadonnées** jusqu’à extension formelle du schéma (#17).
+Les champs `deployment_kind`, `subject_kind`, `host_domain` sont dans le JSON / vault en
+**métadonnées** jusqu’à extension formelle du schéma (#17).
 
 ---
 
@@ -141,17 +147,19 @@ Les champs `deployment_kind`, `subject_kind`, `host_domain` sont dans le JSON / 
 
 ### 1.0 Projet créé (dogfooding 2026-07)
 
-| Champ | Valeur |
-|-------|--------|
-| Project ref | `ndiysuhzmztatpxbkezn` |
-| Project URL | `https://ndiysuhzmztatpxbkezn.supabase.co` |
-| Bootstrap | **SQL Editor manuel** (CLI Supabase non fiable sur la machine de dev) |
-| Config locale | `instances/jhn.json` + `.env` (gitignorés) |
+| Champ         | Valeur                                                                |
+| ------------- | --------------------------------------------------------------------- |
+| Project ref   | `ndiysuhzmztatpxbkezn`                                                |
+| Project URL   | `https://ndiysuhzmztatpxbkezn.supabase.co`                            |
+| Bootstrap     | **SQL Editor manuel** (CLI Supabase non fiable sur la machine de dev) |
+| Config locale | `instances/jhn.json` + `.env` (gitignorés)                            |
 
-**Clés API :** Supabase expose désormais `sb_publishable_…` / `sb_secret_…` **en plus** des JWT legacy `anon` / `service_role`. Les deux formats coexistent. Pour `apps/platform` + Netlify Edge :
+**Clés API :** Supabase expose désormais `sb_publishable_…` / `sb_secret_…` **en plus** des JWT
+legacy `anon` / `service_role`. Les deux formats coexistent. Pour `apps/platform` + Netlify Edge :
 
 - jour 1 : essayer la publishable key dans `VITE_SUPABASE_ANON_KEY` ;
-- si auth / Realtime / edge bloquent : Dashboard → **Settings → API Keys** → copier aussi le JWT **anon** `eyJ…` et l’utiliser dans les env.
+- si auth / Realtime / edge bloquent : Dashboard → **Settings → API Keys** → copier aussi le JWT
+  **anon** `eyJ…` et l’utiliser dans les env.
 
 Ne **pas** coller de `service_role` / `sb_secret_` dans le chat, le git, ou le front.
 
@@ -169,7 +177,8 @@ Ne **pas** coller de `service_role` / `sb_secret_` dans le chat, le git, ou le f
 
 ### 1.2 Schéma — chemin **CLI Supabase** (standard)
 
-Page blanche → **migrations versionnées** + `db push`. Pas de collage SQL Editor pour les évolutions.
+Page blanche → **migrations versionnées** + `db push`. Pas de collage SQL Editor pour les
+évolutions.
 
 ```powershell
 cd C:\tweesic\inseme\apps\platform
@@ -200,9 +209,11 @@ supabase migration new ma_evolution
 supabase db push
 ```
 
-Ne **pas** modifier à la main le SQL Editor cloud pour le schéma (sauf urgence documentée + `db pull` / migration de rattrapage).
+Ne **pas** modifier à la main le SQL Editor cloud pour le schéma (sauf urgence documentée +
+`db pull` / migration de rattrapage).
 
-**Critère d’acceptation Phase 1.2 :** `migration list` aligné ; tables `users` et `instance_config` présentes ; seed JHN lisible.
+**Critère d’acceptation Phase 1.2 :** `migration list` aligné ; tables `users` et `instance_config`
+présentes ; seed JHN lisible.
 
 ### 1.3 Seed vault JHN
 
@@ -216,16 +227,16 @@ instances/sql/jhn-vault.example.sql
 
 Valeurs d’identité attendues :
 
-| key | value (indicatif) |
-|-----|-------------------|
-| community_name | Jean Hugues Noël Robert / Baron Mariani |
-| community_type | association *(legacy enum)* |
-| community_tagline | Instance personnelle JHN |
-| bot_name | Ophélia (ou nom dédié) |
-| contact_email | jhr@baronsmariani.org (ou email admin) |
-| deployment_kind | personal *(metadata / config)* |
-| host_domain | baronsmariani.org |
-| app_url | https://jhn.baronsmariani.org |
+| key               | value (indicatif)                       |
+| ----------------- | --------------------------------------- |
+| community_name    | Jean Hugues Noël Robert / Baron Mariani |
+| community_type    | association _(legacy enum)_             |
+| community_tagline | Instance personnelle JHN                |
+| bot_name          | Ophélia (ou nom dédié)                  |
+| contact_email     | jhr@baronsmariani.org (ou email admin)  |
+| deployment_kind   | personal _(metadata / config)_          |
+| host_domain       | baronsmariani.org                       |
+| app_url           | https://jhn.baronsmariani.org           |
 
 ### 1.4 Auth
 
@@ -258,6 +269,27 @@ WHERE email = 'VOTRE_EMAIL@example.com';
 
 ## Phase 2 — Local smoke (avant Netlify)
 
+### Secrets / env (politique actuelle)
+
+| Fichier                         | Rôle                                                        |
+| ------------------------------- | ----------------------------------------------------------- |
+| `inseme/.env` (racine monorepo) | **Source de vérité** secrets workstation                    |
+| `apps/platform/.env`            | Copie publique Vite (URL + anon) pour dogfooding JHN        |
+| `.env.pertitellu.local`         | Backup local de l’ancien alignement Pertitellu (gitignored) |
+
+Ne pas laisser `SUPABASE_URL` sur le projet Pertitellu (`opnotbjrb…`) tout en travaillant JHN
+(`ndiysuh…`).  
+Ne **jamais** coller un `SERVICE_ROLE` Pertitellu avec une URL JHN.
+
+Contrôle sans écriture :
+
+```powershell
+cd C:\tweesic\inseme\apps\platform
+node scripts/sync-secrets.js          # dry-run par défaut
+```
+
+Écritures (opt-in) : `--apply` (merge `.env` only) ; `--apply --vault` pour pousser le vault.
+
 ```bash
 cd C:\tweesic\inseme   # monorepo
 pnpm install
@@ -266,14 +298,14 @@ pnpm platform:dev
 # ou : cd apps/platform && pnpm dev
 ```
 
-Créer `apps/platform/.env` (non commité) :
+Créer / aligner `apps/platform/.env` (non commité) — idéalement miroir de la racine :
 
 ```env
 SUPABASE_URL=https://xxxxx.supabase.co
 VITE_SUPABASE_URL=https://xxxxx.supabase.co
 SUPABASE_ANON_KEY=eyJ...
 VITE_SUPABASE_ANON_KEY=eyJ...
-SUPABASE_SERVICE_ROLE_KEY=eyJ...   # serveur / functions only
+SUPABASE_SERVICE_ROLE_KEY=eyJ...   # serveur / functions only — projet JHN uniquement
 ```
 
 Tests :
@@ -293,11 +325,11 @@ Tests :
 2. Branch : `main` (ou branche de dogfooding)
 3. Build settings :
 
-| Setting | Value |
-|---------|--------|
-| Base directory | `apps/platform` |
-| Build command | `pnpm install --frozen-lockfile` au root monorepo peut exiger config monorepo ; en pratique souvent : depuis base, `cd ../.. && pnpm install && pnpm --filter platform build` — **ajuster** selon le premier build log |
-| Publish directory | `apps/platform/dist` (ou `dist` si base = apps/platform) |
+| Setting           | Value                                                                                                                                                                                                                  |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Base directory    | `apps/platform`                                                                                                                                                                                                        |
+| Build command     | `pnpm install --frozen-lockfile` au root monorepo peut exiger config monorepo ; en pratique souvent : depuis base, `cd ../.. && pnpm install && pnpm --filter platform build` — **ajuster** selon le premier build log |
+| Publish directory | `apps/platform/dist` (ou `dist` si base = apps/platform)                                                                                                                                                               |
 
 Le `netlify.toml` du monorepo sous `apps/platform` fixe déjà :
 
@@ -369,15 +401,15 @@ https://jhn.baronsmariani.org
 
 ## Phase 5 — Smoke production
 
-| Test | OK ? |
-|------|------|
-| Home charge | |
-| Login email | |
-| Session persistante | |
-| Admin / rôle admin | |
-| Vault affiche community_name JHN | |
-| Pas de fuite de config Corte (noms Pertitellu, etc.) | |
-| Functions critiques (si utilisées) ne 500-ent pas en masse | |
+| Test                                                       | OK ? |
+| ---------------------------------------------------------- | ---- |
+| Home charge                                                |      |
+| Login email                                                |      |
+| Session persistante                                        |      |
+| Admin / rôle admin                                         |      |
+| Vault affiche community_name JHN                           |      |
+| Pas de fuite de config Corte (noms Pertitellu, etc.)       |      |
+| Functions critiques (si utilisées) ne 500-ent pas en masse |      |
 
 Noter la date du smoke et le commit `inseme` déployé.
 
@@ -388,33 +420,35 @@ Noter la date du smoke et le commit `inseme` déployé.
 Ordre conseillé :
 
 1. Documenter le **project-ref** Supabase JHN et le **siteId** Netlify (hors git secrets).
-2. Ouvrir / poursuivre [inseme#17](https://github.com/JeanHuguesRobert/inseme/issues/17) : TwinRoot, mandats, agents.
+2. Ouvrir / poursuivre [inseme#17](https://github.com/JeanHuguesRobert/inseme/issues/17) : TwinRoot,
+   mandats, agents.
 3. Étendre `instance-schema` / registry avec `deployment_kind`, `host_domain`.
-4. **Seulement ensuite** : plan de bascule Pertitellu Corte (survey → inseme), en s’appuyant sur ce qui a marché pour JHN.
+4. **Seulement ensuite** : plan de bascule Pertitellu Corte (survey → inseme), en s’appuyant sur ce
+   qui a marché pour JHN.
 
 ---
 
 ## Dépannage rapide
 
-| Symptôme | Piste |
-|----------|--------|
-| Build monorepo échoue (workspace) | Installer depuis racine inseme ; pnpm ; vérifier `base` Netlify |
-| Écran blanc / erreur Supabase | Env VITE_* manquantes ou mauvaises clés |
-| Auth redirect invalid | URLs Auth Supabase |
-| branding Corte | Vault non seedé ou mauvais projet Supabase |
-| `jhn` not found en multi-instance | Normal sans registry ; mono-instance doit fallback env |
-| lepp.fr cassé | Vous avez touché le mauvais site Netlify — restaurer le site survey |
+| Symptôme                          | Piste                                                               |
+| --------------------------------- | ------------------------------------------------------------------- |
+| Build monorepo échoue (workspace) | Installer depuis racine inseme ; pnpm ; vérifier `base` Netlify     |
+| Écran blanc / erreur Supabase     | Env VITE\_\* manquantes ou mauvaises clés                           |
+| Auth redirect invalid             | URLs Auth Supabase                                                  |
+| branding Corte                    | Vault non seedé ou mauvais projet Supabase                          |
+| `jhn` not found en multi-instance | Normal sans registry ; mono-instance doit fallback env              |
+| lepp.fr cassé                     | Vous avez touché le mauvais site Netlify — restaurer le site survey |
 
 ---
 
 ## Fichiers associés
 
-| Fichier | Rôle |
-|---------|------|
-| [instances/jhn.example.json](../instances/jhn.example.json) | Modèle de config (sans secrets) |
-| [instances/sql/jhn-vault.example.sql](../instances/sql/jhn-vault.example.sql) | Seed vault |
-| [instances/QUICKSTART.md](../instances/QUICKSTART.md) | Provisioning générique (legacy community) |
-| [research/personal_instance_democracy_and_non_capturable_match.md](../../research/personal_instance_democracy_and_non_capturable_match.md) | Doctrine |
+| Fichier                                                                                                                                    | Rôle                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------- |
+| [instances/jhn.example.json](../instances/jhn.example.json)                                                                                | Modèle de config (sans secrets)           |
+| [instances/sql/jhn-vault.example.sql](../instances/sql/jhn-vault.example.sql)                                                              | Seed vault                                |
+| [instances/QUICKSTART.md](../instances/QUICKSTART.md)                                                                                      | Provisioning générique (legacy community) |
+| [research/personal_instance_democracy_and_non_capturable_match.md](../../research/personal_instance_democracy_and_non_capturable_match.md) | Doctrine                                  |
 
 ---
 
