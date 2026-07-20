@@ -196,9 +196,13 @@ supabase/config.toml                 # supabase init
 supabase/migrations/                 # UNIQUEMENT ce que le CLI applique
   20260720040000_baseline_personal_instance.sql
   20260720040100_jhn_instance_identity.sql
+  20260720043000_jhn_instance_config_from_pertitellu_public.sql  # features/map/chatbot (sans secrets)
 supabase/migrations_legacy/          # archive Survey/Corte — référence, non appliquée
 supabase/schema.sql                  # dump de contexte, NE PAS exécuter
 ```
+
+**Vault / Pertitellu :** on importe uniquement des clés **publiques** (feature flags, map Corte, textes Ophélia, branding léger).  
+Les secrets (API keys, OAuth, service_role, URLs Supabase d’un autre projet) restent dans `inseme/.env` — **pas** de copie croisée de vault secret.
 
 #### Ajouter une évolution de schéma (discipline)
 
