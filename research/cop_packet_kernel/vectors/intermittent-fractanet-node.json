@@ -1,0 +1,255 @@
+{
+  "schemaVersion": "0.1.0-experimental",
+  "scenario": "intermittent-fractanet-node",
+  "description": "A packet is timed out by an intermittent node, routed through an explicit fallback, partially processed, continued, and returned along a different path.",
+  "missions": [
+    {
+      "missionId": "urn:cop:mission:fractanet-observation-001",
+      "version": 1,
+      "statement": "Classify a remote biodiversity observation and return the classification with its trace.",
+      "successCriteria": ["observation-classified", "classification-returned-with-trace"],
+      "returnPolicy": {
+        "trigger": "classification-complete",
+        "recipientId": "urn:cop:node:field-origin",
+        "mode": "logical"
+      },
+      "status": "satisfied"
+    }
+  ],
+  "mandates": [
+    {
+      "mandateId": "urn:cop:mandate:fractanet-observation-001",
+      "principalId": "urn:cop:institution:biodiversity-atlas",
+      "granteeId": "urn:cop:collective:fractanet-classifiers",
+      "missionIds": ["urn:cop:mission:fractanet-observation-001"],
+      "allowedCapabilities": [
+        "classify-observation",
+        "partial-classification",
+        "read-observation-ref",
+        "return-classification",
+        "route-fallback"
+      ],
+      "allowedActions": ["accept", "continue", "process", "return"],
+      "canDelegate": false,
+      "issuedAt": "2026-07-20T11:00:00Z"
+    }
+  ],
+  "packets": [
+    {
+      "packetId": "urn:cop:packet:fractanet-observation-emit-001",
+      "lineageId": "urn:cop:lineage:fractanet-observation-001",
+      "mission": { "missionId": "urn:cop:mission:fractanet-observation-001", "version": 1 },
+      "kind": "work",
+      "relation": "emit",
+      "parentPacketIds": [],
+      "correlationId": "urn:cop:correlation:fractanet-observation-001",
+      "envelope": {
+        "missionId": "urn:cop:mission:fractanet-observation-001",
+        "missionVersion": 1,
+        "mandateId": "urn:cop:mandate:fractanet-observation-001",
+        "kind": "work",
+        "requiredCapabilities": ["partial-classification", "read-observation-ref"],
+        "contentClass": "biodiversity-observation",
+        "hopLimit": 6
+      },
+      "content": {
+        "mode": "reference",
+        "uri": "cop+artifact://observations/corsica-2026-0001.json",
+        "mediaType": "application/vnd.biodiversity.observation+json",
+        "digest": "sha256:observation-corsica-2026-0001",
+        "accessibleToHandlers": true
+      },
+      "emittedAt": "2026-07-20T11:01:00Z",
+      "emitterId": "urn:cop:node:field-origin"
+    },
+    {
+      "packetId": "urn:cop:packet:fractanet-observation-continue-001",
+      "lineageId": "urn:cop:lineage:fractanet-observation-001",
+      "mission": { "missionId": "urn:cop:mission:fractanet-observation-001", "version": 1 },
+      "kind": "work",
+      "relation": "continue",
+      "parentPacketIds": ["urn:cop:packet:fractanet-observation-emit-001"],
+      "correlationId": "urn:cop:correlation:fractanet-observation-001",
+      "envelope": {
+        "missionId": "urn:cop:mission:fractanet-observation-001",
+        "missionVersion": 1,
+        "mandateId": "urn:cop:mandate:fractanet-observation-001",
+        "kind": "work",
+        "requiredCapabilities": ["classify-observation", "read-observation-ref"],
+        "contentClass": "partial-biodiversity-classification",
+        "hopLimit": 4
+      },
+      "content": {
+        "mode": "reference",
+        "uri": "cop+artifact://observations/corsica-2026-0001.partial.json",
+        "mediaType": "application/vnd.biodiversity.partial-classification+json",
+        "digest": "sha256:partial-classification-corsica-2026-0001",
+        "accessibleToHandlers": true
+      },
+      "continuation": {
+        "stateRef": {
+          "mode": "reference",
+          "uri": "cop+artifact://continuations/corsica-2026-0001.json",
+          "mediaType": "application/vnd.cop.continuation+json",
+          "digest": "sha256:fractanet-continuation-corsica-2026-0001",
+          "accessibleToHandlers": true
+        },
+        "accessibleToNextHandler": true
+      },
+      "emittedAt": "2026-07-20T11:06:00Z",
+      "emitterId": "urn:cop:node:fallback-c"
+    },
+    {
+      "packetId": "urn:cop:packet:fractanet-observation-return-001",
+      "lineageId": "urn:cop:lineage:fractanet-observation-001",
+      "mission": { "missionId": "urn:cop:mission:fractanet-observation-001", "version": 1 },
+      "kind": "return",
+      "relation": "return",
+      "parentPacketIds": ["urn:cop:packet:fractanet-observation-continue-001"],
+      "correlationId": "urn:cop:correlation:fractanet-observation-001",
+      "envelope": {
+        "missionId": "urn:cop:mission:fractanet-observation-001",
+        "missionVersion": 1,
+        "mandateId": "urn:cop:mandate:fractanet-observation-001",
+        "kind": "return",
+        "requiredCapabilities": ["return-classification"],
+        "contentClass": "biodiversity-classification-result",
+        "hopLimit": 3
+      },
+      "content": {
+        "mode": "reference",
+        "uri": "cop+artifact://observations/corsica-2026-0001.classification.json",
+        "mediaType": "application/vnd.biodiversity.classification+json",
+        "digest": "sha256:classification-corsica-2026-0001",
+        "accessibleToHandlers": true
+      },
+      "emittedAt": "2026-07-20T11:09:00Z",
+      "emitterId": "urn:cop:node:classifier-d"
+    }
+  ],
+  "outcomes": [
+    {
+      "outcomeId": "urn:cop:outcome:fractanet-timeout-001",
+      "packetId": "urn:cop:packet:fractanet-observation-emit-001",
+      "handlerId": "urn:cop:node:intermittent-a",
+      "mandateId": "urn:cop:mandate:fractanet-observation-001",
+      "disposition": "timed-out",
+      "usedCapabilities": [],
+      "producedPacketIds": [],
+      "traceRef": "trace:fractanet:timeout:001",
+      "recordedAt": "2026-07-20T11:03:00Z",
+      "reason": "node-unreachable-before-offer-deadline"
+    },
+    {
+      "outcomeId": "urn:cop:outcome:fractanet-partial-001",
+      "packetId": "urn:cop:packet:fractanet-observation-emit-001",
+      "handlerId": "urn:cop:node:fallback-c",
+      "mandateId": "urn:cop:mandate:fractanet-observation-001",
+      "disposition": "partial",
+      "usedCapabilities": ["partial-classification", "read-observation-ref", "route-fallback"],
+      "producedPacketIds": ["urn:cop:packet:fractanet-observation-continue-001"],
+      "traceRef": "trace:fractanet:partial:001",
+      "recordedAt": "2026-07-20T11:06:00Z"
+    },
+    {
+      "outcomeId": "urn:cop:outcome:fractanet-complete-001",
+      "packetId": "urn:cop:packet:fractanet-observation-continue-001",
+      "handlerId": "urn:cop:node:classifier-d",
+      "mandateId": "urn:cop:mandate:fractanet-observation-001",
+      "disposition": "continued",
+      "usedCapabilities": ["classify-observation", "read-observation-ref"],
+      "producedPacketIds": ["urn:cop:packet:fractanet-observation-return-001"],
+      "traceRef": "trace:fractanet:classification:001",
+      "recordedAt": "2026-07-20T11:09:00Z"
+    },
+    {
+      "outcomeId": "urn:cop:outcome:fractanet-return-001",
+      "packetId": "urn:cop:packet:fractanet-observation-return-001",
+      "handlerId": "urn:cop:node:field-origin",
+      "mandateId": "urn:cop:mandate:fractanet-observation-001",
+      "disposition": "returned",
+      "usedCapabilities": ["return-classification"],
+      "producedPacketIds": [],
+      "traceRef": "trace:fractanet:return:001",
+      "returnDisposition": {
+        "status": "delivered",
+        "recipientId": "urn:cop:node:field-origin",
+        "mode": "logical"
+      },
+      "recordedAt": "2026-07-20T11:12:00Z"
+    }
+  ],
+  "routingDecisions": [
+    {
+      "decisionId": "urn:cop:route:fractanet-timeout-001",
+      "packetId": "urn:cop:packet:fractanet-observation-emit-001",
+      "nodeId": "urn:cop:node:intermittent-a",
+      "advertisedCapabilities": ["partial-classification", "read-observation-ref"],
+      "mandateId": "urn:cop:mandate:fractanet-observation-001",
+      "payloadInspected": false,
+      "disposition": "timed-out",
+      "observedAt": "2026-07-20T11:03:00Z"
+    },
+    {
+      "decisionId": "urn:cop:route:fractanet-fallback-001",
+      "packetId": "urn:cop:packet:fractanet-observation-emit-001",
+      "nodeId": "urn:cop:node:router-b",
+      "advertisedCapabilities": ["route-fallback"],
+      "mandateId": "urn:cop:mandate:fractanet-observation-001",
+      "payloadInspected": false,
+      "disposition": "fallback",
+      "nextNodeId": "urn:cop:node:fallback-c",
+      "observedAt": "2026-07-20T11:03:01Z"
+    },
+    {
+      "decisionId": "urn:cop:route:fractanet-accepted-c-001",
+      "packetId": "urn:cop:packet:fractanet-observation-emit-001",
+      "nodeId": "urn:cop:node:fallback-c",
+      "advertisedCapabilities": ["partial-classification", "read-observation-ref", "route-fallback"],
+      "mandateId": "urn:cop:mandate:fractanet-observation-001",
+      "payloadInspected": false,
+      "disposition": "accepted",
+      "observedAt": "2026-07-20T11:04:00Z"
+    },
+    {
+      "decisionId": "urn:cop:route:fractanet-accepted-d-001",
+      "packetId": "urn:cop:packet:fractanet-observation-continue-001",
+      "nodeId": "urn:cop:node:classifier-d",
+      "advertisedCapabilities": ["classify-observation", "read-observation-ref"],
+      "mandateId": "urn:cop:mandate:fractanet-observation-001",
+      "payloadInspected": false,
+      "disposition": "accepted",
+      "observedAt": "2026-07-20T11:07:00Z"
+    },
+    {
+      "decisionId": "urn:cop:route:fractanet-return-e-001",
+      "packetId": "urn:cop:packet:fractanet-observation-return-001",
+      "nodeId": "urn:cop:node:return-e",
+      "advertisedCapabilities": ["return-classification"],
+      "mandateId": "urn:cop:mandate:fractanet-observation-001",
+      "payloadInspected": false,
+      "disposition": "accepted",
+      "nextNodeId": "urn:cop:node:field-origin",
+      "observedAt": "2026-07-20T11:10:00Z"
+    }
+  ],
+  "custodyTransitions": [],
+  "expected": {
+    "valid": true,
+    "executableLaws": [
+      "accessible-continuation",
+      "causal-parentage",
+      "correlated-return",
+      "envelope-only-routing",
+      "explicit-mission-mutation",
+      "explicit-transition-semantics",
+      "mandate-non-amplification",
+      "traceable-disposition"
+    ],
+    "openQuestions": [
+      "distributed-clock-ordering",
+      "network-delivery-guarantees",
+      "timeout-authority"
+    ]
+  }
+}

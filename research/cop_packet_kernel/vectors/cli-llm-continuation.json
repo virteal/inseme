@@ -1,0 +1,215 @@
+{
+  "schemaVersion": "0.1.0-experimental",
+  "scenario": "cli-llm-continuation",
+  "description": "A CLI emits a packet whose work is continued by a replacement LLM handler using only accessible referenced state, then returns a correlated result.",
+  "missions": [
+    {
+      "missionId": "urn:cop:mission:cli-analysis-001",
+      "version": 1,
+      "statement": "Inspect the supplied source corpus and return a concise contradiction report.",
+      "successCriteria": ["contradictions-cited", "result-returned-to-cli-user"],
+      "returnPolicy": {
+        "trigger": "contradiction-report-complete",
+        "recipientId": "urn:cop:human:cli-user",
+        "mode": "logical"
+      },
+      "status": "satisfied"
+    }
+  ],
+  "mandates": [
+    {
+      "mandateId": "urn:cop:mandate:cli-analysis-001",
+      "principalId": "urn:cop:human:cli-user",
+      "granteeId": "urn:cop:collective:replaceable-analysis-handlers",
+      "missionIds": ["urn:cop:mission:cli-analysis-001"],
+      "allowedCapabilities": ["analyze-corpus", "read-content-ref", "return-report"],
+      "allowedActions": ["accept", "continue", "process", "return"],
+      "canDelegate": false,
+      "issuedAt": "2026-07-20T10:00:00Z"
+    }
+  ],
+  "packets": [
+    {
+      "packetId": "urn:cop:packet:cli-analysis-emit-001",
+      "lineageId": "urn:cop:lineage:cli-analysis-001",
+      "mission": { "missionId": "urn:cop:mission:cli-analysis-001", "version": 1 },
+      "kind": "work",
+      "relation": "emit",
+      "parentPacketIds": [],
+      "correlationId": "urn:cop:correlation:cli-analysis-001",
+      "envelope": {
+        "missionId": "urn:cop:mission:cli-analysis-001",
+        "missionVersion": 1,
+        "mandateId": "urn:cop:mandate:cli-analysis-001",
+        "kind": "work",
+        "requiredCapabilities": ["analyze-corpus", "read-content-ref"],
+        "contentClass": "source-corpus-reference",
+        "hopLimit": 4
+      },
+      "content": {
+        "mode": "reference",
+        "uri": "cop+file://workspace/corpus/manifest.json",
+        "mediaType": "application/vnd.cop.corpus-manifest+json",
+        "digest": "sha256:cli-corpus-manifest-001",
+        "accessibleToHandlers": true
+      },
+      "emittedAt": "2026-07-20T10:01:00Z",
+      "emitterId": "urn:cop:software:cop-cli"
+    },
+    {
+      "packetId": "urn:cop:packet:cli-analysis-continue-001",
+      "lineageId": "urn:cop:lineage:cli-analysis-001",
+      "mission": { "missionId": "urn:cop:mission:cli-analysis-001", "version": 1 },
+      "kind": "work",
+      "relation": "continue",
+      "parentPacketIds": ["urn:cop:packet:cli-analysis-emit-001"],
+      "correlationId": "urn:cop:correlation:cli-analysis-001",
+      "envelope": {
+        "missionId": "urn:cop:mission:cli-analysis-001",
+        "missionVersion": 1,
+        "mandateId": "urn:cop:mandate:cli-analysis-001",
+        "kind": "work",
+        "requiredCapabilities": ["analyze-corpus", "read-content-ref"],
+        "contentClass": "analysis-continuation",
+        "hopLimit": 3
+      },
+      "content": {
+        "mode": "reference",
+        "uri": "cop+artifact://cli-analysis/partial-001.json",
+        "mediaType": "application/vnd.cop.partial-analysis+json",
+        "digest": "sha256:cli-partial-analysis-001",
+        "accessibleToHandlers": true
+      },
+      "continuation": {
+        "stateRef": {
+          "mode": "reference",
+          "uri": "cop+artifact://cli-analysis/continuation-001.json",
+          "mediaType": "application/vnd.cop.continuation+json",
+          "digest": "sha256:cli-continuation-state-001",
+          "accessibleToHandlers": true
+        },
+        "accessibleToNextHandler": true
+      },
+      "emittedAt": "2026-07-20T10:03:00Z",
+      "emitterId": "urn:cop:handler:llm-a"
+    },
+    {
+      "packetId": "urn:cop:packet:cli-analysis-return-001",
+      "lineageId": "urn:cop:lineage:cli-analysis-001",
+      "mission": { "missionId": "urn:cop:mission:cli-analysis-001", "version": 1 },
+      "kind": "return",
+      "relation": "return",
+      "parentPacketIds": ["urn:cop:packet:cli-analysis-continue-001"],
+      "correlationId": "urn:cop:correlation:cli-analysis-001",
+      "envelope": {
+        "missionId": "urn:cop:mission:cli-analysis-001",
+        "missionVersion": 1,
+        "mandateId": "urn:cop:mandate:cli-analysis-001",
+        "kind": "return",
+        "requiredCapabilities": ["return-report"],
+        "contentClass": "contradiction-report",
+        "hopLimit": 2
+      },
+      "content": {
+        "mode": "reference",
+        "uri": "cop+artifact://cli-analysis/report-001.md",
+        "mediaType": "text/markdown",
+        "digest": "sha256:cli-contradiction-report-001",
+        "accessibleToHandlers": true
+      },
+      "emittedAt": "2026-07-20T10:07:00Z",
+      "emitterId": "urn:cop:handler:llm-b"
+    }
+  ],
+  "outcomes": [
+    {
+      "outcomeId": "urn:cop:outcome:cli-analysis-a-001",
+      "packetId": "urn:cop:packet:cli-analysis-emit-001",
+      "handlerId": "urn:cop:handler:llm-a",
+      "mandateId": "urn:cop:mandate:cli-analysis-001",
+      "disposition": "partial",
+      "usedCapabilities": ["analyze-corpus", "read-content-ref"],
+      "producedPacketIds": ["urn:cop:packet:cli-analysis-continue-001"],
+      "traceRef": "trace:cli-analysis:handler-a:001",
+      "recordedAt": "2026-07-20T10:03:00Z"
+    },
+    {
+      "outcomeId": "urn:cop:outcome:cli-analysis-b-001",
+      "packetId": "urn:cop:packet:cli-analysis-continue-001",
+      "handlerId": "urn:cop:handler:llm-b",
+      "mandateId": "urn:cop:mandate:cli-analysis-001",
+      "disposition": "continued",
+      "usedCapabilities": ["analyze-corpus", "read-content-ref"],
+      "producedPacketIds": ["urn:cop:packet:cli-analysis-return-001"],
+      "traceRef": "trace:cli-analysis:handler-b:001",
+      "recordedAt": "2026-07-20T10:07:00Z"
+    },
+    {
+      "outcomeId": "urn:cop:outcome:cli-analysis-return-001",
+      "packetId": "urn:cop:packet:cli-analysis-return-001",
+      "handlerId": "urn:cop:software:cop-cli",
+      "mandateId": "urn:cop:mandate:cli-analysis-001",
+      "disposition": "returned",
+      "usedCapabilities": ["return-report"],
+      "producedPacketIds": [],
+      "traceRef": "trace:cli-analysis:return:001",
+      "returnDisposition": {
+        "status": "delivered",
+        "recipientId": "urn:cop:human:cli-user",
+        "mode": "logical"
+      },
+      "recordedAt": "2026-07-20T10:08:00Z"
+    }
+  ],
+  "routingDecisions": [
+    {
+      "decisionId": "urn:cop:route:cli-analysis-a-001",
+      "packetId": "urn:cop:packet:cli-analysis-emit-001",
+      "nodeId": "urn:cop:handler:llm-a",
+      "advertisedCapabilities": ["analyze-corpus", "read-content-ref"],
+      "mandateId": "urn:cop:mandate:cli-analysis-001",
+      "payloadInspected": false,
+      "disposition": "accepted",
+      "observedAt": "2026-07-20T10:01:01Z"
+    },
+    {
+      "decisionId": "urn:cop:route:cli-analysis-b-001",
+      "packetId": "urn:cop:packet:cli-analysis-continue-001",
+      "nodeId": "urn:cop:handler:llm-b",
+      "advertisedCapabilities": ["analyze-corpus", "read-content-ref"],
+      "mandateId": "urn:cop:mandate:cli-analysis-001",
+      "payloadInspected": false,
+      "disposition": "accepted",
+      "observedAt": "2026-07-20T10:03:01Z"
+    },
+    {
+      "decisionId": "urn:cop:route:cli-analysis-return-001",
+      "packetId": "urn:cop:packet:cli-analysis-return-001",
+      "nodeId": "urn:cop:software:cop-cli",
+      "advertisedCapabilities": ["return-report"],
+      "mandateId": "urn:cop:mandate:cli-analysis-001",
+      "payloadInspected": false,
+      "disposition": "accepted",
+      "observedAt": "2026-07-20T10:07:01Z"
+    }
+  ],
+  "custodyTransitions": [],
+  "expected": {
+    "valid": true,
+    "executableLaws": [
+      "accessible-continuation",
+      "causal-parentage",
+      "correlated-return",
+      "envelope-only-routing",
+      "explicit-mission-mutation",
+      "explicit-transition-semantics",
+      "mandate-non-amplification",
+      "traceable-disposition"
+    ],
+    "openQuestions": [
+      "actual-content-accessibility",
+      "model-nondeterminism",
+      "reference-retention"
+    ]
+  }
+}

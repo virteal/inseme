@@ -1,0 +1,389 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inseme.org/experimental/cop/packet-kernel/0.1/schema.json",
+  "title": "COP Experimental Packet Kernel Scenario Vector",
+  "description": "Non-normative executable vocabulary for issue #21.",
+  "$ref": "#/$defs/ScenarioVector",
+  "$defs": {
+    "Identifier": {
+      "type": "string",
+      "pattern": "^urn:cop:[a-z0-9][a-z0-9:._-]*$"
+    },
+    "NonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "StringSet": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "MissionRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["missionId", "version"],
+      "properties": {
+        "missionId": { "$ref": "#/$defs/Identifier" },
+        "version": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "ReturnPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trigger", "recipientId", "mode"],
+      "properties": {
+        "trigger": { "$ref": "#/$defs/NonEmptyString" },
+        "recipientId": { "$ref": "#/$defs/Identifier" },
+        "mode": { "enum": ["physical", "logical", "either"] },
+        "threshold": { "type": "integer", "minimum": 1 },
+        "destination": { "$ref": "#/$defs/NonEmptyString" }
+      }
+    },
+    "Mission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "missionId",
+        "version",
+        "statement",
+        "successCriteria",
+        "returnPolicy",
+        "status"
+      ],
+      "properties": {
+        "missionId": { "$ref": "#/$defs/Identifier" },
+        "version": { "type": "integer", "minimum": 1 },
+        "previousVersion": { "type": "integer", "minimum": 1 },
+        "changedByControlPacketId": { "$ref": "#/$defs/Identifier" },
+        "statement": { "$ref": "#/$defs/NonEmptyString" },
+        "successCriteria": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/NonEmptyString" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "returnPolicy": { "$ref": "#/$defs/ReturnPolicy" },
+        "status": { "enum": ["active", "satisfied", "failed", "superseded"] }
+      }
+    },
+    "Mandate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mandateId",
+        "principalId",
+        "granteeId",
+        "missionIds",
+        "allowedCapabilities",
+        "allowedActions",
+        "canDelegate",
+        "issuedAt"
+      ],
+      "properties": {
+        "mandateId": { "$ref": "#/$defs/Identifier" },
+        "principalId": { "$ref": "#/$defs/Identifier" },
+        "granteeId": { "$ref": "#/$defs/Identifier" },
+        "missionIds": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Identifier" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "allowedCapabilities": { "$ref": "#/$defs/StringSet" },
+        "allowedActions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "accept",
+              "process",
+              "continue",
+              "return",
+              "control",
+              "transfer-custody",
+              "record-testimony"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "canDelegate": { "type": "boolean" },
+        "issuedAt": { "$ref": "#/$defs/NonEmptyString" },
+        "expiresAt": { "$ref": "#/$defs/NonEmptyString" }
+      }
+    },
+    "ReferencedContent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "uri", "mediaType", "accessibleToHandlers"],
+      "properties": {
+        "mode": { "const": "reference" },
+        "uri": { "$ref": "#/$defs/NonEmptyString" },
+        "mediaType": { "$ref": "#/$defs/NonEmptyString" },
+        "digest": { "$ref": "#/$defs/NonEmptyString" },
+        "accessibleToHandlers": { "type": "boolean" }
+      }
+    },
+    "EmbeddedContent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "value", "mediaType", "accessibleToHandlers"],
+      "properties": {
+        "mode": { "const": "embedded" },
+        "value": { "type": "object" },
+        "mediaType": { "$ref": "#/$defs/NonEmptyString" },
+        "digest": { "$ref": "#/$defs/NonEmptyString" },
+        "accessibleToHandlers": { "type": "boolean" }
+      }
+    },
+    "PhysicalContent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "carrierId", "mediaType", "accessibleToHandlers"],
+      "properties": {
+        "mode": { "const": "physical" },
+        "carrierId": { "$ref": "#/$defs/Identifier" },
+        "mediaType": { "$ref": "#/$defs/NonEmptyString" },
+        "accessibleToHandlers": { "type": "boolean" }
+      }
+    },
+    "ContentRef": {
+      "oneOf": [
+        { "$ref": "#/$defs/ReferencedContent" },
+        { "$ref": "#/$defs/EmbeddedContent" },
+        { "$ref": "#/$defs/PhysicalContent" }
+      ]
+    },
+    "PacketEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "missionId",
+        "missionVersion",
+        "mandateId",
+        "kind",
+        "requiredCapabilities",
+        "contentClass",
+        "hopLimit"
+      ],
+      "properties": {
+        "missionId": { "$ref": "#/$defs/Identifier" },
+        "missionVersion": { "type": "integer", "minimum": 1 },
+        "mandateId": { "$ref": "#/$defs/Identifier" },
+        "kind": { "enum": ["work", "control", "return"] },
+        "requiredCapabilities": { "$ref": "#/$defs/StringSet" },
+        "contentClass": { "$ref": "#/$defs/NonEmptyString" },
+        "hopLimit": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "ContinuationContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stateRef", "accessibleToNextHandler"],
+      "properties": {
+        "stateRef": { "$ref": "#/$defs/ContentRef" },
+        "accessibleToNextHandler": { "type": "boolean" }
+      }
+    },
+    "ControlEffect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fromVersion", "toVersion", "conditionsObserved"],
+      "properties": {
+        "fromVersion": { "type": "integer", "minimum": 1 },
+        "toVersion": { "type": "integer", "minimum": 1 },
+        "conditionsObserved": { "$ref": "#/$defs/StringSet" }
+      }
+    },
+    "Packet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packetId",
+        "lineageId",
+        "mission",
+        "kind",
+        "relation",
+        "parentPacketIds",
+        "correlationId",
+        "envelope",
+        "content",
+        "emittedAt",
+        "emitterId"
+      ],
+      "properties": {
+        "packetId": { "$ref": "#/$defs/Identifier" },
+        "lineageId": { "$ref": "#/$defs/Identifier" },
+        "mission": { "$ref": "#/$defs/MissionRef" },
+        "kind": { "enum": ["work", "control", "return"] },
+        "relation": {
+          "enum": ["emit", "continue", "copy", "fork", "replica", "control", "return"]
+        },
+        "parentPacketIds": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Identifier" },
+          "uniqueItems": true
+        },
+        "correlationId": { "$ref": "#/$defs/Identifier" },
+        "envelope": { "$ref": "#/$defs/PacketEnvelope" },
+        "content": { "$ref": "#/$defs/ContentRef" },
+        "continuation": { "$ref": "#/$defs/ContinuationContext" },
+        "control": { "$ref": "#/$defs/ControlEffect" },
+        "emittedAt": { "$ref": "#/$defs/NonEmptyString" },
+        "emitterId": { "$ref": "#/$defs/Identifier" }
+      }
+    },
+    "ReturnDisposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "recipientId", "mode"],
+      "properties": {
+        "status": { "enum": ["forwarded", "delivered", "failed"] },
+        "recipientId": { "$ref": "#/$defs/Identifier" },
+        "mode": { "enum": ["physical", "logical"] }
+      }
+    },
+    "Outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcomeId",
+        "packetId",
+        "handlerId",
+        "mandateId",
+        "disposition",
+        "usedCapabilities",
+        "producedPacketIds",
+        "traceRef",
+        "recordedAt"
+      ],
+      "properties": {
+        "outcomeId": { "$ref": "#/$defs/Identifier" },
+        "packetId": { "$ref": "#/$defs/Identifier" },
+        "handlerId": { "$ref": "#/$defs/Identifier" },
+        "mandateId": { "$ref": "#/$defs/Identifier" },
+        "disposition": {
+          "enum": ["refused", "accepted", "partial", "continued", "returned", "completed", "timed-out"]
+        },
+        "usedCapabilities": { "$ref": "#/$defs/StringSet" },
+        "producedPacketIds": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Identifier" },
+          "uniqueItems": true
+        },
+        "traceRef": { "$ref": "#/$defs/NonEmptyString" },
+        "returnDisposition": { "$ref": "#/$defs/ReturnDisposition" },
+        "recordedAt": { "$ref": "#/$defs/NonEmptyString" },
+        "reason": { "$ref": "#/$defs/NonEmptyString" }
+      }
+    },
+    "RoutingDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decisionId",
+        "packetId",
+        "nodeId",
+        "advertisedCapabilities",
+        "mandateId",
+        "payloadInspected",
+        "disposition",
+        "observedAt"
+      ],
+      "properties": {
+        "decisionId": { "$ref": "#/$defs/Identifier" },
+        "packetId": { "$ref": "#/$defs/Identifier" },
+        "nodeId": { "$ref": "#/$defs/Identifier" },
+        "advertisedCapabilities": { "$ref": "#/$defs/StringSet" },
+        "mandateId": { "$ref": "#/$defs/Identifier" },
+        "payloadInspected": { "type": "boolean" },
+        "disposition": { "enum": ["offered", "accepted", "refused", "timed-out", "fallback"] },
+        "nextNodeId": { "$ref": "#/$defs/Identifier" },
+        "observedAt": { "$ref": "#/$defs/NonEmptyString" }
+      }
+    },
+    "CustodyTransition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transitionId",
+        "carrierId",
+        "packetId",
+        "fromCustodianId",
+        "toCustodianId",
+        "relation",
+        "evidenceRef",
+        "observedAt"
+      ],
+      "properties": {
+        "transitionId": { "$ref": "#/$defs/Identifier" },
+        "carrierId": { "$ref": "#/$defs/Identifier" },
+        "packetId": { "$ref": "#/$defs/Identifier" },
+        "fromCustodianId": { "$ref": "#/$defs/Identifier" },
+        "toCustodianId": { "$ref": "#/$defs/Identifier" },
+        "relation": { "enum": ["transfer", "return"] },
+        "evidenceRef": { "$ref": "#/$defs/NonEmptyString" },
+        "observedAt": { "$ref": "#/$defs/NonEmptyString" }
+      }
+    },
+    "ExpectedEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["valid", "executableLaws", "openQuestions"],
+      "properties": {
+        "valid": { "const": true },
+        "executableLaws": { "$ref": "#/$defs/StringSet" },
+        "openQuestions": { "$ref": "#/$defs/StringSet" }
+      }
+    },
+    "ScenarioVector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "scenario",
+        "description",
+        "missions",
+        "mandates",
+        "packets",
+        "outcomes",
+        "routingDecisions",
+        "custodyTransitions",
+        "expected"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "0.1.0-experimental" },
+        "scenario": { "enum": ["immortelle-bottle", "cli-llm-continuation", "intermittent-fractanet-node"] },
+        "description": { "$ref": "#/$defs/NonEmptyString" },
+        "missions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Mission" },
+          "minItems": 1
+        },
+        "mandates": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Mandate" },
+          "minItems": 1
+        },
+        "packets": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Packet" },
+          "minItems": 1
+        },
+        "outcomes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Outcome" },
+          "minItems": 1
+        },
+        "routingDecisions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/RoutingDecision" }
+        },
+        "custodyTransitions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/CustodyTransition" }
+        },
+        "expected": { "$ref": "#/$defs/ExpectedEvidence" }
+      }
+    }
+  }
+}

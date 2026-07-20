@@ -1,0 +1,364 @@
+{
+  "schemaVersion": "0.1.0-experimental",
+  "scenario": "immortelle-bottle",
+  "description": "A uniquely identified Casa Mariani Immortelle bottle travels under human custody, changes mission under prior mandate, and returns to its source.",
+  "missions": [
+    {
+      "missionId": "urn:cop:mission:immortelle-001",
+      "version": 1,
+      "statement": "Reach three Corsican custodians outside Corsica and collect a testimony from each.",
+      "successCriteria": ["three-corsican-custodians-recorded"],
+      "returnPolicy": {
+        "trigger": "three-corsican-custodians-recorded",
+        "recipientId": "urn:cop:principal:casa-mariani",
+        "mode": "physical",
+        "threshold": 3,
+        "destination": "Musee Mariani des Possibles, Corte"
+      },
+      "status": "superseded"
+    },
+    {
+      "missionId": "urn:cop:mission:immortelle-001",
+      "version": 2,
+      "previousVersion": 1,
+      "changedByControlPacketId": "urn:cop:packet:immortelle-control-001",
+      "statement": "Return after two verified Corsican custodians because the pre-authorized early-return condition was observed.",
+      "successCriteria": ["two-corsican-custodians-recorded", "carrier-returned-to-source"],
+      "returnPolicy": {
+        "trigger": "two-corsican-custodians-recorded",
+        "recipientId": "urn:cop:principal:casa-mariani",
+        "mode": "physical",
+        "threshold": 2,
+        "destination": "Musee Mariani des Possibles, Corte"
+      },
+      "status": "satisfied"
+    }
+  ],
+  "mandates": [
+    {
+      "mandateId": "urn:cop:mandate:immortelle-community-001",
+      "principalId": "urn:cop:principal:casa-mariani",
+      "granteeId": "urn:cop:collective:human-custodians",
+      "missionIds": ["urn:cop:mission:immortelle-001"],
+      "allowedCapabilities": [
+        "apply-preauthorized-control",
+        "identify-carrier",
+        "record-testimony",
+        "return-carrier",
+        "transfer-custody"
+      ],
+      "allowedActions": [
+        "accept",
+        "continue",
+        "control",
+        "process",
+        "record-testimony",
+        "return",
+        "transfer-custody"
+      ],
+      "canDelegate": false,
+      "issuedAt": "2026-08-01T09:00:00Z"
+    }
+  ],
+  "packets": [
+    {
+      "packetId": "urn:cop:packet:immortelle-emit-001",
+      "lineageId": "urn:cop:lineage:immortelle-001",
+      "mission": { "missionId": "urn:cop:mission:immortelle-001", "version": 1 },
+      "kind": "work",
+      "relation": "emit",
+      "parentPacketIds": [],
+      "correlationId": "urn:cop:correlation:immortelle-001",
+      "envelope": {
+        "missionId": "urn:cop:mission:immortelle-001",
+        "missionVersion": 1,
+        "mandateId": "urn:cop:mandate:immortelle-community-001",
+        "kind": "work",
+        "requiredCapabilities": ["identify-carrier", "transfer-custody"],
+        "contentClass": "identified-physical-carrier",
+        "hopLimit": 12
+      },
+      "content": {
+        "mode": "physical",
+        "carrierId": "urn:cop:carrier:casa-mariani-immortelle-000001",
+        "mediaType": "application/vnd.casa-mariani.bottle",
+        "accessibleToHandlers": true
+      },
+      "emittedAt": "2026-08-01T10:00:00Z",
+      "emitterId": "urn:cop:principal:casa-mariani"
+    },
+    {
+      "packetId": "urn:cop:packet:immortelle-continue-001",
+      "lineageId": "urn:cop:lineage:immortelle-001",
+      "mission": { "missionId": "urn:cop:mission:immortelle-001", "version": 1 },
+      "kind": "work",
+      "relation": "continue",
+      "parentPacketIds": ["urn:cop:packet:immortelle-emit-001"],
+      "correlationId": "urn:cop:correlation:immortelle-001",
+      "envelope": {
+        "missionId": "urn:cop:mission:immortelle-001",
+        "missionVersion": 1,
+        "mandateId": "urn:cop:mandate:immortelle-community-001",
+        "kind": "work",
+        "requiredCapabilities": ["record-testimony", "transfer-custody"],
+        "contentClass": "identified-physical-carrier",
+        "hopLimit": 11
+      },
+      "content": {
+        "mode": "physical",
+        "carrierId": "urn:cop:carrier:casa-mariani-immortelle-000001",
+        "mediaType": "application/vnd.casa-mariani.bottle",
+        "accessibleToHandlers": true
+      },
+      "continuation": {
+        "stateRef": {
+          "mode": "reference",
+          "uri": "https://trace.casa-mariani.example/bottles/000001/history/1",
+          "mediaType": "application/vnd.cop.trace+json",
+          "digest": "sha256:trace-immortelle-001",
+          "accessibleToHandlers": true
+        },
+        "accessibleToNextHandler": true
+      },
+      "emittedAt": "2026-08-12T12:00:00Z",
+      "emitterId": "urn:cop:human:custodian-a"
+    },
+    {
+      "packetId": "urn:cop:packet:immortelle-control-001",
+      "lineageId": "urn:cop:lineage:immortelle-001",
+      "mission": { "missionId": "urn:cop:mission:immortelle-001", "version": 1 },
+      "kind": "control",
+      "relation": "control",
+      "parentPacketIds": ["urn:cop:packet:immortelle-continue-001"],
+      "correlationId": "urn:cop:correlation:immortelle-001",
+      "envelope": {
+        "missionId": "urn:cop:mission:immortelle-001",
+        "missionVersion": 1,
+        "mandateId": "urn:cop:mandate:immortelle-community-001",
+        "kind": "control",
+        "requiredCapabilities": ["apply-preauthorized-control"],
+        "contentClass": "mission-control",
+        "hopLimit": 10
+      },
+      "content": {
+        "mode": "embedded",
+        "value": { "operation": "activate-early-return", "reason": "second-verified-custodian" },
+        "mediaType": "application/vnd.cop.control+json",
+        "accessibleToHandlers": true
+      },
+      "control": {
+        "fromVersion": 1,
+        "toVersion": 2,
+        "conditionsObserved": ["second-verified-custodian", "valid-preauthorization"]
+      },
+      "emittedAt": "2026-08-25T15:00:00Z",
+      "emitterId": "urn:cop:human:custodian-b"
+    },
+    {
+      "packetId": "urn:cop:packet:immortelle-continue-002",
+      "lineageId": "urn:cop:lineage:immortelle-001",
+      "mission": { "missionId": "urn:cop:mission:immortelle-001", "version": 2 },
+      "kind": "work",
+      "relation": "continue",
+      "parentPacketIds": ["urn:cop:packet:immortelle-control-001"],
+      "correlationId": "urn:cop:correlation:immortelle-001",
+      "envelope": {
+        "missionId": "urn:cop:mission:immortelle-001",
+        "missionVersion": 2,
+        "mandateId": "urn:cop:mandate:immortelle-community-001",
+        "kind": "work",
+        "requiredCapabilities": ["return-carrier"],
+        "contentClass": "identified-physical-carrier",
+        "hopLimit": 9
+      },
+      "content": {
+        "mode": "physical",
+        "carrierId": "urn:cop:carrier:casa-mariani-immortelle-000001",
+        "mediaType": "application/vnd.casa-mariani.bottle",
+        "accessibleToHandlers": true
+      },
+      "continuation": {
+        "stateRef": {
+          "mode": "reference",
+          "uri": "https://trace.casa-mariani.example/bottles/000001/history/2",
+          "mediaType": "application/vnd.cop.trace+json",
+          "digest": "sha256:trace-immortelle-002",
+          "accessibleToHandlers": true
+        },
+        "accessibleToNextHandler": true
+      },
+      "emittedAt": "2026-08-25T15:01:00Z",
+      "emitterId": "urn:cop:human:custodian-b"
+    },
+    {
+      "packetId": "urn:cop:packet:immortelle-return-001",
+      "lineageId": "urn:cop:lineage:immortelle-001",
+      "mission": { "missionId": "urn:cop:mission:immortelle-001", "version": 2 },
+      "kind": "return",
+      "relation": "return",
+      "parentPacketIds": ["urn:cop:packet:immortelle-continue-002"],
+      "correlationId": "urn:cop:correlation:immortelle-001",
+      "envelope": {
+        "missionId": "urn:cop:mission:immortelle-001",
+        "missionVersion": 2,
+        "mandateId": "urn:cop:mandate:immortelle-community-001",
+        "kind": "return",
+        "requiredCapabilities": ["return-carrier"],
+        "contentClass": "identified-physical-carrier",
+        "hopLimit": 8
+      },
+      "content": {
+        "mode": "physical",
+        "carrierId": "urn:cop:carrier:casa-mariani-immortelle-000001",
+        "mediaType": "application/vnd.casa-mariani.bottle",
+        "accessibleToHandlers": true
+      },
+      "emittedAt": "2026-09-01T10:00:00Z",
+      "emitterId": "urn:cop:human:return-courier"
+    }
+  ],
+  "outcomes": [
+    {
+      "outcomeId": "urn:cop:outcome:immortelle-001",
+      "packetId": "urn:cop:packet:immortelle-emit-001",
+      "handlerId": "urn:cop:human:custodian-a",
+      "mandateId": "urn:cop:mandate:immortelle-community-001",
+      "disposition": "continued",
+      "usedCapabilities": ["identify-carrier", "transfer-custody"],
+      "producedPacketIds": ["urn:cop:packet:immortelle-continue-001"],
+      "traceRef": "trace:immortelle:001",
+      "recordedAt": "2026-08-12T12:00:00Z"
+    },
+    {
+      "outcomeId": "urn:cop:outcome:immortelle-002",
+      "packetId": "urn:cop:packet:immortelle-continue-001",
+      "handlerId": "urn:cop:human:custodian-b",
+      "mandateId": "urn:cop:mandate:immortelle-community-001",
+      "disposition": "continued",
+      "usedCapabilities": ["record-testimony", "transfer-custody"],
+      "producedPacketIds": ["urn:cop:packet:immortelle-control-001"],
+      "traceRef": "trace:immortelle:002",
+      "recordedAt": "2026-08-25T15:00:00Z"
+    },
+    {
+      "outcomeId": "urn:cop:outcome:immortelle-control-001",
+      "packetId": "urn:cop:packet:immortelle-control-001",
+      "handlerId": "urn:cop:human:custodian-b",
+      "mandateId": "urn:cop:mandate:immortelle-community-001",
+      "disposition": "continued",
+      "usedCapabilities": ["apply-preauthorized-control"],
+      "producedPacketIds": ["urn:cop:packet:immortelle-continue-002"],
+      "traceRef": "trace:immortelle:control:001",
+      "recordedAt": "2026-08-25T15:01:00Z"
+    },
+    {
+      "outcomeId": "urn:cop:outcome:immortelle-003",
+      "packetId": "urn:cop:packet:immortelle-continue-002",
+      "handlerId": "urn:cop:human:return-courier",
+      "mandateId": "urn:cop:mandate:immortelle-community-001",
+      "disposition": "continued",
+      "usedCapabilities": ["return-carrier"],
+      "producedPacketIds": ["urn:cop:packet:immortelle-return-001"],
+      "traceRef": "trace:immortelle:003",
+      "recordedAt": "2026-09-01T10:00:00Z"
+    },
+    {
+      "outcomeId": "urn:cop:outcome:immortelle-return-001",
+      "packetId": "urn:cop:packet:immortelle-return-001",
+      "handlerId": "urn:cop:principal:casa-mariani",
+      "mandateId": "urn:cop:mandate:immortelle-community-001",
+      "disposition": "returned",
+      "usedCapabilities": ["return-carrier"],
+      "producedPacketIds": [],
+      "traceRef": "trace:immortelle:return:001",
+      "returnDisposition": {
+        "status": "delivered",
+        "recipientId": "urn:cop:principal:casa-mariani",
+        "mode": "physical"
+      },
+      "recordedAt": "2026-09-10T09:00:00Z"
+    }
+  ],
+  "routingDecisions": [
+    {
+      "decisionId": "urn:cop:route:immortelle-001",
+      "packetId": "urn:cop:packet:immortelle-emit-001",
+      "nodeId": "urn:cop:human:custodian-a",
+      "advertisedCapabilities": ["identify-carrier", "transfer-custody"],
+      "mandateId": "urn:cop:mandate:immortelle-community-001",
+      "payloadInspected": false,
+      "disposition": "accepted",
+      "observedAt": "2026-08-12T11:59:00Z"
+    },
+    {
+      "decisionId": "urn:cop:route:immortelle-002",
+      "packetId": "urn:cop:packet:immortelle-continue-001",
+      "nodeId": "urn:cop:human:custodian-b",
+      "advertisedCapabilities": ["record-testimony", "transfer-custody"],
+      "mandateId": "urn:cop:mandate:immortelle-community-001",
+      "payloadInspected": false,
+      "disposition": "accepted",
+      "observedAt": "2026-08-25T14:59:00Z"
+    },
+    {
+      "decisionId": "urn:cop:route:immortelle-return-001",
+      "packetId": "urn:cop:packet:immortelle-return-001",
+      "nodeId": "urn:cop:principal:casa-mariani",
+      "advertisedCapabilities": ["return-carrier"],
+      "mandateId": "urn:cop:mandate:immortelle-community-001",
+      "payloadInspected": false,
+      "disposition": "accepted",
+      "observedAt": "2026-09-10T08:59:00Z"
+    }
+  ],
+  "custodyTransitions": [
+    {
+      "transitionId": "urn:cop:custody:immortelle-001",
+      "carrierId": "urn:cop:carrier:casa-mariani-immortelle-000001",
+      "packetId": "urn:cop:packet:immortelle-emit-001",
+      "fromCustodianId": "urn:cop:principal:casa-mariani",
+      "toCustodianId": "urn:cop:human:custodian-a",
+      "relation": "transfer",
+      "evidenceRef": "trace:immortelle:custody:001",
+      "observedAt": "2026-08-01T10:00:00Z"
+    },
+    {
+      "transitionId": "urn:cop:custody:immortelle-002",
+      "carrierId": "urn:cop:carrier:casa-mariani-immortelle-000001",
+      "packetId": "urn:cop:packet:immortelle-continue-001",
+      "fromCustodianId": "urn:cop:human:custodian-a",
+      "toCustodianId": "urn:cop:human:custodian-b",
+      "relation": "transfer",
+      "evidenceRef": "trace:immortelle:custody:002",
+      "observedAt": "2026-08-25T15:00:00Z"
+    },
+    {
+      "transitionId": "urn:cop:custody:immortelle-return-001",
+      "carrierId": "urn:cop:carrier:casa-mariani-immortelle-000001",
+      "packetId": "urn:cop:packet:immortelle-return-001",
+      "fromCustodianId": "urn:cop:human:return-courier",
+      "toCustodianId": "urn:cop:principal:casa-mariani",
+      "relation": "return",
+      "evidenceRef": "trace:immortelle:custody:return:001",
+      "observedAt": "2026-09-10T09:00:00Z"
+    }
+  ],
+  "expected": {
+    "valid": true,
+    "executableLaws": [
+      "accessible-continuation",
+      "causal-parentage",
+      "correlated-return",
+      "envelope-only-routing",
+      "explicit-mission-mutation",
+      "explicit-transition-semantics",
+      "mandate-non-amplification",
+      "traceable-disposition"
+    ],
+    "openQuestions": [
+      "cryptographic-identity",
+      "physical-custody-truth",
+      "privacy-and-erasure"
+    ]
+  }
+}
