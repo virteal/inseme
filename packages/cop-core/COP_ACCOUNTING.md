@@ -4,26 +4,42 @@ author: "Jean Hugues Noël Robert, baron Mariani"
 affiliation: "Institut Mariani / C.O.R.S.I.C.A."
 license: "CC BY-SA 4.0"
 date: "2026-07-20"
-version: "0.1-draft"
-status: "working-source — human validation required"
+last_modified_at: "2026-07-20"
+published_at: "2026-07-20"
+version: "1.0"
+status: "published — human validated"
 document_role: "source"
 document_kind: "protocol-profile"
 visibility: "public"
-lifecycle_state: "working"
+lifecycle_state: "active"
 update_policy: "UP-DECISION-REVIEW"
-human_validation_required: true
+human_validation_required: false
+canonical_path: "inseme/packages/cop-core/COP_ACCOUNTING.md"
+canonical_url: "https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop-core/COP_ACCOUNTING.md"
+revision_note: "v1.0 is the first human-validated public source. It consolidates the v0.4 arbitration on account URLs, proportional real-time traces, privacy and consent, cellular community boundaries, democratic safeguards, express mandates, experimental profiles, consolidation, and exploratory confederated Kudos work."
+ai_assisted_by:
+  - name: "OpenAI Codex"
+    role: "AI-assisted co-drafting, corpus retrieval, structuring, and consistency review"
+    principal: "Jean Hugues Noël Robert"
+    responsibility: "Human author retains validation and publication authority"
 provenance:
   origin_type: "conversation"
   origin_repository: "JeanHuguesRobert/inseme"
-  origin_ref: "local-draft"
+  origin_ref: "conversation checkpoint R52"
   origin_date: "2026-07-20"
   derived_from:
     - "packages/cop-core/Invariants.md"
     - "packages/cop-core/COP_STORE_AND_PERSISTENCE.md"
     - "packages/cop-core/COP_IDENTITY.md"
+    - "https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/kudos.md"
+    - "https://github.com/acorsica/Kudos/blob/main/README.md"
+    - "https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/fractanet.md"
+    - "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md"
 review:
-  status: "unreviewed"
-  reviewed_by: []
+  status: "human-validated"
+  reviewed_by:
+    - "Jean Hugues Noël Robert"
+  reviewed_at: "2026-07-20"
 tags:
   - cop
   - accounting
@@ -48,20 +64,57 @@ This profile is:
 - normative for any COP application that allocates, consumes, transfers, reserves, creates, or
   destroys consequential resources;
 - optional for COP applications that perform no such act;
-- a draft requiring human validation before being declared stable.
+- a human-validated public source whose unresolved extensions are explicitly identified as future
+  work rather than silently treated as settled protocol.
 
 The accounting trace MUST exist before reputation, market signals, or routing weights are computed.
 Good intentions, transient agent memory, and application logs are not accounting records.
 
+### 1.1 Documentary dependency rule
+
+This profile uses ordinary accounting vocabulary without redefining every generally known term. Any
+Corpus-specific concept, however, MUST be linked to the document that defines it. A concept for
+which no such document exists MUST be marked as unstabilized and MUST NOT silently acquire
+normative force through this profile alone.
+
+The dependency status used below is:
+
+- **canonical** — the link is the intended source definition;
+- **working source** — the document defines the current concept but still requires stabilization;
+- **missing source** — the concept is used provisionally and requires its own source document.
+
+### 1.2 Corpus concept anchors
+
+| Concept used here | Defining or closest source | Status in this profile |
+|---|---|---|
+| COP durable primitives and Views | [COP Store — Minimal Persistence Model](COP_STORE_AND_PERSISTENCE.md) | working source |
+| COP invariants | [COP Protocol Invariants](Invariants.md) | canonical within COP |
+| Identity, subject, actor, principal, and mandate fields | [COP/Identity](COP_IDENTITY.md) | working source |
+| Act, mandate, responsibility, and imputability | [Traçabilité des actes](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/traceabilite_des_actes.md) and [Act, mandate and responsibility](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/act_mandate_responsibility.md) | working sources |
+| Fractanet | [Fractanet — Generalized Control Planes for Heterogeneous Packet Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/fractanet.md) | working source |
+| Cognitive packet | [Cognitive Packets](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md) | working source |
+| Cognitive-packet routing | [Cognitive Packet Switching](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packet_switching.md) | working source |
+| Packet Attractor | [Packet Attractor — Fractanet Distributed Demand and Capability Routing](../../research/packet_attractor_fractanet.md) | working source |
+| Kudos | [Kudos source paper](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/kudos.md), [Kudos repository status](https://github.com/acorsica/Kudos/blob/main/STATUT.md), and [Kudos repository introduction](https://github.com/acorsica/Kudos/blob/main/README.md) | working sources; see §8 for unresolved differences |
+| Community rules and equality of users | [Constitution minimale des communs](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/constitution_minimale_des_communs.md) | working source |
+| Kudocracy | [Kudocracy](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/kudocracy.md) and [COP/Kudocracy](COP_KUDOCRACY.md) | working sources |
+| Stigmergy | [Stigmergie sans limite haute](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/stigmergie_sans_limite_haute.md) | working source |
+| Traceability of consequential acts | [Traçabilité des actes](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/traceabilite_des_actes.md) | working source |
+| Informational gravity (`gravité informationnelle`) | [Informational Gravity — Contextual Attraction for Cognitive-Packet Routing](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/informational_gravity.md) | local working-source draft; human validation and publication pending |
+| Confederated circulation of Kudos | No defining document found that captures the bilateral agreements and upward-subsidiarity model | **missing source; §8 records requirements but does not define the political model** |
+
 ## 2. Scope
 
-COP/Accounting is a multidimensional resource-accounting profile. It covers monetary and
+COP/Accounting is a multidimensional resource-accounting profile for COP-supervised systems such
+as [Fractanet](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/fractanet.md). It
+covers monetary and
 non-monetary resources, including:
 
 - legal tender and bank balances;
 - complementary units such as Kudos;
 - energy, compute, storage, bandwidth, materials, and time;
-- cognitive-packet budgets;
+- [cognitive-packet](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md)
+  budgets;
 - reservations, quotas, rights of use, and other capacities.
 
 This profile does not claim that every resource has a monetary value. Quantity, unit, valuation,
@@ -115,7 +168,9 @@ primitive.
 
 ### 5.1 Complete attribution
 
-Every consequential posting MUST identify:
+Consistently with the Corpus doctrine of
+[traceable consequential acts](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/traceabilite_des_actes.md),
+every consequential posting MUST identify:
 
 - the transaction and posting;
 - the account and accountable subject;
@@ -168,8 +223,11 @@ could overspend the budget.
 
 ### 5.6 Bounded delegation
 
-An act performed by a human, software agent, cognitive packet, or node on behalf of another subject
-MUST reference a valid mandate. The verifier MUST reject an act outside the mandate's resource,
+An act performed by a human, software agent,
+[cognitive packet](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md),
+or node on behalf of another subject MUST reference a valid mandate, in the sense developed by
+[Act, mandate and responsibility](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/act_mandate_responsibility.md).
+The verifier MUST reject an act outside the mandate's resource,
 amount, purpose, recipient class, time, or delegation bounds.
 
 No mandate may infer unbounded authority from silence.
@@ -222,8 +280,18 @@ availability, statements, and accounting-derived routing inputs MUST replay iden
 
 ### 5.12 Reputation and routing are derived signals
 
-Reputation, market signals, and information-gravity weights are contextual `View`s. They are not
+Reputation, market signals, and provisionally named information-gravity weights are contextual
+`View`s. They are not
 assets, balances, or authoritative facts about a subject.
+
+The expression **informational gravity** (`gravité informationnelle`) is defined by
+[Informational Gravity — Contextual Attraction for Cognitive-Packet Routing](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/informational_gravity.md),
+whose local working-source draft still requires human validation and publication. Until that source
+is stabilized, implementations MUST treat it as an experimental Fractanet concept rather than a
+stable COP invariant. Its relationship to the
+[Packet Attractor](../../research/packet_attractor_fractanet.md) remains explicit: an attractor is a
+capacity declaration; informational gravity is a contextual relation between one packet and one
+candidate capacity.
 
 The COP routing layer:
 
@@ -298,7 +366,55 @@ This example specifies accounting mechanics only. It does not presume that Kudos
 fixed to the euro, legally regulated as a payment instrument, or implemented in any particular
 community regime.
 
-## 8. Kudos activation modes
+## 8. Kudos accounting profile
+
+### 8.1 Doctrinal anchors
+
+Kudos is not introduced here as an arbitrary example. It is a Corpus concept with its own sources:
+
+- the [Kudos source paper](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/kudos.md)
+  defines a Maussian complementary currency superposed on a real euro-denominated transaction;
+- the [Kudos repository status](https://github.com/acorsica/Kudos/blob/main/STATUT.md) identifies the
+  dedicated repository as doctrinal, editorial, and pre-operational;
+- the [Kudos repository introduction](https://github.com/acorsica/Kudos/blob/main/README.md) states
+  that the gift/counter-gift layer is public, voluntary, nominative, transparent, and traceable;
+- the [Kudos concept note](https://github.com/acorsica/Kudos/blob/main/concept.md) develops recognition,
+  social memory, circulation, community autonomy, and non-accumulation;
+- the [Kudos glossary](https://github.com/acorsica/Kudos/blob/main/annexes/glossaire.md) defines the
+  dedicated vocabulary, including complementary currency, recognition, demurrage, community,
+  circulation, and velocity.
+
+The source paper presently describes euro backing and at least partial convertibility as part of
+the proposed design. Later design clarification has established that convertibility and fixed euro
+parity may need to remain inactive until a lawful implementation path is available. Because that
+clarification is not yet consolidated in a dedicated Kudos source document, this profile MUST NOT
+pretend that the documentary discrepancy is resolved. The three modes below are an accounting
+mechanism for making the active legal and operational regime explicit; they do not amend the Kudos
+doctrine by themselves.
+
+### 8.2 Trace semantics
+
+A Kudos gift represented through COP/Accounting MUST retain the defining properties stated by the
+Kudos sources:
+
+- it is voluntary, nominative, and publicly attributable;
+- it is a trace of recognition or counter-gift, not a hidden purchase record;
+- its connection to a genuine euro-denominated exchange can be auditable without publishing what
+  was purchased, private banking data, or unrelated transactions;
+- its giver, recipient, community, governing policy, quantity, time, and delegation chain are
+  explicit;
+- when an agent, node, or cognitive packet gives Kudos for a principal, the public trace MUST
+  distinguish the principal from the technical actor;
+- circulation, demurrage, common-pool contribution, redistribution, backing, redemption, and
+  cross-community exchange MUST be recorded as distinct event types rather than inferred from one
+  opaque balance change.
+
+This explicit trace allows Kudos to contribute to stigmergic guidance in the sense explored by
+[Stigmergie sans limite haute](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/stigmergie_sans_limite_haute.md).
+Its use by routing remains governed by §5.12 and does not turn Kudos into an unquestionable or
+global reputation score.
+
+### 8.3 Activation modes
 
 The ledger MUST make the active community regime explicit. At minimum, it MUST distinguish:
 
@@ -312,15 +428,27 @@ The ledger MUST make the active community regime explicit. At minimum, it MUST d
 Changing mode MUST be a governed, prospective, versioned event. It MUST NOT retroactively change
 the rights attached to prior Kudos.
 
-Community-specific demurrage, common-pool distribution, weekly redistribution, eligibility, and
+Consistently with the democratic community framework of the
+[Constitution minimale des communs](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/constitution_minimale_des_communs.md),
+community-specific demurrage, common-pool distribution, weekly redistribution, eligibility, and
 cross-community compensation MUST be explicit policies referenced by the relevant transactions.
 They are not universal COP invariants.
+
+The confederal model—bilateral agreements, upward subsidiarity, and cross-community clearing—does
+not yet have a defining source identified by this audit. Implementations MUST therefore keep these
+features disabled or explicitly experimental until that source exists and the accounting-domain
+boundaries are specified.
 
 If a regime asserts a backing rule such as “one Kudos created implies one euro reserved,” the
 projector MUST expose reserve coverage separately from Kudos circulation, and conformance tests MUST
 prove that unauthorized issuance cannot create apparent coverage.
 
 ## 9. Day-one Fractanet requirements
+
+This section specializes the
+[Fractanet source architecture](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/fractanet.md),
+the [Cognitive Packet](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md)
+format, and [Cognitive Packet Switching](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packet_switching.md).
 
 Before a cognitive packet can consume a consequential resource or influence accounting-derived
 routing, the reference implementation MUST provide:
@@ -358,17 +486,147 @@ A conforming implementation MUST demonstrate that:
 Regime-specific tests MUST be added for reserve coverage, demurrage, redistribution, exchange, or
 convertibility whenever those features are activated.
 
-## 11. Matters requiring human decision
+## 11. Human arbitration and remaining openings
 
-Before stabilization, the corpus maintainers must validate:
+### 11.1 Canonical account address
 
-- the canonical account-address format and accounting-domain boundary;
-- the minimum lifecycle and finality rules for each resource class;
-- the privacy/disclosure taxonomy and who may authorize redaction;
-- the distinction between community, confederation, and external settlement domains;
-- the anti-manipulation rules applied to Kudos-derived reputation;
-- the routing policy's safeguards against concentration and self-reinforcing attraction;
-- the legal and operational activation criteria for each Kudos mode;
-- whether this profile becomes a COP-wide normative profile or remains mandatory only within the
-  Fractanet implementation profile.
+The initial canonical account address is a URL. For example,
+`https://jhn.baronsmariani.org/` is intended to be Jean Hugues Noël Robert's address.
 
+The address is an identity and discovery root, not merely the location of an HTML page. The exact
+resources exposed there require a separate design study. Expected possibilities include:
+
+- a human- and search-engine-readable identity description;
+- machine-readable metadata and capability discovery;
+- links to public accounts, mandates, policies, keys, and service descriptions;
+- an optional conversational or `chat/completions`-compatible intelligence endpoint;
+- explicit content negotiation, versioning, and privacy boundaries.
+
+No optional service is implied merely because the URL exists. Failure or absence of an intelligent
+endpoint MUST NOT invalidate the stable address.
+
+### 11.2 Lifecycle, hard real time, and proportional trace
+
+The lifecycle MUST support extremely short acts because hard real time is not out of scope. A valid
+lifecycle may be no longer than the execution of an interrupt request (IRQ).
+
+This does not require a durable Event for every interrupt. In accordance with
+[Constitution minimale des communs](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/constitution_minimale_des_communs.md)
+and [Traçabilité des actes](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/traceabilite_des_actes.md),
+trace depth is proportional to consequence. For an interrupt stream, meaningful durable traces may
+be limited to transitions such as:
+
+```text
+normal -> overload: excessive interrupts, node cannot keep up
+overload -> normal: service recovered
+```
+
+Intermediate telemetry MAY be sampled or retained for audit and optimization. It does not become a
+full consequential-act ledger unless policy, observed harm, or law requires it. The transition,
+threshold, responsible policy, and any lost or deferred work MUST remain auditable.
+
+### 11.3 Privacy, minimum disclosure, and informed consent
+
+Disclosure follows this order:
+
+1. disclose what applicable law requires;
+2. otherwise disclose only what is necessary for the stated purpose;
+3. inform the data owner of foreseeable consequences;
+4. provide understandable explanations and resources so consent can be as informed as reasonably
+   possible;
+5. record the applicable legal basis, consent, refusal, withdrawal, or exceptional mandate.
+
+Consent MUST NOT be inferred merely from technical access, silence, or inability to understand an
+opaque notice. Public accounting proofs SHOULD minimize the private content they expose.
+
+### 11.4 Communities as bounded cells
+
+A community is modeled as a cell with a frontier: what is inside, what is outside, and how the two
+interact must be distinguishable. The frontier may depend on personal intentions, community rules,
+mandates, and external circumstances.
+
+This applies to territorial and thematic communities and also to a personal **Society of Mind**:
+the community formed by a person and their assistants or cognitive prostheses. Membership,
+residency, visiting status, delegation, data flow, resource custody, and external settlement MUST
+not be inferred from one another.
+
+The frontier is governed and permeable, not an assertion of isolation. Cross-frontier acts require
+explicit interfaces, policies, traces, and—where resources move—accounting-domain semantics.
+
+### 11.5 Anti-manipulation and democratic safeguards
+
+At minimum, anti-manipulation rules MUST be either:
+
+- directly decided by citizens; or
+- applied under maximal transparency for mandate holders, maximum lawful privacy for other users,
+  traceable consequential acts, and correction without rewriting history.
+
+Routing weights, thresholds, decay, exclusions, exploration rules, concentration safeguards, and
+audit procedures are democratically decided, changeable, and auditable. A technical operator MUST
+NOT silently substitute its own political judgment.
+
+The system cannot guarantee that citizens will save themselves from every collective error. It can
+guarantee that they have inspectable information, accountable mandates, reversible rules where
+possible, and effective means to deliberate and correct.
+
+### 11.6 Normal, degraded, and crisis regimes
+
+Transitions between normal, degraded, and crisis modes MUST be bounded by **express mandates**
+prepared, deliberated, and voted in advance through democratic procedures, as defined by
+[Mandats express et démocratie capable de crise](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/democratie_crise_mandats_express.md).
+
+Each transition policy MUST identify triggering evidence, authorized actors, temporary powers,
+resource limits, prohibited acts, trace requirements, review, revocation, expiry, and automatic
+return conditions. Crisis does not authorize an unbounded blank cheque.
+
+### 11.7 Protocol profile versus experimental deployment
+
+In this document, a **protocol profile** means a reusable set of optional COP semantics and
+conformance rules. It does not mean a personal ideological profile and does not impose one local
+regime on everyone.
+
+The deployments chosen by Jean Hugues Noël Robert, C.O.R.S.I.C.A., or an initial community are
+experiments and, hopefully, reproducible examples. Other entities remain free to duplicate,
+improve, reject, or adapt them to local needs, subject to the interoperability claims they choose to
+make. A system MUST NOT claim conformity to a named profile while violating that profile's stated
+invariants, but nobody is required to adopt the profile.
+
+This distinction is anti-totalitarian: interoperability is offered; political uniformity is not.
+
+### 11.8 Validation and authorship trace
+
+Jean Hugues Noël Robert performed the human validation and retains authority over later revisions.
+OpenAI Codex contributed corpus retrieval, drafting, structuring, consistency checks,
+and objections under his mandate. This contribution is disclosed in the frontmatter without
+transferring human responsibility to software.
+
+### 11.9 Consolidation required
+
+The decisions developed in conversation must be consolidated into the sovereign documents that
+define Kudos, informational gravity, communities, identity, and COP profiles. COP/Accounting should
+reference those sources rather than become their substitute.
+
+### 11.10 Confederated Kudos circulation remains exploratory
+
+A dedicated document is needed for the confederation around Kudos circulation. It MUST initially
+remain an exploratory working source, not a canonical doctrine: bilateral agreements, upward
+subsidiarity, compensation, and community autonomy expose unresolved questions that require
+experience and further human deliberation.
+
+At minimum, that exploration should examine:
+
+- how two communities establish, authenticate, amend, suspend, and terminate an agreement;
+- whether Kudos cross the frontier, are wrapped, converted, cleared, or merely recognized;
+- how double spending and replay are prevented across intermittently connected communities;
+- who owns and controls reserves, bridge liquidity, and settlement accounts;
+- how insolvency, reserve shortfall, disputed settlement, reversal, and community exit are handled;
+- which community's rules apply to demurrage, redistribution, disclosure, taxation, and disputes;
+- how identity assurance and Sybil resistance work without forcing universal identity disclosure;
+- how exchange or compensation rates are decided without creating a hidden central bank;
+- how bilateral agreements compose into longer paths without silently granting transitive trust;
+- how partitions, degraded mode, crisis mode, and later reconciliation affect finality;
+- how bridge operators are prevented from becoming capture points;
+- how users obtain intelligible warnings about legal, financial, privacy, and irreversibility risks.
+
+These are openings, not presumed answers. The first confederation document should map choices,
+failure modes, and experiments before proposing stable rules.
