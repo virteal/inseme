@@ -292,6 +292,7 @@ export const BRIQUES = [
         "position": "header"
       }
     ],
+    "tools": [],
     "configSchema": {
       "auxilia_default_hub_id": {
         "type": "string",
@@ -437,6 +438,9 @@ export const BRIQUES = [
         "protected": false
       }
     ],
+    "menuItems": [],
+    "tools": [],
+    "configSchema": {},
     "hasPublic": false
   },
   {
@@ -464,6 +468,9 @@ export const BRIQUES = [
         "protected": false
       }
     ],
+    "menuItems": [],
+    "tools": [],
+    "configSchema": {},
     "hasPublic": false
   },
   {
@@ -554,6 +561,7 @@ export const BRIQUES = [
         "briqueId": "fil"
       }
     ],
+    "configSchema": {},
     "hasPublic": true,
     "prompts": {
       "system": "# Système du Fil\nTu es un assistant spécialisé dans la gestion des actualités du Fil. Ton rôle est d'aider les utilisateurs à trouver et publier des informations pertinentes."
@@ -589,6 +597,7 @@ export const BRIQUES = [
         "position": "sidebar"
       }
     ],
+    "tools": [],
     "configSchema": {},
     "hasPublic": false
   },
@@ -1146,6 +1155,10 @@ export const BRIQUES = [
   {
     "id": "kudocracy",
     "name": "Kudocracy",
+    "routes": [],
+    "menuItems": [],
+    "tools": [],
+    "configSchema": {},
     "hasPublic": false
   }
 ];

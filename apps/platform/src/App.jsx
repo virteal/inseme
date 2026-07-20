@@ -119,9 +119,9 @@ export function App() {
             </FeatureRoute>
           }
         />
-        {/* Dynamic Briques Routes */}
-        {BRIQUES.map((brique) =>
-          brique.routes.map((route) => (
+        {/* Dynamic Briques Routes — skip briques without routes (e.g. library packages) */}
+        {(BRIQUES || []).flatMap((brique) =>
+          (brique.routes || []).map((route) => (
             <Route
               key={`${brique.id}-${route.path}`}
               path={route.path.endsWith("/*") ? route.path : `${route.path}/*`}

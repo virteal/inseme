@@ -825,10 +825,11 @@ export const BRIQUES = ${JSON.stringify(
       id: b.id,
       name: b.name,
       feature: b.feature,
-      routes: b.routes,
-      menuItems: b.menuItems,
-      tools: b.tools?.map((t) => ({ ...t, briqueId: b.id })),
-      configSchema: b.configSchema,
+      // Always emit an array — App.jsx maps routes; library packages may omit routes
+      routes: Array.isArray(b.routes) ? b.routes : [],
+      menuItems: Array.isArray(b.menuItems) ? b.menuItems : [],
+      tools: b.tools?.map((t) => ({ ...t, briqueId: b.id })) || [],
+      configSchema: b.configSchema || {},
       hasPublic: existsSync(join(b._briqueDir, "public")),
       prompts: b.prompts
         ? Object.fromEntries(
