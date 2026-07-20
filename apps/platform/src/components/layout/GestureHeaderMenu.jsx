@@ -8,6 +8,7 @@ import { useCurrentUser } from "@inseme/cop-host";
 import { getSupabase } from "../../lib/supabase.js";
 import { isFeatureEnabled, FEATURES } from "../../lib/features.js";
 import FacebookPagePlugin from "../common/FacebookPagePlugin";
+import AuthModal from "../common/AuthModal";
 import { BRIQUES } from "../../generated/brique-registry.js";
 
 // This component replaces the modal hamburger menu with a gesture-revealed header menu
@@ -29,6 +30,7 @@ export default function GestureHeaderMenu({ activeEdges = ["top"] }) {
   const [openDirection, setOpenDirection] = useState(null); // null or "top"/"bottom"/"left"/"right"
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileButton, setShowMobileButton] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const { currentUser } = useCurrentUser();
 
   // Check if mobile on mount and resize
@@ -527,7 +529,11 @@ export default function GestureHeaderMenu({ activeEdges = ["top"] }) {
                   </div>
                 ) : (
                   <button
-                    onClick={closeMenu}
+                    type="button"
+                    onClick={() => {
+                      setShowAuthModal(true);
+                      closeMenu();
+                    }}
                     style={{
                       background: "var(--color-action-primary)",
                       color: "var(--color-bg-app)",
@@ -552,6 +558,12 @@ export default function GestureHeaderMenu({ activeEdges = ["top"] }) {
           )}
         </div>
       ))}
+      {showAuthModal && (
+        <AuthModal
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={() => setShowAuthModal(false)}
+        />
+      )}
     </>,
     document.body
   );
