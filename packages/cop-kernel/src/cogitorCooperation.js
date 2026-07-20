@@ -26,20 +26,17 @@
  * Apps/briques/runners can use them to avoid reinventing Cogitor cooperation.
  */
 
-import { createContinuationDescriptor, createStackCallPacket } from "./continuation.js"; // note: continuation.js re-exports or we import direct; adjust if needed
-import { genId, nowIso } from "./Cop-kerneltasks.js"; // reuse id/time helpers if exported, else local
+import { createContinuationDescriptor } from "./continuation.js";
+import { createStackCallPacket } from "./stdio.js";
 
-// Local fallbacks if not exported
-function localGenId() {
+// Local id/time helpers (not exported from Cop-kerneltasks.js)
+function _genId() {
   if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
   return String(Date.now()) + "-" + Math.random().toString(16).slice(2);
 }
-function localNowIso() {
+function _nowIso() {
   return new Date().toISOString();
 }
-
-const _genId = typeof genId === "function" ? genId : localGenId;
-const _nowIso = typeof nowIso === "function" ? nowIso : localNowIso;
 
 /**
  * Create a "forked" continuation for a sub-Cogitor call.
