@@ -205,6 +205,9 @@ supabase/schema.sql                  # dump de contexte, NE PAS exécuter
 Les **secrets** (API keys, OAuth, `service_role`) viennent de `inseme/.env` → vault via script (comme sur Pertitellu).  
 Pas de copie croisée des secrets *d’un autre projet Supabase*.
 
+> **À mémoriser (design)** : le vault existe pour éviter l’enfer du copier-coller de clés dans Netlify.
+> Réf. canonique : [`CONFIGURATION_VAULT.md`](./CONFIGURATION_VAULT.md).
+
 #### Secrets → vault (edge functions)
 
 Les edge/backend lisent `instance_config` avec le client **service_role** (Netlify env : `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` du projet JHN).  

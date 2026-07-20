@@ -35,8 +35,14 @@ Applique toutes les migrations SQL sur la nouvelle base Supabase.
 ### 4. Configuration du Vault
 ```bash
 node scripts/provision-instance.js --subdomain=[nom] --step-vault
+# Dogfood / workstation → vault (copie complète des clés réelles du .env) :
+# node scripts/push-env-to-vault.js --apply --verbose
 ```
 Injecte les variables d'identité et les secrets dans la table `instance_config`.
+
+> **Pourquoi un vault ?** Pour ne **pas** recopier toutes les clés API dans l’UI Netlify.
+> Netlify ne garde que `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` ; le reste est lu depuis
+> `instance_config` (Node functions **et** Edge Deno). Voir **[CONFIGURATION_VAULT.md](./CONFIGURATION_VAULT.md)**.
 
 ### 5. Enregistrement dans le Hub
 ```bash

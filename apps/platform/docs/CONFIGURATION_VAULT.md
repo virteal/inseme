@@ -1,315 +1,152 @@
-OBSOLETE
+# Configuration Vault (`instance_config`)
 
-# Système de Configuration Centralisé (Vault)
-
-## Vue d'ensemble
-
-Le projet Survey utilise un système de configuration centralisé ("vault") qui permet de gérer les
-variables d'environnement de manière unifiée à travers tous les composants de l'application.
-
-### Problématique résolue
-
-Avant le vault, la gestion des variables d'environnement était dispersée :
-
-- Multiples noms pour la même variable (`SUPABASE_URL`, `VITE_SUPABASE_URL`, etc.)
-- Pas de source de vérité unique
-- Duplication de code pour les fallbacks
-- Difficultés de maintenance
-
-### Solution
-
-Un système à trois niveaux avec fallback automatique :
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    getConfig("key")                     │
-└─────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────┐
-│  1. VAULT (table instance_config dans Supabase)         │
-│     → Source de vérité pour les configurations partagées│
-└─────────────────────────────────────────────────────────┘
-                           │ (si absent)
-                           ▼
-┌─────────────────────────────────────────────────────────┐
-│  2. VARIABLES D'ENVIRONNEMENT                           │
-│     → .env local ou variables Netlify                   │
-│     → Mapping automatique des variantes (VITE_*, etc.)  │
-└─────────────────────────────────────────────────────────┘
-                           │ (si absent)
-                           ▼
-┌─────────────────────────────────────────────────────────┐
-│  3. VALEURS PAR DÉFAUT                                  │
-│     → Définies dans DEFAULT_VALUES                      │
-└─────────────────────────────────────────────────────────┘
-```
+**Status:** canonical (2026-07)  
+**Scope:** every Inseme / platform Supabase instance (Pertitellu, JHN, future personal or civic)
 
 ---
 
-## Architecture
+## Why this exists (remember this)
 
-### Modules de configuration
+Without a vault, every new API key had to be copy-pasted into the **Netlify UI** (and again for
+previews, other sites, other instances). That was operational hell: easy to forget, easy to mix
+projects (e.g. Pertitellu vs JHN), impossible to review in git, painful for multi-instance.
 
-| Environnement         | Module                                         | Usage                            |
-| --------------------- | ---------------------------------------------- | -------------------------------- |
-| **Frontend**          | `src/lib/instanceConfig.js`                    | Composants React, hooks          |
-| **Netlify Functions** | `netlify/lib/instanceConfig.js`                | API serverless Node.js           |
-| **Edge Functions**    | `netlify/edge-functions/lib/instanceConfig.js` | API Deno                         |
-| **Scripts CLI**       | `scripts/lib/config.js`                        | Scripts d'ingestion, maintenance |
+**The vault was built so Netlify only needs the minimum bootstrap credentials**, while the full set
+of keys and identity config lives in the instance database and is shared by all runtimes that can
+reach that project.
 
-### Table Supabase `instance_config`
-
-```sql
-CREATE TABLE IF NOT EXISTS instance_config (
-  key TEXT PRIMARY KEY,
-  value TEXT NOT NULL,
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Index pour les recherches rapides
-CREATE INDEX IF NOT EXISTS idx_instance_config_key ON instance_config(key);
+```text
+Workstation SoT:  inseme/.env
+        │
+        │  push-env-to-vault / loadConfig align
+        ▼
+Supabase table:   public.instance_config   ← "the vault"
+        ▲
+        │  service_role client reads full table
+        │
+   ┌────┴────┬──────────────────┬─────────────────────┐
+   │ Local   │ Netlify Node     │ Netlify Edge (Deno) │
+   │ Vite /  │ functions/       │ edge-functions/     │
+   │ scripts │ (legacy Node)    │ (modern Deno)       │
+   └─────────┴──────────────────┴─────────────────────┘
 ```
+
+| Runtime | How it gets secrets | Bootstrap outside vault |
+|---------|---------------------|-------------------------|
+| **Local** (Vite, scripts) | `.env` and/or vault if `SERVICE_ROLE` present | Full `.env` is fine for dogfood |
+| **Netlify Functions** (`netlify/functions/`, **Node**) | `instanceConfig.backend.js` → admin client → vault | `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` of **this** project |
+| **Netlify Edge** (`netlify/edge-functions/`, **Deno**) | `instanceConfig.edge.js` → admin client → vault | Same two vars in Netlify env |
+
+Public HTTP config endpoints **must not** expose `is_secret=true` rows (code filter + RLS).
 
 ---
 
-## Utilisation
+## Design principles
 
-### Pattern de base
-
-```javascript
-import { loadConfig, getConfig } from "./lib/instanceConfig.js";
-
-// Charger la configuration (une fois au démarrage)
-await loadConfig();
-
-// Récupérer une valeur
-const apiKey = getConfig("openai_api_key");
-
-// Avec valeur par défaut
-const cityName = getConfig("city_name", "Corte");
-```
-
-### Dans les scripts CLI
-
-```javascript
-import { initializeConfig_Backend, newSupabase, getConfig } from "TODO";
-
-await initialize();
-
-// Clients pré-configurés
-const supabase = newSupabase();
-
-// Accès aux valeurs
-const model = getConfig("openai_heavy_model", "gpt-4o");
-```
-
-### Dans les Netlify Functions (Node.js)
-
-```javascript
-import { initializeConfig_Edge, getConfig, newSupabase } from "TODO";
-
-export async function handler(event, context) {
-  await initializeConfig_Edge();
-
-  const supabase = newSupabase();
-  const cityName = getConfig("city_name");
-
-  // ...
-}
-```
+1. **One vault per Supabase project** — never share Pertitellu secrets into JHN or the reverse.
+2. **Workstation → vault is a full copy of real capabilities** — every non-empty, non-placeholder
+   key available in `inseme/.env` should be pushable (`push-env-to-vault --apply`).
+3. **Empty / placeholders stay empty** — e.g. `ANTHROPIC_API_KEY=` or `your_…` must not be stored
+   as a fake key (code would believe the provider is configured).
+4. **Netlify stays thin** — only bootstrap to open the vault; not a second secret spreadsheet.
+5. **Migrations for public/identity schema seeds** — CLI `supabase/migrations/`; secrets never
+   committed in migration SQL (use the push script).
 
 ---
 
-## Clés de configuration
+## Table (conceptual)
 
-### Mapping des variables d'environnement
+See live migrations under `apps/platform/supabase/migrations/` for the authoritative DDL.
 
-Le système mappe automatiquement les clés normalisées vers les variantes d'environnement :
+Important columns:
 
-| Clé normalisée              | Variables d'environnement recherchées         |
-| --------------------------- | --------------------------------------------- |
-| `supabase_url`              | `SUPABASE_URL`, `VITE_SUPABASE_URL`           |
-| `supabase_anon_key`         | `SUPABASE_ANON_KEY`, `VITE_SUPABASE_ANON_KEY` |
-| `supabase_service_role_key` | `SUPABASE_SERVICE_ROLE_KEY`                   |
-| `openai_api_key`            | `OPENAI_API_KEY`                              |
-| `openai_heavy_model`        | `OPENAI_HEAVY_MODEL`                          |
-| `openai_small_model`        | `OPENAI_SMALL_MODEL`                          |
-| `anthropic_api_key`         | `ANTHROPIC_API_KEY`                           |
-| `gemini_api_key`            | `GEMINI_API_KEY`                              |
-| `city_name`                 | `VITE_CITY_NAME`, `CITY_NAME`                 |
-| `party_name`                | `VITE_PARTY_NAME`, `PARTY_NAME`               |
-| `app_url`                   | `VITE_APP_URL`, `APP_URL`, `URL`              |
-| `assistant_name`            | `VITE_ASSISTANT_NAME`, `ASSISTANT_NAME`       |
+| Column | Role |
+|--------|------|
+| `key` | Normalized name (`openai_api_key`, not `OPENAI_API_KEY`) |
+| `value` / `value_json` | Payload |
+| `is_secret` | Never serve to browsers / public config API |
+| `is_public` | Safe for public config snapshot |
+| `category` | identity, branding, features, secrets, … |
 
-### Valeurs par défaut
-
-```javascript
-const DEFAULT_VALUES = {
-  city_name: "Corte",
-  party_name: "Petit Parti",
-  assistant_name: "Ophélia",
-  openai_heavy_model: "gpt-4o",
-  openai_small_model: "gpt-4o-mini",
-  embed_model: "text-embedding-3-small",
-  port: 8888,
-  // ... voir le code source pour la liste complète
-};
-```
+RLS (JHN+): secret rows are **not** readable by `anon` / `authenticated`. **Service role** bypasses
+RLS (edge/backend admin path).
 
 ---
 
-## Cache et performance
+## Day-to-day commands
 
-### Stratégie de cache
+```powershell
+cd C:\tweesic\inseme\apps\platform
 
-- **TTL** : 5 minutes (configurable via `CONFIG_CACHE_TTL_MS`)
-- **Invalidation** : Automatique après expiration
-- **Fallback** : Si le vault est inaccessible, utilise les variables d'environnement
+# Dry-run: what would go to the vault
+node scripts/push-env-to-vault.js
 
-```javascript
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+# Complete copy of non-empty / non-placeholder .env keys → vault
+node scripts/push-env-to-vault.js --apply --verbose
+
+# Schema / public seed only (no secrets in git)
+supabase db push
+supabase migration list
 ```
 
-### Rechargement forcé
+Source implementation:
 
-```javascript
-// Forcer le rechargement de la configuration
-await loadConfig(true); // true = force refresh
-```
+- CLI push / env mapping: `apps/platform/scripts/lib/config.js`, `scripts/push-env-to-vault.js`
+- Frontend: `@inseme/cop-host` + `instanceConfig.client.js`
+- Node functions: `packages/cop-host/src/config/instanceConfig.backend.js` + `runtime/function.js`
+- Deno edge: `packages/cop-host/src/config/instanceConfig.edge.js` + `runtime/edge.js`
 
 ---
 
-## Migration depuis l'ancien système
+## Netlify: two function families
 
-### Avant (dispersé)
+Netlify has (names vary in docs):
 
-```javascript
-// Ancien code - À ÉVITER
-const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabase = createClient(url, key);
-```
+1. **Serverless / Functions** — traditionally **Node.js** → our `netlify/functions/`
+2. **Edge Functions** — **Deno** → our `netlify/edge-functions/`
 
-### Après (centralisé)
-
-```javascript
-// Nouveau code - RECOMMANDÉ
-import { loadConfig, createSupabaseClient } from "./lib/config.js";
-
-await loadConfig();
-const supabase = createSupabaseClient();
-```
+Both should load config through the vault after bootstrapping with the **same project’s**
+service role. Prefer the matching adapter (`backend` vs `edge`); avoid importing Node-only modules
+from Deno edge.
 
 ---
 
-## Ajout d'une nouvelle variable
+## Instance lifecycle (mental model)
 
-### 1. Ajouter au mapping (si variantes)
-
-Dans chaque module `instanceConfig.js` :
-
-```javascript
-const ENV_KEY_MAPPING = {
-  // ... existant
-  ma_nouvelle_cle: ["MA_NOUVELLE_CLE", "VITE_MA_NOUVELLE_CLE"],
-};
+```text
+1. Create blank Supabase project
+2. CLI migrations (schema + public identity seed)
+3. inseme/.env → JHN URL + service_role + all workstation keys
+4. push-env-to-vault --apply
+5. Netlify site env: only SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (+ build vars)
+6. Local: pnpm platform:dev against same project
 ```
 
-### 2. Ajouter une valeur par défaut (optionnel)
-
-```javascript
-const DEFAULT_VALUES = {
-  // ... existant
-  ma_nouvelle_cle: "valeur_par_defaut",
-};
-```
-
-### 3. Utiliser dans le code
-
-```javascript
-const maValeur = getConfig("ma_nouvelle_cle", "fallback");
-```
+Personal instance dogfood: `docs/RUNBOOK_JHN_PERSONAL_INSTANCE.md`.  
+Multi-instance overview: `docs/ARCHITECTURE_MULTI_INSTANCE.md`.  
+Provisioning: `docs/PROVISIONING_GUIDE.md` (step-vault).
 
 ---
 
-## Stockage en base de données
+## Anti-patterns
 
-### Insérer une configuration
-
-```sql
-INSERT INTO instance_config (key, value)
-VALUES ('city_name', 'Ma Ville')
-ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW();
-```
-
-### Lire les configurations
-
-```sql
-SELECT key, value, updated_at FROM instance_config ORDER BY key;
-```
-
-### Supprimer une configuration
-
-```sql
-DELETE FROM instance_config WHERE key = 'city_name';
-```
+| Don't | Do |
+|-------|-----|
+| Paste every API key into Netlify UI | Vault + thin Netlify bootstrap |
+| Copy vault rows between Supabase projects blindly | Per-project push from that instance’s SoT |
+| Store `your_anthropic_key_here` in vault | Leave empty until real key exists |
+| Commit secrets in SQL migrations | `push-env-to-vault` only |
+| Use Pertitellu service_role with JHN URL | Always pair URL + keys of one project |
 
 ---
 
-## Sécurité
+## Related
 
-### Bonnes pratiques
-
-1. **Secrets sensibles** : Stockez les clés API en variables d'environnement Netlify, pas en base
-2. **RLS** : La table `instance_config` doit être protégée (lecture seule pour les fonctions)
-3. **Logs** : Ne jamais logger les valeurs des clés sensibles
-
-### Variables à NE PAS stocker en base
-
-- `SUPABASE_SERVICE_ROLE_KEY` (accès admin)
-- `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, etc.
-- Tout secret de production
-
-### Variables OK pour le vault
-
-- `city_name`, `party_name`, `assistant_name`
-- Configurations d'affichage
-- Paramètres de modèles IA (noms, pas clés)
-- parent_hub_api_key (clé API du hub parent, stockez-la dans le vault si vous souhaitez autoriser le
-  forwarding depuis ce hub)
+- `apps/platform/scripts/push-env-to-vault.js`
+- `apps/platform/scripts/sync-secrets.js` (hygiene / dry-run; `.env` remains SoT on workstation)
+- `apps/platform/docs/RUNBOOK_JHN_PERSONAL_INSTANCE.md`
+- `apps/platform/docs/ARCHITECTURE_MULTI_INSTANCE.md` (section vault / Netlify thin env)
 
 ---
 
-## Dépannage
-
-### La configuration ne se charge pas
-
-```javascript
-// Vérifier que loadConfig() est appelé
-await loadConfig();
-console.log("Config loaded:", getConfig("city_name"));
-```
-
-### Valeur incorrecte retournée
-
-1. Vérifier la priorité : vault > env > défaut
-2. Inspecter la table `instance_config`
-3. Vérifier les variables d'environnement : `netlify env:list`
-
-### Cache obsolète
-
-```javascript
-// Forcer le rechargement
-await loadConfig(true);
-```
-
----
-
-## Références
-
-- [Migration SQL](../supabase/migrations/old_applied/20251205_instance_vault.sql)
-- [Module Frontend](../src/common/config/instanceConfig.client.js)
-- [Module Netlify Functions](../src/common/config/instanceConfig.backend.js)
-- [Module Edge Functions](../src/common/config/instanceConfig.edge.js)
-- [Module Core](../src/common/config/instanceConfig.core.js)
+_Last updated: 2026-07-20 — rewrote obsolete Survey-era notes; records “avoid Netlify key hell” rationale and Node vs Deno edge paths._
