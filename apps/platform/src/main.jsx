@@ -20,7 +20,6 @@ import { initSupabaseWithInstance } from "./lib/supabase.js";
 import {
   initializeInstance,
   loadInstanceConfig,
-  getSupabase,
   getConfig,
 } from "./common/config/instanceConfig.client.js";
 import { updatePageMeta } from "./lib/meta.js";
@@ -196,22 +195,23 @@ async function bootstrap() {
       );
     }
 
-    // Initialiser la configuration globale, not admin / no secrets
-    await initializeInstance(null, false, instance);
+    // 1) Client Supabase (singleton cop-host) — AVANT tout getSupabase()
+    //    Ne pas appeler getSupabase() ici : le singleton n'existe pas encore.
+    console.log(
+      `🔧 initSupabaseWithInstance: url=${instance.supabaseUrl ? "yes" : "no"} key=${
+        instance.supabaseAnonKey ? "yes" : "no"
+      }`
+    );
+    const supabase = initSupabaseWithInstance(instance);
+
+    // 2) Config vault (même client — évite deux clients disjoints)
+    await initializeInstance(supabase, false);
     await loadInstanceConfig();
 
-    // Mettre à jour les métadonnées de la page (titre, SEO)
+    // 3) Métadonnées de page (titre, SEO) — après config
     updatePageMeta();
 
-    // TODO: handle not default case
-    instance.supabase = getSupabase();
-
-    // 3. Initialiser Supabase module  avec cette  supabaseClient
-    // Debug trace, is there or not a supabase instance already?
-    console.log(`🔧 initSupabaseWithInstance: ${instance.supabase ? "yes" : "no"}`);
-    initSupabaseWithInstance(instance);
-
-    // 5. Stocker l'instance pour accès global
+    // 4) Stocker l'instance pour accès global
     window.__OPHELIA_INSTANCE__ = instance;
 
     // 6. Rendre l'application React
