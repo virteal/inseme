@@ -1,7 +1,7 @@
 // src/App.jsx
 
 import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Methodologie from "./pages/Methodologie";
 import GlobalStatusIndicator from "./components/common/GlobalStatusIndicator";
 import Audit from "./pages/Audit";
@@ -235,35 +235,10 @@ export function App() {
         <Route path="/oauth/facebook/deletion-status" element={<FacebookDeletionStatus />} />
         <Route path="/oauth/:provider/callback" element={<OAuthCallback />} />
         <Route path="/oauth/consent" element={<OAuthConsent />} />
-        <Route
-          path="/missions/*"
-          element={
-            <FeatureRoute feature={FEATURES.MISSIONS}>
-              <Routes>
-                <Route index element={<MissionsPage />} />
-                <Route path="new" element={<MissionCreate />} />
-                <Route path=":id" element={<MissionDetail />} />
-                <Route path=":id/edit" element={<MissionCreate />} />
-              </Routes>
-            </FeatureRoute>
-          }
-        />
-
-        <Route
-          path="/tasks/*"
-          element={
-            <FeatureRoute feature={FEATURES.MISSIONS}>
-              <Routes>
-                <Route index element={<TaskProjectsPage />} />
-                <Route path="new" element={<TaskProjectCreate />} />
-                <Route path=":id" element={<TaskProjectDetail />} />
-                <Route path=":projectId/task/new" element={<TaskCreate />} />
-                <Route path=":projectId/task/:taskId" element={<TaskDetail />} />
-                <Route path=":projectId/task/:taskId/edit" element={<TaskEdit />} />
-              </Routes>
-            </FeatureRoute>
-          }
-        />
+        {/* Missions/tasks UI lives in brique-tasks as /projects/* (see BRIQUES registry).
+            Legacy /missions and /tasks paths referenced removed components (MissionsPage, etc.). */}
+        <Route path="/missions/*" element={<Navigate to="/projects" replace />} />
+        <Route path="/tasks/*" element={<Navigate to="/projects" replace />} />
 
         <Route
           path="/fil/*"
