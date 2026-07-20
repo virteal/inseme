@@ -312,8 +312,31 @@ Tests :
 
 - [ ] `http://localhost:5173/` charge
 - [ ] `http://localhost:5173/?instance=jhn` ne casse pas (mono-instance)
+- [ ] Signup (email réel ou domaine autorisé — `@example.com` peut être refusé)
 - [ ] Login
 - [ ] Section admin / vault si présente
+
+#### Auth smoke notes (2026-07-20)
+
+1. `pnpm platform:dev` must be `pnpm --filter platform run dev` (fixed in root `package.json`).
+2. Projet Auth : confirmation email **activée** par défaut → login renvoie `email_not_confirmed` jusqu’à confirmation.
+3. Contournement dogfooding (CLI, pas SQL Editor) :
+
+```powershell
+cd C:\tweesic\inseme\apps\platform
+supabase db query --linked "UPDATE auth.users SET email_confirmed_at = COALESCE(email_confirmed_at, now()) WHERE email = 'VOTRE@email';"
+```
+
+4. Ou désactiver *Confirm email* dans Dashboard → Authentication → Providers → Email (ok pour instance perso / dev).
+5. Trigger `handle_new_user` crée `public.users` (rôle `user`) au signup.
+6. Promo admin (après login OK) :
+
+```powershell
+supabase db query --linked "UPDATE public.users SET role = 'admin' WHERE email = 'VOTRE@email';"
+```
+
+7. `sb_publishable_…` fonctionne pour REST/Auth sur ce projet ; tables `users` + `instance_config` répondent 200.
+8. Warning Vite possible (scan `cop-kernel` / `createStackCallPacket`) : pré-bundling skippé, HTML/modules principaux servis — suivre si une page COP casse.
 
 ---
 
