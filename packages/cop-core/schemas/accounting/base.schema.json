@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cop.dev/schemas/accounting/base.schema.json",
+  "title": "COP Accounting Base Types",
+  "description": "Base types for COP/Accounting events and artifacts. Provides exact quantity representation, account identifiers, and common governance fields.",
+  "definitions": {
+    "ExactQuantity": {
+      "type": "object",
+      "description": "Exact quantity representation using decimal coefficient and scale. No binary floating-point arithmetic for authoritative quantities.",
+      "required": ["coefficient", "scale"],
+      "properties": {
+        "coefficient": {
+          "type": "string",
+          "description": "Decimal coefficient as string to preserve precision. Can be positive or negative. Example: '123456789' for 1.23456789 when scale=8, or '-500' for -5.00 when scale=2."
+        },
+        "scale": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18,
+          "description": "Number of decimal places. Example: 8 for 1.23456789, 2 for -5.00."
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit of measure for the quantity. Required for authoritative accounting."
+        }
+      }
+    },
+    "AccountIdentifier": {
+      "type": "string",
+      "description": "Canonical account identifier. MUST accept HTTPS URLs including identity URLs like https://jhn.baronsmariani.org/. Format: one of (1) canonical HTTPS URL, (2) URN, (3) local account reference in form 'local:{type}:{id}'.",
+      "format": "uri",
+      "pattern": "^(https://|urn:|local:|kudos:)"
+    },
+    "AccountingDomain": {
+      "type": "string",
+      "description": "Accounting domain scope. Balancing is enforced within (resourceType, unit, accountingDomain). Different domains never balance implicitly.",
+      "examples": ["kudos.public", "kudos.private", "fiat.eur", "resource.cpu", "reputation.trust"]
+    },
+    "ResourceType": {
+      "type": "string",
+      "description": "Type of resource being accounted. Examples: 'kudos', 'fiat', 'cpu-time', 'storage', 'reputation'.",
+      "examples": ["kudos", "fiat", "cpu-time", "storage", "reputation", "carbon-credits"]
+    },
+    "DisclosureClass": {
+      "type": "string",
+      "enum": ["public", "restricted", "private", "confidential"],
+      "description": "Disclosure class controlling visibility in projections. Public projections must not require private purchase content."
+    },
+    "GovernanceContext": {
+      "type": "object",
+      "description": "Governance fields for accountability and mandate compliance.",
+      "required": ["actor_subject_id", "principal_subject_id"],
+      "properties": {
+        "actor_subject_id": {
+          "type": "string",
+          "description": "The subject who physically acts. The agent or person executing the action."
+        },
+        "actor_subject_kind": {
+          "type": "string",
+          "enum": ["natural_person_living", "ai_agent", "technical_node", "legal_entity_collective", "role_or_office"],
+          "description": "Kind of the acting subject."
+        },
+        "principal_subject_id": {
+          "type": "string",
+          "description": "The subject on whose behalf the action is taken. Distinct from actor when delegation occurs."
+        },
+        "mandate_id": {
+          "type": "string",
+          "description": "Reference to the mandate artifact authorizing this action. Required when actor != principal."
+        },
+        "capacity_basis": {
+          "type": "string",
+          "description": "Legal or organizational basis for the capacity to act (e.g., role, contract, court order)."
+        },
+        "acting_as": {
+          "type": "string",
+          "description": "Role or office under which the actor is exercising capacity."
+        }
+      }
+    },
+    "Posting": {
+      "type": "object",
+      "description": "A single posting within a transaction. Debits and credits must balance exactly.",
+      "required": ["account", "quantity", "posting_type"],
+      "properties": {
+        "account": {
+          "$ref": "#/definitions/AccountIdentifier"
+        },
+        "quantity": {
+          "$ref": "#/definitions/ExactQuantity"
+        },
+        "posting_type": {
+          "type": "string",
+          "enum": ["debit", "credit"],
+          "description": "Posting type. In accounting, debit increases asset/expense accounts, credit increases liability/equity/revenue accounts."
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of this posting."
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Additional posting-level metadata."
+        }
+      }
+    },
+    "BudgetReference": {
+      "type": "object",
+      "description": "Reference to a budget artifact or event.",
+      "required": ["budget_id"],
+      "properties": {
+        "budget_id": {
+          "type": "string",
+          "description": "Identifier of the budget."
+        },
+        "version": {
+          "type": "string",
+          "description": "Optional version identifier for optimistic concurrency."
+        }
+      }
+    },
+    "EvidenceReference": {
+      "type": "object",
+      "description": "Reference to evidence artifacts supporting the accounting event.",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "description": "Artifact identifier."
+        },
+        "role": {
+          "type": "string",
+          "enum": ["source", "proof", "receipt", "contract", "confirmation", "other"],
+          "description": "Role of this evidence in supporting the event."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this evidence was created or observed."
+        }
+      }
+    }
+  }
+}

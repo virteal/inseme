@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cop.dev/schemas/accounting/event.account.schema.json",
+  "title": "COP Accounting Account Lifecycle Event",
+  "description": "Event type for account creation and modification. Accounts are projections, not core primitives, but their lifecycle needs explicit authorization events.",
+  "type": "object",
+  "required": [
+    "eventType",
+    "schemaVersion",
+    "account_id",
+    "action",
+    "governance",
+    "idempotency_key"
+  ],
+  "properties": {
+    "eventType": {
+      "const": "accounting/account"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "account_id": {
+      "$ref": "base.schema.json#/definitions/AccountIdentifier",
+      "description": "Canonical identifier for the account."
+    },
+    "action": {
+      "type": "string",
+      "enum": ["create", "modify", "suspend", "close"],
+      "description": "Lifecycle action for the account."
+    },
+    "account_type": {
+      "type": "string",
+      "enum": ["asset", "liability", "equity", "revenue", "expense", "off-balance"],
+      "description": "Account type per standard accounting categories."
+    },
+    "resource_type": {
+      "$ref": "base.schema.json#/definitions/ResourceType",
+      "description": "Type of resource this account tracks."
+    },
+    "accounting_domain": {
+      "$ref": "base.schema.json#/definitions/AccountingDomain"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Default unit for this account."
+    },
+    "owner_subject_id": {
+      "type": "string",
+      "description": "Subject that owns this account."
+    },
+    "authorized_source_sink": {
+      "type": "boolean",
+      "description": "Whether this account is authorized as a source/sink for creation or destruction of value. Must be explicitly authorized."
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Human-readable name for the account."
+    },
+    "description": {
+      "type": "string",
+      "description": "Purpose or description of the account."
+    },
+    "parent_account_id": {
+      "$ref": "base.schema.json#/definitions/AccountIdentifier",
+      "description": "For hierarchical account structures, reference to parent account."
+    },
+    "governance": {
+      "$ref": "base.schema.json#/definitions/GovernanceContext"
+    },
+    "disclosure_class": {
+      "$ref": "base.schema.json#/definitions/DisclosureClass",
+      "default": "restricted"
+    },
+    "idempotency_key": {
+      "type": "string",
+      "description": "Idempotency key for this account event."
+    },
+    "evidence_references": {
+      "type": "array",
+      "items": {
+        "$ref": "base.schema.json#/definitions/EvidenceReference"
+      },
+      "description": "Supporting evidence for account creation or modification."
+    },
+    "effective_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the account action takes effect. Defaults to event timestamp."
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cop.dev/schemas/accounting/event.reversal.schema.json",
+  "title": "COP Accounting Reversal Event",
+  "description": "Event type for reversing or compensating a prior transaction. Reversal preserves the original trace while neutralizing its accounting effect.",
+  "type": "object",
+  "required": [
+    "eventType",
+    "schemaVersion",
+    "reversal_id",
+    "original_transaction_id",
+    "reversal_type",
+    "governance",
+    "idempotency_key"
+  ],
+  "properties": {
+    "eventType": {
+      "const": "accounting/reversal"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "reversal_id": {
+      "type": "string",
+      "description": "Unique identifier for this reversal event."
+    },
+    "original_transaction_id": {
+      "type": "string",
+      "description": "Transaction ID being reversed."
+    },
+    "reversal_type": {
+      "type": "string",
+      "enum": ["full", "partial", "compensating"],
+      "description": "Type of reversal. 'full' reverses entire original, 'partial' reverses portion, 'compensating' creates new opposite transaction."
+    },
+    "partial_amount": {
+      "$ref": "base.schema.json#/definitions/ExactQuantity",
+      "description": "For partial reversals, the amount being reversed."
+    },
+    "reason": {
+      "type": "string",
+      "description": "Reason for the reversal. Required for auditability.",
+      "examples": ["error_correction", "dispute_resolution", "fraud", "authorized_cancellation", "technical_failure"]
+    },
+    "compensating_postings": {
+      "type": "array",
+      "items": {
+        "$ref": "base.schema.json#/definitions/Posting"
+      },
+      "description": "For compensating reversals, the new postings that compensate the original."
+    },
+    "governance": {
+      "$ref": "base.schema.json#/definitions/GovernanceContext"
+    },
+    "disclosure_class": {
+      "$ref": "base.schema.json#/definitions/DisclosureClass",
+      "default": "restricted"
+    },
+    "idempotency_key": {
+      "type": "string",
+      "description": "Idempotency key for this reversal."
+    },
+    "authorized_by": {
+      "type": "string",
+      "description": "Reference to authority (mandate, policy, or person) authorizing this reversal."
+    },
+    "evidence_references": {
+      "type": "array",
+      "items": {
+        "$ref": "base.schema.json#/definitions/EvidenceReference"
+      },
+      "description": "Supporting evidence for the reversal (e.g., dispute notice, error log)."
+    },
+    "effective_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the reversal takes effect. Defaults to event timestamp."
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

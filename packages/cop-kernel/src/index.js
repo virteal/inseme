@@ -51,3 +51,8 @@ export * from "./stdio.js";
 // result delivery as closures, control for supervision, waitForEvents, runner orchestration).
 // See lineage doc for comparison to l8 Parole/Water/Fluid/Tasks + motivation.
 export * from "./cogitorCooperation.js";
+
+// COP/Accounting day-one conformance kernel (v1.0)
+// Provides exact quantity arithmetic, event validation, and deterministic projection.
+// See accounting/README.md for conformance tests and usage.
+export * from "./accounting/index.js";

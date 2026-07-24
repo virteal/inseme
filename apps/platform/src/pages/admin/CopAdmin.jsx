@@ -6,6 +6,7 @@
 //   3) Visualisation du registre COP (cop_nodes, cop_agents) via /cop-admin-registry.
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import CopAccountingDashboard from "../../components/cop/CopAccountingDashboard";
 
 // Trace state moved inside component
 
@@ -293,6 +294,11 @@ export default function CopAdmin() {
   return (
     <div style={styles.page}>
       <h1 style={styles.title}>COP Admin / Test</h1>
+
+      {/* 0. COP Conformance Accounting & Kudos Attractor Dashboard */}
+      <section style={{ marginBottom: "32px" }}>
+        <CopAccountingDashboard />
+      </section>
 
       {/* 1. Envoi de COP_MESSAGE */}
       <section style={styles.section}>

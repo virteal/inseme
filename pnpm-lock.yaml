@@ -386,9 +386,15 @@ importers:
       '@inseme/brique-tasks':
         specifier: workspace:*
         version: link:../../packages/brique-tasks
+      '@inseme/cop-core':
+        specifier: workspace:*
+        version: link:../../packages/cop-core
       '@inseme/cop-host':
         specifier: workspace:*
         version: link:../../packages/cop-host
+      '@inseme/cop-kernel':
+        specifier: workspace:*
+        version: link:../../packages/cop-kernel
       '@inseme/kudocracy':
         specifier: '*'
         version: link:../../packages/kudocracy

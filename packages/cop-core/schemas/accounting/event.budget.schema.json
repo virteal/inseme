@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cop.dev/schemas/accounting/event.budget.schema.json",
+  "title": "COP Accounting Budget Event",
+  "description": "Event type for budget grant, amendment, and revocation. Budgets authorize spending limits within scopes.",
+  "type": "object",
+  "required": [
+    "eventType",
+    "schemaVersion",
+    "budget_id",
+    "action",
+    "resource_type",
+    "accounting_domain",
+    "quantity",
+    "governance",
+    "idempotency_key"
+  ],
+  "properties": {
+    "eventType": {
+      "const": "accounting/budget"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "budget_id": {
+      "type": "string",
+      "description": "Unique identifier for this budget."
+    },
+    "action": {
+      "type": "string",
+      "enum": ["grant", "amend", "revoke", "expire"],
+      "description": "Action being performed on the budget."
+    },
+    "resource_type": {
+      "$ref": "base.schema.json#/definitions/ResourceType"
+    },
+    "accounting_domain": {
+      "$ref": "base.schema.json#/definitions/AccountingDomain"
+    },
+    "quantity": {
+      "$ref": "base.schema.json#/definitions/ExactQuantity",
+      "description": "Budget amount. For revocation, this may be zero or the remaining amount being revoked."
+    },
+    "source_account": {
+      "$ref": "base.schema.json#/definitions/AccountIdentifier",
+      "description": "Optional source account from which the budget is drawn. If omitted, implies creation from authorized source/sink."
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Purpose or objective for which this budget is granted."
+    },
+    "scope": {
+      "type": "object",
+      "description": "Scope of budget authorization.",
+      "properties": {
+        "community": { "type": "string" },
+        "jurisdiction": { "type": "string" },
+        "allowed_recipients": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Account identifiers permitted to receive funds from this budget."
+        },
+        "forbidden_recipients": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Account identifiers explicitly forbidden from receiving funds."
+        },
+        "time_bounds": {
+          "type": "object",
+          "properties": {
+            "valid_from": { "type": "string", "format": "date-time" },
+            "valid_until": { "type": "string", "format": "date-time" }
+          }
+        },
+        "category_restrictions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Spending categories or purposes allowed."
+        }
+      },
+      "additionalProperties": true
+    },
+    "governance": {
+      "$ref": "base.schema.json#/definitions/GovernanceContext"
+    },
+    "disclosure_class": {
+      "$ref": "base.schema.json#/definitions/DisclosureClass",
+      "default": "restricted"
+    },
+    "idempotency_key": {
+      "type": "string",
+      "description": "Idempotency key to prevent duplicate processing. Must be unique per (budget_id, action)."
+    },
+    "effective_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this budget action takes effect. Defaults to event timestamp."
+    },
+    "prior_budget_id": {
+      "type": "string",
+      "description": "For amendments, reference to the prior budget version being modified."
+    },
+    "evidence_references": {
+      "type": "array",
+      "items": {
+        "$ref": "base.schema.json#/definitions/EvidenceReference"
+      },
+      "description": "Supporting evidence for this budget action."
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

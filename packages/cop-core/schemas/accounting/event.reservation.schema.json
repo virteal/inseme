@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cop.dev/schemas/accounting/event.reservation.schema.json",
+  "title": "COP Accounting Reservation Event",
+  "description": "Event type for resource reservation and release. Reservations prevent concurrent double-spending by temporarily holding budget capacity.",
+  "type": "object",
+  "required": [
+    "eventType",
+    "schemaVersion",
+    "reservation_id",
+    "action",
+    "resource_type",
+    "accounting_domain",
+    "quantity",
+    "budget_reference",
+    "governance",
+    "idempotency_key"
+  ],
+  "properties": {
+    "eventType": {
+      "const": "accounting/reservation"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "reservation_id": {
+      "type": "string",
+      "description": "Unique identifier for this reservation."
+    },
+    "action": {
+      "type": "string",
+      "enum": ["reserve", "release", "commit", "expire"],
+      "description": "Action being performed. 'reserve' creates a hold, 'release' cancels it, 'commit' converts to transaction, 'expire' is system-triggered expiration."
+    },
+    "resource_type": {
+      "$ref": "base.schema.json#/definitions/ResourceType"
+    },
+    "accounting_domain": {
+      "$ref": "base.schema.json#/definitions/AccountingDomain"
+    },
+    "quantity": {
+      "$ref": "base.schema.json#/definitions/ExactQuantity",
+      "description": "Quantity being reserved, released, or committed."
+    },
+    "budget_reference": {
+      "$ref": "base.schema.json#/definitions/BudgetReference",
+      "description": "Budget against which this reservation is held."
+    },
+    "reserved_for_account": {
+      "$ref": "base.schema.json#/definitions/AccountIdentifier",
+      "description": "Account that will receive the reserved amount upon commitment."
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Purpose for which the reservation is made."
+    },
+    "time_to_live": {
+      "type": "object",
+      "description": "Reservation lifetime controls.",
+      "properties": {
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the reservation automatically expires."
+        },
+        "max_extension": {
+          "type": "string",
+          "description": "ISO-8601 duration for maximum extension (e.g., 'PT1H' for 1 hour)."
+        }
+      }
+    },
+    "governance": {
+      "$ref": "base.schema.json#/definitions/GovernanceContext"
+    },
+    "disclosure_class": {
+      "$ref": "base.schema.json#/definitions/DisclosureClass",
+      "default": "restricted"
+    },
+    "idempotency_key": {
+      "type": "string",
+      "description": "Idempotency key for this reservation event."
+    },
+    "related_transaction_id": {
+      "type": "string",
+      "description": "For 'commit' actions, reference to the transaction that consumes this reservation."
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

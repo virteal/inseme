@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cop.dev/schemas/accounting/event.transaction.schema.json",
+  "title": "COP Accounting Transaction Event",
+  "description": "Event type for balanced transaction commitment and settlement. All postings must balance exactly within (resourceType, unit, accountingDomain).",
+  "type": "object",
+  "required": [
+    "eventType",
+    "schemaVersion",
+    "transaction_id",
+    "resource_type",
+    "accounting_domain",
+    "postings",
+    "governance",
+    "idempotency_key"
+  ],
+  "properties": {
+    "eventType": {
+      "const": "accounting/transaction"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "transaction_id": {
+      "type": "string",
+      "description": "Unique identifier for this transaction."
+    },
+    "transaction_type": {
+      "type": "string",
+      "enum": ["commitment", "settlement", "direct"],
+      "description": "Type of transaction. 'commitment' reserves for later settlement, 'settlement' fulfills a commitment, 'direct' is atomic."
+    },
+    "resource_type": {
+      "$ref": "base.schema.json#/definitions/ResourceType"
+    },
+    "accounting_domain": {
+      "$ref": "base.schema.json#/definitions/AccountingDomain"
+    },
+    "postings": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "$ref": "base.schema.json#/definitions/Posting"
+      },
+      "description": "At least two postings required. Sum of debits must equal sum of credits for the same (resourceType, unit, accountingDomain)."
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit for this transaction. All postings must use this unit. Implied from postings if all match."
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Purpose or description of this transaction."
+    },
+    "category": {
+      "type": "string",
+      "description": "Transaction category for classification and reporting.",
+      "examples": ["purchase", "transfer", "grant", "fee", "adjustment"]
+    },
+    "settlement_reference": {
+      "type": "object",
+      "description": "For settlement transactions, reference to the prior commitment.",
+      "properties": {
+        "commitment_transaction_id": {
+          "type": "string",
+          "description": "Transaction ID of the original commitment."
+        },
+        "fulfillment_amount": {
+          "$ref": "base.schema.json#/definitions/ExactQuantity",
+          "description": "Amount being settled if different from commitment."
+        }
+      }
+    },
+    "consumes_reservations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Reservation IDs being consumed by this transaction."
+    },
+    "governance": {
+      "$ref": "base.schema.json#/definitions/GovernanceContext"
+    },
+    "disclosure_class": {
+      "$ref": "base.schema.json#/definitions/DisclosureClass",
+      "default": "restricted"
+    },
+    "idempotency_key": {
+      "type": "string",
+      "description": "Idempotency key for this transaction."
+    },
+    "effective_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the transaction takes effect. Defaults to event timestamp."
+    },
+    "evidence_references": {
+      "type": "array",
+      "items": {
+        "$ref": "base.schema.json#/definitions/EvidenceReference"
+      },
+      "description": "Supporting evidence for this transaction."
+    },
+    "conversion_rate": {
+      "type": "object",
+      "description": "Explicit conversion rate if this involves cross-unit conversion with explicit authorization.",
+      "properties": {
+        "from_unit": { "type": "string" },
+        "to_unit": { "type": "string" },
+        "rate": {
+          "type": "object",
+          "description": "Conversion rate as exact quantity.",
+          "properties": {
+            "numerator": { "type": "string" },
+            "denominator": { "type": "string" }
+          }
+        },
+        "authorized_by": {
+          "type": "string",
+          "description": "Authority authorizing this conversion."
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
