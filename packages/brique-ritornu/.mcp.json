@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "inseme": {
+      "command": "node",
+      "args": ["bin/inseme-mcp.js"],
+      "cwd": ".",
+      "env": {
+        "INSEME_MCP_SURFACE": "full",
+        "COGENTIA_DAEMON_URL": "http://127.0.0.1:8790",
+        "COGENTIA_MCP_VIEW": "public",
+        "RITORNU_STORAGE_BUCKET": "ritornu-private"
+      }
+    },
+    "ritornu-only": {
+      "command": "node",
+      "args": ["bin/ritornu-mcp.js"],
+      "cwd": ".",
+      "env": {
+        "RITORNU_STORAGE_BUCKET": "ritornu-private"
+      }
+    }
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inseme.local/schemas/ritornu/source-capture/v1",
+  "title": "Ritornu source_capture",
+  "description": "Private source capture package. Proof bytes stay outside Git; this object is the inspectable provenance header.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "capture_id",
+    "state",
+    "created_at",
+    "method",
+    "content_fingerprint",
+    "byte_length",
+    "review_required"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ritornu/source_capture/v1"
+    },
+    "capture_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "const": "capture"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "requested_url": {
+      "type": ["string", "null"]
+    },
+    "canonical_url": {
+      "type": ["string", "null"]
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "official-export",
+        "public-rss",
+        "public-url",
+        "provided-copy",
+        "assisted-browser"
+      ]
+    },
+    "platform": {
+      "type": "string",
+      "enum": ["substack", "facebook", "other", "unknown"]
+    },
+    "content_type": {
+      "type": "string"
+    },
+    "content_fingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "byte_length": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "single_publication": { "type": "boolean" },
+        "no_recursive_collection": { "type": "boolean" },
+        "no_social_graph": { "type": "boolean" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" },
+          "recoverable": { "type": "boolean" }
+        }
+      }
+    },
+    "proof": {
+      "type": "object",
+      "properties": {
+        "relative_path": {
+          "type": ["string", "null"],
+          "description": "Object key inside the private platform bucket; never a Git-tracked path. Null until persisted."
+        },
+        "bucket": {
+          "type": ["string", "null"],
+          "description": "Private Supabase (or compatible) storage bucket name."
+        },
+        "backend": {
+          "type": ["string", "null"],
+          "description": "Storage backend id: supabase | memory (tests only)."
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["private"]
+        },
+        "captured_at": { "type": "string", "format": "date-time" },
+        "storage_class": {
+          "type": "string",
+          "enum": ["platform-private", "memory"],
+          "description": "Platform private object storage (Supabase). memory is tests-only."
+        }
+      },
+      "additionalProperties": true
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "review_required": {
+      "const": true
+    }
+  },
+  "additionalProperties": false
+}

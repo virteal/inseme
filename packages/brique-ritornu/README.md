@@ -1,42 +1,119 @@
 # @inseme/brique-ritornu
 
-Ritornu est la brique de **retrofit patrimonial sélectif** : elle aide une personne à reprendre une publication personnelle ancienne depuis une URL ou une exportation officielle, à en préserver la preuve privée, puis à préparer une transcription et une remise au corpus soumise à revue.
+Ritornu est la brique de **retrofit patrimonial sélectif** : sous mandat humain, elle reprend une
+publication personnelle (export, URL publique, copie fournie), en conserve la preuve **privée sur la
+plateforme**, normalise le corps éditorial, puis prépare une remise au corpus soumise à revue.
 
-Statut : `skeleton`. Le package ne réalise encore aucune acquisition.
+Statut : `experimental` (M0 packages + M1 Substack + **MCP multi-host**).
+
+## MCP hub (ChatGPT, Claude, Grok, Cursor, …)
+
+**Prefer the federated server** — it exposes the large **Cogentia.js** tool surface (search, packs,
+issues, CLI, index…) **plus** Ritornu retrofit tools:
+
+```bash
+cd packages/brique-ritornu
+node bin/inseme-mcp.js          # stdio — full hub (recommended)
+node bin/inseme-mcp-http.js     # HTTP POST /mcp
+node bin/ritornu-mcp.js         # Ritornu-only subset
+```
+
+Requires a running Cogentia daemon for corpus tools (`COGENTIA_DAEMON_URL`, default
+`http://127.0.0.1:8790`).
+
+Full setup: [docs/MCP.md](docs/MCP.md). Template: [`.mcp.json`](.mcp.json).
 
 ## Frontière
 
 ```text
-source personnelle
-  -> capture privée
+source personnelle (URL publique | export | copie)
+  -> capture privée (Supabase bucket, jamais Git)
   -> candidat normalisé
   -> décision humaine de routage
   -> remise au corpus ou rejet
 ```
 
-La capture brute et ses métadonnées de preuve restent hors Git et privées par défaut. Le corpus ne reçoit qu'un candidat explicitement revu ; une publication n'est jamais créée ou modifiée par la brique elle-même.
+## Stockage plateforme (pas de disque « local » workstation)
+
+Inseme s’exécute sur **Netlify (functions / edge)** + **Supabase**. Ritornu n’utilise donc **pas**
+`~/.local/share/…` comme stockage de production.
+
+| Backend         | Usage                                                      |
+| --------------- | ---------------------------------------------------------- |
+| `SupabaseStore` | Production — bucket privé `ritornu-private` (configurable) |
+| `MemoryStore`   | Tests + desktop MCP dry-run when Supabase env is absent    |
+
+Preuves et paquets : `captures/`, `transcriptions/`, `candidates/`, `handoffs/` **dans le bucket**,
+`visibility: private`. Aucune URL publique n’est générée pour les captures.
+
+Migration : `apps/platform/supabase/migrations/20260724120000_ritornu_private_storage.sql`
+
+## M0 — paquets déterministes
+
+| Élément              | Emplacement                       |
+| -------------------- | --------------------------------- |
+| Schémas versionnés   | `schemas/*.schema.json`           |
+| Normalisation + diff | `src/normalize.js`, `src/diff.js` |
+| Pipeline + handoff   | `src/pipeline.js`                 |
+| Fixture Substack     | `fixtures/substack-backup/`       |
+
+## M1 — adaptateur Substack (URL publique)
+
+Contraintes respectées :
+
+- **une URL** par invocation (`/p/slug`) ;
+- conservation de l’URL demandée + **canonique** (tracking retiré) ;
+- extraction HTML ciblée (article/main) + nettoyage de bruit ;
+- **aucune** API non documentée, **aucun** cookie/auth, **aucun** suivi de liens internes ;
+- indisponibilité **explicite** (`unavailable`) avec replis : export officiel, copie fournie,
+  navigation assistée.
+
+Outil COP (compilateur de briques) :
+
+- handler : `src/edge/tool-prepare-substack.js`
+- nom : `prepare_substack_post`
+- chemin généré typique : `/api/tools/ritornu/prepare_substack_post`
+
+```js
+import {
+  prepareSubstackPublicUrl,
+  createStoreFromRuntime,
+  createHandoff,
+} from "@inseme/brique-ritornu";
+
+// Edge / Netlify runtime
+const store = createStoreFromRuntime(runtime); // requires runtime.supabase
+const prepared = await prepareSubstackPublicUrl({
+  url: "https://example.substack.com/p/backup",
+  store,
+});
+// prepared.candidate is review-request; raw HTML only in private bucket
+```
 
 ## Invariants
 
 - mandat humain explicite, publication par publication ;
-- pas de collecte récursive, de graphe social, de commentaires ou de réactions ;
-- pas de contournement de CAPTCHA, paywall, authentification, limitation de débit ou protection technique ;
-- aucun cookie, identifiant ou secret lu ou stocké par la brique ;
+- stockage privé plateforme (Supabase), hors Git ;
+- pas de collecte récursive, graphe social, commentaires, réactions ;
+- pas de contournement CAPTCHA / paywall / auth / rate-limit ;
 - aucune écriture Git ou GitHub directe ;
-- conservation du lien entre source, capture, normalisation et décision de revue ;
-- tout échec doit rester visible et conduire vers une voie légitime : export officiel, copie fournie ou navigation assistée par l'utilisateur.
+- handoff = proposition (patch / fichier), jamais un commit.
 
 ## États de travail
 
 `capture` → `candidate` → `review-request` → `handoff` → `watch-change`
 
-Ces états décrivent des paquets de travail ; ils ne définissent pas encore une révision du protocole COP. Toute intégration COP durable devra préserver les invariants d'immuabilité, d'idempotence, de traçabilité et de replay déterministe.
+## Tests
 
-## Périmètre des prochaines étapes
+```bash
+cd packages/brique-ritornu
+node --test ./tests/*.test.js
+```
 
-1. M0 : formats locaux versionnés de capture, manifeste et diff de normalisation, accompagnés de fixtures et tests ;
-2. M1 : adaptateur Substack, à partir d'une URL publique, sans API cachée ni contournement ;
-3. M2 : adaptateur Facebook pour un permalink choisi, avec voie d'export officielle et navigation locale assistée ;
-4. M3 : paquet de remise et revue explicite avant toute opération sur le corpus.
+## Suite
 
-Aucun de ces jalons n'est autorisé par ce squelette seul. Voir [issue #26](https://github.com/JeanHuguesRobert/inseme/issues/26).
+- **M2** — Facebook permalink + export Meta
+- **M3** — surface de revue / remise corpus
+- **M4** — exports officiels et `watch-change`
+
+Voir [issue #26](https://github.com/JeanHuguesRobert/inseme/issues/26).

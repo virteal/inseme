@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inseme.local/schemas/ritornu/import-candidate/v1",
+  "title": "Ritornu import_candidate",
+  "description": "Proposed corpus integration. Not a published document; routing fields stay null until human review.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "candidate_id",
+    "capture_id",
+    "transcription_id",
+    "state",
+    "created_at",
+    "review_required",
+    "body_markdown",
+    "fingerprints",
+    "routing"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ritornu/import_candidate/v1"
+    },
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capture_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "transcription_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "type": "string",
+      "enum": ["candidate", "review-request"]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "review_required": {
+      "const": true
+    },
+    "proposed_filename": {
+      "type": ["string", "null"]
+    },
+    "proposed_frontmatter": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "body_markdown": {
+      "type": "string"
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "requested_url": { "type": ["string", "null"] },
+        "canonical_url": { "type": ["string", "null"] },
+        "method": { "type": "string" },
+        "platform": { "type": "string" },
+        "capture_fingerprint": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "transcription_fingerprint": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": true
+    },
+    "fingerprints": {
+      "type": "object",
+      "required": ["capture", "transcription", "candidate"],
+      "properties": {
+        "capture": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "transcription": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "candidate": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "description": "Human-only decisions. Must remain undecided until review.",
+      "required": [
+        "destination_repo",
+        "destination_path",
+        "visibility",
+        "license",
+        "decided"
+      ],
+      "properties": {
+        "destination_repo": { "type": ["string", "null"] },
+        "destination_path": { "type": ["string", "null"] },
+        "visibility": { "type": ["string", "null"] },
+        "license": { "type": ["string", "null"] },
+        "decided": { "const": false }
+      }
+    },
+    "ambiguities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

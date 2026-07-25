@@ -952,6 +952,49 @@ export const BRIQUES = [
     }
   },
   {
+    "id": "ritornu",
+    "name": "Ritornu — retrofit patrimonial",
+    "feature": "ritornu",
+    "routes": [],
+    "menuItems": [],
+    "tools": [
+      {
+        "type": "function",
+        "handler": "./src/edge/tool-prepare-substack.js",
+        "function": {
+          "name": "prepare_substack_post",
+          "description": "Sous mandat explicite, récupérer UNE publication Substack publique (URL /p/slug), en conserver la preuve dans le bucket privé plateforme, normaliser le corps éditorial et produire un candidat de revue. N'écrit jamais dans Git. En cas d'indisponibilité (paywall, 404, erreur réseau), retourne un échec explicite avec replis légitimes (export officiel, copie fournie, navigation assistée). Ne contourne ni CAPTCHA, ni authentification, ni limitation de débit.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "URL https publique unique d'un post Substack (/p/slug). Une seule URL par invocation."
+              }
+            },
+            "required": [
+              "url"
+            ]
+          }
+        },
+        "briqueId": "ritornu"
+      }
+    ],
+    "configSchema": {
+      "ritornu_storage_bucket": {
+        "type": "string",
+        "default": "ritornu-private",
+        "description": "Bucket Supabase privé pour captures, transcriptions et candidats. Jamais un dépôt Git, jamais public par défaut."
+      },
+      "ritornu_default_review_required": {
+        "type": "boolean",
+        "default": true,
+        "description": "Interdit toute remise vers un corpus sans revue humaine explicite."
+      }
+    },
+    "hasPublic": false
+  },
+  {
     "id": "tasks",
     "name": "Projets & Actions",
     "feature": "projects",

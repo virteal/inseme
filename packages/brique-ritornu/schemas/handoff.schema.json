@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inseme.local/schemas/ritornu/handoff/v1",
+  "title": "Ritornu handoff",
+  "description": "Package delivered to a human operator after explicit review. Never a Git commit; never an automatic corpus write.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "handoff_id",
+    "candidate_id",
+    "state",
+    "created_at",
+    "review",
+    "decisions",
+    "git_write_forbidden",
+    "patch"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ritornu/handoff/v1"
+    },
+    "handoff_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "const": "handoff"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "review": {
+      "type": "object",
+      "required": ["status", "reviewed_by", "reviewed_at"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["approved", "rejected"]
+        },
+        "reviewed_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "decisions": {
+      "type": "object",
+      "required": ["operation"],
+      "properties": {
+        "operation": {
+          "type": "string",
+          "enum": ["propose-create", "propose-update", "reject"]
+        },
+        "destination_repo": { "type": ["string", "null"] },
+        "destination_path": { "type": ["string", "null"] },
+        "visibility": { "type": ["string", "null"] },
+        "license": { "type": ["string", "null"] },
+        "document_type": { "type": ["string", "null"] }
+      }
+    },
+    "patch": {
+      "type": "object",
+      "required": ["format"],
+      "properties": {
+        "format": {
+          "type": "string",
+          "enum": ["file-proposal", "unified-diff", "none"]
+        },
+        "proposed_filename": { "type": ["string", "null"] },
+        "content": { "type": ["string", "null"] },
+        "content_fingerprint": {
+          "type": ["string", "null"],
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "git_write_forbidden": {
+      "const": true
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,15 +1,43 @@
 {
   "name": "@inseme/brique-ritornu",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
-  "description": "Personal publication retrofit brique for the Inseme monorepo",
+  "description": "Ritornu retrofit + federated Inseme MCP hub (Cogentia.js surface + Ritornu tools)",
   "type": "module",
   "main": "./src/index.js",
+  "bin": {
+    "inseme-mcp": "./bin/inseme-mcp.js",
+    "inseme-mcp-http": "./bin/inseme-mcp-http.js",
+    "ritornu-mcp": "./bin/ritornu-mcp.js",
+    "ritornu-mcp-http": "./bin/ritornu-mcp-http.js"
+  },
   "exports": {
     ".": "./src/index.js",
-    "./manifest": "./brique.config.js"
+    "./manifest": "./brique.config.js",
+    "./mcp": "./src/mcp/core.js",
+    "./mcp/hub": "./src/mcp/hub.js",
+    "./schemas/*": "./schemas/*"
   },
   "scripts": {
-    "test": "node --test ./tests/*.test.js"
+    "test": "node --test ./tests/*.test.js",
+    "mcp": "node ./bin/inseme-mcp.js",
+    "mcp:http": "node ./bin/inseme-mcp-http.js",
+    "mcp:ritornu": "node ./bin/ritornu-mcp.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "schemas",
+    "fixtures",
+    "docs",
+    "brique.config.js",
+    "README.md",
+    ".mcp.json"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "optionalDependencies": {
+    "@supabase/supabase-js": "^2.0.0"
   }
 }

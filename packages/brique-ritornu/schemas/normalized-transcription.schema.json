@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inseme.local/schemas/ritornu/normalized-transcription/v1",
+  "title": "Ritornu normalized_transcription",
+  "description": "Deterministic transcription derived from a private source_capture. Distinct from the raw proof.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "transcription_id",
+    "capture_id",
+    "created_at",
+    "normalizer",
+    "content_fingerprint",
+    "body_markdown",
+    "diff_from_raw"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ritornu/normalized_transcription/v1"
+    },
+    "transcription_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capture_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "normalizer": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "title": { "type": ["string", "null"] },
+    "author": { "type": ["string", "null"] },
+    "published_at": { "type": ["string", "null"] },
+    "canonical_url": { "type": ["string", "null"] },
+    "body_markdown": { "type": "string" },
+    "content_fingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "diff_from_raw": {
+      "type": "object",
+      "required": ["algorithm", "raw_fingerprint", "normalized_fingerprint", "stats"],
+      "properties": {
+        "algorithm": { "type": "string" },
+        "raw_fingerprint": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "normalized_fingerprint": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "stats": {
+          "type": "object",
+          "required": ["raw_bytes", "normalized_bytes", "raw_lines", "normalized_lines"],
+          "properties": {
+            "raw_bytes": { "type": "integer", "minimum": 0 },
+            "normalized_bytes": { "type": "integer", "minimum": 0 },
+            "raw_lines": { "type": "integer", "minimum": 0 },
+            "normalized_lines": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "removed_noise_kinds": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "line_ops": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["op"],
+            "properties": {
+              "op": {
+                "type": "string",
+                "enum": ["equal", "remove", "add"]
+              },
+              "text": { "type": "string" }
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "ambiguities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}
