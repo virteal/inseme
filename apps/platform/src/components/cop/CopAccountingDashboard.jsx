@@ -175,6 +175,96 @@ export default function CopAccountingDashboard() {
     setEventSequence((prev) => [...prev, newEvt]);
   };
 
+  // Quick Simulation Preset Event Handlers
+  const handleSimulateReservation = () => {
+    const newEvt = {
+      event_id: `evt_sim_res_${Date.now().toString(36)}`,
+      event_type: "RESERVATION_HOLD",
+      timestamp: new Date().toISOString(),
+      domain: "compute",
+      actor_subject_id: "subject:jhn",
+      principal_subject_id: "subject:jhn",
+      resource_type: "EUR_MICRO",
+      postings: [
+        {
+          account_id: "account:jhn:compute_budget",
+          amount: fromDecimal(15.0, 6, "EUR"),
+          direction: "debit",
+        },
+        {
+          account_id: "account:jhn:reserved_futures",
+          amount: fromDecimal(15.0, 6, "EUR"),
+          direction: "credit",
+        },
+      ],
+      holding_fee: fromDecimal(2.0, 6, "EUR"),
+      kudos_trace: { kudos_score: 20, reputation_action: "SIMULATED_RESERVATION_HOLD" },
+    };
+    setEventSequence((prev) => [...prev, newEvt]);
+  };
+
+  const handleSimulateExecution = () => {
+    const newEvt = {
+      event_id: `evt_sim_exec_${Date.now().toString(36)}`,
+      event_type: "RESOURCE_CONSUMED",
+      timestamp: new Date().toISOString(),
+      domain: "compute",
+      actor_subject_id: "subject:jhn",
+      principal_subject_id: "subject:jhn",
+      resource_type: "EUR_MICRO",
+      postings: [
+        {
+          account_id: "account:jhn:reserved_futures",
+          amount: fromDecimal(15.0, 6, "EUR"),
+          direction: "debit",
+        },
+        {
+          account_id: "account:jhn:spent_compute",
+          amount: fromDecimal(13.0, 6, "EUR"),
+          direction: "credit",
+        },
+        {
+          account_id: "account:jhn:holding_fee_retained",
+          amount: fromDecimal(2.0, 6, "EUR"),
+          direction: "credit",
+        },
+      ],
+      kudos_trace: { kudos_score: 35, reputation_action: "SIMULATED_EXECUTION_ON_TIME" },
+    };
+    setEventSequence((prev) => [...prev, newEvt]);
+  };
+
+  const handleSimulateKudosGrant = () => {
+    const newEvt = {
+      event_id: `evt_sim_kudos_${Date.now().toString(36)}`,
+      event_type: "BUDGET_GRANTED",
+      timestamp: new Date().toISOString(),
+      domain: "compute",
+      actor_subject_id: "subject:jhn",
+      principal_subject_id: "subject:jhn",
+      resource_type: "EUR_MICRO",
+      postings: [
+        {
+          account_id: "account:jhn:treasury",
+          amount: fromDecimal(50.0, 6, "EUR"),
+          direction: "debit",
+        },
+        {
+          account_id: "account:jhn:compute_budget",
+          amount: fromDecimal(50.0, 6, "EUR"),
+          direction: "credit",
+        },
+      ],
+      budget_limit: fromDecimal(50.0, 6, "EUR"),
+      kudos_trace: { kudos_score: 50, reputation_action: "COMMUNITY_KUDOS_BOOST" },
+    };
+    setEventSequence((prev) => [...prev, newEvt]);
+  };
+
+  const handleResetLedger = () => {
+    setEventSequence(SAMPLE_JHN_EVENTS);
+  };
+
   return (
     <div style={theme.container}>
       {/* Header Banner */}
@@ -233,6 +323,87 @@ export default function CopAccountingDashboard() {
             {attractorGravityScore} <span style={{ fontSize: "14px", color: "#9ca3af" }}>Mass</span>
           </div>
           <div style={theme.kpiSubtext}>{totalKudos} Kudos accumulated</div>
+        </div>
+      </div>
+
+      {/* Quick Simulation Action Bar */}
+      <div style={{
+        background: "rgba(30, 41, 59, 0.6)",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        borderRadius: "12px",
+        padding: "16px 20px",
+        marginBottom: "24px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+        gap: "12px",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <span style={{ fontSize: "18px" }}>⚡</span>
+          <strong style={{ color: "#f8fafc", fontSize: "14px" }}>Quick COP Event Simulator:</strong>
+        </div>
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          <button
+            onClick={handleSimulateReservation}
+            style={{
+              background: "#3b82f6",
+              color: "#fff",
+              border: "none",
+              borderRadius: "6px",
+              padding: "8px 14px",
+              fontSize: "12px",
+              fontWeight: "600",
+              cursor: "pointer",
+            }}
+          >
+            + Reserve Option (€15)
+          </button>
+          <button
+            onClick={handleSimulateExecution}
+            style={{
+              background: "#10b981",
+              color: "#fff",
+              border: "none",
+              borderRadius: "6px",
+              padding: "8px 14px",
+              fontSize: "12px",
+              fontWeight: "600",
+              cursor: "pointer",
+            }}
+          >
+            + Execute Futures (€15)
+          </button>
+          <button
+            onClick={handleSimulateKudosGrant}
+            style={{
+              background: "#8b5cf6",
+              color: "#fff",
+              border: "none",
+              borderRadius: "6px",
+              padding: "8px 14px",
+              fontSize: "12px",
+              fontWeight: "600",
+              cursor: "pointer",
+            }}
+          >
+            + Award Kudos (+50)
+          </button>
+          <button
+            onClick={handleResetLedger}
+            style={{
+              background: "transparent",
+              color: "#94a3b8",
+              border: "1px solid #475569",
+              borderRadius: "6px",
+              padding: "8px 14px",
+              fontSize: "12px",
+              fontWeight: "600",
+              cursor: "pointer",
+            }}
+          >
+            🔄 Reset Sequence
+          </button>
         </div>
       </div>
 
