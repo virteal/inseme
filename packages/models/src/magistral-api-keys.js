@@ -4,23 +4,36 @@
  * Secret authority: inseme/.env (loaded by packages/models/src/ai.js via dotenv).
  * Runtime copies (e.g. /etc/cogentia/magistral.env) must match unless a local
  * override is explicitly commented at the override site.
+ *
+ * Naming: Cogentia is the system name; FractaVolta is a commercial deployment face.
+ * The shared bearer for OpenAI-compatible Cogentia surfaces (including Agent CLI
+ * Gateway) is COGENTIA_API_KEY. Legacy AGENT_GATEWAY_* token names remain as
+ * fallbacks during migration.
  */
 
 export function buildMagistralApiKeys(map = [], env = process.env) {
   const e = env || {};
+  const cogentiaApiKey =
+    e.COGENTIA_API_KEY ||
+    e.AGENT_GATEWAY_TOKEN ||
+    e.AGENT_GATEWAY_INVOKE_TOKEN ||
+    e.AGENT_GATEWAY_ACCEPT_TOKEN ||
+    "";
+
   const keys = {
     GROQ_API_KEY: e.GROQ_API_KEY || "",
     TOGETHER_API_KEY: e.TOGETHER_API_KEY || "",
     OPENAI_API_KEY: e.OPENAI_API_KEY || "",
     ANTHROPIC_API_KEY: e.ANTHROPIC_API_KEY || "",
-    // Coding-agent gateway (ThinkPad Agent CLI Gateway, etc.)
-    AGENT_GATEWAY_TOKEN:
-      e.AGENT_GATEWAY_TOKEN || e.AGENT_GATEWAY_INVOKE_TOKEN || e.AGENT_GATEWAY_ACCEPT_TOKEN || "",
+    // Primary system bearer (Guide / Magistral / Agent CLI Gateway)
+    COGENTIA_API_KEY: cogentiaApiKey,
   };
 
-  if (keys.AGENT_GATEWAY_TOKEN) {
-    keys.AGENT_GATEWAY_INVOKE_TOKEN = keys.AGENT_GATEWAY_TOKEN;
-    keys.AGENT_GATEWAY_ACCEPT_TOKEN = keys.AGENT_GATEWAY_TOKEN;
+  // Legacy aliases (same value) so older map nodes and drop-ins keep working
+  if (cogentiaApiKey) {
+    keys.AGENT_GATEWAY_TOKEN = cogentiaApiKey;
+    keys.AGENT_GATEWAY_INVOKE_TOKEN = cogentiaApiKey;
+    keys.AGENT_GATEWAY_ACCEPT_TOKEN = cogentiaApiKey;
   }
 
   for (const node of Array.isArray(map) ? map : []) {

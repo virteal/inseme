@@ -253,17 +253,23 @@ function getApiKeyForNode(node, apiKeys) {
   if (node.apiKey || node.api_key) return node.apiKey || node.api_key;
   const envName = node.apiKeyEnv || node.api_key_env;
   if (envName && bag[envName]) return bag[envName];
-  // Tailnet coding-agent gateways (OpenAI-compatible) use AGENT_GATEWAY_* keys
-  if (envName && /AGENT_GATEWAY/i.test(envName) && bag.AGENT_GATEWAY_TOKEN) {
-    return bag.AGENT_GATEWAY_TOKEN;
+  // Cogentia system bearer (legacy AGENT_GATEWAY_* names still accepted)
+  if (
+    envName &&
+    (/COGENTIA_API_KEY/i.test(envName) || /AGENT_GATEWAY/i.test(envName)) &&
+    (bag.COGENTIA_API_KEY || bag.AGENT_GATEWAY_TOKEN)
+  ) {
+    return bag.COGENTIA_API_KEY || bag.AGENT_GATEWAY_TOKEN;
   }
   if (url.includes("groq.com")) return bag.GROQ_API_KEY;
   if (url.includes("together.xyz") || url.includes("together.ai")) return bag.TOGETHER_API_KEY;
   if (url.includes("openai.com")) return bag.OPENAI_API_KEY;
   if (url.includes("anthropic.com")) return bag.ANTHROPIC_API_KEY;
-  // Non-public agent-gateway hosts often look like http://host:8793/...
+  // Non-public Cogentia tool hosts (Agent CLI Gateway) often listen on :8793
   if (/:(8793)\b/.test(url) || /agent-gateway|i7-thinkpad|coding-/i.test(String(node.id || ""))) {
-    return bag.AGENT_GATEWAY_TOKEN || bag.AGENT_GATEWAY_INVOKE_TOKEN || null;
+    return (
+      bag.COGENTIA_API_KEY || bag.AGENT_GATEWAY_TOKEN || bag.AGENT_GATEWAY_INVOKE_TOKEN || null
+    );
   }
   return null;
 }

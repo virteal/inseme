@@ -2,21 +2,24 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { buildMagistralApiKeys } from "../src/magistral-api-keys.js";
 
-test("buildMagistralApiKeys includes AGENT_GATEWAY_TOKEN and aliases", () => {
+test("buildMagistralApiKeys prefers COGENTIA_API_KEY", () => {
   const keys = buildMagistralApiKeys([], {
     OPENAI_API_KEY: "oai",
-    AGENT_GATEWAY_TOKEN: "gw-secret",
+    COGENTIA_API_KEY: "cogentia-secret",
+    AGENT_GATEWAY_TOKEN: "legacy",
   });
   assert.equal(keys.OPENAI_API_KEY, "oai");
-  assert.equal(keys.AGENT_GATEWAY_TOKEN, "gw-secret");
-  assert.equal(keys.AGENT_GATEWAY_INVOKE_TOKEN, "gw-secret");
+  assert.equal(keys.COGENTIA_API_KEY, "cogentia-secret");
+  assert.equal(keys.AGENT_GATEWAY_TOKEN, "cogentia-secret");
+  assert.equal(keys.AGENT_GATEWAY_INVOKE_TOKEN, "cogentia-secret");
 });
 
-test("buildMagistralApiKeys falls back to AGENT_GATEWAY_INVOKE_TOKEN", () => {
+test("buildMagistralApiKeys falls back to legacy AGENT_GATEWAY_TOKEN", () => {
   const keys = buildMagistralApiKeys([], {
-    AGENT_GATEWAY_INVOKE_TOKEN: "invoke-only",
+    AGENT_GATEWAY_TOKEN: "legacy-gw",
   });
-  assert.equal(keys.AGENT_GATEWAY_TOKEN, "invoke-only");
+  assert.equal(keys.COGENTIA_API_KEY, "legacy-gw");
+  assert.equal(keys.AGENT_GATEWAY_TOKEN, "legacy-gw");
 });
 
 test("buildMagistralApiKeys picks up map apiKeyEnv from env", () => {

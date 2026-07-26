@@ -29,14 +29,17 @@ FractaVolta Guide
 If a runtime copy **must** differ from `inseme/.env`, put a **comment immediately above** the
 override explaining why. Do not silent-diverge.
 
-Required for coding-agent map nodes (`apiKeyEnv: "AGENT_GATEWAY_TOKEN"`):
+**Naming:** Cogentia is the system; FractaVolta is a commercial deployment face. Shared bearer:
+**`COGENTIA_API_KEY`** (legacy alias: `AGENT_GATEWAY_TOKEN`).
+
+Required for coding-agent map nodes (`apiKeyEnv: "COGENTIA_API_KEY"`):
 
 ```text
 # Authority: inseme/.env — copy to /etc/cogentia/magistral.env on fracta
-AGENT_GATEWAY_TOKEN=...same value as Agent Gateway on ThinkPad...
+COGENTIA_API_KEY=...same value as Agent CLI Gateway on ThinkPad...
 ```
 
-Magistral builds the router key bag via `buildMagistralApiKeys()` so `AGENT_GATEWAY_TOKEN` (and
+Magistral builds the router key bag via `buildMagistralApiKeys()` so `COGENTIA_API_KEY` (and
 map-declared `apiKeyEnv` names) are forwarded as `Authorization: Bearer …`.
 
 ## Environment
@@ -48,7 +51,7 @@ MAGISTRAL_API_KEY=local-loopback
 MAGISTRAL_MAP_PATH=/etc/cogentia/magistral-openai-map.json
 MAGISTRAL_INCLUDE_LOCAL_FALLBACK=false
 OPENAI_API_KEY=...          # from inseme/.env (or documented override)
-AGENT_GATEWAY_TOKEN=...     # from inseme/.env (or documented override)
+COGENTIA_API_KEY=...        # from inseme/.env (or documented override)
 ```
 
 `MAGISTRAL_API_KEY` currently enables the embedded router inside `packages/models/src/ai.js`. It is
