@@ -17,10 +17,12 @@ reach that project.
 
 ```text
 Workstation SoT:  inseme/.env
-        │
+        │  (includes COGENTIA_API_KEY — Cogentia system bearer;
+        │   FractaVolta is a commercial deploy face, not a separate secret namespace)
         │  push-env-to-vault / loadConfig align
         ▼
 Supabase table:   public.instance_config   ← "the vault"
+        │  Edge functions MUST use the vault: they have no inseme/.env filesystem.
         ▲
         │  service_role client reads full table
         │
@@ -31,11 +33,11 @@ Supabase table:   public.instance_config   ← "the vault"
    └─────────┴──────────────────┴─────────────────────┘
 ```
 
-| Runtime | How it gets secrets | Bootstrap outside vault |
-|---------|---------------------|-------------------------|
-| **Local** (Vite, scripts) | `.env` and/or vault if `SERVICE_ROLE` present | Full `.env` is fine for dogfood |
+| Runtime                                                | How it gets secrets                                | Bootstrap outside vault                                          |
+| ------------------------------------------------------ | -------------------------------------------------- | ---------------------------------------------------------------- |
+| **Local** (Vite, scripts)                              | `.env` and/or vault if `SERVICE_ROLE` present      | Full `.env` is fine for dogfood                                  |
 | **Netlify Functions** (`netlify/functions/`, **Node**) | `instanceConfig.backend.js` → admin client → vault | `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` of **this** project |
-| **Netlify Edge** (`netlify/edge-functions/`, **Deno**) | `instanceConfig.edge.js` → admin client → vault | Same two vars in Netlify env |
+| **Netlify Edge** (`netlify/edge-functions/`, **Deno**) | `instanceConfig.edge.js` → admin client → vault    | Same two vars in Netlify env                                     |
 
 Public HTTP config endpoints **must not** expose `is_secret=true` rows (code filter + RLS).
 
@@ -46,8 +48,8 @@ Public HTTP config endpoints **must not** expose `is_secret=true` rows (code fil
 1. **One vault per Supabase project** — never share Pertitellu secrets into JHN or the reverse.
 2. **Workstation → vault is a full copy of real capabilities** — every non-empty, non-placeholder
    key available in `inseme/.env` should be pushable (`push-env-to-vault --apply`).
-3. **Empty / placeholders stay empty** — e.g. `ANTHROPIC_API_KEY=` or `your_…` must not be stored
-   as a fake key (code would believe the provider is configured).
+3. **Empty / placeholders stay empty** — e.g. `ANTHROPIC_API_KEY=` or `your_…` must not be stored as
+   a fake key (code would believe the provider is configured).
 4. **Netlify stays thin** — only bootstrap to open the vault; not a second secret spreadsheet.
 5. **Migrations for public/identity schema seeds** — CLI `supabase/migrations/`; secrets never
    committed in migration SQL (use the push script).
@@ -60,13 +62,13 @@ See live migrations under `apps/platform/supabase/migrations/` for the authorita
 
 Important columns:
 
-| Column | Role |
-|--------|------|
-| `key` | Normalized name (`openai_api_key`, not `OPENAI_API_KEY`) |
-| `value` / `value_json` | Payload |
-| `is_secret` | Never serve to browsers / public config API |
-| `is_public` | Safe for public config snapshot |
-| `category` | identity, branding, features, secrets, … |
+| Column                 | Role                                                     |
+| ---------------------- | -------------------------------------------------------- |
+| `key`                  | Normalized name (`openai_api_key`, not `OPENAI_API_KEY`) |
+| `value` / `value_json` | Payload                                                  |
+| `is_secret`            | Never serve to browsers / public config API              |
+| `is_public`            | Safe for public config snapshot                          |
+| `category`             | identity, branding, features, secrets, …                 |
 
 RLS (JHN+): secret rows are **not** readable by `anon` / `authenticated`. **Service role** bypasses
 RLS (edge/backend admin path).
@@ -105,9 +107,9 @@ Netlify has (names vary in docs):
 1. **Serverless / Functions** — traditionally **Node.js** → our `netlify/functions/`
 2. **Edge Functions** — **Deno** → our `netlify/edge-functions/`
 
-Both should load config through the vault after bootstrapping with the **same project’s**
-service role. Prefer the matching adapter (`backend` vs `edge`); avoid importing Node-only modules
-from Deno edge.
+Both should load config through the vault after bootstrapping with the **same project’s** service
+role. Prefer the matching adapter (`backend` vs `edge`); avoid importing Node-only modules from Deno
+edge.
 
 ---
 
@@ -130,14 +132,14 @@ Provisioning: `docs/PROVISIONING_GUIDE.md` (step-vault).
 
 ## Anti-patterns
 
-| Don't | Do |
-|-------|-----|
-| Paste every API key into Netlify UI | Vault + thin Netlify bootstrap |
-| Copy vault rows between Supabase projects blindly | Per-project push from that instance’s SoT |
-| Store `your_anthropic_key_here` in vault | Leave empty until real key exists |
-| Commit secrets in SQL migrations | `push-env-to-vault` only |
-| Use Pertitellu service_role with JHN URL | Always pair URL + keys of one project |
-| Push `HTTP_PROXY` / `VITE_PROXY_URL` into vault | Keep proxies **workstation-only** (CSP + dogfood break otherwise) |
+| Don't                                             | Do                                                                |
+| ------------------------------------------------- | ----------------------------------------------------------------- |
+| Paste every API key into Netlify UI               | Vault + thin Netlify bootstrap                                    |
+| Copy vault rows between Supabase projects blindly | Per-project push from that instance’s SoT                         |
+| Store `your_anthropic_key_here` in vault          | Leave empty until real key exists                                 |
+| Commit secrets in SQL migrations                  | `push-env-to-vault` only                                          |
+| Use Pertitellu service_role with JHN URL          | Always pair URL + keys of one project                             |
+| Push `HTTP_PROXY` / `VITE_PROXY_URL` into vault   | Keep proxies **workstation-only** (CSP + dogfood break otherwise) |
 
 ---
 
@@ -150,4 +152,5 @@ Provisioning: `docs/PROVISIONING_GUIDE.md` (step-vault).
 
 ---
 
-_Last updated: 2026-07-20 — rewrote obsolete Survey-era notes; records “avoid Netlify key hell” rationale and Node vs Deno edge paths._
+_Last updated: 2026-07-20 — rewrote obsolete Survey-era notes; records “avoid Netlify key hell”
+rationale and Node vs Deno edge paths._

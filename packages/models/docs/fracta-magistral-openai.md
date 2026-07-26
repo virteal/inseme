@@ -20,11 +20,15 @@ FractaVolta Guide
 **Canonical values** for Magistral provider keys live in **`inseme/.env`** (loaded by
 `packages/models/src/ai.js` via dotenv). Other locations are **copies**:
 
-| Location                                               | Role                                                    |
-| ------------------------------------------------------ | ------------------------------------------------------- |
-| `inseme/.env`                                          | **Authority** (dev + source of truth for key names)     |
-| `/etc/cogentia/magistral.env` on fracta                | Runtime copy for `magistral.service` `EnvironmentFile=` |
-| `/etc/cogentia/agent-gateway.env`, workstation secrets | Runtime copies for Agent Gateway / invoke               |
+| Location                                                 | Role                                                                                                                                                         |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `inseme/.env`                                            | Workstation **authority** (key names + values for dogfood)                                                                                                   |
+| `/etc/cogentia/magistral.env`                            | Runtime **copy** for `magistral.service`                                                                                                                     |
+| Tool-host secrets (ThinkPad, etc.)                       | Runtime **copy** for Agent CLI Gateway                                                                                                                       |
+| **`instance_config` vault** (Supabase / Inseme platform) | Authority for **edge / Netlify** (no filesystem `.env`); fill via `push-env-to-vault` from workstation SoT — see `apps/platform/docs/CONFIGURATION_VAULT.md` |
+
+Use the name **`COGENTIA_API_KEY` only** for the shared bearer (do not also store the same secret as
+`AGENT_GATEWAY_TOKEN=`). Legacy names remain read aliases in code.
 
 If a runtime copy **must** differ from `inseme/.env`, put a **comment immediately above** the
 override explaining why. Do not silent-diverge.
