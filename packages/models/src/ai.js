@@ -17,6 +17,8 @@ import {
 } from "../../magistral/src/router.js";
 import OllamaEmbeddingProvider from "./providers/ollama.js";
 import OpenAIEmbeddingProvider from "./providers/openai.js";
+import { buildMagistralApiKeys } from "./magistral-api-keys.js";
+export { buildMagistralApiKeys } from "./magistral-api-keys.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -431,11 +433,10 @@ function getMagistralRouter() {
   }
 
   const map = includeLocalFallback() ? [...cloudNodes, localFallback] : cloudNodes;
-  const apiKeys = {
-    GROQ_API_KEY: process.env.GROQ_API_KEY || "",
-    TOGETHER_API_KEY: process.env.TOGETHER_API_KEY || "",
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY || "",
-  };
+  // Provider keys for map nodes. Authority for values: inseme/.env (loaded above via dotenv).
+  // Copies (e.g. /etc/cogentia/magistral.env) must match unless a local override is
+  // explicitly commented at the override site.
+  const apiKeys = buildMagistralApiKeys(map);
 
   _magistralRouter = createRouter({ map, apiKeys, log: console.warn });
   _magistralRouter.map = map; // Expose map for dynamic updates
@@ -1716,7 +1717,12 @@ async function main() {
   });
 }
 
-main().catch((e) => {
-  console.error("[AI] Fatal error:", e);
-  process.exit(1);
-});
+const isMain =
+  process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
+
+if (isMain) {
+  main().catch((e) => {
+    console.error("[AI] Fatal error:", e);
+    process.exit(1);
+  });
+}

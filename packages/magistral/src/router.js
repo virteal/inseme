@@ -249,12 +249,22 @@ export function buildRoutingSequence(map, tier, registry, options = {}) {
 
 function getApiKeyForNode(node, apiKeys) {
   const url = node.url || "";
+  const bag = apiKeys || {};
   if (node.apiKey || node.api_key) return node.apiKey || node.api_key;
-  if (node.apiKeyEnv && apiKeys[node.apiKeyEnv]) return apiKeys[node.apiKeyEnv];
-  if (url.includes("groq.com")) return apiKeys.GROQ_API_KEY;
-  if (url.includes("together.xyz") || url.includes("together.ai")) return apiKeys.TOGETHER_API_KEY;
-  if (url.includes("openai.com")) return apiKeys.OPENAI_API_KEY;
-  if (url.includes("anthropic.com")) return apiKeys.ANTHROPIC_API_KEY;
+  const envName = node.apiKeyEnv || node.api_key_env;
+  if (envName && bag[envName]) return bag[envName];
+  // Tailnet coding-agent gateways (OpenAI-compatible) use AGENT_GATEWAY_* keys
+  if (envName && /AGENT_GATEWAY/i.test(envName) && bag.AGENT_GATEWAY_TOKEN) {
+    return bag.AGENT_GATEWAY_TOKEN;
+  }
+  if (url.includes("groq.com")) return bag.GROQ_API_KEY;
+  if (url.includes("together.xyz") || url.includes("together.ai")) return bag.TOGETHER_API_KEY;
+  if (url.includes("openai.com")) return bag.OPENAI_API_KEY;
+  if (url.includes("anthropic.com")) return bag.ANTHROPIC_API_KEY;
+  // Non-public agent-gateway hosts often look like http://host:8793/...
+  if (/:(8793)\b/.test(url) || /agent-gateway|i7-thinkpad|coding-/i.test(String(node.id || ""))) {
+    return bag.AGENT_GATEWAY_TOKEN || bag.AGENT_GATEWAY_INVOKE_TOKEN || null;
+  }
   return null;
 }
 
