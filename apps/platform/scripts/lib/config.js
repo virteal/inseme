@@ -67,6 +67,8 @@ const ENV_KEY_MAPPING = {
   axiom_org_id: ["AXIOM_ORG_ID", "VITE_AXIOM_ORG_ID"],
   gradium_api_key: ["GRADIUM_API_KEY"],
   cartesia_api_key: ["CARTESIA_API_KEY"],
+  // Cogentia system bearer — edge has no inseme/.env FS; vault is edge authority
+  cogentia_api_key: ["COGENTIA_API_KEY"],
 
   // GitHub
   github_token: ["GITHUB_TOKEN"],
@@ -693,10 +695,7 @@ export async function pushEnvSecretsToVault({ clearEmptySecrets = true } = {}) {
       // If env has no real value for this vault key, null it out
       const fromEnv = envExplicit[row.key];
       const envNameUpper = row.key.toUpperCase();
-      const rawEnv =
-        process.env[envNameUpper] ??
-        process.env[`VITE_${envNameUpper}`] ??
-        null;
+      const rawEnv = process.env[envNameUpper] ?? process.env[`VITE_${envNameUpper}`] ?? null;
       const envMissingOrPlaceholder =
         (fromEnv === undefined || fromEnv === null || fromEnv === "") &&
         (rawEnv === null || isPlaceholderValue(rawEnv));

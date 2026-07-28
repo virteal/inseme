@@ -80,6 +80,9 @@ const VAULT_KEY_MAPPING = {
   AXIOM_TOKEN: "axiom_token",
   GRADIUM_API_KEY: "gradium_api_key",
   CARTESIA_API_KEY: "cartesia_api_key",
+  // Cogentia system bearer (Magistral coding nodes / Agent CLI Gateway).
+  // Edge functions have no FS access to inseme/.env — vault is their authority.
+  COGENTIA_API_KEY: "cogentia_api_key",
   SUPABASE_URL: "supabase_url",
   VITE_SUPABASE_URL: "supabase_url",
   SUPABASE_ANON_KEY: "supabase_anon_key",
