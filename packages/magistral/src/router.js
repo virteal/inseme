@@ -265,6 +265,8 @@ function getApiKeyForNode(node, apiKeys) {
   if (url.includes("together.xyz") || url.includes("together.ai")) return bag.TOGETHER_API_KEY;
   if (url.includes("openai.com")) return bag.OPENAI_API_KEY;
   if (url.includes("anthropic.com")) return bag.ANTHROPIC_API_KEY;
+  if (url.includes("mistral.ai")) return bag.MISTRAL_API_KEY;
+  if (url.includes("googleapis.com") || url.includes("google.com")) return bag.GEMINI_API_KEY;
   // Non-public Cogentia tool hosts (Agent CLI Gateway) often listen on :8793
   if (/:(8793)\b/.test(url) || /agent-gateway|i7-thinkpad|coding-/i.test(String(node.id || ""))) {
     return (
@@ -318,6 +320,9 @@ export function createRouter({
       if (apiKey) headers["Authorization"] = `Bearer ${apiKey}`;
 
       const nodePayload = { ...payload, model: node.model };
+      if (node.url.includes("googleapis.com") || node.url.includes("google.com")) {
+        delete nodePayload.max_tokens;
+      }
 
       // Base log entry
       const logEntry = {

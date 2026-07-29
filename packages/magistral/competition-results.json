@@ -1,0 +1,509 @@
+{
+  "generatedAt": "2026-07-12T16:41:33.758Z",
+  "leaderboard": [
+    {
+      "nodeId": "groq-strong",
+      "model": "llama-3.3-70b-versatile",
+      "tier": "strong",
+      "successRate": 100,
+      "avgScore": 100,
+      "avgLatency": 259,
+      "avgSpeed": 112,
+      "competitiveScore": 100,
+      "results": [
+        {
+          "testName": "Guide RAG Synthesis",
+          "success": true,
+          "latency": 284,
+          "tokensPerSec": 190,
+          "score": 100,
+          "details": "Found 'Developer-Human-in-the-Loop' (+3), Found exact source citation format (+4), Appropriate response length (+3)",
+          "promptTokens": 145,
+          "completionTokens": 54
+        },
+        {
+          "testName": "Inox VM Code Generation",
+          "success": true,
+          "latency": 212,
+          "tokensPerSec": 47,
+          "score": 100,
+          "details": "Outputted clean code block (+3), Contains number 42 (+4), Strictly concise (+3)",
+          "promptTokens": 74,
+          "completionTokens": 10
+        },
+        {
+          "testName": "JSON Parameter Extraction",
+          "success": true,
+          "latency": 281,
+          "tokensPerSec": 100,
+          "score": 100,
+          "details": "Valid JSON parsed (+4), Correct locale 'fr' (+3), Correct needs_rag boolean (+3)",
+          "promptTokens": 86,
+          "completionTokens": 28
+        }
+      ]
+    },
+    {
+      "nodeId": "mistral-fast",
+      "model": "mistral-small-latest",
+      "tier": "fast",
+      "successRate": 100,
+      "avgScore": 100,
+      "avgLatency": 734,
+      "avgSpeed": 43,
+      "competitiveScore": 83,
+      "results": [
+        {
+          "testName": "Guide RAG Synthesis",
+          "success": true,
+          "latency": 1134,
+          "tokensPerSec": 51,
+          "score": 100,
+          "details": "Found 'Developer-Human-in-the-Loop' (+3), Found exact source citation format (+4), Appropriate response length (+3)",
+          "promptTokens": 131,
+          "completionTokens": 58
+        },
+        {
+          "testName": "Inox VM Code Generation",
+          "success": true,
+          "latency": 562,
+          "tokensPerSec": 14,
+          "score": 100,
+          "details": "Outputted clean code block (+3), Contains number 42 (+4), Strictly concise (+3)",
+          "promptTokens": 57,
+          "completionTokens": 8
+        },
+        {
+          "testName": "JSON Parameter Extraction",
+          "success": true,
+          "latency": 506,
+          "tokensPerSec": 63,
+          "score": 100,
+          "details": "Valid JSON parsed (+4), Correct locale 'fr' (+3), Correct needs_rag boolean (+3)",
+          "promptTokens": 69,
+          "completionTokens": 32
+        }
+      ]
+    },
+    {
+      "nodeId": "groq-fast",
+      "model": "llama-3.1-8b-instant",
+      "tier": "fast",
+      "successRate": 100,
+      "avgScore": 90,
+      "avgLatency": 547,
+      "avgSpeed": 54,
+      "competitiveScore": 81,
+      "results": [
+        {
+          "testName": "Guide RAG Synthesis",
+          "success": true,
+          "latency": 1028,
+          "tokensPerSec": 54,
+          "score": 100,
+          "details": "Found 'Developer-Human-in-the-Loop' (+3), Found exact source citation format (+4), Appropriate response length (+3)",
+          "promptTokens": 145,
+          "completionTokens": 55
+        },
+        {
+          "testName": "Inox VM Code Generation",
+          "success": true,
+          "latency": 207,
+          "tokensPerSec": 43,
+          "score": 100,
+          "details": "Outputted clean code block (+3), Contains number 42 (+4), Strictly concise (+3)",
+          "promptTokens": 74,
+          "completionTokens": 9
+        },
+        {
+          "testName": "JSON Parameter Extraction",
+          "success": true,
+          "latency": 405,
+          "tokensPerSec": 64,
+          "score": 70,
+          "details": "Valid JSON parsed (+4), Correct locale 'fr' (+3), Missing needs_rag field or wrong type",
+          "promptTokens": 86,
+          "completionTokens": 26
+        }
+      ]
+    },
+    {
+      "nodeId": "mistral-strong",
+      "model": "mistral-large-latest",
+      "tier": "strong",
+      "successRate": 100,
+      "avgScore": 100,
+      "avgLatency": 946,
+      "avgSpeed": 32,
+      "competitiveScore": 80,
+      "results": [
+        {
+          "testName": "Guide RAG Synthesis",
+          "success": true,
+          "latency": 1414,
+          "tokensPerSec": 43,
+          "score": 100,
+          "details": "Found 'Developer-Human-in-the-Loop' (+3), Found exact source citation format (+4), Appropriate response length (+3)",
+          "promptTokens": 119,
+          "completionTokens": 61
+        },
+        {
+          "testName": "Inox VM Code Generation",
+          "success": true,
+          "latency": 575,
+          "tokensPerSec": 14,
+          "score": 100,
+          "details": "Outputted clean code block (+3), Contains number 42 (+4), Strictly concise (+3)",
+          "promptTokens": 45,
+          "completionTokens": 8
+        },
+        {
+          "testName": "JSON Parameter Extraction",
+          "success": true,
+          "latency": 849,
+          "tokensPerSec": 38,
+          "score": 100,
+          "details": "Valid JSON parsed (+4), Correct locale 'fr' (+3), Correct needs_rag boolean (+3)",
+          "promptTokens": 57,
+          "completionTokens": 32
+        }
+      ]
+    },
+    {
+      "nodeId": "gemini-fast",
+      "model": "gemini-2.5-flash",
+      "tier": "fast",
+      "successRate": 100,
+      "avgScore": 100,
+      "avgLatency": 1362,
+      "avgSpeed": 22,
+      "competitiveScore": 77,
+      "results": [
+        {
+          "testName": "Guide RAG Synthesis",
+          "success": true,
+          "latency": 1722,
+          "tokensPerSec": 34,
+          "score": 100,
+          "details": "Found 'Developer-Human-in-the-Loop' (+3), Found exact source citation format (+4), Appropriate response length (+3)",
+          "promptTokens": 120,
+          "completionTokens": 59
+        },
+        {
+          "testName": "Inox VM Code Generation",
+          "success": true,
+          "latency": 769,
+          "tokensPerSec": 12,
+          "score": 100,
+          "details": "Outputted clean code block (+3), Contains number 42 (+4), Strictly concise (+3)",
+          "promptTokens": 43,
+          "completionTokens": 9
+        },
+        {
+          "testName": "JSON Parameter Extraction",
+          "success": true,
+          "latency": 1595,
+          "tokensPerSec": 20,
+          "score": 100,
+          "details": "Valid JSON parsed (+4), Correct locale 'fr' (+3), Correct needs_rag boolean (+3)",
+          "promptTokens": 52,
+          "completionTokens": 32
+        }
+      ]
+    },
+    {
+      "nodeId": "openai-strong",
+      "model": "gpt-4o",
+      "tier": "strong",
+      "successRate": 100,
+      "avgScore": 90,
+      "avgLatency": 912,
+      "avgSpeed": 34,
+      "competitiveScore": 75,
+      "results": [
+        {
+          "testName": "Guide RAG Synthesis",
+          "success": true,
+          "latency": 973,
+          "tokensPerSec": 57,
+          "score": 100,
+          "details": "Found 'Developer-Human-in-the-Loop' (+3), Found exact source citation format (+4), Appropriate response length (+3)",
+          "promptTokens": 118,
+          "completionTokens": 55
+        },
+        {
+          "testName": "Inox VM Code Generation",
+          "success": true,
+          "latency": 1005,
+          "tokensPerSec": 7,
+          "score": 100,
+          "details": "Outputted clean code block (+3), Contains number 42 (+4), Strictly concise (+3)",
+          "promptTokens": 50,
+          "completionTokens": 7
+        },
+        {
+          "testName": "JSON Parameter Extraction",
+          "success": true,
+          "latency": 759,
+          "tokensPerSec": 38,
+          "score": 70,
+          "details": "Valid JSON parsed (+4), Correct locale 'fr' (+3), Missing needs_rag field or wrong type",
+          "promptTokens": 58,
+          "completionTokens": 29
+        }
+      ]
+    },
+    {
+      "nodeId": "openai-fast",
+      "model": "gpt-4o-mini",
+      "tier": "fast",
+      "successRate": 100,
+      "avgScore": 90,
+      "avgLatency": 1229,
+      "avgSpeed": 21,
+      "competitiveScore": 71,
+      "results": [
+        {
+          "testName": "Guide RAG Synthesis",
+          "success": true,
+          "latency": 1877,
+          "tokensPerSec": 29,
+          "score": 100,
+          "details": "Found 'Developer-Human-in-the-Loop' (+3), Found exact source citation format (+4), Appropriate response length (+3)",
+          "promptTokens": 118,
+          "completionTokens": 55
+        },
+        {
+          "testName": "Inox VM Code Generation",
+          "success": true,
+          "latency": 853,
+          "tokensPerSec": 8,
+          "score": 100,
+          "details": "Outputted clean code block (+3), Contains number 42 (+4), Strictly concise (+3)",
+          "promptTokens": 50,
+          "completionTokens": 7
+        },
+        {
+          "testName": "JSON Parameter Extraction",
+          "success": true,
+          "latency": 957,
+          "tokensPerSec": 25,
+          "score": 70,
+          "details": "Valid JSON parsed (+4), Correct locale 'fr' (+3), Missing needs_rag field or wrong type",
+          "promptTokens": 58,
+          "completionTokens": 24
+        }
+      ]
+    },
+    {
+      "nodeId": "ollama-fallback",
+      "model": "qwen2.5:3b",
+      "tier": "fallback",
+      "successRate": 100,
+      "avgScore": 90,
+      "avgLatency": 11011,
+      "avgSpeed": 4,
+      "competitiveScore": 66,
+      "results": [
+        {
+          "testName": "Guide RAG Synthesis",
+          "success": true,
+          "latency": 22944,
+          "tokensPerSec": 5,
+          "score": 70,
+          "details": "Found 'Developer-Human-in-the-Loop' (+3), Found exact source citation format (+4), Response too short or verbose",
+          "promptTokens": 127,
+          "completionTokens": 114
+        },
+        {
+          "testName": "Inox VM Code Generation",
+          "success": true,
+          "latency": 3143,
+          "tokensPerSec": 3,
+          "score": 100,
+          "details": "Outputted clean code block (+3), Contains number 42 (+4), Strictly concise (+3)",
+          "promptTokens": 53,
+          "completionTokens": 9
+        },
+        {
+          "testName": "JSON Parameter Extraction",
+          "success": true,
+          "latency": 6947,
+          "tokensPerSec": 4,
+          "score": 100,
+          "details": "Valid JSON parsed (+4), Correct locale 'fr' (+3), Correct needs_rag boolean (+3)",
+          "promptTokens": 64,
+          "completionTokens": 29
+        }
+      ]
+    },
+    {
+      "nodeId": "agent-claude",
+      "model": "claude-code",
+      "tier": "agent",
+      "successRate": 100,
+      "avgScore": 20,
+      "avgLatency": 396,
+      "avgSpeed": 19,
+      "competitiveScore": 36,
+      "results": [
+        {
+          "testName": "Guide RAG Synthesis",
+          "success": true,
+          "latency": 469,
+          "tokensPerSec": 15,
+          "score": 30,
+          "details": "Missing keyword 'Developer-Human-in-the-Loop', Missing source citation, Appropriate response length (+3)",
+          "promptTokens": 0,
+          "completionTokens": 0
+        },
+        {
+          "testName": "Inox VM Code Generation",
+          "success": true,
+          "latency": 337,
+          "tokensPerSec": 22,
+          "score": 30,
+          "details": "No code block syntax, Missing target value 42, Strictly concise (+3)",
+          "promptTokens": 0,
+          "completionTokens": 0
+        },
+        {
+          "testName": "JSON Parameter Extraction",
+          "success": true,
+          "latency": 383,
+          "tokensPerSec": 19,
+          "score": 0,
+          "details": "Failed to parse JSON",
+          "promptTokens": 0,
+          "completionTokens": 0
+        }
+      ]
+    },
+    {
+      "nodeId": "agent-codex",
+      "model": "codex",
+      "tier": "agent",
+      "successRate": 100,
+      "avgScore": 20,
+      "avgLatency": 392,
+      "avgSpeed": 19,
+      "competitiveScore": 36,
+      "results": [
+        {
+          "testName": "Guide RAG Synthesis",
+          "success": true,
+          "latency": 421,
+          "tokensPerSec": 17,
+          "score": 30,
+          "details": "Missing keyword 'Developer-Human-in-the-Loop', Missing source citation, Appropriate response length (+3)",
+          "promptTokens": 0,
+          "completionTokens": 0
+        },
+        {
+          "testName": "Inox VM Code Generation",
+          "success": true,
+          "latency": 387,
+          "tokensPerSec": 19,
+          "score": 30,
+          "details": "No code block syntax, Missing target value 42, Strictly concise (+3)",
+          "promptTokens": 0,
+          "completionTokens": 0
+        },
+        {
+          "testName": "JSON Parameter Extraction",
+          "success": true,
+          "latency": 368,
+          "tokensPerSec": 20,
+          "score": 0,
+          "details": "Failed to parse JSON",
+          "promptTokens": 0,
+          "completionTokens": 0
+        }
+      ]
+    },
+    {
+      "nodeId": "agent-grok",
+      "model": "grok-build",
+      "tier": "agent",
+      "successRate": 100,
+      "avgScore": 20,
+      "avgLatency": 476,
+      "avgSpeed": 15,
+      "competitiveScore": 35,
+      "results": [
+        {
+          "testName": "Guide RAG Synthesis",
+          "success": true,
+          "latency": 406,
+          "tokensPerSec": 18,
+          "score": 30,
+          "details": "Missing keyword 'Developer-Human-in-the-Loop', Missing source citation, Appropriate response length (+3)",
+          "promptTokens": 0,
+          "completionTokens": 0
+        },
+        {
+          "testName": "Inox VM Code Generation",
+          "success": true,
+          "latency": 482,
+          "tokensPerSec": 15,
+          "score": 30,
+          "details": "No code block syntax, Missing target value 42, Strictly concise (+3)",
+          "promptTokens": 0,
+          "completionTokens": 0
+        },
+        {
+          "testName": "JSON Parameter Extraction",
+          "success": true,
+          "latency": 539,
+          "tokensPerSec": 13,
+          "score": 0,
+          "details": "Failed to parse JSON",
+          "promptTokens": 0,
+          "completionTokens": 0
+        }
+      ]
+    },
+    {
+      "nodeId": "together-strong",
+      "model": "meta-llama/Llama-3.1-70B-Instruct-Turbo",
+      "tier": "strong",
+      "successRate": 0,
+      "avgScore": 0,
+      "avgLatency": 0,
+      "avgSpeed": 0,
+      "competitiveScore": 0,
+      "results": [
+        {
+          "testName": "Guide RAG Synthesis",
+          "success": false,
+          "latency": 0,
+          "tokensPerSec": 0,
+          "score": 0,
+          "details": "Error: HTTP 401",
+          "promptTokens": 0,
+          "completionTokens": 0
+        },
+        {
+          "testName": "Inox VM Code Generation",
+          "success": false,
+          "latency": 0,
+          "tokensPerSec": 0,
+          "score": 0,
+          "details": "Error: HTTP 401",
+          "promptTokens": 0,
+          "completionTokens": 0
+        },
+        {
+          "testName": "JSON Parameter Extraction",
+          "success": false,
+          "latency": 0,
+          "tokensPerSec": 0,
+          "score": 0,
+          "details": "Error: HTTP 401",
+          "promptTokens": 0,
+          "completionTokens": 0
+        }
+      ]
+    }
+  ]
+}

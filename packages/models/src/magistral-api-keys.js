@@ -21,10 +21,12 @@ export function buildMagistralApiKeys(map = [], env = process.env) {
     "";
 
   const keys = {
-    GROQ_API_KEY: e.GROQ_API_KEY || "",
+    GROQ_API_KEY: e.GROQ_API_KEY || e.GROC_API_KEY || "",
     TOGETHER_API_KEY: e.TOGETHER_API_KEY || "",
     OPENAI_API_KEY: e.OPENAI_API_KEY || "",
     ANTHROPIC_API_KEY: e.ANTHROPIC_API_KEY || "",
+    MISTRAL_API_KEY: e.MISTRAL_API_KEY || "",
+    GEMINI_API_KEY: e.GEMINI_API_KEY || "",
     // Primary system bearer (Guide / Magistral / Agent CLI Gateway)
     COGENTIA_API_KEY: cogentiaApiKey,
   };
