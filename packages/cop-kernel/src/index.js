@@ -10,6 +10,7 @@ export * from "./debugLog.js";
 export * from "./env.js";
 export * from "./events.js";
 export * from "./artifacts.js";
+export * from "./runtimeModel.js";
 
 // Task / Step / Continuation orchestration helpers (generic foundation)
 // These provide the reusable Task/Step lifecycle + tight integration with
