@@ -70,6 +70,17 @@ const ENV_KEY_MAPPING = {
   // Cogentia system bearer — edge has no inseme/.env FS; vault is edge authority
   cogentia_api_key: ["COGENTIA_API_KEY"],
 
+  // Agent JHN WhatsApp (Cogentia adapter; config/PII — not Baileys session files)
+  // Session material stays on workstation under STATE_DIR (registre-mariani/runtime/…).
+  agent_jhn_whatsapp_allowed_self_jid: ["AGENT_JHN_WHATSAPP_ALLOWED_SELF_JID"],
+  agent_jhn_whatsapp_mode: ["AGENT_JHN_WHATSAPP_MODE"],
+  agent_jhn_whatsapp_send_enabled: ["AGENT_JHN_WHATSAPP_SEND_ENABLED"],
+  agent_jhn_whatsapp_notice_url: ["AGENT_JHN_WHATSAPP_NOTICE_URL"],
+  agent_jhn_whatsapp_state_dir: ["AGENT_JHN_WHATSAPP_STATE_DIR"],
+  agent_jhn_whatsapp_preferred_self_peer: ["AGENT_JHN_WHATSAPP_PREFERRED_SELF_PEER"],
+  agent_jhn_whatsapp_grant_id: ["AGENT_JHN_WHATSAPP_USAGE_GRANT_ID", "AGENT_JHN_WHATSAPP_GRANT_ID"],
+  agent_jhn_whatsapp_mandate_id: ["AGENT_JHN_WHATSAPP_MANDATE_ID"],
+
   // GitHub
   github_token: ["GITHUB_TOKEN"],
   github_client_id: ["GITHUB_CLIENT_ID"],

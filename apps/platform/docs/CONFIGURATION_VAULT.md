@@ -143,11 +143,36 @@ Provisioning: `docs/PROVISIONING_GUIDE.md` (step-vault).
 
 ---
 
+## Agent JHN WhatsApp (John / personal twin)
+
+Config for the Cogentia WhatsApp adapter lives in the **JHN** vault (project `ndiysuh…`), not
+Pertitellu. Env → vault keys (via `ENV_KEY_MAPPING` in `scripts/lib/config.js`):
+
+| Env                                      | Vault key                                | Notes                                          |
+| ---------------------------------------- | ---------------------------------------- | ---------------------------------------------- |
+| `AGENT_JHN_WHATSAPP_ALLOWED_SELF_JID`    | `agent_jhn_whatsapp_allowed_self_jid`    | PII — `is_secret`                              |
+| `AGENT_JHN_WHATSAPP_PREFERRED_SELF_PEER` | `agent_jhn_whatsapp_preferred_self_peer` | Message-yourself `@lid` — `is_secret`          |
+| `AGENT_JHN_WHATSAPP_STATE_DIR`           | `agent_jhn_whatsapp_state_dir`           | Workstation path — `is_secret`                 |
+| `AGENT_JHN_WHATSAPP_MODE`                | `agent_jhn_whatsapp_mode`                | e.g. `self_chat_only`                          |
+| `AGENT_JHN_WHATSAPP_SEND_ENABLED`        | `agent_jhn_whatsapp_send_enabled`        | Prefer `false` in vault; enable only for tests |
+| `AGENT_JHN_WHATSAPP_NOTICE_URL`          | `agent_jhn_whatsapp_notice_url`          | Public disclosure URL                          |
+| `AGENT_JHN_WHATSAPP_USAGE_GRANT_ID`      | `agent_jhn_whatsapp_grant_id`            | Governance id                                  |
+| `AGENT_JHN_WHATSAPP_MANDATE_ID`          | `agent_jhn_whatsapp_mandate_id`          | Governance id                                  |
+
+**Not in vault (by design):** Baileys session files under `STATE_DIR/baileys-auth/` (noise keys,
+multi-device creds). Those stay on the principal’s machine / registry runtime disk
+(`registre-mariani/runtime/…`). Re-pair on a new host instead of shipping session material through
+the vault unless a dedicated encrypted session-export path is designed later.
+
+Category: `integrations`. Push: `node scripts/push-env-to-vault.js --apply` from `apps/platform`
+with JHN `SUPABASE_*` in `inseme/.env`.
+
 ## Related
 
 - `apps/platform/scripts/push-env-to-vault.js`
 - `apps/platform/scripts/sync-secrets.js` (hygiene / dry-run; `.env` remains SoT on workstation)
 - `apps/platform/docs/RUNBOOK_JHN_PERSONAL_INSTANCE.md`
+- Cogentia: `docs/agent-jhn-whatsapp-mvp.md`
 - `apps/platform/docs/ARCHITECTURE_MULTI_INSTANCE.md` (section vault / Netlify thin env)
 
 ---
