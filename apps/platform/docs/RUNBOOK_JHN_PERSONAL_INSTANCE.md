@@ -12,6 +12,7 @@ visibility: "public"
 repository: "JeanHuguesRobert/inseme"
 canonical_path: "apps/platform/docs/RUNBOOK_JHN_PERSONAL_INSTANCE.md"
 related_documents:
+  - "../../research/instance_map.md"
   - "../../research/personal_instance_democracy_and_non_capturable_match.md"
   - "../instances/jhn.example.json"
   - "../instances/QUICKSTART.md"
@@ -22,7 +23,9 @@ related_documents:
 
 ## Objectif
 
-Disposer **en priorité** d’une instance personnelle pour Jean Hugues Noël Robert (JHN) :
+Disposer **en priorité** d’une instance personnelle pour Jean Hugues Noël Robert (JHN)
+(`instance_id` verrouillé : **`jhn`** — voir [instance_map.md](../../research/instance_map.md) ;
+première instance collective = **`pertitellu-corte`** / lepp.fr, non confondre) :
 
 | Élément                    | Cible                                                                           |
 | -------------------------- | ------------------------------------------------------------------------------- |
@@ -201,17 +204,21 @@ supabase/migrations_legacy/          # archive Survey/Corte — référence, non
 supabase/schema.sql                  # dump de contexte, NE PAS exécuter
 ```
 
-**Vault / Pertitellu :** les clés **publiques** (features, map, branding) viennent d’une migration curatée.  
-Les **secrets** (API keys, OAuth, `service_role`) viennent de `inseme/.env` → vault via script (comme sur Pertitellu).  
-Pas de copie croisée des secrets *d’un autre projet Supabase*.
+**Vault / Pertitellu :** les clés **publiques** (features, map, branding) viennent d’une migration
+curatée.  
+Les **secrets** (API keys, OAuth, `service_role`) viennent de `inseme/.env` → vault via script
+(comme sur Pertitellu).  
+Pas de copie croisée des secrets _d’un autre projet Supabase_.
 
-> **À mémoriser (design)** : le vault existe pour éviter l’enfer du copier-coller de clés dans Netlify.
-> Réf. canonique : [`CONFIGURATION_VAULT.md`](./CONFIGURATION_VAULT.md).
+> **À mémoriser (design)** : le vault existe pour éviter l’enfer du copier-coller de clés dans
+> Netlify. Réf. canonique : [`CONFIGURATION_VAULT.md`](./CONFIGURATION_VAULT.md).
 
 #### Secrets → vault (edge functions)
 
-Les edge/backend lisent `instance_config` avec le client **service_role** (Netlify env : `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` du projet JHN).  
-Les autres clés (OpenAI, Anthropic, …) doivent être **dans le vault**, pas seulement dans le `.env` local.
+Les edge/backend lisent `instance_config` avec le client **service_role** (Netlify env :
+`SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` du projet JHN).  
+Les autres clés (OpenAI, Anthropic, …) doivent être **dans le vault**, pas seulement dans le `.env`
+local.
 
 ```powershell
 cd C:\tweesic\inseme\apps\platform
@@ -222,11 +229,12 @@ node scripts/push-env-to-vault.js
 node scripts/push-env-to-vault.js --apply --verbose
 ```
 
-Politique « copie complète » : tout ce qui est réellement disponible dans `inseme/.env`
-(prefixes + mappings) part dans le vault. Placeholders vides (`ANTHROPIC_API_KEY=`,
-`your_…`, `sesame`) ne sont **pas** poussés (sinon le code croit avoir une clé).
+Politique « copie complète » : tout ce qui est réellement disponible dans `inseme/.env` (prefixes +
+mappings) part dans le vault. Placeholders vides (`ANTHROPIC_API_KEY=`, `your_…`, `sesame`) ne sont
+**pas** poussés (sinon le code croit avoir une clé).
 
-RLS : les lignes `is_secret=true` ne sont **pas** lisibles en anon/authenticated (migration `…_instance_config_secret_rls`).  
+RLS : les lignes `is_secret=true` ne sont **pas** lisibles en anon/authenticated (migration
+`…_instance_config_secret_rls`).  
 Service role contourne le RLS (edge admin).
 
 #### Ajouter une évolution de schéma (discipline)
@@ -348,7 +356,8 @@ Tests :
 #### Auth smoke notes (2026-07-20)
 
 1. `pnpm platform:dev` must be `pnpm --filter platform run dev` (fixed in root `package.json`).
-2. Projet Auth : confirmation email **activée** par défaut → login renvoie `email_not_confirmed` jusqu’à confirmation.
+2. Projet Auth : confirmation email **activée** par défaut → login renvoie `email_not_confirmed`
+   jusqu’à confirmation.
 3. Contournement dogfooding (CLI, pas SQL Editor) :
 
 ```powershell
@@ -356,7 +365,8 @@ cd C:\tweesic\inseme\apps\platform
 supabase db query --linked "UPDATE auth.users SET email_confirmed_at = COALESCE(email_confirmed_at, now()) WHERE email = 'VOTRE@email';"
 ```
 
-4. Ou désactiver *Confirm email* dans Dashboard → Authentication → Providers → Email (ok pour instance perso / dev).
+4. Ou désactiver _Confirm email_ dans Dashboard → Authentication → Providers → Email (ok pour
+   instance perso / dev).
 5. Trigger `handle_new_user` crée `public.users` (rôle `user`) au signup.
 6. Promo admin (après login OK) :
 
@@ -364,8 +374,10 @@ supabase db query --linked "UPDATE auth.users SET email_confirmed_at = COALESCE(
 supabase db query --linked "UPDATE public.users SET role = 'admin' WHERE email = 'VOTRE@email';"
 ```
 
-7. `sb_publishable_…` fonctionne pour REST/Auth sur ce projet ; tables `users` + `instance_config` répondent 200.
-8. Warning Vite possible (scan `cop-kernel` / `createStackCallPacket`) : pré-bundling skippé, HTML/modules principaux servis — suivre si une page COP casse.
+7. `sb_publishable_…` fonctionne pour REST/Auth sur ce projet ; tables `users` + `instance_config`
+   répondent 200.
+8. Warning Vite possible (scan `cop-kernel` / `createStackCallPacket`) : pré-bundling skippé,
+   HTML/modules principaux servis — suivre si une page COP casse.
 
 ---
 
