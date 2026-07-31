@@ -55,6 +55,10 @@
 
 # --- GENERATED BRIQUE EDGE START ---
 [[edge_functions]]
+  function = "github-webhook"
+  path = "/api/webhooks/github"
+
+[[edge_functions]]
   function = "gen-tool-actes-search_actes"
   path = "/api/tools/actes/search_actes"
 
