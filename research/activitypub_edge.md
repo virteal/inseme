@@ -1,12 +1,12 @@
 ---
-title: "ActivityPub Edge — frontière fédérée d’Inseme / Fractanet"
-subtitle: "Publication dérivée, interactions externes et exécution multi-tenant avec Fedify"
+title: "ActivityPub Edge — Inseme / Fractanet Federation Boundary"
+subtitle: "Derived publication, external interactions, and multi-tenant execution with Fedify"
 author: "Jean Hugues Noël Robert"
 affiliation: "Institut Mariani / C.O.R.S.I.C.A."
 license: "CC BY-SA 4.0"
 status: "working-paper — source document"
 date: "2026-07-31"
-language: "fr"
+language: "en"
 repository: "JeanHuguesRobert/inseme"
 canonical_path: "research/activitypub_edge.md"
 canonical_url: "https://github.com/JeanHuguesRobert/inseme/blob/main/research/activitypub_edge.md"
@@ -21,145 +21,143 @@ classification_rule: "architecture-decision"
 classification_confidence: "medium"
 ---
 
-# ActivityPub Edge — frontière fédérée d’Inseme / Fractanet
+# ActivityPub Edge — Inseme / Fractanet Federation Boundary
 
-## 1. Décision
+## 1. Decision
 
-Inseme adopte **ActivityPub** comme frontière de fédération avec le Fediverse, non comme source
-canonique de la mémoire, des mandats, des décisions ou des droits.
+Inseme adopts **ActivityPub** as its federation boundary with the Fediverse, not as the canonical
+source of memory, mandates, decisions, or rights.
 
-L’implémentation de référence envisagée est **[Fedify](https://fedify.dev/)** — et non « Fedly » —
-un framework TypeScript sous licence MIT. Le futur composant est nommé, à ce stade :
+The reference implementation under consideration is **[Fedify](https://fedify.dev/)** — not
+“Fedly” — a TypeScript framework released under the MIT license. The future component is provisionally
+named:
 
 ```text
 inseme/packages/brique-activitypub-edge/
 ```
 
-Il sera une brique optionnelle, multi-tenant dès sa conception. L’absence actuelle de ce package
-est explicite : cette note en fixe la cible architecturale, elle ne prétend pas annoncer une
-implémentation achevée.
+It will be an optional brique, multi-tenant by design. The current absence of this package is
+explicit: this note records the architectural target; it does not claim that implementation is
+complete.
 
-## 2. Rôle et frontière
+## 2. Role and boundary
 
-ActivityPub est la couche d’échange avec des serveurs externes, analogue à un protocole de courrier
-ou de routage : utile pour publier, recevoir, suivre et dialoguer, mais insuffisant pour porter à
-lui seul une institution ou une mémoire fiable.
+ActivityPub is the exchange layer with external servers, comparable to a mail or routing protocol:
+useful for publishing, receiving, following, and conversing, but insufficient by itself to carry an
+institution or a trustworthy memory.
 
-| Couche | Autorité / rôle |
+| Layer | Authority / role |
 | --- | --- |
-| GitHub et corpus versionné | sources, historique et provenance publiable |
-| Ubikia | publication dérivée, lisible et vérifiable |
-| Cogentia / COP | paquets, traces, continuations, mandats, actes et règles de traitement |
-| Inseme | instances, briques, interaction collective et application des politiques |
-| ActivityPub Edge | projection publique fédérée et ingestion d’interactions externes |
-| PrivAI | garanties proportionnées : preuve, limite, recours, expiration et responsabilité |
+| GitHub and the versioned corpus | sources, history, and publishable provenance |
+| Ubikia | readable and verifiable derived publication |
+| Cogentia / COP | packets, traces, continuations, mandates, acts, and processing rules |
+| Inseme | instances, briques, collective interaction, and policy enforcement |
+| ActivityPub Edge | public federated projection and ingestion of external interactions |
+| PrivAI | proportionate guarantees: evidence, limits, recourse, expiry, and responsibility |
 
-Une activité fédérée doit donc pointer vers sa source ou son produit dérivé vérifiable. Elle ne
-devient pas, par sa seule diffusion, la vérité de référence du corpus.
+A federated activity must therefore point to its verifiable source or derived product. Distribution
+alone does not make it the corpus’s reference truth.
 
 ## 3. Invariants
 
-1. **Projection, jamais substitution.** Une publication ActivityPub est une projection publique,
-   dérivée et révoquable ; la source et son historique restent identifiables.
-2. **Séparation des identités.** `tenant`, `subject`, `actor`, `persona`, `agent`, `mandate` et
-   `act` sont des objets distincts. Une adresse fédérée n’est pas une preuve de personne vivante,
-   de droit de vote ni de mandat.
-3. **Agent explicite.** Un acteur automatisé est déclaré comme tel, rattaché à un sujet ou mandat
-   lorsque cela est pertinent, et ne se confond pas avec une personne humaine.
-4. **Données minimales.** Seuls les éléments explicitement publics et nécessaires à la projection
-   sortent vers la fédération ; aucune donnée privée du corpus ne devient visible par défaut.
-5. **Entrant non fiable par défaut.** Une activité reçue est un paquet externe : authentification,
-   quotas, politique de contenu, traçabilité et contrôle humain s’appliquent avant tout effet
-   institutionnel ou toute réponse engageante.
-6. **Multi-tenant réel.** L’isolation, les clés, les quotas, les journaux et les politiques sont
-   portés par tenant dès le schéma initial ; le premier tenant n’est pas une exception architecturale.
-7. **Réversibilité.** L’edge peut être désactivé ou remplacé sans perdre les sources, les mandats,
-   les actes ni la mémoire COP.
+1. **Projection, never substitution.** An ActivityPub publication is a public, derived, revocable
+   projection; its source and history remain identifiable.
+2. **Separate identities.** `tenant`, `subject`, `actor`, `persona`, `agent`, `mandate`, and
+   `act` are distinct objects. A federated address is not proof of a living person, voting right, or
+   mandate.
+3. **Explicit agents.** An automated actor is declared as such, linked to a subject or mandate where
+   relevant, and never conflated with a human person.
+4. **Data minimisation.** Only explicitly public elements needed for the projection leave the
+   federation boundary; private corpus data is not exposed by default.
+5. **Untrusted inbound by default.** A received activity is an external packet: authentication,
+   quotas, content policy, traceability, and human control apply before any institutional effect or
+   engaging response.
+6. **Real multi-tenancy.** Isolation, keys, quotas, logs, and policies are tenant-scoped from the
+   initial schema; the first tenant is not an architectural exception.
+7. **Reversibility.** The edge can be disabled or replaced without losing sources, mandates, acts, or
+   COP memory.
 
-## 4. Chemins de traitement
+## 4. Processing paths
 
 ```text
-Source GitHub → publication dérivée Ubikia → paquet / trace Cogentia
-→ projection ActivityPub par tenant → Fediverse
+GitHub source → Ubikia derived publication → Cogentia packet / trace
+→ tenant-scoped ActivityPub projection → Fediverse
 
-Fediverse → activité externe non fiable → vérification et politique
-→ paquet d’interaction COP → effet autorisé, file d’attente ou contrôle humain
+Fediverse → untrusted external activity → verification and policy
+→ COP interaction packet → authorised effect, queue, or human checkpoint
 ```
 
-Les effets à enjeu élevé — publication au nom d’une organisation, modération sensible, décision,
-engagement financier, conséquence civique — ne sont pas déduits d’un simple message fédéré. Ils
-exigent le niveau de mandat, de preuve et de contrôle correspondant à leur **STAKE**, avec un
-**GAGE** vérifiable : promesse bornée, éléments de preuve, durée, révocation et recours.
+High-stakes effects — publication on behalf of an organisation, sensitive moderation, decisions,
+financial commitments, or civic consequences — are not inferred from a federated message alone.
+They require the mandate, evidence, and control level matching their **STAKE**, with a verifiable
+**GAGE**: bounded promise, evidence, duration, revocation, and recourse.
 
-## 5. Modèle minimal
+## 5. Minimal model
 
-| Objet | Sens |
+| Object | Meaning |
 | --- | --- |
-| `tenant` | instance, collectif ou surface opérée ; frontière de politique et d’isolation |
-| `subject` | personne vivante, collectif, institution, agent, nœud technique ou autre sujet COP |
-| `actor` | adresse et clés ActivityPub exposées pour un contexte donné |
-| `persona` | présentation publique d’un sujet, distincte de l’identité ou de la capacité civique |
-| `agent` | acteur logiciel, avec nature automatisée visible et responsabilité rattachable |
-| `mandate` | autorisation bornée d’agir, publier ou répondre au nom d’un sujet |
-| `act` | acte COP traçable, dont une activité ActivityPub peut être la projection ou l’entrée |
+| `tenant` | operated instance, collective, or surface; policy and isolation boundary |
+| `subject` | living person, collective, institution, agent, technical node, or other COP subject |
+| `actor` | ActivityPub address and keys exposed for a given context |
+| `persona` | public presentation of a subject, distinct from identity or civic capacity |
+| `agent` | software actor, with visible automated nature and attributable responsibility |
+| `mandate` | bounded authorisation to act, publish, or reply on behalf of a subject |
+| `act` | traceable COP act, of which an ActivityPub activity may be a projection or an input |
 
-Une même personne, organisation ou instance peut avoir plusieurs personas et acteurs ; aucun de ces
-alias ne doit multiplier les droits politiques ou contourner les règles de représentation.
+A person, organisation, or instance may have several personas and actors; none of these aliases may
+multiply political rights or bypass representation rules.
 
-## 6. Profil d’implémentation Fedify
+## 6. Fedify implementation profile
 
-La brique visée utilise Fedify pour les primitives de fédération : WebFinger, signatures HTTP,
-inbox/outbox, livraison asynchrone, découverte et activités ActivityPub. Elle s’intègre au contrat
-des briques et à COP, sans faire de Fedify le modèle de domaine interne.
+The intended brique uses Fedify for federation primitives: WebFinger, HTTP signatures, inbox/outbox,
+asynchronous delivery, discovery, and ActivityPub activities. It integrates with the brique contract
+and COP without making Fedify the internal domain model.
 
-Socle technique envisagé :
+Proposed technical foundation:
 
-- TypeScript et `@fedify/fedify` ; adaptateur d’hébergement choisi selon l’application Inseme ;
-- PostgreSQL/Supabase pour les objets métier, avec portée `tenant_id` et politiques d’accès ;
-- Redis pour cache, quotas, anti-duplication et files légères ;
-- une file durable ou AMQP seulement lorsque le volume et les garanties de livraison le justifient ;
-- OpenTelemetry et FractaLog/COP pour les traces d’exécution, sans journaliser indûment les contenus
-  privés ;
-- clés et secrets séparés par tenant, avec rotation et révocation.
+- TypeScript and `@fedify/fedify`; hosting adapter selected according to the Inseme application;
+- PostgreSQL/Supabase for domain objects, scoped by `tenant_id` and access policies;
+- Redis for caching, quotas, deduplication, and lightweight queues;
+- a durable queue or AMQP only when volume and delivery guarantees justify it;
+- OpenTelemetry and FractaLog/COP for execution traces, without logging private content unnecessarily;
+- tenant-separated keys and secrets, with rotation and revocation.
 
-La compatibilité API Mastodon peut devenir un adaptateur ultérieur ; elle n’est pas un prérequis et
-ne doit pas imposer son modèle de produit au noyau.
+Mastodon API compatibility may become a later adapter; it is not a prerequisite and must not impose
+its product model on the core.
 
-## 7. Vigilances opérationnelles
+## 7. Operational safeguards
 
-- vérifier les signatures et l’attribution sans les surinterpréter comme une identité civique ;
-- limiter les requêtes sortantes et les récupérations d’objets distants (notamment contre SSRF) ;
-- appliquer quotas, idempotence, reprise et files d’échec ;
-- séparer modération, droit de publication, mandat de réponse et éligibilité civique ;
-- conserver une provenance compacte : source, produit dérivé, version, tenant, politique appliquée ;
-- prévoir suspension, blocage, réexamen et expiration des autorisations ;
-- réserver un humain dans la boucle lorsque l’acte devient engageant ou irréversible.
+- verify signatures and attribution without overinterpreting them as civic identity;
+- limit outbound requests and remote-object fetching, including SSRF protection;
+- apply quotas, idempotence, retries, and failure queues;
+- separate moderation, publication rights, reply mandates, and civic eligibility;
+- retain compact provenance: source, derived product, version, tenant, and applied policy;
+- provide suspension, blocking, review, and authorisation expiry;
+- keep a human in the loop when an act becomes consequential or irreversible.
 
-## 8. Première trajectoire
+## 8. Initial path
 
-1. Créer la brique vide et son contrat de configuration multi-tenant.
-2. Réaliser une projection sortante publique pour le tenant personnel JHN, avec lien vers la source
-   versionnée et sans ingestion automatique.
-3. Ajouter l’inbox, les signatures, les quotas et la traduction en paquets d’interaction COP.
-4. Ajouter progressivement politiques de modération, mandats de réponse, observabilité et outils de
-   recours.
-5. N’ajouter les compatibilités produit et la montée en charge qu’après validation de ces invariants.
+1. Create the empty brique and its multi-tenant configuration contract.
+2. Build a public outbound projection for the JHN personal tenant, with a link to the versioned source
+   and no automatic ingestion.
+3. Add inbox handling, signatures, quotas, and translation into COP interaction packets.
+4. Add moderation policies, reply mandates, observability, and recourse tools progressively.
+5. Add product compatibilities and scale only after these invariants have been validated.
 
-## 9. Documents liés
+## 9. Related documents
 
-- [Instance map — locked names and regimes](instance_map.md) — instances fondatrices et régimes.
-- [COP Identity / Kudocracy Profile](cop_identity_kudocracy_profile.md) — sujets, capacités,
-  mandats et actes publics ; ActivityPub n’en est qu’une interface.
-- [COP — Cognitive Orchestration Protocol](../packages/cop-core/Architecture.md) — primitives
-  canoniques de trace et de continuité.
-- [BRIQUE_SPEC](../packages/cop-host/BRIQUE_SPEC.md) — contrat d’intégration de la future brique.
+- [Instance map — locked names and regimes](instance_map.md) — founding instances and regimes.
+- [COP Identity / Kudocracy Profile](cop_identity_kudocracy_profile.md) — subjects, capacities,
+  mandates, and public acts; ActivityPub is only one interface.
+- [COP — Cognitive Orchestration Protocol](../packages/cop-core/Architecture.md) — canonical trace
+  and continuity primitives.
+- [BRIQUE_SPEC](../packages/cop-host/BRIQUE_SPEC.md) — integration contract for the future brique.
 - [FractaNet](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/fractanet.md) —
-  substrat distribué plus large auquel l’edge apporte une surface fédérée.
-- [STAKE / GAGE](https://github.com/acorsica/privai/blob/main/stake_gage.md) — proportion entre
-  conséquence, garantie et recours.
+  broader distributed substrate to which the edge adds a federated surface.
+- [STAKE / GAGE](https://github.com/acorsica/privai/blob/main/stake_gage.md) — proportion between
+  consequence, guarantee, and recourse.
 
 ---
 
-_Décision initiale, à éprouver par un premier flux public réversible. Toute évolution qui modifie
-les invariants ci-dessus doit être explicite, versionnée et reliée à une trace de décision._
-
+_Initial decision, to be tested by a first reversible public flow. Any change to the invariants above
+must be explicit, versioned, and linked to a decision trace._
