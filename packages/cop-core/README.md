@@ -24,7 +24,7 @@ review:
 (COP).
 
 It defines the **canonical data model, invariants, and interfaces** required to build durable,
-replayable, and interoperable cognitive systems (AI agents, workflows, human-in-the-loop processes).
+replayable, and interoperable cognitive systems (handlers, workflows, human-in-the-loop processes).
 
 This package intentionally contains **no executable logic**.
 
@@ -45,7 +45,7 @@ COP standardizes how cognition is:
 
 COP treats cognition as a **durable process**, not a transient computation.
 
-Agents are replaceable. Models evolve. Cognition remains.
+Handlers are replaceable. Models evolve. Cognition remains.
 
 ---
 
@@ -79,7 +79,7 @@ COP defines a small set of foundational primitives:
 
 All durable state lives in Events and Artifacts.
 
-Agents are **stateless**.
+Handlers are **stateless**.
 
 ---
 
@@ -90,7 +90,7 @@ Agents are **stateless**.
 - **COPBus** — event publication and replay
 - **COPStore** — deterministic projection storage
 - **COPScheduler** — event dispatch and coordination
-- **COPAgent** — stateless cognitive actor
+- **COPHandler** — stateless packet/event handler
 
 Any technology stack can implement these interfaces:
 
@@ -114,7 +114,7 @@ COP is defined by a small number of **non-negotiable invariants**:
 2. Topic-local ordering
 3. Idempotency
 4. Durability
-5. Stateless agents
+5. Stateless handlers
 6. Isolation via events
 
 These invariants are normative and MUST be preserved by all implementations.
@@ -126,6 +126,10 @@ See **`invariants.md`** for the formal definition.
 ## Profiles
 
 Profiles extend COP without modifying the core.
+
+Normative authority and execution terminology is defined in
+[`Terminology.md`](Terminology.md). In particular, COP distinguishes a `LogicalAgent` that
+holds a mandate from a `Handler` and its potentially ephemeral `HandlerInstance` that execute work.
 
 Examples:
 
