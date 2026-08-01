@@ -99,6 +99,9 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
       framer-motion:
         specifier: ^10.16.4
         version: 10.18.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -126,9 +129,15 @@ importers:
       lucide-react:
         specifier: ^0.562.0
         version: 0.562.0(react@18.3.1)
+      minimist:
+        specifier: ^1.2.8
+        version: 1.2.8
       netlify-cli:
         specifier: ^23.13.5
         version: 23.13.5(@types/node@25.0.9)(encoding@0.1.13)(picomatch@4.0.3)(rollup@2.79.2)
+      ngrok:
+        specifier: ^5.0.0-beta.2
+        version: 5.0.0-beta.2
       openai:
         specifier: ^4.52.5
         version: 4.104.0(encoding@0.1.13)(ws@8.19.0)(zod@3.25.76)
@@ -262,6 +271,9 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
       framer-motion:
         specifier: ^10.16.4
         version: 10.18.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -286,6 +298,12 @@ importers:
       lucide-react:
         specifier: ^0.562.0
         version: 0.562.0(react@18.3.1)
+      minimist:
+        specifier: ^1.2.8
+        version: 1.2.8
+      ngrok:
+        specifier: ^5.0.0-beta.2
+        version: 5.0.0-beta.2
       openai:
         specifier: ^4.52.5
         version: 4.104.0(encoding@0.1.13)(ws@8.19.0)(zod@3.25.76)
@@ -458,6 +476,12 @@ importers:
       lucide-react:
         specifier: ^0.562.0
         version: 0.562.0(react@18.3.1)
+      minimist:
+        specifier: ^1.2.8
+        version: 1.2.8
+      ngrok:
+        specifier: ^5.0.0-beta.2
+        version: 5.0.0-beta.2
       node-fetch:
         specifier: ^3.0.0
         version: 3.3.2
@@ -543,12 +567,6 @@ importers:
       eslint-plugin-prettier:
         specifier: ^5.5.4
         version: 5.5.5(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))(prettier@3.8.0)
-      minimist:
-        specifier: ^1.2.8
-        version: 1.2.8
-      ngrok:
-        specifier: ^5.0.0-beta.2
-        version: 5.0.0-beta.2
       nodemon:
         specifier: ^3.1.11
         version: 3.1.11
@@ -811,6 +829,12 @@ importers:
       serialize-error:
         specifier: ^11.0.0
         version: 11.0.3
+
+  packages/brique-ritornu:
+    optionalDependencies:
+      '@supabase/supabase-js':
+        specifier: ^2.0.0
+        version: 2.90.1
 
   packages/brique-tasks:
     dependencies:
@@ -12175,7 +12199,7 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 18.19.130
+      '@types/node': 25.0.9
       form-data: 4.0.5
 
   '@types/node@18.19.130':
