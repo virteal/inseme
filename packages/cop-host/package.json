@@ -12,6 +12,8 @@
     ".": "./src/index.js",
     "./backend": "./src/backend.js",
     "./backend.js": "./src/backend.js",
+    "./client/*": "./src/client/*",
+    "./src/*": "./src/*",
     "./config/*": "./src/config/*",
     "./runtime/*": "./src/runtime/*",
     "./tunnel": "./src/tunnel/runtime.js",

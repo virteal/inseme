@@ -6,20 +6,6 @@ dist/
 build/
 **/build/
 .netlify/
-.cache/
-.parcel-cache/
-.turbo/
-**/playwright-report/
-**/test-results/
-**/coverage/
-.temp/
-**/.temp/
-**/gen-*.js
-
-# --- Lockfiles Interdits dans les sous-dossiers ---
-# On autorise le lockfile à la racine, mais on ignore ceux des apps
-apps/**/package-lock.json
-packages/**/package-lock.json
 
 # --- Environnement & Secrets ---
 .env*
@@ -35,6 +21,10 @@ packages/**/package-lock.json
 .metrics-cache.json
 .magistral-traffic.log*
 logs/
+tmp/
+**/tmp/
+.temp/
+**/.temp/
 npm-debug.log*
 yarn-debug.log*
 vite.config.*.timestamp-*

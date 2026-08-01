@@ -5,6 +5,9 @@
   functions = "netlify/functions"
   edge_functions = "netlify/edge-functions"
 
+[build.environment]
+  NODE_OPTIONS = "--max-old-space-size=4096"
+
 [dev]
   command = "node ../../scripts/check-tunnel.js && pnpm vite"
   port = 8888
