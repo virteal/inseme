@@ -1,7 +1,7 @@
 /**
  * call.js
  *
- * High-level helpers to call another agent with a COP continuation
+ * High-level helpers to call another handler with a COP continuation
  * and to resume an existing continuation.
  *
  * Restored after file content mix-up.
@@ -22,7 +22,7 @@ import { postCopMessage } from "./transport.js";
  *  - attach it to a COP_MESSAGE
  *  - POST it to /cop
  */
-export async function callAgentWithContinuation(params) {
+export async function callHandlerWithContinuation(params) {
   const {
     from,
     to,
@@ -41,11 +41,11 @@ export async function callAgentWithContinuation(params) {
     baseUrl,
   } = params || {};
 
-  if (!from) throw new Error("callAgentWithContinuation: 'from' is required");
-  if (!to) throw new Error("callAgentWithContinuation: 'to' is required");
-  if (!intent) throw new Error("callAgentWithContinuation: 'intent' is required");
-  if (!resumeTo) throw new Error("callAgentWithContinuation: 'resumeTo' is required");
-  if (!resumeIntent) throw new Error("callAgentWithContinuation: 'resumeIntent' is required");
+  if (!from) throw new Error("callHandlerWithContinuation: 'from' is required");
+  if (!to) throw new Error("callHandlerWithContinuation: 'to' is required");
+  if (!intent) throw new Error("callHandlerWithContinuation: 'intent' is required");
+  if (!resumeTo) throw new Error("callHandlerWithContinuation: 'resumeTo' is required");
+  if (!resumeIntent) throw new Error("callHandlerWithContinuation: 'resumeIntent' is required");
 
   const continuation = createContinuationDescriptor({
     resumeTo,

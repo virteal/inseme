@@ -9,7 +9,7 @@
 //       eventType: "echo.received",
 //       payload: { original_payload: msg.payload },
 //       correlationId: msg.correlation_id || msg.message_id,
-//       metadata: { agentName: agent.agentName },
+//       metadata: { handlerName: handler.handlerName },
 //     });
 
 import { COP_VERSION } from "./message.js";

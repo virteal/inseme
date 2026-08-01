@@ -3,7 +3,7 @@ title: "Forthia — Coding Brief for a COP/Inox Fractanet Router"
 author: "Jean Hugues Noël Robert, baron Mariani / drafted by ChatGPT"
 affiliation: "Institut Mariani / C.O.R.S.I.C.A."
 date: "2026-06-12"
-status: "draft-for-coding-agent"
+status: "draft-for-coding-handler"
 version: "0.1.0"
 language: "en"
 corpus_role: "source"
@@ -43,7 +43,7 @@ human_validation_required:
 
 ## 0. Purpose of this document
 
-This document is a coding brief for an implementation agent.
+This document is a coding brief for an implementation handler.
 
 The goal is to implement a first minimal version of **Forthia**, the small name, in homage to **Forth**, of a **cognitive router** for augmented HTTP/JSON APIs.
 
@@ -121,7 +121,7 @@ If the module becomes large enough, split it later into:
 packages/forthia/
 ```
 
-But do **not** start with a separate package unless the agent finds a strong technical reason. The first goal is integration, not architectural ceremony.
+But do **not** start with a separate package unless the handler finds a strong technical reason. The first goal is integration, not architectural ceremony.
 
 ## 4. Non-goals for the MVP
 
@@ -152,7 +152,7 @@ The MVP must provide:
 7. COP event emission hooks or event objects.
 8. A small HTTP/JSON adapter, if feasible.
 9. Unit tests.
-10. A README for future agents.
+10. A README for future handlers.
 
 ## 6. Core concepts
 
@@ -709,7 +709,7 @@ Expected: `eu-mobile-cache-v1` selected; `us-direct-v1` rejected for residency m
 
 ## 18. Design constraints
 
-The coding agent must preserve these constraints:
+The coding handler must preserve these constraints:
 
 - pure ES modules;
 - no heavy dependency unless strictly necessary;
@@ -753,9 +753,9 @@ The implementation is acceptable when:
 - README documents the module;
 - the code remains small and easy to refactor toward Inox.
 
-## 21. Suggested coding-agent task list
+## 21. Suggested coding-handler task list
 
-Give the coding agent these tasks in order:
+Give the coding handler these tasks in order:
 
 ```text
 1. Inspect packages/cop-kernel/src and test structure.

@@ -11,8 +11,8 @@
 //   - Never touches .payload
 //   - Forwards via provided bus if decision is made
 //
-//   This is the "method-governed routing policy" layer as a higher agent on the bus.
-//   Hybrid approach (preferred): primary policy lives here (bus agents using the helper
+//   This is the "method-governed routing policy" layer as a higher handler on the bus.
+//   Hybrid approach (preferred): primary policy lives here (bus handlers using the helper
 //   + CapabilityRegistry), while JobScheduler can be wired to consult the same registry
 //   for validation during scheduling (see COPJobScheduler constructor + schedule()).
 //   The bus is the neutral switching fabric; policy decisions (cop.packet.routed) can
@@ -25,7 +25,7 @@
 //       forwardToBus: someTopicBus,
 //     });
 //
-//   For reactive agent style (subscribe and auto-apply):
+//   For reactive handler style (subscribe and auto-apply):
 //     const unsub = bus.subscribe('cognitive-packet', async (evt) => {
 //       await cogentiaRoutePacket(evt.data, { registry, forwardToBus });
 //     });
@@ -52,13 +52,13 @@ export async function cogentiaRoutePacket(
   const { packetKind, routeTo, requiredCapability, riskLevel } = envelope || {};
 
   // These logs are useful for bac-à-sable / demo / debugging.
-  // In production router agents you may want to pass a logger or suppress.
+  // In production router handlers you may want to pass a logger or suppress.
   console.log("[COGENTIA-ROUTER] Envelope-only inspection:");
   console.log(`  packetKind=${packetKind}`);
   console.log(`  routeTo=${routeTo}`);
   console.log(`  requiredCapability=${requiredCapability}`);
   console.log(`  riskLevel=${riskLevel}`);
-  // (In a real agent you might suppress these or use a passed logger.)
+  // (In a real handler you might suppress these or use a passed logger.)
 
   const capabilityOk = !registry || registry.canSatisfy(requiredCapability);
 
@@ -85,7 +85,7 @@ export async function cogentiaRoutePacket(
       // Canonical cop.packet.* event (in addition to / as wrapper around custom types).
       // This addresses the open question in the resume: we now emit cop.packet.*
       // alongside the custom "cognitive-packet.*" so that external Cogentia routers
-      // or agents can uniformly subscribe to cop.packet.* events.
+      // or handlers can uniformly subscribe to cop.packet.* events.
       await forwardToBus.publish({
         type: "cop.packet.routed",
         data: {
@@ -109,7 +109,7 @@ export async function cogentiaRoutePacket(
 }
 
 /**
- * Convenience factory for a simple reactive Cogentia router "agent".
+ * Convenience factory for a simple reactive Cogentia router "handler".
  * Returns an object with a subscribe handler you can attach to a bus.
  *
  * Example:
@@ -121,7 +121,7 @@ export async function cogentiaRoutePacket(
 export function createCogentiaRouterAgent({
   registry,
   forwardToBus,
-  source = "cogentia-router-agent",
+  source = "cogentia-router-handler",
 } = {}) {
   return {
     handler: async (evt) => {

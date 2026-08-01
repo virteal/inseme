@@ -100,7 +100,7 @@ function replay(events) {
 
 test("replays Task / Step / Continuation state and ignores duplicate events", () => {
   const continuation = createContinuationDescriptor({
-    resumeTo: "agent:test-worker",
+    resumeTo: "handler:test-worker",
     resumeIntent: "continue-test-task",
     taskId: "task-1",
     stepId: "step-1",
@@ -159,7 +159,7 @@ test("replays Task / Step / Continuation state and ignores duplicate events", ()
 
 test("continuation retry creates new traceable state without mutating the previous descriptor", () => {
   const original = createContinuationDescriptor({
-    resumeTo: "agent:test-worker",
+    resumeTo: "handler:test-worker",
     resumeIntent: "retry-test",
     state: { phase: "initial" },
     retry: {

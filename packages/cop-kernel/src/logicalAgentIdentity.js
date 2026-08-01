@@ -1,15 +1,15 @@
-// File: packages/cop-kernel/src/agentIdentity.js
+// File: packages/cop-kernel/src/logicalAgentIdentity.js
 // Description:
-//   Helpers to manage COP agent identities ("état civil" des agents)
-//   backed by the cop_agent_identities table.
+//   Helpers to manage COP LogicalAgent identities ("état civil" des handlers)
+//   backed by the cop_logical_agents table.
 //
 //   Prérequis SQL (que vous créez déjà côté DB) :
 //
-//   create table public.cop_agent_identities (
-//     agent_id uuid primary key default gen_random_uuid(),
+//   create table public.cop_logical_agents (
+//     logical_agent_id uuid primary key default gen_random_uuid(),
 //
-//     agent_name text not null,
-//     agent_class text not null,
+//     logical_agent_name text not null,
+//     logical_agent_class text not null,
 //     description text,
 //
 //     owner_human_id uuid,
@@ -32,11 +32,11 @@
 //     updated_at timestamptz not null default now()
 //   );
 //
-//   create index if not exists idx_cop_agent_identities_name
-//     on public.cop_agent_identities (agent_name);
+//   create index if not exists idx_cop_logical_agents_name
+//     on public.cop_logical_agents (logical_agent_name);
 //
-//   create index if not exists idx_cop_agent_identities_status
-//     on public.cop_agent_identities (status);
+//   create index if not exists idx_cop_logical_agents_status
+//     on public.cop_logical_agents (status);
 //
 
 import { createClient } from "@supabase/supabase-js";
@@ -49,7 +49,7 @@ function getSupabaseIdentity() {
     const url = getEnv("SUPABASE_URL");
     const key = getEnv("SUPABASE_SERVICE_ROLE");
     if (!url || !key) {
-      throw new Error("agentIdentity: SUPABASE_URL or SUPABASE_SERVICE_ROLE not set");
+      throw new Error("logicalAgentIdentity: SUPABASE_URL or SUPABASE_SERVICE_ROLE not set");
     }
     supabaseIdentity = createClient(url, key);
   }
@@ -57,15 +57,15 @@ function getSupabaseIdentity() {
 }
 
 /**
- * Upsert an agent identity in cop_agent_identities.
+ * Upsert a LogicalAgent identity in cop_logical_agents.
  *
- * If agent_id is provided, we upsert on agent_id.
- * Otherwise we use agent_name as a natural key (assuming uniqueness).
+ * If logical_agent_id is provided, we upsert on logical_agent_id.
+ * Otherwise we use logical_agent_name as a natural key (assuming uniqueness).
  *
  * @param {Object} params
- * @param {string} [params.agent_id]
- * @param {string} params.agent_name
- * @param {string} params.agent_class
+ * @param {string} [params.logical_agent_id]
+ * @param {string} params.logical_agent_name
+ * @param {string} params.logical_agent_class
  * @param {string} [params.description]
  *
  * @param {string} [params.owner_human_id]
@@ -84,11 +84,11 @@ function getSupabaseIdentity() {
  *
  * @returns {Promise<{identity: object|null, ok: boolean, error?: string}>}
  */
-export async function upsertAgentIdentity(params) {
+export async function upsertLogicalAgentIdentity(params) {
   const {
-    agent_id,
-    agent_name,
-    agent_class,
+    logical_agent_id,
+    logical_agent_name,
+    logical_agent_class,
     description,
 
     owner_human_id,
@@ -106,18 +106,18 @@ export async function upsertAgentIdentity(params) {
     metadata,
   } = params || {};
 
-  if (!agent_name) {
-    throw new Error("upsertAgentIdentity: 'agent_name' is required");
+  if (!logical_agent_name) {
+    throw new Error("upsertLogicalAgentIdentity: 'logical_agent_name' is required");
   }
-  if (!agent_class) {
-    throw new Error("upsertAgentIdentity: 'agent_class' is required");
+  if (!logical_agent_class) {
+    throw new Error("upsertLogicalAgentIdentity: 'logical_agent_class' is required");
   }
 
   const sb = getSupabaseIdentity();
 
   const row = {
-    agent_name,
-    agent_class,
+    logical_agent_name,
+    logical_agent_class,
     description: description ?? null,
     owner_human_id: owner_human_id ?? null,
     owner_group_id: owner_group_id ?? null,
@@ -139,15 +139,15 @@ export async function upsertAgentIdentity(params) {
     }
   });
 
-  let query = sb.from("cop_agent_identities");
+  let query = sb.from("cop_logical_agents");
 
-  if (agent_id) {
-    // upsert sur agent_id
-    row.agent_id = agent_id;
-    query = query.upsert(row, { onConflict: "agent_id" });
+  if (logical_agent_id) {
+    // upsert sur logical_agent_id
+    row.logical_agent_id = logical_agent_id;
+    query = query.upsert(row, { onConflict: "logical_agent_id" });
   } else {
-    // upsert sur agent_name (en supposant une contrainte unique côté DB si souhaitée)
-    query = query.upsert(row, { onConflict: "agent_name" });
+    // upsert sur logical_agent_name (en supposant une contrainte unique côté DB si souhaitée)
+    query = query.upsert(row, { onConflict: "logical_agent_name" });
   }
 
   const { data, error } = await query.select().maybeSingle();
@@ -155,7 +155,7 @@ export async function upsertAgentIdentity(params) {
     return {
       identity: null,
       ok: false,
-      error: "upsertAgentIdentity: " + error.message,
+      error: "upsertLogicalAgentIdentity: " + error.message,
     };
   }
 
@@ -166,19 +166,19 @@ export async function upsertAgentIdentity(params) {
 }
 
 /**
- * Get a single agent identity by agent_id.
+ * Get a single LogicalAgent identity by logical_agent_id.
  *
- * @param {string} agent_id
+ * @param {string} logical_agent_id
  */
-export async function getAgentIdentityById(agent_id) {
-  if (!agent_id) {
-    throw new Error("getAgentIdentityById: 'agent_id' is required");
+export async function getLogicalAgentIdentityById(logical_agent_id) {
+  if (!logical_agent_id) {
+    throw new Error("getLogicalAgentIdentityById: 'logical_agent_id' is required");
   }
   const sb = getSupabaseIdentity();
   const { data, error } = await sb
-    .from("cop_agent_identities")
+    .from("cop_logical_agents")
     .select("*")
-    .eq("agent_id", agent_id)
+    .eq("logical_agent_id", logical_agent_id)
     .maybeSingle();
 
   if (error) {
@@ -188,19 +188,19 @@ export async function getAgentIdentityById(agent_id) {
 }
 
 /**
- * Get a single agent identity by agent_name.
+ * Get a single LogicalAgent identity by logical_agent_name.
  *
- * @param {string} agent_name
+ * @param {string} logical_agent_name
  */
-export async function getAgentIdentityByName(agent_name) {
-  if (!agent_name) {
-    throw new Error("getAgentIdentityByName: 'agent_name' is required");
+export async function getLogicalAgentIdentityByName(logical_agent_name) {
+  if (!logical_agent_name) {
+    throw new Error("getLogicalAgentIdentityByName: 'logical_agent_name' is required");
   }
   const sb = getSupabaseIdentity();
   const { data, error } = await sb
-    .from("cop_agent_identities")
+    .from("cop_logical_agents")
     .select("*")
-    .eq("agent_name", agent_name)
+    .eq("logical_agent_name", logical_agent_name)
     .maybeSingle();
 
   if (error) {
@@ -210,18 +210,18 @@ export async function getAgentIdentityByName(agent_name) {
 }
 
 /**
- * List agent identities, optionally filtered by status.
+ * List LogicalAgent identities, optionally filtered by status.
  *
  * @param {Object} params
  * @param {string} [params.status] - filter by status
  * @param {number} [params.limit=100]
  */
-export async function listAgentIdentities(params = {}) {
+export async function listLogicalAgentIdentities(params = {}) {
   const { status, limit = 100 } = params;
   const sb = getSupabaseIdentity();
 
   let query = sb
-    .from("cop_agent_identities")
+    .from("cop_logical_agents")
     .select("*")
     .order("created_at", { ascending: true })
     .limit(limit);
@@ -238,24 +238,24 @@ export async function listAgentIdentities(params = {}) {
 }
 
 /**
- * Update status of an agent identity.
+ * Update status of a LogicalAgent identity.
  *
- * @param {string} agent_id
+ * @param {string} logical_agent_id
  * @param {string} status - active | suspended | revoked | expired
  */
-export async function updateAgentIdentityStatus(agent_id, status) {
-  if (!agent_id) {
-    throw new Error("updateAgentIdentityStatus: 'agent_id' is required");
+export async function updateLogicalAgentIdentityStatus(logical_agent_id, status) {
+  if (!logical_agent_id) {
+    throw new Error("updateLogicalAgentIdentityStatus: 'logical_agent_id' is required");
   }
   if (!status) {
-    throw new Error("updateAgentIdentityStatus: 'status' is required");
+    throw new Error("updateLogicalAgentIdentityStatus: 'status' is required");
   }
 
   const sb = getSupabaseIdentity();
   const { data, error } = await sb
-    .from("cop_agent_identities")
+    .from("cop_logical_agents")
     .update({ status })
-    .eq("agent_id", agent_id)
+    .eq("logical_agent_id", logical_agent_id)
     .select()
     .maybeSingle();
 
@@ -266,7 +266,7 @@ export async function updateAgentIdentityStatus(agent_id, status) {
 }
 
 /**
- * Minimal mandate / permission check for an agent identity.
+ * Minimal mandate / permission check for a LogicalAgent identity.
  *
  * Very simple for now:
  *  - identity must exist
@@ -277,28 +277,28 @@ export async function updateAgentIdentityStatus(agent_id, status) {
  *
  * @param {Object} params
  * @param {object} [params.identity]      - optional, if already loaded
- * @param {string} [params.agent_id]      - or agent_id to load it
- * @param {string} [params.agent_name]    - or agent_name to load it
+ * @param {string} [params.logical_agent_id]      - or logical_agent_id to load it
+ * @param {string} [params.logical_agent_name]    - or logical_agent_name to load it
  * @param {string} [params.domain]
  * @param {string} [params.permissionKey] - e.g. 'write_artifacts'
  *
  * @returns {Promise<{allowed: boolean, reason?: string, identity?: object}>}
  */
-export async function validateAgentMandate(params) {
-  const { identity: givenIdentity, agent_id, agent_name, domain, permissionKey } = params || {};
+export async function validateLogicalAgentMandate(params) {
+  const { identity: givenIdentity, logical_agent_id, logical_agent_name, domain, permissionKey } = params || {};
 
   let identity = givenIdentity || null;
 
   try {
     if (!identity) {
-      if (agent_id) {
-        const res = await getAgentIdentityById(agent_id);
+      if (logical_agent_id) {
+        const res = await getLogicalAgentIdentityById(logical_agent_id);
         if (!res.ok) {
           return { allowed: false, reason: "identity_load_error: " + res.error };
         }
         identity = res.identity;
-      } else if (agent_name) {
-        const res = await getAgentIdentityByName(agent_name);
+      } else if (logical_agent_name) {
+        const res = await getLogicalAgentIdentityByName(logical_agent_name);
         if (!res.ok) {
           return { allowed: false, reason: "identity_load_error: " + res.error };
         }
@@ -306,7 +306,7 @@ export async function validateAgentMandate(params) {
       } else {
         return {
           allowed: false,
-          reason: "validateAgentMandate: no identity, agent_id or agent_name provided",
+          reason: "validateLogicalAgentMandate: no identity, logical_agent_id or logical_agent_name provided",
         };
       }
     }

@@ -4,7 +4,7 @@
  * Lightweight, standalone helpers for capturing wall-clock time, CPU time,
  * and human reaction times in COP flows.
  *
- * These can be used independently of the agent context if needed.
+ * These can be used independently of the handler context if needed.
  */
 
 export function startStepTiming() {

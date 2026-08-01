@@ -5,18 +5,18 @@ const COP_ADDR_RE = /^cop:\/\/([^/]+)\/([^/]+)\/([^/]+)\/([^/]+)$/;
 const COP_CHAN_RE = /^copchan:\/\/([^/]+)\/([^/]+)\/([^/]+)\/([^/]+)$/;
 
 /**
- * Build a COP_ADDR: cop://{networkId}/{nodeId}/{instanceId}/{agentName}
+ * Build a COP_ADDR: cop://{networkId}/{nodeId}/{instanceId}/{handlerName}
  */
-export function mkCopAddr({ networkId, nodeId, instanceId, agentName }) {
-  if (!networkId || !nodeId || !instanceId || !agentName) {
+export function mkCopAddr({ networkId, nodeId, instanceId, handlerName }) {
+  if (!networkId || !nodeId || !instanceId || !handlerName) {
     throw new Error("mkCopAddr: missing component(s)");
   }
-  return `cop://${networkId}/${nodeId}/${instanceId}/${agentName}`;
+  return `cop://${networkId}/${nodeId}/${instanceId}/${handlerName}`;
 }
 
 /**
  * Parse a COP_ADDR string.
- * Returns { networkId, nodeId, instanceId, agentName } or throws on error.
+ * Returns { networkId, nodeId, instanceId, handlerName } or throws on error.
  */
 export function parseCopAddr(addr) {
   const m = typeof addr === "string" ? addr.match(COP_ADDR_RE) : null;
@@ -27,7 +27,7 @@ export function parseCopAddr(addr) {
     networkId: m[1],
     nodeId: m[2],
     instanceId: m[3],
-    agentName: m[4],
+    handlerName: m[4],
   };
 }
 

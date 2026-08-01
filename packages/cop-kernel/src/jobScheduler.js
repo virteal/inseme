@@ -11,7 +11,7 @@
  * Purpose:
  * - Provide reliable, persistent scheduling of continuations and tasks.
  * - Native support for exponential backoff on retries.
- * - First-class support for obsolescence (decided by agents, especially AI agents).
+ * - First-class support for obsolescence (decided by handlers, especially AI handlers).
  * - Survives restarts when backed by persistent storage.
  *
  * This sits on top of COPScheduler (low-level event/time reactor) and the Store.
@@ -51,10 +51,10 @@ export class COPJobScheduler {
    * @param {string} [job.schedule.cron] - future: cron expression
    * @param {Object} [job.obsolescence]
    * @param {boolean} [job.obsolescence.enabled = false]
-   * @param {string} [job.obsolescence.policy = 'agent-decided'] - 'agent-decided' | 'maxAge' | ...
+   * @param {string} [job.obsolescence.policy = 'handler-decided'] - 'handler-decided' | 'maxAge' | ...
    * Hybrid note: pass capabilityRegistry so JobScheduler can participate in policy
    * (e.g. requiredCapability checks) while the primary Cogentia router policy lives
-   * as a higher agent on the bus (see cogentiaRouter.js).
+   * as a higher handler on the bus (see cogentiaRouter.js).
    */
   async schedule(job) {
     if (!job.jobId) throw new Error("jobId is required");
@@ -71,7 +71,7 @@ export class COPJobScheduler {
     // Hybrid policy integration: if the job/continuation declares a requiredCapability,
     // the JobScheduler can consult the (shared) capabilityRegistry for validation or
     // to record the satisfaction. This complements the higher-level Cogentia router
-    // agent on the bus (which does the primary envelope-based routing decision).
+    // handler on the bus (which does the primary envelope-based routing decision).
     const cont = job.continuation || {};
     const reqCap =
       job.requiredCapability ||
@@ -93,7 +93,7 @@ export class COPJobScheduler {
 
     // Deeper hybrid: if a routingPolicy (e.g. the cogentiaRoutePacket helper) is wired,
     // consult it to get a full decision based on envelope. This allows the policy layer
-    // (higher agent style) to influence scheduling decisions directly inside JobScheduler.
+    // (higher handler style) to influence scheduling decisions directly inside JobScheduler.
     if (this.routingPolicy && typeof this.routingPolicy === "function") {
       const pktForPolicy = {
         packetKind: "job",
@@ -188,9 +188,9 @@ export class COPJobScheduler {
 
   /**
    * Mark a scheduled job / continuation as obsolete.
-   * This is the "clause d'obsolescence" — typically decided by an AI agent.
+   * This is the "clause d'obsolescence" — typically decided by an AI handler.
    */
-  async markObsolete(jobId, reason, decidedBy = "ai-agent") {
+  async markObsolete(jobId, reason, decidedBy = "ai-handler") {
     const job = this.jobs.get(jobId);
     if (!job) return null;
 
@@ -272,9 +272,9 @@ export class COPJobScheduler {
 
   /**
    * Hybrid integration point: listen on a (topic/federated) bus for cop.packet.routed
-   * events published by a higher-level Cogentia router agent (see cogentiaRouter.js).
+   * events published by a higher-level Cogentia router handler (see cogentiaRouter.js).
    * When seen, auto-schedule the continuation payload from the packet.
-   * This is a small example of the hybrid: policy decision lives on the bus (agent + registry),
+   * This is a small example of the hybrid: policy decision lives on the bus (handler + registry),
    * operational scheduler reacts to the published decision and schedules.
    */
   listenForRoutedPackets(bus) {
@@ -284,7 +284,7 @@ export class COPJobScheduler {
         const pkt = evt.data && evt.data.packet;
         if (pkt && pkt.payload && pkt.payload.continuationId) {
           console.log(
-            "[COPJobScheduler] Hybrid: reacting to cop.packet.routed (from bus agent policy), auto-scheduling continuation"
+            "[COPJobScheduler] Hybrid: reacting to cop.packet.routed (from bus handler policy), auto-scheduling continuation"
           );
           await this.schedule({
             jobId: "hybrid-from-routed-" + pkt.payload.continuationId,

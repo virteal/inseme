@@ -7,7 +7,7 @@
  *
  * Key normative points implemented:
  * - Scheduler watches for events and time to decide on resumption (§5.5.2)
- * - When resuming, it "invokes the designated Agent" (in this implementation: publishes a resumption message that an Agent would listen to)
+ * - When resuming, it "invokes the designated handler" (in this implementation: publishes a resumption message that a handler would listen to)
  * - Scheduler does NOT directly mutate the Store (it only publishes events)
  * - Original Continuation is not mutated; new state is expressed via new Events/Artifacts
  * - Failure must be observable
@@ -189,9 +189,9 @@ export class COPScheduler {
   }
 
   async _performResumption(continuation, triggeringEvent, reason) {
-    // According to spec §5.5.3, the Scheduler "invokes the designated Agent"
+    // According to spec §5.5.3, the Scheduler "invokes the designated handler"
     // In this minimal implementation we publish a well-formed resumption message.
-    // A real Agent runtime would subscribe to this and execute.
+    // A real handler runtime would subscribe to this and execute.
 
     let finalContinuation = continuation;
     let resumeReason = reason;

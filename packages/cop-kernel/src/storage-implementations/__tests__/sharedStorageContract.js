@@ -81,66 +81,66 @@ export function testStorageContract(storageName, createStorageInstance) {
       });
     });
 
-    describe("agentIdentities", () => {
-      it("should have an agentIdentities object", () => {
-        assert.ok(storage.agentIdentities, "agentIdentities should exist");
+    describe("logicalAgents", () => {
+      it("should have an logicalAgents object", () => {
+        assert.ok(storage.logicalAgents, "logicalAgents should exist");
         assert.strictEqual(
-          typeof storage.agentIdentities,
+          typeof storage.logicalAgents,
           "object",
-          "agentIdentities should be an object"
+          "logicalAgents should be an object"
         );
       });
 
-      it("should have agentIdentities.upsert method that returns a Promise", async () => {
+      it("should have logicalAgents.upsert method that returns a Promise", async () => {
         assert.strictEqual(
-          typeof storage.agentIdentities.upsert,
+          typeof storage.logicalAgents.upsert,
           "function",
-          "agentIdentities.upsert should be a function"
+          "logicalAgents.upsert should be a function"
         );
-        const result = storage.agentIdentities.upsert({});
-        assert.ok(result instanceof Promise, "agentIdentities.upsert should return a Promise");
+        const result = storage.logicalAgents.upsert({});
+        assert.ok(result instanceof Promise, "logicalAgents.upsert should return a Promise");
       });
 
-      it("should have agentIdentities.getById method that returns a Promise", async () => {
+      it("should have logicalAgents.getById method that returns a Promise", async () => {
         assert.strictEqual(
-          typeof storage.agentIdentities.getById,
+          typeof storage.logicalAgents.getById,
           "function",
-          "agentIdentities.getById should be a function"
+          "logicalAgents.getById should be a function"
         );
-        const result = storage.agentIdentities.getById("some-id");
-        assert.ok(result instanceof Promise, "agentIdentities.getById should return a Promise");
+        const result = storage.logicalAgents.getById("some-id");
+        assert.ok(result instanceof Promise, "logicalAgents.getById should return a Promise");
       });
 
-      it("should have agentIdentities.getByName method that returns a Promise", async () => {
+      it("should have logicalAgents.getByName method that returns a Promise", async () => {
         assert.strictEqual(
-          typeof storage.agentIdentities.getByName,
+          typeof storage.logicalAgents.getByName,
           "function",
-          "agentIdentities.getByName should be a function"
+          "logicalAgents.getByName should be a function"
         );
-        const result = storage.agentIdentities.getByName("some-name");
-        assert.ok(result instanceof Promise, "agentIdentities.getByName should return a Promise");
+        const result = storage.logicalAgents.getByName("some-name");
+        assert.ok(result instanceof Promise, "logicalAgents.getByName should return a Promise");
       });
 
-      it("should have agentIdentities.list method that returns a Promise", async () => {
+      it("should have logicalAgents.list method that returns a Promise", async () => {
         assert.strictEqual(
-          typeof storage.agentIdentities.list,
+          typeof storage.logicalAgents.list,
           "function",
-          "agentIdentities.list should be a function"
+          "logicalAgents.list should be a function"
         );
-        const result = storage.agentIdentities.list({});
-        assert.ok(result instanceof Promise, "agentIdentities.list should return a Promise");
+        const result = storage.logicalAgents.list({});
+        assert.ok(result instanceof Promise, "logicalAgents.list should return a Promise");
       });
 
-      it("should have agentIdentities.updateStatus method that returns a Promise", async () => {
+      it("should have logicalAgents.updateStatus method that returns a Promise", async () => {
         assert.strictEqual(
-          typeof storage.agentIdentities.updateStatus,
+          typeof storage.logicalAgents.updateStatus,
           "function",
-          "agentIdentities.updateStatus should be a function"
+          "logicalAgents.updateStatus should be a function"
         );
-        const result = storage.agentIdentities.updateStatus("some-id", "active");
+        const result = storage.logicalAgents.updateStatus("some-id", "active");
         assert.ok(
           result instanceof Promise,
-          "agentIdentities.updateStatus should return a Promise"
+          "logicalAgents.updateStatus should return a Promise"
         );
       });
     });

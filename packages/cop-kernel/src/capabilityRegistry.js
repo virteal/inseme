@@ -5,8 +5,8 @@
 //   envelope.requiredCapability without inspecting payload.
 //
 //   This is the "method-governed routing policy" layer stub.
-//   A real version could be backed by agentRegistry + intents/capabilities
-//   in cop_agents, or a dedicated table.
+//   A real version could be backed by handlerRegistry + intents/capabilities
+//   in cop_handlers, or a dedicated table.
 //
 //   Designed to be resettable for bac-à-sable / tests so we don't accumulate
 //   state across scenarios (consistent with scheduler resetForTest).
@@ -20,7 +20,7 @@ export class CapabilityRegistry {
    * Register a capability that can be required by packets.
    * @param {string} name e.g. "source-critique"
    * @param {Object} [opts]
-   * @param {string[]} [opts.providers] - agent names or ids that can handle it
+   * @param {string[]} [opts.providers] - handler names or ids that can handle it
    * @param {Object} [opts.metadata]
    */
   register(name, { providers = [], metadata = {} } = {}) {

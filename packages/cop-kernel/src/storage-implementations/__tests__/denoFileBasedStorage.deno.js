@@ -44,97 +44,97 @@ Deno.test("DenoFileBasedStorage", () => {
     assertEquals(result.artifact, artifactRecord);
   });
 
-  Deno.test("agentIdentities should upsert new identity", async () => {
-    const identity = { agent_id: "agent_1", agent_name: "test_agent", status: "active" };
-    const result = await storage.agentIdentities.upsert(identity);
+  Deno.test("logicalAgents should upsert new identity", async () => {
+    const identity = { logical_agent_id: "agent_1", logical_agent_name: "test_agent", status: "active" };
+    const result = await storage.logicalAgents.upsert(identity);
     assertEquals(result.ok, true);
     assertEquals(result.identity, identity);
 
-    const filePath = `${testBasePath}/agentIdentities/agent_1.json`;
+    const filePath = `${testBasePath}/logicalAgents/agent_1.json`;
     const fileContent = await Deno.readTextFile(filePath);
     assertEquals(JSON.parse(fileContent), identity);
 
-    const nameIndexFilePath = `${testBasePath}/agentIdentities_name_index.json`;
+    const nameIndexFilePath = `${testBasePath}/logicalAgents_name_index.json`;
     const nameIndexContent = await Deno.readTextFile(nameIndexFilePath);
     assertEquals(JSON.parse(nameIndexContent), { test_agent: "agent_1" });
   });
 
-  Deno.test("agentIdentities should update existing identity", async () => {
-    const initialIdentity = { agent_id: "agent_1", agent_name: "test_agent", status: "active" };
-    await storage.agentIdentities.upsert(initialIdentity);
-    const updatedIdentity = { agent_id: "agent_1", agent_name: "test_agent", status: "inactive" };
-    const result = await storage.agentIdentities.upsert(updatedIdentity);
+  Deno.test("logicalAgents should update existing identity", async () => {
+    const initialIdentity = { logical_agent_id: "agent_1", logical_agent_name: "test_agent", status: "active" };
+    await storage.logicalAgents.upsert(initialIdentity);
+    const updatedIdentity = { logical_agent_id: "agent_1", logical_agent_name: "test_agent", status: "inactive" };
+    const result = await storage.logicalAgents.upsert(updatedIdentity);
     assertEquals(result.ok, true);
     assertEquals(result.identity, updatedIdentity);
 
-    const filePath = `${testBasePath}/agentIdentities/agent_1.json`;
+    const filePath = `${testBasePath}/logicalAgents/agent_1.json`;
     const fileContent = await Deno.readTextFile(filePath);
     assertEquals(JSON.parse(fileContent), updatedIdentity);
   });
 
-  Deno.test("agentIdentities should get identity by id", async () => {
-    const identity = { agent_id: "agent_1", agent_name: "test_agent" };
-    await storage.agentIdentities.upsert(identity);
-    const result = await storage.agentIdentities.getById("agent_1");
+  Deno.test("logicalAgents should get identity by id", async () => {
+    const identity = { logical_agent_id: "agent_1", logical_agent_name: "test_agent" };
+    await storage.logicalAgents.upsert(identity);
+    const result = await storage.logicalAgents.getById("agent_1");
     assertEquals(result.ok, true);
     assertEquals(result.identity, identity);
   });
 
-  Deno.test("agentIdentities should get identity by name", async () => {
-    const identity = { agent_id: "agent_1", agent_name: "test_agent" };
-    await storage.agentIdentities.upsert(identity);
-    const result = await storage.agentIdentities.getByName("test_agent");
+  Deno.test("logicalAgents should get identity by name", async () => {
+    const identity = { logical_agent_id: "agent_1", logical_agent_name: "test_agent" };
+    await storage.logicalAgents.upsert(identity);
+    const result = await storage.logicalAgents.getByName("test_agent");
     assertEquals(result.ok, true);
     assertEquals(result.identity, identity);
   });
 
-  Deno.test("agentIdentities should list identities", async () => {
-    await storage.agentIdentities.upsert({
-      agent_id: "agent_1",
-      agent_name: "agent1",
+  Deno.test("logicalAgents should list identities", async () => {
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent_1",
+      logical_agent_name: "agent1",
       status: "active",
     });
-    await storage.agentIdentities.upsert({
-      agent_id: "agent_2",
-      agent_name: "agent2",
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent_2",
+      logical_agent_name: "agent2",
       status: "inactive",
     });
-    const result = await storage.agentIdentities.list();
+    const result = await storage.logicalAgents.list();
     assertEquals(result.ok, true);
     assertEquals(result.identities.length, 2);
     assertEquals(
       result.identities
-        .map((i) => i.agent_id)
+        .map((i) => i.logical_agent_id)
         .sort()
         .join(),
       ["agent_1", "agent_2"].sort().join()
     );
   });
 
-  Deno.test("agentIdentities should list identities by status", async () => {
-    await storage.agentIdentities.upsert({
-      agent_id: "agent_1",
-      agent_name: "agent1",
+  Deno.test("logicalAgents should list identities by status", async () => {
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent_1",
+      logical_agent_name: "agent1",
       status: "active",
     });
-    await storage.agentIdentities.upsert({
-      agent_id: "agent_2",
-      agent_name: "agent2",
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent_2",
+      logical_agent_name: "agent2",
       status: "inactive",
     });
-    const result = await storage.agentIdentities.list({ status: "active" });
+    const result = await storage.logicalAgents.list({ status: "active" });
     assertEquals(result.ok, true);
     assertEquals(result.identities.length, 1);
     assertEquals(result.identities[0].status, "active");
   });
 
-  Deno.test("agentIdentities should update status", async () => {
-    const identity = { agent_id: "agent_1", agent_name: "test_agent", status: "active" };
-    await storage.agentIdentities.upsert(identity);
-    const result = await storage.agentIdentities.updateStatus("agent_1", "inactive");
+  Deno.test("logicalAgents should update status", async () => {
+    const identity = { logical_agent_id: "agent_1", logical_agent_name: "test_agent", status: "active" };
+    await storage.logicalAgents.upsert(identity);
+    const result = await storage.logicalAgents.updateStatus("agent_1", "inactive");
     assertEquals(result.ok, true);
     assertEquals(result.identity.status, "inactive");
-    const updated = await storage.agentIdentities.getById("agent_1");
+    const updated = await storage.logicalAgents.getById("agent_1");
     assertEquals(updated.identity.status, "inactive");
   });
 
@@ -278,9 +278,9 @@ Deno.test("DenoFileBasedStorage", () => {
   });
 
   Deno.test("should clear all data", async () => {
-    await storage.agentIdentities.upsert({
-      agent_id: "agent_1",
-      agent_name: "agent1",
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent_1",
+      logical_agent_name: "agent1",
       status: "active",
     });
     await storage.tasks.upsert({ id: "task_1", name: "task1", status: "pending" });
@@ -289,7 +289,7 @@ Deno.test("DenoFileBasedStorage", () => {
 
     await storage.clearCache();
 
-    const listIdentities = await storage.agentIdentities.list();
+    const listIdentities = await storage.logicalAgents.list();
     assertEquals(listIdentities.identities.length, 0);
     const listTasks = await storage.tasks.list();
     assertEquals(listTasks.tasks.length, 0);

@@ -4,7 +4,7 @@
  * COPBus — the core event transport for the Cognitive Orchestration Protocol.
  *
  * Design goals (aligned with the corpus influences):
- * - Actor-oriented: events as messages between autonomous agents.
+ * - Actor-oriented: events as messages between autonomous handlers.
  * - ARPANET / mesh / Fractanet: decentralized, routable, partition-tolerant packet-like events.
  *   See also cogentia/research/cognitive_packet_switching.md and cogentia_continuation_packet_routing.md:
  *   the Bus (with SubBus per-topic scoping + federation + propagateInterest) + Scheduler act as the
@@ -111,7 +111,7 @@ export class COPBus {
    * This is the recommended way to get an isolated bus for a specific Topic.
    *
    * All events published via this sub-bus will be namespaced under `topic:${topicId}/...`
-   * and the scheduler / agents can scope their subscriptions accordingly.
+   * and the scheduler / handlers can scope their subscriptions accordingly.
    */
   forTopic(topicId) {
     if (!topicId) {

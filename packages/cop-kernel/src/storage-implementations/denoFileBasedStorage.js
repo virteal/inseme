@@ -105,39 +105,39 @@ export function createDenoFileBasedStorage(options) {
       },
     },
 
-    agentIdentities: {
-      async upsert(identity, conflictKey = "agent_name") {
-        const filePath = getEntityFilePath("agentIdentities", identity.agent_id);
+    logicalAgents: {
+      async upsert(identity, conflictKey = "logical_agent_name") {
+        const filePath = getEntityFilePath("logicalAgents", identity.logical_agent_id);
         await writeJsonFile(filePath, identity);
 
         // Update name index
-        const nameIndex = await readIndexFile("agentIdentities", "name");
-        nameIndex[identity.agent_name] = identity.agent_id;
-        await writeIndexFile("agentIdentities", "name", nameIndex);
+        const nameIndex = await readIndexFile("logicalAgents", "name");
+        nameIndex[identity.logical_agent_name] = identity.logical_agent_id;
+        await writeIndexFile("logicalAgents", "name", nameIndex);
 
         await auditLogger.logEvent({
-          eventType: "AgentIdentityUpserted",
-          entityType: "agentIdentity",
-          entityId: identity.agent_id,
+          eventType: "LogicalAgentIdentityUpserted",
+          entityType: "logicalAgentIdentity",
+          entityId: identity.logical_agent_id,
           payload: identity,
         });
         return { ok: true, identity };
       },
-      async getById(agent_id) {
-        const filePath = getEntityFilePath("agentIdentities", agent_id);
+      async getById(logical_agent_id) {
+        const filePath = getEntityFilePath("logicalAgents", logical_agent_id);
         const identity = await readJsonFile(filePath);
         return { ok: !!identity, identity };
       },
-      async getByName(agent_name) {
-        const nameIndex = await readIndexFile("agentIdentities", "name");
-        const agent_id = nameIndex[agent_name];
-        if (agent_id) {
-          return this.getById(agent_id);
+      async getByName(logical_agent_name) {
+        const nameIndex = await readIndexFile("logicalAgents", "name");
+        const logical_agent_id = nameIndex[logical_agent_name];
+        if (logical_agent_id) {
+          return this.getById(logical_agent_id);
         }
-        return { ok: false, error: "Agent not found", code: ERROR_CODES.NOT_FOUND };
+        return { ok: false, error: "identity not found", code: ERROR_CODES.NOT_FOUND };
       },
       async list({ status, limit = 100 } = {}) {
-        const dirPath = path.join(basePath, "agentIdentities");
+        const dirPath = path.join(basePath, "logicalAgents");
         await ensureDir(dirPath);
         const files = await fs.readdir(dirPath, { withFileTypes: true });
         for (const dirEntry of files) {
@@ -157,22 +157,22 @@ export function createDenoFileBasedStorage(options) {
         }
         return { ok: true, identities: identities.slice(0, limit) };
       },
-      async updateStatus(agent_id, status) {
-        const filePath = getEntityFilePath("agentIdentities", agent_id);
+      async updateStatus(logical_agent_id, status) {
+        const filePath = getEntityFilePath("logicalAgents", logical_agent_id);
         const identity = await readJsonFile(filePath);
         if (identity) {
           const oldStatus = identity.status;
           identity.status = status;
           await writeJsonFile(filePath, identity);
           await auditLogger.logEvent({
-            eventType: "AgentIdentityStatusUpdated",
-            entityType: "agentIdentity",
-            entityId: agent_id,
+            eventType: "LogicalAgentIdentityStatusUpdated",
+            entityType: "logicalAgentIdentity",
+            entityId: logical_agent_id,
             payload: { oldStatus, newStatus: status },
           });
           return { ok: true, identity };
         }
-        return { ok: false, error: "Agent not found", code: ERROR_CODES.NOT_FOUND };
+        return { ok: false, error: "identity not found", code: ERROR_CODES.NOT_FOUND };
       },
     },
 
@@ -338,7 +338,7 @@ export function createDenoFileBasedStorage(options) {
         // Also remove index files
         // fs.rm will throw if file doesn't exist, so we need to catch it.
         try {
-          await fs.rm(getIndexFilePath("agentIdentities", "name"), { force: true });
+          await fs.rm(getIndexFilePath("logicalAgents", "name"), { force: true });
         } catch (error) {
           if (!(error.code === "ENOENT")) {
             throw error;

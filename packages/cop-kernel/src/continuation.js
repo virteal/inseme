@@ -10,7 +10,7 @@
  *   l8 tasks are user-level non-preemptive threads / promises with rich resumption.
  * - Future target: Inox (https://github.com/virteal/Inox or JeanHuguesRobert/Inox) — the
  *   concatenative stack VM with strict control/data plane separation, actors, and named values,
- *   intended as the efficient runtime substrate for COP agents/nodes at the edge (Fractanet).
+ *   intended as the efficient runtime substrate for COP handlers/nodes at the edge (Fractanet).
  *   Inox's control structures and actor model are designed to implement COP-level Task/Step/Continuation
  *   semantics with minimal overhead and excellent traceability.
  *
@@ -49,7 +49,7 @@ function getRandomUUID() {
  *
  * Derived from spec §2.7 "Continuation Artifact":
  * - It represents suspended/deferred work.
- * - Must contain: where to resume (agent/topic/task/step), how (state),
+ * - Must contain: where to resume (handler/topic/task/step), how (state),
  *   under which conditions (waitForEvents, resumeAfter, resumeBefore),
  *   and optional retry hints.
  *
@@ -58,7 +58,7 @@ function getRandomUUID() {
  */
 export function createContinuationDescriptor(params = {}) {
   const {
-    resumeTo, // maps to "agent" in the Artifact payload
+    resumeTo, // maps to "handler" in the Artifact payload
     resumeIntent,
     correlationId = null,
     channel = null,
@@ -74,13 +74,13 @@ export function createContinuationDescriptor(params = {}) {
   } = params;
 
   if (!resumeTo) {
-    throw new Error("createContinuationDescriptor: 'resumeTo' (agent) is required per spec §2.7");
+    throw new Error("createContinuationDescriptor: 'resumeTo' (handler) is required per spec §2.7");
   }
 
   const descriptor = {
     continuationId: getRandomUUID(),
     type: "cop/continuation", // as per spec §2.7.3 Reserved Type Name
-    resumeTo, // "agent" field
+    resumeTo, // "handler" field
     resumeIntent,
     correlationId: correlationId || getRandomUUID(),
     channel,
@@ -107,20 +107,20 @@ export function createContinuationDescriptor(params = {}) {
  * for this attempt is computed as retryDelayMs * 2^(attempt-1).
  *
  * Also supports obsolescence: if the continuation has been marked obsolete
- * (by an agent, typically an AI), retry is refused.
+ * (by a handler, typically an AI), retry is refused.
  */
 export function prepareRetry(continuation) {
   if (!continuation || !continuation.retry) {
     return { shouldRetry: false, nextState: continuation?.state || {} };
   }
 
-  // Obsolescence check (decided by an agent / AI in absence of precise spec)
+  // Obsolescence check (decided by a handler / AI in absence of precise spec)
   if (continuation.obsolete) {
     return {
       shouldRetry: false,
       nextState: continuation.state || {},
       obsolete: true,
-      obsolescenceReason: continuation.obsolescenceReason || "marked obsolete by agent",
+      obsolescenceReason: continuation.obsolescenceReason || "marked obsolete by handler",
     };
   }
 
@@ -200,14 +200,14 @@ export function markMaxRetriesReached(continuation) {
 /**
  * Marks a continuation as obsolete.
  * This is the "clause d'obsolescence" – in the absence of a precise specification,
- * the decision is left to the judgment of an agent (typically an AI agent).
+ * the decision is left to the judgment of a handler (typically an AI handler).
  *
  * Once obsolete, prepareRetry will refuse further retries.
  */
 export function markContinuationObsolete(
   continuation,
-  reason = "marked obsolete by agent",
-  decidedBy = "agent"
+  reason = "marked obsolete by handler",
+  decidedBy = "handler"
 ) {
   return {
     ...continuation,
@@ -222,7 +222,7 @@ export function markContinuationObsolete(
  * Attaches a continuation descriptor to a COP Message.
  *
  * This is an internal mechanism (not directly in the Event schema) used by
- * higher-level helpers (callAgentWithContinuation) to carry resumption
+ * higher-level helpers (callHandlerWithContinuation) to carry resumption
  * information alongside a message.
  *
  * In a full implementation this would typically result in a `cop/continuation`
@@ -253,13 +253,24 @@ export function attachContinuationToMessage(message, continuation) {
   };
 }
 
+/**
+ * Extract the continuation descriptor carried by a COP message.
+ *
+ * A handler context uses this before resuming work, so the descriptor remains
+ * explicit packet state rather than process-local runtime state.
+ */
+export function extractContinuationFromMessage(message) {
+  const continuation = message && message.metadata && message.metadata.continuation;
+  return continuation && continuation.continuationId ? continuation : null;
+}
+
 // === l8 + "side" bridge for Cogitors as steps (user request: Cogitor as special l8 Step) ===
 
 /**
  * Create an l8-compatible waitable for a Cogitor call.
  *
  * This gives COP an "l8 face": from inside l8.task/.step code, a remote or heterogeneous
- * Cogitor (e.g. JVM agent speaking the packet protocol) can be treated as a local cooperative
+ * Cogitor (e.g. JVM handler speaking the packet protocol) can be treated as a local cooperative
  * blocking Step.
  *
  * The returned object has a .promise that l8 code can pass to l8.wait(promise) (or integrate
@@ -272,7 +283,7 @@ export function attachContinuationToMessage(message, continuation) {
  *   or directly in an onPacket handler for 'continuation-input'), calling the .resolve(value)
  *   or .reject(err) on the waitable.
  *
- * This closes the loop for "when a JVM needs results from external agents, with all benefits of l8".
+ * This closes the loop for "when a JVM needs results from external handlers, with all benefits of l8".
  *
  * See also the lineage doc for full discussion and the "side" complementarity.
  */
@@ -345,7 +356,7 @@ export function callCogitorAsPromise(targetCapability, stack = [], opts = {}) {
  * This is the message the Scheduler (or an external trigger) would send
  * when resumption conditions are met (§5.5.2 and §5.5.3).
  *
- * The receiving side (Agent) is expected to receive the original continuation
+ * The receiving side (handler) is expected to receive the original continuation
  * state + the triggering context.
  */
 export function buildContinuationResumeMessage(params = {}) {
@@ -365,7 +376,7 @@ export function buildContinuationResumeMessage(params = {}) {
     channel: continuation.channel,
     payload: {
       resumedContinuationId: continuation.continuationId,
-      state: continuation.state, // the state the Agent should resume with
+      state: continuation.state, // the state the handler should resume with
       triggeringEvent, // the event that caused resumption (if any)
       ...payload,
     },

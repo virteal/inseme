@@ -22,7 +22,7 @@ describe("Storage Module", () => {
         setStorage(null);
         const defaultMemoryStorage = await getStorage();
         assert.ok(defaultMemoryStorage.options.type === "memory");
-        assert.ok(defaultMemoryStorage.agentIdentities);
+        assert.ok(defaultMemoryStorage.logicalAgents);
       });
 
       it("getStorage should return the same in-memory instance on subsequent calls if no default is set", async () => {
@@ -55,44 +55,44 @@ describe("Storage Module", () => {
       });
     });
     assert.strictEqual(storage.options.type, "memory");
-    assert.ok(storage.agentIdentities); // Check for a basic property of the storage interface
+    assert.ok(storage.logicalAgents); // Check for a basic property of the storage interface
   });
-  it("should be able to upsert and retrieve an agent identity", async () => {
+  it("should be able to upsert and retrieve a LogicalAgent identity", async () => {
     const storage = await initStorage({ type: "memory" });
-    const agent = { agent_id: "agent1", agent_name: "Test Agent", status: "active" };
-    await storage.agentIdentities.upsert(agent);
-    const retrievedAgent = await storage.agentIdentities.getById("agent1");
+    const identity = { logical_agent_id: "agent1", logical_agent_name: "Test handler", status: "active" };
+    await storage.logicalAgents.upsert(identity);
+    const retrievedAgent = await storage.logicalAgents.getById("agent1");
     assert.ok(retrievedAgent.ok);
-    assert.deepStrictEqual(retrievedAgent.data, agent);
+    assert.deepStrictEqual(retrievedAgent.data, identity);
   });
 
-  it("should be able to list agent identities", async () => {
+  it("should be able to list LogicalAgent identities", async () => {
     const storage = await initStorage({ type: "memory" });
     storage.clearCache();
-    await storage.agentIdentities.upsert({
-      agent_id: "agent2",
-      agent_name: "Agent Two",
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent2",
+      logical_agent_name: "identity Two",
       status: "active",
     });
-    await storage.agentIdentities.upsert({
-      agent_id: "agent3",
-      agent_name: "Agent Three",
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent3",
+      logical_agent_name: "identity Three",
       status: "inactive",
     });
-    const { data: identities } = await storage.agentIdentities.list();
+    const { data: identities } = await storage.logicalAgents.list();
     assert.strictEqual(identities.length, 2);
-    assert.ok(identities.some((a) => a.agent_name === "Agent Two"));
+    assert.ok(identities.some((a) => a.logical_agent_name === "identity Two"));
   });
 
-  it("should be able to update agent identity status", async () => {
+  it("should be able to update LogicalAgent identity status", async () => {
     const storage = await initStorage({ type: "memory" });
     storage.clearCache();
-    await storage.agentIdentities.upsert({
-      agent_id: "agent4",
-      agent_name: "Agent Four",
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent4",
+      logical_agent_name: "identity Four",
       status: "active",
     });
-    const { ok, data: identity } = await storage.agentIdentities.updateStatus("agent4", "inactive");
+    const { ok, data: identity } = await storage.logicalAgents.updateStatus("agent4", "inactive");
     assert.ok(ok);
     assert.strictEqual(identity.status, "inactive");
   });
@@ -171,9 +171,9 @@ describe("Storage Module", () => {
   it("should clear all in-memory data when clearCache is called", async () => {
     const storage = await initStorage({ type: "memory" });
     storage.clearCache();
-    await storage.agentIdentities.upsert({
-      agent_id: "agent5",
-      agent_name: "Agent Five",
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent5",
+      logical_agent_name: "identity Five",
       status: "active",
     });
     await storage.tasks.upsert({ id: "task3", name: "Task Three", status: "pending" });
@@ -187,7 +187,7 @@ describe("Storage Module", () => {
 
     storage.clearCache();
 
-    const { data: identities } = await storage.agentIdentities.list();
+    const { data: identities } = await storage.logicalAgents.list();
     assert.strictEqual(identities.length, 0);
     const { data: tasks } = await storage.tasks.list();
     assert.strictEqual(tasks.length, 0);
@@ -291,48 +291,48 @@ describe("File-based Storage Module", () => {
   it("should return a file-based storage instance when type is 'file'", async () => {
     const storage = await initStorage({ type: "file", basePath: testBasePath });
     assert.strictEqual(storage.options.type, "file");
-    assert.ok(storage.agentIdentities);
+    assert.ok(storage.logicalAgents);
     await storage.clearCache(); // Clean up after test
   });
 
-  it("should be able to upsert and retrieve an agent identity", async () => {
+  it("should be able to upsert and retrieve a LogicalAgent identity", async () => {
     const storage = await initStorage({ type: "file", basePath: testBasePath });
     await storage.clearCache();
-    const agent = { agent_id: "agent1", agent_name: "Test Agent", status: "active" };
-    await storage.agentIdentities.upsert(agent);
-    const retrievedAgent = await storage.agentIdentities.getById("agent1");
+    const identity = { logical_agent_id: "agent1", logical_agent_name: "Test handler", status: "active" };
+    await storage.logicalAgents.upsert(identity);
+    const retrievedAgent = await storage.logicalAgents.getById("agent1");
     assert.ok(retrievedAgent.ok);
-    assert.deepStrictEqual(retrievedAgent.identity, agent);
+    assert.deepStrictEqual(retrievedAgent.identity, identity);
     await storage.clearCache();
   });
 
-  it("should be able to list agent identities", async () => {
+  it("should be able to list LogicalAgent identities", async () => {
     const storage = await initStorage({ type: "file", basePath: testBasePath });
     await storage.clearCache();
-    await storage.agentIdentities.upsert({
-      agent_id: "agent2",
-      agent_name: "Agent Two",
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent2",
+      logical_agent_name: "identity Two",
       status: "active",
     });
-    await storage.agentIdentities.upsert({
-      agent_id: "agent3",
-      agent_name: "Agent Three",
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent3",
+      logical_agent_name: "identity Three",
       status: "inactive",
     });
-    const { identities } = await storage.agentIdentities.list();
+    const { identities } = await storage.logicalAgents.list();
     assert.strictEqual(identities.length, 2);
-    assert.ok(identities.some((a) => a.agent_name === "Agent Two"));
+    assert.ok(identities.some((a) => a.logical_agent_name === "identity Two"));
     await storage.clearCache();
   });
 
-  it("should be able to update agent identity status", async () => {
+  it("should be able to update LogicalAgent identity status", async () => {
     const storage = await initStorage({ type: "file", basePath: testBasePath });
     await storage.clearCache();
-    const agent = { agent_id: "agent4", agent_name: "Agent Four", status: "active" };
-    await storage.agentIdentities.upsert(agent);
-    const { ok, identity } = await storage.agentIdentities.updateStatus("agent4", "inactive");
+    const identity = { logical_agent_id: "agent4", logical_agent_name: "identity Four", status: "active" };
+    await storage.logicalAgents.upsert(identity);
+    const { ok, identity: updatedIdentity } = await storage.logicalAgents.updateStatus("agent4", "inactive");
     assert.ok(ok);
-    assert.strictEqual(identity.status, "inactive");
+    assert.strictEqual(updatedIdentity.status, "inactive");
     await storage.clearCache();
   });
 
@@ -416,9 +416,9 @@ describe("File-based Storage Module", () => {
   it("should clear all file-based data when clearCache is called", async () => {
     const storage = await initStorage({ type: "file", basePath: testBasePath });
     await storage.clearCache();
-    await storage.agentIdentities.upsert({
-      agent_id: "agent5",
-      agent_name: "Agent Five",
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent5",
+      logical_agent_name: "identity Five",
       status: "active",
     });
     await storage.tasks.upsert({ id: "task3", name: "Task Three", status: "pending" });
@@ -432,7 +432,7 @@ describe("File-based Storage Module", () => {
 
     await storage.clearCache();
 
-    const { identities } = await storage.agentIdentities.list();
+    const { identities } = await storage.logicalAgents.list();
     assert.strictEqual(identities.length, 0);
     const { tasks } = await storage.tasks.list();
     assert.strictEqual(tasks.length, 0);

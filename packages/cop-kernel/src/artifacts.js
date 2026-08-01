@@ -26,7 +26,7 @@ import { COP_VERSION } from "./message.js";
  * @param {string} [params.eventId]
  * @param {string} [params.taskId]
  * @param {string} [params.taskStepId]
- * @param {Object} params.agent
+ * @param {Object} params.handler
  * @param {any}    params.content
  * @param {Object} [params.metadata]
  * @param {string} [params.stabilityLevel='stable']  // 'transient' | 'provisional' | 'stable' | 'superseded'
@@ -54,7 +54,7 @@ export async function emitCopArtifact(params) {
     taskId = null,
     taskStepId = null,
 
-    agent,
+    handler,
     content,
     metadata = {},
 
@@ -87,8 +87,8 @@ export async function emitCopArtifact(params) {
   if (!artifactKind) {
     throw new Error("emitCopArtifact: 'artifactKind' is required");
   }
-  if (!agent || typeof agent.agentName !== "string") {
-    throw new Error("emitCopArtifact: valid 'agent' (with agentName) is required");
+  if (!handler || typeof handler.handlerName !== "string") {
+    throw new Error("emitCopArtifact: valid 'handler' (with handlerName) is required");
   }
 
   const row = {
@@ -104,10 +104,10 @@ export async function emitCopArtifact(params) {
     task_id: taskId,
     task_step_id: taskStepId,
 
-    network_id: agent.networkId || null,
-    node_id: agent.nodeId || null,
-    instance_id: agent.instanceId || null,
-    agent_name: agent.agentName,
+    network_id: handler.networkId || null,
+    node_id: handler.nodeId || null,
+    instance_id: handler.instanceId || null,
+    handler_name: handler.handlerName,
 
     artifact_type: artifactType,
     artifact_kind: artifactKind,
@@ -195,10 +195,10 @@ export async function emitCopArtifact(params) {
 export async function stabilizeTaskArtifacts(
   taskId,
   {
-    stableArtifacts = [], // array of {artifactType, artifactKind, content, metadata?, agent, ...}
+    stableArtifacts = [], // array of {artifactType, artifactKind, content, metadata?, handler, ...}
     supersededArtifactIds = [], // previous working/transient ones to mark as superseded
     stabilityLevel = "stable",
-    agent,
+    handler,
     correlationId = null,
     emitEvent = true,
   } = {}
@@ -212,7 +212,7 @@ export async function stabilizeTaskArtifacts(
       stabilityLevel,
       derivesFromArtifactId: a.derivesFromArtifactId || null,
       emitEvent,
-      agent: a.agent || agent,
+      handler: a.handler || handler,
       correlationId: a.correlationId || correlationId,
       throwOnError: false,
     });
@@ -230,7 +230,7 @@ export async function stabilizeTaskArtifacts(
       content: { supersededArtifactId: oldId, reason: "task_stabilized", taskId },
       metadata: { supersededArtifactId: oldId },
       stabilityLevel: "superseded",
-      agent,
+      handler,
       correlationId,
       emitEvent,
       throwOnError: false,
@@ -252,7 +252,7 @@ export async function abortTaskEvolution(
   {
     reason = "task_failed",
     compensationArtifacts = [],
-    agent,
+    handler,
     correlationId = null,
     emitEvent = true,
   } = {}
@@ -267,7 +267,7 @@ export async function abortTaskEvolution(
     content: { reason, abortedAt: new Date().toISOString() },
     metadata: { reason },
     stabilityLevel: "superseded",
-    agent,
+    handler,
     correlationId,
     emitEvent,
     throwOnError: false,
@@ -279,7 +279,7 @@ export async function abortTaskEvolution(
       ...a,
       taskId,
       stabilityLevel: a.stabilityLevel || "provisional",
-      agent: a.agent || agent,
+      handler: a.handler || handler,
       correlationId: a.correlationId || correlationId,
       emitEvent,
       throwOnError: false,
@@ -299,7 +299,7 @@ export async function recordArtifactEvolution({
   taskId,
   before, // {artifactType, artifactKind, content, ...} or just the id of existing stable
   after, // the new stable state
-  agent,
+  handler,
   correlationId,
   operation = "evolve", // e.g. 'add_column', 'refactor', ...
 } = {}) {
@@ -310,7 +310,7 @@ export async function recordArtifactEvolution({
       ...before,
       taskId,
       stabilityLevel: "stable",
-      agent,
+      handler,
       correlationId,
       emitEvent: true,
       throwOnError: false,
@@ -328,7 +328,7 @@ export async function recordArtifactEvolution({
       operation,
       beforeArtifactId: beforeId,
     },
-    agent,
+    handler,
     correlationId,
     emitEvent: true,
     throwOnError: false,
@@ -383,7 +383,7 @@ export async function lookupReusableArtifact(
 /**
  * Apply a retention / GC decision to one or more artifacts.
  * Supports legal "right to forget", time-based expiration, "until superseded", etc.
- * In a full system this would be driven by a scheduled GC task or agent judgment,
+ * In a full system this would be driven by a scheduled GC task or handler judgment,
  * and would publish events (never silently delete the event log itself).
  */
 export async function applyRetentionPolicy(artifactIdsOrQuery, policyDecision) {
@@ -417,7 +417,7 @@ export async function applyRetentionPolicy(artifactIdsOrQuery, policyDecision) {
         },
         metadata: { target: id, ...policyDecision },
         stabilityLevel: "stable", // the retention decision itself is durable
-        agent: policyDecision.decidedBy || { agentName: "retention-policy-engine" },
+        handler: policyDecision.decidedBy || { handlerName: "retention-policy-engine" },
       });
       results.push(res);
     }

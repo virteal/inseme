@@ -23,7 +23,7 @@ export function createNodeSqliteStorage(options) {
 
     if (currentDbVersion < CURRENT_SCHEMA_VERSION) {
       // Appliquer le schéma centralisé
-      await db.exec(SQLITE_SCHEMA.agentIdentities);
+      await db.exec(SQLITE_SCHEMA.logicalAgents);
       await db.exec(SQLITE_SCHEMA.tasks);
       await db.exec(SQLITE_SCHEMA.steps);
       await db.exec(SQLITE_SCHEMA.debugLogs);
@@ -37,7 +37,7 @@ export function createNodeSqliteStorage(options) {
     }
 
     // Vérifier les schémas des tables
-    await checkTableSchema(db, "agentIdentities", ["agent_id", "agent_name", "status"]);
+    await checkTableSchema(db, "logicalAgents", ["logical_agent_id", "logical_agent_name", "status"]);
     await checkTableSchema(db, "tasks", ["id", "status", "version"]);
     await checkTableSchema(db, "steps", ["id", "task_id", "status", "output"]);
     await checkTableSchema(db, "debugLogs", ["id", "message", "level", "timestamp"]);
@@ -51,13 +51,13 @@ export function createNodeSqliteStorage(options) {
 
   return {
     options: { type: "node-sqlite" },
-    agentIdentities: {
+    logicalAgents: {
       async upsert(identity) {
         try {
           await db.run(
-            `INSERT INTO agentIdentities (agent_id, agent_name, status) VALUES (?, ?, ?) ON CONFLICT(agent_id) DO UPDATE SET agent_name = EXCLUDED.agent_name, status = EXCLUDED.status`,
-            identity.agent_id,
-            identity.agent_name,
+            `INSERT INTO logicalAgents (logical_agent_id, logical_agent_name, status) VALUES (?, ?, ?) ON CONFLICT(logical_agent_id) DO UPDATE SET logical_agent_name = EXCLUDED.logical_agent_name, status = EXCLUDED.status`,
+            identity.logical_agent_id,
+            identity.logical_agent_name,
             identity.status
           );
           return { ok: true, identity };
@@ -65,9 +65,9 @@ export function createNodeSqliteStorage(options) {
           return { ok: false, code: ERROR_CODES.DB_ERROR, error };
         }
       },
-      async getById(agent_id) {
+      async getById(logical_agent_id) {
         try {
-          const row = await db.get(`SELECT * FROM agentIdentities WHERE agent_id = ?`, agent_id);
+          const row = await db.get(`SELECT * FROM logicalAgents WHERE logical_agent_id = ?`, logical_agent_id);
           if (row) {
             return { ok: true, identity: row };
           } else {
@@ -77,11 +77,11 @@ export function createNodeSqliteStorage(options) {
           return { ok: false, code: ERROR_CODES.DB_ERROR, error };
         }
       },
-      async getByName(agent_name) {
+      async getByName(logical_agent_name) {
         try {
           const row = await db.get(
-            `SELECT * FROM agentIdentities WHERE agent_name = ?`,
-            agent_name
+            `SELECT * FROM logicalAgents WHERE logical_agent_name = ?`,
+            logical_agent_name
           );
           if (row) {
             return { ok: true, identity: row };
@@ -94,20 +94,20 @@ export function createNodeSqliteStorage(options) {
       },
       async list() {
         try {
-          const rows = await db.all(`SELECT * FROM agentIdentities`);
+          const rows = await db.all(`SELECT * FROM logicalAgents`);
           return { ok: true, identities: rows };
         } catch (error) {
           return { ok: false, code: ERROR_CODES.DB_ERROR, error };
         }
       },
-      async updateStatus(agent_id, status) {
+      async updateStatus(logical_agent_id, status) {
         try {
           await db.run(
-            `UPDATE agentIdentities SET status = ? WHERE agent_id = ?`,
+            `UPDATE logicalAgents SET status = ? WHERE logical_agent_id = ?`,
             status,
-            agent_id
+            logical_agent_id
           );
-          const { identity } = await this.getById(agent_id);
+          const { identity } = await this.getById(logical_agent_id);
           return { ok: true, identity };
         } catch (error) {
           return { ok: false, code: ERROR_CODES.DB_ERROR, error };

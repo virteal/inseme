@@ -15,7 +15,7 @@ function nowIso() {
  * @param {string} [params.correlation_id]
  * @param {string} [params.message_id]
  * @param {string} [params.event_id]
- * @param {string} [params.location]   - usually agent address
+ * @param {string} [params.location]   - usually handler address
  * @param {string} [params.stage]      - e.g. "received", "processing", "sent", "error"
  * @param {string} [params.direction]  - "in", "out", "internal"
  * @param {any}    [params.payload]

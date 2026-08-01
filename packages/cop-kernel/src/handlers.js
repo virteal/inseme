@@ -1,11 +1,11 @@
-// File: packages/cop-kernel/src/agent.js
+// File: packages/cop-kernel/src/handler.js
 // Description:
-//   Agent factories for COP v0.2.
+//   handler factories for COP v0.2.
 
-import { createAgentContext } from "./agentContext.js";
+import { createHandlerContext } from "./handlerContext.js";
 
 /**
- * Define a COP agent with a standard run() entrypoint, including
+ * Define a COP handler with a standard run() entrypoint, including
  * automatic task/step lifecycle management if configured.
  *
  * @param {Object} config
@@ -13,7 +13,7 @@ import { createAgentContext } from "./agentContext.js";
  *
  * @param {Object} [config.task]
  * @param {string} config.task.taskType
- * @param {string} config.task.workerAgentName
+ * @param {string} config.task.workerHandlerName
  * @param {string} [config.task.stepName]
  * @param {boolean} [config.task.autoComplete=true]
  *
@@ -23,28 +23,28 @@ import { createAgentContext } from "./agentContext.js";
  * @param {Function} [config.onError]
  *   async function onError(err, ctx, { task, step })
  */
-export function defineAgent(config) {
+export function defineHandler(config) {
   const { name, task: taskConfig, handle, onError } = config || {};
 
   if (!name || typeof name !== "string") {
-    throw new Error("defineAgent: 'name' (string) is required");
+    throw new Error("defineHandler: 'name' (string) is required");
   }
   if (typeof handle !== "function") {
-    throw new Error("defineAgent: 'handle' function is required");
+    throw new Error("defineHandler: 'handle' function is required");
   }
 
   const hasTask = !!taskConfig;
   if (hasTask) {
     if (!taskConfig.taskType) {
-      throw new Error("defineAgent: task.taskType is required when 'task' is defined");
+      throw new Error("defineHandler: task.taskType is required when 'task' is defined");
     }
-    if (!taskConfig.workerAgentName) {
-      throw new Error("defineAgent: task.workerAgentName is required when 'task' is defined");
+    if (!taskConfig.workerHandlerName) {
+      throw new Error("defineHandler: task.workerHandlerName is required when 'task' is defined");
     }
   }
 
   async function run(msg, runtimeOptions = {}) {
-    const ctx = createAgentContext({ msg, ...runtimeOptions });
+    const ctx = createHandlerContext({ msg, ...runtimeOptions });
 
     let task = null;
     let step = null;
@@ -54,7 +54,7 @@ export function defineAgent(config) {
 
       task = await ctx.startTask({
         taskType: taskConfig.taskType,
-        workerAgentName: taskConfig.workerAgentName,
+        workerHandlerName: taskConfig.workerHandlerName,
         sourceEntityId: null,
         sourceEntityType: null,
         idempotencyHash: null,
@@ -105,7 +105,7 @@ export function defineAgent(config) {
 }
 
 /**
- * Define a simple service-like agent (no task/step orchestration).
+ * Define a simple service-like handler (no task/step orchestration).
  *
  * @param {Object} config
  * @param {string} config.name
@@ -113,18 +113,18 @@ export function defineAgent(config) {
  *   async function handle(ctx)
  * @param {Function} [config.onError]
  */
-export function defineServiceAgent(config) {
+export function defineServiceHandler(config) {
   const { name, handle, onError } = config || {};
 
   if (!name) {
-    throw new Error("defineServiceAgent: 'name' is required");
+    throw new Error("defineServiceHandler: 'name' is required");
   }
   if (typeof handle !== "function") {
-    throw new Error("defineServiceAgent: 'handle' must be a function");
+    throw new Error("defineServiceHandler: 'handle' must be a function");
   }
 
   async function run(msg, runtimeOptions = {}) {
-    const ctx = createAgentContext({ msg, ...runtimeOptions });
+    const ctx = createHandlerContext({ msg, ...runtimeOptions });
 
     try {
       await ctx.log("received", "in", { payload: msg.payload });

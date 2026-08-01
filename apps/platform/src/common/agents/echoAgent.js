@@ -1,8 +1,8 @@
 // echoAgent.js
-import { createAgentContext } from "../../../../../packages/cop-kernel/src/agentContext.js";
+import { createHandlerContext } from "../../../../../packages/cop-kernel/src/handlerContext.js";
 
 export async function echoAgentHandler(msg, runtimeOptions) {
-  const ctx = createAgentContext({ msg, ...runtimeOptions });
+  const ctx = createHandlerContext({ msg, ...runtimeOptions });
 
   await ctx.log("received", "in", { payload: msg.payload });
 

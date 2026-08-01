@@ -81,7 +81,7 @@ test("runtime model attaches and resolves continuations traceably", () => {
     "req-1",
     {
       continuationId: "cont-1",
-      resumeTo: "agent:test-worker",
+      resumeTo: "handler:test-worker",
       resumeIntent: "finish-later",
     },
     new Date("2026-07-18T10:01:00.000Z")

@@ -15,23 +15,23 @@ export function createDenoSqliteStorage(options) {
 
   return {
     options: { type: "deno-sqlite" },
-    agentIdentities: {
+    logicalAgents: {
       async upsert(identity) {
         try {
           db.query(
-            `INSERT INTO agentIdentities (agent_id, agent_name, status) VALUES (?, ?, ?) ON CONFLICT(agent_id) DO UPDATE SET agent_name = EXCLUDED.agent_name, status = EXCLUDED.status`,
-            [identity.agent_id, identity.agent_name, identity.status]
+            `INSERT INTO logicalAgents (logical_agent_id, logical_agent_name, status) VALUES (?, ?, ?) ON CONFLICT(logical_agent_id) DO UPDATE SET logical_agent_name = EXCLUDED.logical_agent_name, status = EXCLUDED.status`,
+            [identity.logical_agent_id, identity.logical_agent_name, identity.status]
           );
           return { ok: true, identity };
         } catch (error) {
           return { ok: false, code: ERROR_CODES.DB_ERROR, error };
         }
       },
-      async getById(agent_id) {
+      async getById(logical_agent_id) {
         try {
-          const [row] = db.query(`SELECT * FROM agentIdentities WHERE agent_id = ?`, [agent_id]);
+          const [row] = db.query(`SELECT * FROM logicalAgents WHERE logical_agent_id = ?`, [logical_agent_id]);
           if (row) {
-            const identity = { agent_id: row[0], agent_name: row[1], status: row[2] };
+            const identity = { logical_agent_id: row[0], logical_agent_name: row[1], status: row[2] };
             return { ok: true, identity };
           } else {
             return { ok: false, code: ERROR_CODES.NOT_FOUND };
@@ -40,13 +40,13 @@ export function createDenoSqliteStorage(options) {
           return { ok: false, code: ERROR_CODES.DB_ERROR, error };
         }
       },
-      async getByName(agent_name) {
+      async getByName(logical_agent_name) {
         try {
-          const [row] = db.query(`SELECT * FROM agentIdentities WHERE agent_name = ?`, [
-            agent_name,
+          const [row] = db.query(`SELECT * FROM logicalAgents WHERE logical_agent_name = ?`, [
+            logical_agent_name,
           ]);
           if (row) {
-            const identity = { agent_id: row[0], agent_name: row[1], status: row[2] };
+            const identity = { logical_agent_id: row[0], logical_agent_name: row[1], status: row[2] };
             return { ok: true, identity };
           } else {
             return { ok: false, code: ERROR_CODES.NOT_FOUND };
@@ -57,10 +57,10 @@ export function createDenoSqliteStorage(options) {
       },
       async list() {
         try {
-          const rows = db.query(`SELECT * FROM agentIdentities`);
+          const rows = db.query(`SELECT * FROM logicalAgents`);
           const identities = rows.map((row) => ({
-            agent_id: row[0],
-            agent_name: row[1],
+            logical_agent_id: row[0],
+            logical_agent_name: row[1],
             status: row[2],
           }));
           return { ok: true, identities };
@@ -68,10 +68,10 @@ export function createDenoSqliteStorage(options) {
           return { ok: false, code: ERROR_CODES.DB_ERROR, error };
         }
       },
-      async updateStatus(agent_id, status) {
+      async updateStatus(logical_agent_id, status) {
         try {
-          db.query(`UPDATE agentIdentities SET status = ? WHERE agent_id = ?`, [status, agent_id]);
-          const { identity } = await this.getById(agent_id);
+          db.query(`UPDATE logicalAgents SET status = ? WHERE logical_agent_id = ?`, [status, logical_agent_id]);
+          const { identity } = await this.getById(logical_agent_id);
           return { ok: true, identity };
         } catch (error) {
           return { ok: false, code: ERROR_CODES.DB_ERROR, error };

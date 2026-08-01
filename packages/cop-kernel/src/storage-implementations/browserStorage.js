@@ -76,42 +76,42 @@ export function createBrowserStorage(options = {}) {
       },
     },
 
-    agentIdentities: {
-      async upsert(identity, conflictKey = "agent_name") {
-        const identities = readFromLocalStorage("agentIdentities");
-        identities[identity.agent_id] = identity;
-        writeToLocalStorage("agentIdentities", identities);
+    logicalAgents: {
+      async upsert(identity, conflictKey = "logical_agent_name") {
+        const identities = readFromLocalStorage("logicalAgents");
+        identities[identity.logical_agent_id] = identity;
+        writeToLocalStorage("logicalAgents", identities);
         return { ok: true, identity };
       },
-      async getById(agent_id) {
-        const identities = readFromLocalStorage("agentIdentities");
-        const identity = identities[agent_id];
+      async getById(logical_agent_id) {
+        const identities = readFromLocalStorage("logicalAgents");
+        const identity = identities[logical_agent_id];
         return identity ? { ok: true, identity } : { ok: false, code: currentErrorCodes.NOT_FOUND };
       },
-      async getByName(agent_name) {
-        const identities = readFromLocalStorage("agentIdentities");
-        const foundIdentity = Object.values(identities).find((id) => id.agent_name === agent_name);
+      async getByName(logical_agent_name) {
+        const identities = readFromLocalStorage("logicalAgents");
+        const foundIdentity = Object.values(identities).find((id) => id.logical_agent_name === logical_agent_name);
         return foundIdentity
           ? { ok: true, identity: foundIdentity }
           : { ok: false, code: currentErrorCodes.NOT_FOUND };
       },
       async list({ status, limit = 100 } = {}) {
-        const identities = readFromLocalStorage("agentIdentities");
+        const identities = readFromLocalStorage("logicalAgents");
         let filteredIdentities = Object.values(identities);
         if (status) {
           filteredIdentities = filteredIdentities.filter((id) => id.status === status);
         }
         return { ok: true, identities: filteredIdentities.slice(0, limit) };
       },
-      async updateStatus(agent_id, status) {
-        const identities = readFromLocalStorage("agentIdentities");
-        const identity = identities[agent_id];
+      async updateStatus(logical_agent_id, status) {
+        const identities = readFromLocalStorage("logicalAgents");
+        const identity = identities[logical_agent_id];
         if (identity) {
           identity.status = status;
-          writeToLocalStorage("agentIdentities", identities);
+          writeToLocalStorage("logicalAgents", identities);
           return { ok: true, identity };
         }
-        return { ok: false, error: "Agent not found", code: currentErrorCodes.NOT_FOUND };
+        return { ok: false, error: "identity not found", code: currentErrorCodes.NOT_FOUND };
       },
     },
 
@@ -211,7 +211,7 @@ export function createBrowserStorage(options = {}) {
 
     clearCache: async () => {
       try {
-        localStorage.removeItem(getLocalStorageKey("agentIdentities"));
+        localStorage.removeItem(getLocalStorageKey("logicalAgents"));
         localStorage.removeItem(getLocalStorageKey("tasks"));
         localStorage.removeItem(getLocalStorageKey("steps"));
         // No audit logs for browser storage in this simple implementation

@@ -1,8 +1,8 @@
 export const SQLITE_SCHEMA = {
-  agentIdentities: `
-    CREATE TABLE IF NOT EXISTS agentIdentities (
-      agent_id TEXT PRIMARY KEY,
-      agent_name TEXT,
+  logicalAgents: `
+    CREATE TABLE IF NOT EXISTS logicalAgents (
+      logical_agent_id TEXT PRIMARY KEY,
+      logical_agent_name TEXT,
       status TEXT
     )
   `,

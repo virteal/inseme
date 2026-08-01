@@ -4,7 +4,7 @@ import { createSupabaseStorage } from "../supabaseStorage.js";
 
 // Mock the Supabase client
 const mockData = {
-  cop_agent_identities: new Map(),
+  cop_logical_agents: new Map(),
   cop_tasks: new Map(),
   cop_steps: new Map(),
 };
@@ -106,8 +106,8 @@ const createMockSupabaseClient = () => {
                 const idKey =
                   options && options.onConflict
                     ? options.onConflict
-                    : tableName === "cop_agent_identities"
-                      ? "agent_id"
+                    : tableName === "cop_logical_agents"
+                      ? "logical_agent_id"
                       : "id";
                 table.set(record[idKey], record);
                 console.log(`Mock upserted to ${tableName}:`, record);
@@ -129,8 +129,8 @@ const createMockSupabaseClient = () => {
                 const idKey =
                   options && options.onConflict
                     ? options.onConflict
-                    : tableName === "cop_agent_identities"
-                      ? "agent_id"
+                    : tableName === "cop_logical_agents"
+                      ? "logical_agent_id"
                       : "id";
                 table.set(record[idKey], record);
                 console.log(`Mock upserted to ${tableName} (data accessor):`, record);
@@ -270,7 +270,7 @@ test("supabaseStorage", async (t) => {
 
   const clearMockData = () => {
     console.log("Clearing mock data...");
-    mockData.cop_agent_identities.clear();
+    mockData.cop_logical_agents.clear();
     mockData.cop_tasks.clear();
     mockData.cop_steps.clear();
   };
@@ -286,13 +286,13 @@ test("supabaseStorage", async (t) => {
 
     // Populate mockData with initial values using the same client instance
     currentMockSupabaseClient
-      .from("cop_agent_identities")
-      .upsert({ agent_id: "agent1", agent_name: "Test Agent" })
+      .from("cop_logical_agents")
+      .upsert({ logical_agent_id: "agent1", logical_agent_name: "Test handler" })
       .select()
       .maybeSingle();
     currentMockSupabaseClient
-      .from("cop_agent_identities")
-      .upsert({ agent_id: "agent2", agent_name: "Another Agent" })
+      .from("cop_logical_agents")
+      .upsert({ logical_agent_id: "agent2", logical_agent_name: "Another handler" })
       .select()
       .maybeSingle();
     currentMockSupabaseClient
@@ -318,7 +318,7 @@ test("supabaseStorage", async (t) => {
   });
 
   await t.test("should return an object with expected properties", () => {
-    assert.ok(storage.agentIdentities, "should have agentIdentities property");
+    assert.ok(storage.logicalAgents, "should have logicalAgents property");
     assert.ok(storage.tasks, "should have tasks property");
     assert.ok(storage.steps, "should have steps property");
     assert.ok(storage.fileStorage, "should have fileStorage property");
@@ -326,45 +326,45 @@ test("supabaseStorage", async (t) => {
     assert.ok(storage.clearCache, "should have clearCache property");
   });
 
-  await t.test("agentIdentities", async (t) => {
-    await t.test("should upsert an agent identity", async () => {
-      const identity = { agent_id: "agent1", agent_name: "Test Agent" };
-      const result = await storage.agentIdentities.upsert(identity);
+  await t.test("logicalAgents", async (t) => {
+    await t.test("should upsert a LogicalAgent identity", async () => {
+      const identity = { logical_agent_id: "agent1", logical_agent_name: "Test handler" };
+      const result = await storage.logicalAgents.upsert(identity);
       assert.strictEqual(result.ok, true);
       assert.deepStrictEqual(result, { ok: true, data: identity });
     });
 
-    await t.test("should get an agent identity by id", async () => {
-      const identity = { agent_id: "agent1", agent_name: "Test Agent" };
+    await t.test("should get a LogicalAgent identity by id", async () => {
+      const identity = { logical_agent_id: "agent1", logical_agent_name: "Test handler" };
 
-      const result = await storage.agentIdentities.getById("agent1");
+      const result = await storage.logicalAgents.getById("agent1");
       assert.strictEqual(result.ok, true);
       assert.deepStrictEqual(result, { ok: true, data: identity });
     });
 
-    await t.test("should get an agent identity by name", async () => {
-      const identity = { agent_id: "agent1", agent_name: "Test Agent" };
+    await t.test("should get a LogicalAgent identity by name", async () => {
+      const identity = { logical_agent_id: "agent1", logical_agent_name: "Test handler" };
 
-      const result = await storage.agentIdentities.getByName("Test Agent");
+      const result = await storage.logicalAgents.getByName("Test handler");
       assert.strictEqual(result.ok, true);
       assert.deepStrictEqual(result.data, identity);
     });
 
-    await t.test("should list agent identities", async () => {
+    await t.test("should list LogicalAgent identities", async () => {
       const identities = [
-        { agent_id: "agent1", agent_name: "Test Agent" },
-        { agent_id: "agent2", agent_name: "Another Agent" },
+        { logical_agent_id: "agent1", logical_agent_name: "Test handler" },
+        { logical_agent_id: "agent2", logical_agent_name: "Another handler" },
       ];
 
-      const result = await storage.agentIdentities.list();
+      const result = await storage.logicalAgents.list();
       assert.strictEqual(result.ok, true);
       assert.deepStrictEqual(result.data, identities);
     });
 
-    await t.test("should update agent status", async () => {
-      const identity = { agent_id: "agent1", agent_name: "Test Agent", status: "active" };
+    await t.test("should update identity status", async () => {
+      const identity = { logical_agent_id: "agent1", logical_agent_name: "Test handler", status: "active" };
       const updatedIdentity = { ...identity, status: "inactive" };
-      const result = await storage.agentIdentities.updateStatus("agent1", "inactive");
+      const result = await storage.logicalAgents.updateStatus("agent1", "inactive");
       assert.strictEqual(result.ok, true);
       assert.deepStrictEqual(result.data, updatedIdentity);
     });
@@ -438,21 +438,21 @@ test("supabaseStorage", async (t) => {
   await t.test("cache", async (t) => {
     await t.test("should return cache contents", async () => {
       const cacheContents = storage.getCacheContents();
-      assert.ok(cacheContents.agentIdentities);
+      assert.ok(cacheContents.logicalAgents);
       assert.ok(cacheContents.tasks);
       assert.ok(cacheContents.steps);
     });
 
     await t.test("should clear cache", async () => {
       // Populate cache first
-      await storage.agentIdentities.upsert({ agent_id: "agent1", agent_name: "Test Agent" });
+      await storage.logicalAgents.upsert({ logical_agent_id: "agent1", logical_agent_name: "Test handler" });
       await storage.tasks.upsert({ id: "task1", name: "Test Task" });
       await storage.steps.upsert({ id: "step1", task_id: "task1", name: "Test Step" });
 
       storage.clearCache();
 
       const cacheContents = storage.getCacheContents();
-      assert.strictEqual(cacheContents.agentIdentities.length, 0);
+      assert.strictEqual(cacheContents.logicalAgents.length, 0);
       assert.strictEqual(cacheContents.tasks.length, 0);
       assert.strictEqual(cacheContents.steps.length, 0);
     });

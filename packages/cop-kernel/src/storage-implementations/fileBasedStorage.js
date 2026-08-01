@@ -84,7 +84,7 @@ export async function createFileBasedStorage(options = {}) {
   }
 
   // Initialize directories
-  await ensureDir(normalizePath(path.posix.join(basePath, "agentIdentities")));
+  await ensureDir(normalizePath(path.posix.join(basePath, "logicalAgents")));
   await ensureDir(normalizePath(path.posix.join(basePath, "tasks")));
   await ensureDir(normalizePath(path.posix.join(basePath, "steps")));
   await ensureDir(normalizePath(path.posix.join(basePath, "events")));
@@ -119,39 +119,39 @@ export async function createFileBasedStorage(options = {}) {
       },
     },
 
-    agentIdentities: {
-      async upsert(identity, conflictKey = "agent_name") {
-        const filePath = getEntityFilePath("agentIdentities", identity.agent_id);
+    logicalAgents: {
+      async upsert(identity, conflictKey = "logical_agent_name") {
+        const filePath = getEntityFilePath("logicalAgents", identity.logical_agent_id);
         await writeJsonFile(filePath, identity);
 
         // Update name index
-        const nameIndex = await readIndexFile("agentIdentities", "name");
-        nameIndex[identity.agent_name] = identity.agent_id;
-        await writeIndexFile("agentIdentities", "name", nameIndex);
+        const nameIndex = await readIndexFile("logicalAgents", "name");
+        nameIndex[identity.logical_agent_name] = identity.logical_agent_id;
+        await writeIndexFile("logicalAgents", "name", nameIndex);
 
         await auditLogger.logEvent({
-          eventType: "AgentIdentityUpserted",
-          entityType: "agentIdentity",
-          entityId: identity.agent_id,
+          eventType: "LogicalAgentIdentityUpserted",
+          entityType: "logicalAgentIdentity",
+          entityId: identity.logical_agent_id,
           payload: identity,
         });
         return { ok: true, identity };
       },
-      async getById(agent_id) {
-        const filePath = getEntityFilePath("agentIdentities", agent_id);
+      async getById(logical_agent_id) {
+        const filePath = getEntityFilePath("logicalAgents", logical_agent_id);
         const identity = await readJsonFile(filePath);
         return { ok: !!identity, identity };
       },
-      async getByName(agent_name) {
-        const nameIndex = await readIndexFile("agentIdentities", "name");
-        const agent_id = nameIndex[agent_name];
-        if (agent_id) {
-          return this.getById(agent_id);
+      async getByName(logical_agent_name) {
+        const nameIndex = await readIndexFile("logicalAgents", "name");
+        const logical_agent_id = nameIndex[logical_agent_name];
+        if (logical_agent_id) {
+          return this.getById(logical_agent_id);
         }
-        return { ok: false, error: "Agent not found", code: ERROR_CODES.NOT_FOUND };
+        return { ok: false, error: "identity not found", code: ERROR_CODES.NOT_FOUND };
       },
       async list({ status, limit = 100 } = {}) {
-        const dirPath = normalizePath(path.posix.join(basePath, "agentIdentities"));
+        const dirPath = normalizePath(path.posix.join(basePath, "logicalAgents"));
         await ensureDir(dirPath);
         const files = await injectedFs.readdir(dirPath);
         let identities = [];
@@ -166,22 +166,22 @@ export async function createFileBasedStorage(options = {}) {
         }
         return { ok: true, identities: identities.slice(0, limit) };
       },
-      async updateStatus(agent_id, status) {
-        const filePath = getEntityFilePath("agentIdentities", agent_id);
+      async updateStatus(logical_agent_id, status) {
+        const filePath = getEntityFilePath("logicalAgents", logical_agent_id);
         const identity = await readJsonFile(filePath);
         if (identity) {
           const oldStatus = identity.status;
           identity.status = status;
           await writeJsonFile(filePath, identity);
           await auditLogger.logEvent({
-            eventType: "AgentIdentityStatusUpdated",
-            entityType: "agentIdentity",
-            entityId: agent_id,
+            eventType: "LogicalAgentIdentityStatusUpdated",
+            entityType: "logicalAgentIdentity",
+            entityId: logical_agent_id,
             payload: { oldStatus, newStatus: status },
           });
           return { ok: true, identity };
         }
-        return { ok: false, error: "Agent not found", code: ERROR_CODES.NOT_FOUND };
+        return { ok: false, error: "identity not found", code: ERROR_CODES.NOT_FOUND };
       },
     },
 
@@ -356,7 +356,7 @@ export async function createFileBasedStorage(options = {}) {
       try {
         await injectedFs.rm(basePath, { recursive: true, force: true });
         // Also remove index files
-        await injectedFs.unlink(getIndexFilePath("agentIdentities", "name")).catch(() => {}); // Ignore if file doesn't exist
+        await injectedFs.unlink(getIndexFilePath("logicalAgents", "name")).catch(() => {}); // Ignore if file doesn't exist
         await ensureDir(basePath); // Recreate base directory
       } catch (error) {
         // Ignore if directory doesn't exist
@@ -368,7 +368,7 @@ export async function createFileBasedStorage(options = {}) {
 
     getCacheContents: () => {
       return {
-        agentIdentities: [],
+        logicalAgents: [],
         tasks: [],
         steps: [],
       };

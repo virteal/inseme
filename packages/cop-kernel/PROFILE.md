@@ -32,11 +32,11 @@ It is useful enough to guide implementation work, but not yet mature enough to b
 
 `cop-kernel` implements or experiments with the runtime side of COP:
 
-- agent and node helpers;
+- handler and node helpers;
 - event helpers;
 - artifact helpers;
 - continuation creation and resumption;
-- agent calls with continuation support;
+- handler calls with continuation support;
 - Task / Step / Continuation helpers;
 - `COPBus`;
 - `COPScheduler`;
@@ -72,7 +72,7 @@ It is the first concrete place where COP moves from protocol specification to ex
 | Continuation | `continuation.js`, `call.js`, scheduler registration and resumption |
 | COPBus | `src/bus.js` |
 | COPScheduler | `src/scheduler.js` |
-| COPAgent | agent registry and stateless call conventions, still partial |
+| COPHandler | handler registry and stateless call conventions, still partial |
 | Store / projections | not yet sufficiently integrated at kernel level |
 
 ---
@@ -85,7 +85,7 @@ It is the first concrete place where COP moves from protocol specification to ex
 | Topic-local ordering | partial | Per-topic sub-buses exist; strict persisted `topicSeq` enforcement remains to be completed. |
 | Idempotency | partial | At-least-once assumptions are present in the protocol; handler/projector idempotency needs conformance tests. |
 | Durability | incomplete | Some runtime state is still in memory; persistence through Store remains a priority. |
-| Stateless agents | partial | Agent model assumes statelessness, but enforcement is not yet systematic. |
+| Stateless handlers | partial | Handler model assumes statelessness, but enforcement is not yet systematic. |
 | Isolation via Events | partial | Bus-based coordination exists, but some higher-level packages may still use direct calls. |
 | Deterministic replay of traces | incomplete | Replay is specified conceptually but not yet exercised at scale through tests. |
 | Schema versioning | partial | Core types exist; runtime messages need consistent versioning discipline. |
@@ -199,7 +199,7 @@ A profile should not claim full conformance before these tests exist.
 
 ### `cop-chat`
 
-`cop-chat` can become a conversational HITL or agent interface, provided conversations become durable COP Events or Artifacts where necessary.
+`cop-chat` can become a conversational HITL or handler interface, provided conversations become durable COP Events or Artifacts where necessary.
 
 ### future `cop-n8n`
 

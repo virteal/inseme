@@ -40,51 +40,51 @@ describe("Browser Storage (localStorage) Implementation", () => {
     assert.strictEqual(storage.options.type, "browser");
   });
 
-  describe("agentIdentities", () => {
-    it("should upsert and retrieve an agent identity by id", async () => {
-      const identity = { agent_id: "agent1", agent_name: "Agent One", status: "active" };
-      const result = await storage.agentIdentities.upsert(identity);
+  describe("logicalAgents", () => {
+    it("should upsert and retrieve a LogicalAgent identity by id", async () => {
+      const identity = { logical_agent_id: "agent1", logical_agent_name: "identity One", status: "active" };
+      const result = await storage.logicalAgents.upsert(identity);
       assert.strictEqual(result.ok, true);
       assert.deepStrictEqual(result.identity, identity);
 
-      const retrieved = await storage.agentIdentities.getById("agent1");
+      const retrieved = await storage.logicalAgents.getById("agent1");
       assert.strictEqual(retrieved.ok, true);
       assert.deepStrictEqual(retrieved.identity, identity);
     });
 
-    it("should retrieve an agent identity by name", async () => {
-      const identity = { agent_id: "agent2", agent_name: "Agent Two", status: "active" };
-      await storage.agentIdentities.upsert(identity);
+    it("should retrieve a LogicalAgent identity by name", async () => {
+      const identity = { logical_agent_id: "agent2", logical_agent_name: "identity Two", status: "active" };
+      await storage.logicalAgents.upsert(identity);
 
-      const retrieved = await storage.agentIdentities.getByName("Agent Two");
+      const retrieved = await storage.logicalAgents.getByName("identity Two");
       assert.strictEqual(retrieved.ok, true);
       assert.deepStrictEqual(retrieved.identity, identity);
     });
 
-    it("should list agent identities", async () => {
-      const identity1 = { agent_id: "agent3", agent_name: "Agent Three", status: "active" };
-      const identity2 = { agent_id: "agent4", agent_name: "Agent Four", status: "inactive" };
-      await storage.agentIdentities.upsert(identity1);
-      await storage.agentIdentities.upsert(identity2);
+    it("should list LogicalAgent identities", async () => {
+      const identity1 = { logical_agent_id: "agent3", logical_agent_name: "identity Three", status: "active" };
+      const identity2 = { logical_agent_id: "agent4", logical_agent_name: "identity Four", status: "inactive" };
+      await storage.logicalAgents.upsert(identity1);
+      await storage.logicalAgents.upsert(identity2);
 
-      const result = await storage.agentIdentities.list();
+      const result = await storage.logicalAgents.list();
       assert.strictEqual(result.ok, true);
       assert.strictEqual(result.identities.length, 2);
       assert.deepStrictEqual(
-        result.identities.find((id) => id.agent_id === "agent3"),
+        result.identities.find((id) => id.logical_agent_id === "agent3"),
         identity1
       );
     });
 
-    it("should update agent status", async () => {
-      const identity = { agent_id: "agent5", agent_name: "Agent Five", status: "active" };
-      await storage.agentIdentities.upsert(identity);
+    it("should update identity status", async () => {
+      const identity = { logical_agent_id: "agent5", logical_agent_name: "identity Five", status: "active" };
+      await storage.logicalAgents.upsert(identity);
 
-      const result = await storage.agentIdentities.updateStatus("agent5", "inactive");
+      const result = await storage.logicalAgents.updateStatus("agent5", "inactive");
       assert.strictEqual(result.ok, true);
       assert.strictEqual(result.identity.status, "inactive");
 
-      const retrieved = await storage.agentIdentities.getById("agent5");
+      const retrieved = await storage.logicalAgents.getById("agent5");
       assert.strictEqual(retrieved.ok, true);
       assert.strictEqual(retrieved.identity.status, "inactive");
     });
@@ -163,12 +163,12 @@ describe("Browser Storage (localStorage) Implementation", () => {
   });
 
   it("should clear cache", async () => {
-    const identity = { agent_id: "agent6", agent_name: "Agent Six", status: "active" };
-    await storage.agentIdentities.upsert(identity);
+    const identity = { logical_agent_id: "agent6", logical_agent_name: "identity Six", status: "active" };
+    await storage.logicalAgents.upsert(identity);
 
     await storage.clearCache();
 
-    const retrieved = await storage.agentIdentities.getById("agent6");
+    const retrieved = await storage.logicalAgents.getById("agent6");
     assert.strictEqual(retrieved.ok, false);
     assert.strictEqual(retrieved.code, ERROR_CODES.NOT_FOUND);
   });

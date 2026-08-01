@@ -134,94 +134,94 @@ test("FileBasedStorage", async (t) => {
     assert.deepStrictEqual(result.artifact, artifactRecord);
   });
 
-  await t.test("agentIdentities should upsert new identity", async () => {
-    const identity = { agent_id: "agent_1", agent_name: "test_agent", status: "active" };
-    const result = await storage.agentIdentities.upsert(identity);
+  await t.test("logicalAgents should upsert new identity", async () => {
+    const identity = { logical_agent_id: "agent_1", logical_agent_name: "test_agent", status: "active" };
+    const result = await storage.logicalAgents.upsert(identity);
     assert.strictEqual(result.ok, true);
     assert.deepStrictEqual(result.identity, identity);
 
-    const filePath = path.join(testBasePath, "agentIdentities", "agent_1.json");
+    const filePath = path.join(testBasePath, "logicalAgents", "agent_1.json");
     const fileContent = await mockFs.readFile(filePath);
     assert.deepStrictEqual(JSON.parse(fileContent), identity);
 
-    const nameIndexFilePath = path.join(testBasePath, "agentIdentities_name_index.json");
+    const nameIndexFilePath = path.join(testBasePath, "logicalAgents_name_index.json");
     const nameIndexContent = await mockFs.readFile(nameIndexFilePath);
     assert.deepStrictEqual(JSON.parse(nameIndexContent), { test_agent: "agent_1" });
   });
 
-  await t.test("agentIdentities should update existing identity", async () => {
-    const initialIdentity = { agent_id: "agent_1", agent_name: "test_agent", status: "active" };
-    await storage.agentIdentities.upsert(initialIdentity);
-    const updatedIdentity = { agent_id: "agent_1", agent_name: "test_agent", status: "inactive" };
-    const result = await storage.agentIdentities.upsert(updatedIdentity);
+  await t.test("logicalAgents should update existing identity", async () => {
+    const initialIdentity = { logical_agent_id: "agent_1", logical_agent_name: "test_agent", status: "active" };
+    await storage.logicalAgents.upsert(initialIdentity);
+    const updatedIdentity = { logical_agent_id: "agent_1", logical_agent_name: "test_agent", status: "inactive" };
+    const result = await storage.logicalAgents.upsert(updatedIdentity);
     assert.strictEqual(result.ok, true);
     assert.deepStrictEqual(result.identity, updatedIdentity);
 
-    const filePath = path.join(testBasePath, "agentIdentities", "agent_1.json");
+    const filePath = path.join(testBasePath, "logicalAgents", "agent_1.json");
     const fileContent = await mockFs.readFile(filePath);
     assert.deepStrictEqual(JSON.parse(fileContent), updatedIdentity);
   });
 
-  await t.test("agentIdentities should get identity by id", async () => {
-    const identity = { agent_id: "agent_1", agent_name: "test_agent" };
-    await storage.agentIdentities.upsert(identity);
-    const result = await storage.agentIdentities.getById("agent_1");
+  await t.test("logicalAgents should get identity by id", async () => {
+    const identity = { logical_agent_id: "agent_1", logical_agent_name: "test_agent" };
+    await storage.logicalAgents.upsert(identity);
+    const result = await storage.logicalAgents.getById("agent_1");
     assert.strictEqual(result.ok, true);
     assert.deepStrictEqual(result.identity, identity);
   });
 
-  await t.test("agentIdentities should get identity by name", async () => {
-    const identity = { agent_id: "agent_1", agent_name: "test_agent" };
-    await storage.agentIdentities.upsert(identity);
-    const result = await storage.agentIdentities.getByName("test_agent");
+  await t.test("logicalAgents should get identity by name", async () => {
+    const identity = { logical_agent_id: "agent_1", logical_agent_name: "test_agent" };
+    await storage.logicalAgents.upsert(identity);
+    const result = await storage.logicalAgents.getByName("test_agent");
     assert.strictEqual(result.ok, true);
     assert.deepStrictEqual(result.identity, identity);
   });
 
-  await t.test("agentIdentities should list identities", async () => {
-    await storage.agentIdentities.upsert({
-      agent_id: "agent_1",
-      agent_name: "agent1",
+  await t.test("logicalAgents should list identities", async () => {
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent_1",
+      logical_agent_name: "agent1",
       status: "active",
     });
-    await storage.agentIdentities.upsert({
-      agent_id: "agent_2",
-      agent_name: "agent2",
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent_2",
+      logical_agent_name: "agent2",
       status: "inactive",
     });
-    const result = await storage.agentIdentities.list();
+    const result = await storage.logicalAgents.list();
     assert.strictEqual(result.ok, true);
     assert.strictEqual(result.identities.length, 2);
     assert.deepStrictEqual(
-      result.identities.map((i) => i.agent_id).sort(),
+      result.identities.map((i) => i.logical_agent_id).sort(),
       ["agent_1", "agent_2"].sort()
     );
   });
 
-  await t.test("agentIdentities should list identities by status", async () => {
-    await storage.agentIdentities.upsert({
-      agent_id: "agent_1",
-      agent_name: "agent1",
+  await t.test("logicalAgents should list identities by status", async () => {
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent_1",
+      logical_agent_name: "agent1",
       status: "active",
     });
-    await storage.agentIdentities.upsert({
-      agent_id: "agent_2",
-      agent_name: "agent2",
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent_2",
+      logical_agent_name: "agent2",
       status: "inactive",
     });
-    const result = await storage.agentIdentities.list({ status: "active" });
+    const result = await storage.logicalAgents.list({ status: "active" });
     assert.strictEqual(result.ok, true);
     assert.strictEqual(result.identities.length, 1);
     assert.strictEqual(result.identities[0].status, "active");
   });
 
-  await t.test("agentIdentities should update status", async () => {
-    const identity = { agent_id: "agent_1", agent_name: "test_agent", status: "active" };
-    await storage.agentIdentities.upsert(identity);
-    const result = await storage.agentIdentities.updateStatus("agent_1", "inactive");
+  await t.test("logicalAgents should update status", async () => {
+    const identity = { logical_agent_id: "agent_1", logical_agent_name: "test_agent", status: "active" };
+    await storage.logicalAgents.upsert(identity);
+    const result = await storage.logicalAgents.updateStatus("agent_1", "inactive");
     assert.strictEqual(result.ok, true);
     assert.strictEqual(result.identity.status, "inactive");
-    const updated = await storage.agentIdentities.getById("agent_1");
+    const updated = await storage.logicalAgents.getById("agent_1");
     assert.strictEqual(updated.identity.status, "inactive");
   });
 
@@ -363,9 +363,9 @@ test("FileBasedStorage", async (t) => {
   });
 
   await t.test("should clear all data", async () => {
-    await storage.agentIdentities.upsert({
-      agent_id: "agent_1",
-      agent_name: "agent1",
+    await storage.logicalAgents.upsert({
+      logical_agent_id: "agent_1",
+      logical_agent_name: "agent1",
       status: "active",
     });
     await storage.tasks.upsert({ id: "task_1", name: "task1", status: "pending" });
@@ -375,7 +375,7 @@ test("FileBasedStorage", async (t) => {
     // Simulate clearing the base path
     await mockFs.rm(testBasePath, { recursive: true, force: true });
 
-    const listIdentities = await storage.agentIdentities.list();
+    const listIdentities = await storage.logicalAgents.list();
     assert.strictEqual(listIdentities.identities.length, 0);
     const listTasks = await storage.tasks.list();
     assert.strictEqual(listTasks.tasks.length, 0);

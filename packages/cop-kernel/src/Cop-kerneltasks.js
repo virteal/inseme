@@ -27,7 +27,7 @@ function genId() {
 /**
  * Internal helper to emit a COP event via the bus when available.
  * This is the key genericity mechanism: Task/Step lifecycles become first-class observable events
- * that the Scheduler, other agents, JobScheduler, and audit can react to without app-level glue.
+ * that the Scheduler, other handlers, JobScheduler, and audit can react to without app-level glue.
  */
 async function emitTaskEvent(busOrScheduler, eventType, payload) {
   let targetBus = busOrScheduler;
@@ -46,7 +46,7 @@ async function emitTaskEvent(busOrScheduler, eventType, payload) {
     const eventData = { ...payload };
     // Further cop.packet.* wrapping of task events (as follow-up): include projection
     // when the payload looks like a continuation/task with resume info. This allows
-    // routers/agents to subscribe uniformly to cop.packet.* alongside cop.task.*
+    // routers/handlers to subscribe uniformly to cop.packet.* alongside cop.task.*
     if (payload && (payload.continuationId || payload.resumeTo || payload.waitForEvents)) {
       eventData.packet = asCognitivePacket({
         envelope: { packetKind: "task", taskId: payload.taskId, stepId: payload.stepId },
@@ -70,7 +70,7 @@ async function emitTaskEvent(busOrScheduler, eventType, payload) {
  *
  * @param {Object} params
  * @param {string} params.taskType
- * @param {string} params.workerAgentName
+ * @param {string} params.workerHandlerName
  * @param {string} [params.rootCorrelationId]
  * @param {string} [params.channel]
  * @param {string} [params.sourceEntityId]
@@ -84,7 +84,7 @@ export async function createTask(params) {
   const storage = getStorage();
   const {
     taskType,
-    workerAgentName,
+    workerHandlerName,
     rootCorrelationId = null,
     channel = null,
     sourceEntityId = null,
@@ -97,8 +97,8 @@ export async function createTask(params) {
   if (!taskType) {
     throw new Error("createTask: 'taskType' is required");
   }
-  if (!workerAgentName) {
-    throw new Error("createTask: 'workerAgentName' is required");
+  if (!workerHandlerName) {
+    throw new Error("createTask: 'workerHandlerName' is required");
   }
 
   const createdAt = nowIso();
@@ -106,7 +106,7 @@ export async function createTask(params) {
   const row = {
     id: genId(),
     task_type: taskType,
-    worker_agent_name: workerAgentName,
+    worker_handler_name: workerHandlerName,
     root_correlation_id: rootCorrelationId,
     channel,
     source_entity_id: sourceEntityId,
@@ -128,7 +128,7 @@ export async function createTask(params) {
   await emitTaskEvent(null, "created", {
     taskId: inserted.id,
     taskType,
-    workerAgentName,
+    workerHandlerName,
     rootCorrelationId,
     channel,
   });
@@ -297,7 +297,7 @@ export async function markTaskStepFailed(stepId, errorMessage) {
 export async function createTaskWithInitialContinuation(params) {
   const {
     taskType,
-    workerAgentName,
+    workerHandlerName,
     // continuation params
     resumeTo,
     resumeIntent,
@@ -310,9 +310,9 @@ export async function createTaskWithInitialContinuation(params) {
     channel = null,
   } = params || {};
 
-  if (!taskType || !workerAgentName || !resumeTo) {
+  if (!taskType || !workerHandlerName || !resumeTo) {
     throw new Error(
-      "createTaskWithInitialContinuation: taskType, workerAgentName and resumeTo are required"
+      "createTaskWithInitialContinuation: taskType, workerHandlerName and resumeTo are required"
     );
   }
 
@@ -321,7 +321,7 @@ export async function createTaskWithInitialContinuation(params) {
     // 1. Try to create the Task (requires storage tasks support)
     task = await createTask({
       taskType,
-      workerAgentName,
+      workerHandlerName,
       rootCorrelationId,
       channel,
     });
@@ -330,7 +330,7 @@ export async function createTaskWithInitialContinuation(params) {
     task = {
       id: genId(),
       task_type: taskType,
-      worker_agent_name: workerAgentName,
+      worker_handler_name: workerHandlerName,
       status: "pending",
       synthetic: true,
       note: "Task created in degraded mode (no persistent storage)",
@@ -403,7 +403,7 @@ export async function associateContinuationToTask(continuationId, taskId, stepId
  * Improvements (clean follow-up):
  * - Generates id + timestamp in envelope if absent (better defaults).
  * - Optional emission of `cop.packet.created` (and `cop.packet.routed` etc. by callers)
- *   so external "Cogentia router agents" can subscribe uniformly without knowing
+ *   so external "Cogentia router handlers" can subscribe uniformly without knowing
  *   internal task/job event shapes.
  * - Basic shape validation (warns on obvious misuse).
  */
@@ -461,7 +461,7 @@ export function asCognitivePacket({
   return packet;
 }
 
-// --- Ergonomic aliases for higher agents adopting COP (e.g. Ophelia "from now on") ---
+// --- Ergonomic aliases for higher handlers adopting COP (e.g. Ophelia "from now on") ---
 // These provide the startStep/completeStep names referenced in integration code and docs,
 // without introducing new implementation debt. They delegate to the storage-backed marks.
 

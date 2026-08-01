@@ -7,7 +7,7 @@ export function createInMemoryStorage(ERROR_CODES) {
     debugLogs: [],
     events: [],
     artifacts: [],
-    agentIdentities: new Map(),
+    logicalAgents: new Map(),
     tasks: new Map(),
     steps: new Map(),
     fileContent: new Map(),
@@ -80,48 +80,48 @@ export function createInMemoryStorage(ERROR_CODES) {
       },
     },
 
-    agentIdentities: {
-      async upsert(identity, conflictKey = "agent_name") {
-        const existing = Array.from(inMemoryData.agentIdentities.values()).find(
+    logicalAgents: {
+      async upsert(identity, conflictKey = "logical_agent_name") {
+        const existing = Array.from(inMemoryData.logicalAgents.values()).find(
           (a) => a[conflictKey] === identity[conflictKey]
         );
         if (existing) {
           Object.assign(existing, identity);
-          inMemoryData.agentIdentities.set(existing.agent_id, existing);
+          inMemoryData.logicalAgents.set(existing.logical_agent_id, existing);
           return { ok: true, data: existing };
         } else {
           const newIdentity = {
             ...identity,
-            agent_id: identity.agent_id || `agent_${inMemoryData.agentIdentities.size + 1}`,
+            logical_agent_id: identity.logical_agent_id || `agent_${inMemoryData.logicalAgents.size + 1}`,
           };
-          inMemoryData.agentIdentities.set(newIdentity.agent_id, newIdentity);
+          inMemoryData.logicalAgents.set(newIdentity.logical_agent_id, newIdentity);
           return { ok: true, data: newIdentity };
         }
       },
-      async getById(agent_id) {
-        const identity = inMemoryData.agentIdentities.get(agent_id);
+      async getById(logical_agent_id) {
+        const identity = inMemoryData.logicalAgents.get(logical_agent_id);
         return { ok: !!identity, data: identity || null };
       },
-      async getByName(agent_name) {
-        const identity = Array.from(inMemoryData.agentIdentities.values()).find(
-          (a) => a.agent_name === agent_name
+      async getByName(logical_agent_name) {
+        const identity = Array.from(inMemoryData.logicalAgents.values()).find(
+          (a) => a.logical_agent_name === logical_agent_name
         );
         return { ok: !!identity, data: identity || null };
       },
       async list({ status, limit = 100 } = {}) {
-        let identities = Array.from(inMemoryData.agentIdentities.values());
+        let identities = Array.from(inMemoryData.logicalAgents.values());
         if (status) {
           identities = identities.filter((a) => a.status === status);
         }
         return { ok: true, data: identities.slice(0, limit) };
       },
-      async updateStatus(agent_id, status) {
-        const identity = inMemoryData.agentIdentities.get(agent_id);
+      async updateStatus(logical_agent_id, status) {
+        const identity = inMemoryData.logicalAgents.get(logical_agent_id);
         if (identity) {
           identity.status = status;
           return { ok: true, data: identity };
         }
-        return { ok: false, error: "Agent not found", code: ERROR_CODES.NOT_FOUND };
+        return { ok: false, error: "identity not found", code: ERROR_CODES.NOT_FOUND };
       },
     },
 
@@ -220,7 +220,7 @@ export function createInMemoryStorage(ERROR_CODES) {
     },
 
     getCacheContents: () => ({
-      agentIdentities: Array.from(inMemoryData.agentIdentities.entries()),
+      logicalAgents: Array.from(inMemoryData.logicalAgents.entries()),
       tasks: Array.from(inMemoryData.tasks.entries()),
       steps: Array.from(inMemoryData.steps.entries()),
       debugLogs: inMemoryData.debugLogs,
@@ -228,7 +228,7 @@ export function createInMemoryStorage(ERROR_CODES) {
       artifacts: inMemoryData.artifacts,
     }),
     clearCache: () => {
-      inMemoryData.agentIdentities.clear();
+      inMemoryData.logicalAgents.clear();
       inMemoryData.tasks.clear();
       inMemoryData.steps.clear();
       inMemoryData.debugLogs = [];

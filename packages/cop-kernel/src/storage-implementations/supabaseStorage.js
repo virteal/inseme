@@ -47,12 +47,12 @@ export function createSupabaseStorage(options = {}) {
   const client = opt_client || createClient(url, key);
 
   // Caches for frequently accessed data
-  const agentIdentitiesCache = new Map();
+  const logicalAgentsCache = new Map();
   const tasksCache = new Map();
   const stepsCache = new Map();
 
   const flushAllCaches = () => {
-    agentIdentitiesCache.clear();
+    logicalAgentsCache.clear();
     tasksCache.clear();
     stepsCache.clear();
   };
@@ -208,7 +208,7 @@ export function createSupabaseStorage(options = {}) {
     return result;
   };
 
-  // Définition des interfaces CRUD (Agent, Tasks, Steps)
+  // Définition des interfaces CRUD (handler, Tasks, Steps)
   const events = {
     async insert(eventRecord) {
       return executeStorageOperation("Write", "events.insert", async () => {
@@ -231,54 +231,54 @@ export function createSupabaseStorage(options = {}) {
       });
     },
   };
-  const agentIdentities = {
+  const logicalAgents = {
     async upsert(identity) {
       const result = await handleUpsert(
-        "cop_agent_identities",
+        "cop_logical_agents",
         identity,
-        agentIdentitiesCache,
-        "agentIdentities.upsert",
-        "agent_id",
-        "agent_id"
+        logicalAgentsCache,
+        "logicalAgents.upsert",
+        "logical_agent_id",
+        "logical_agent_id"
       );
       return result;
     },
-    async getById(agent_id) {
+    async getById(logical_agent_id) {
       const result = await handleReadSingle(
-        "cop_agent_identities",
-        agent_id,
-        agentIdentitiesCache,
-        "agentIdentities.getById",
-        "agent_id"
+        "cop_logical_agents",
+        logical_agent_id,
+        logicalAgentsCache,
+        "logicalAgents.getById",
+        "logical_agent_id"
       );
       return result;
     },
-    async getByName(agent_name) {
+    async getByName(logical_agent_name) {
       const result = await executeStorageOperation(
         "Read",
-        "agentIdentities.getByName",
+        "logicalAgents.getByName",
         async () => {
           const response = await client
-            .from("cop_agent_identities")
+            .from("cop_logical_agents")
             .select()
-            .eq("agent_name", agent_name)
+            .eq("logical_agent_name", logical_agent_name)
             .maybeSingle();
           if (response.error) throw response.error;
           if (response.data) {
-            agentIdentitiesCache.set(response.data.agent_id, response.data);
+            logicalAgentsCache.set(response.data.logical_agent_id, response.data);
           }
           return response; // Return full response
         },
-        { agent_name }
+        { logical_agent_name }
       );
       return result;
     },
     async list({ status, limit = 100 } = {}) {
       const result = await executeStorageOperation(
         "Read",
-        "agentIdentities.list",
+        "logicalAgents.list",
         async () => {
-          let query = client.from("cop_agent_identities").select();
+          let query = client.from("cop_logical_agents").select();
           if (status) {
             query = query.eq("status", status);
           }
@@ -286,7 +286,7 @@ export function createSupabaseStorage(options = {}) {
           const response = await query;
           if (response.error) throw response.error;
           (response.data || []).forEach((identity) =>
-            agentIdentitiesCache.set(identity.agent_id, identity)
+            logicalAgentsCache.set(identity.logical_agent_id, identity)
           );
           return response; // Return full response
         },
@@ -294,14 +294,14 @@ export function createSupabaseStorage(options = {}) {
       );
       return result;
     },
-    async updateStatus(agent_id, status) {
+    async updateStatus(logical_agent_id, status) {
       const result = await handleUpdate(
-        "cop_agent_identities",
-        agent_id,
+        "cop_logical_agents",
+        logical_agent_id,
         { status },
-        agentIdentitiesCache,
-        "agentIdentities.updateStatus",
-        "agent_id"
+        logicalAgentsCache,
+        "logicalAgents.updateStatus",
+        "logical_agent_id"
       );
       return result;
     },
@@ -451,12 +451,12 @@ export function createSupabaseStorage(options = {}) {
     debugLogs,
     events,
     artifacts,
-    agentIdentities,
+    logicalAgents,
     tasks,
     steps,
     fileStorage, // EXPOSÉ
     getCacheContents: () => ({
-      agentIdentities: Array.from(agentIdentitiesCache.values()),
+      logicalAgents: Array.from(logicalAgentsCache.values()),
       tasks: Array.from(tasksCache.values()),
       steps: Array.from(stepsCache.values()),
     }),

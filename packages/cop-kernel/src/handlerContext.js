@@ -1,6 +1,6 @@
-// File: packages/cop-kernel/src/agentContext.js
+// File: packages/cop-kernel/src/handlerContext.js
 // Description:
-//   High-level helpers for implementing COP agents.
+//   High-level helpers for implementing COP handlers.
 
 import { logCopDebug } from "./debugLog.js";
 import {
@@ -14,22 +14,22 @@ import {
 } from "./Cop-kerneltasks.js";
 import { emitCopArtifact } from "./artifacts.js";
 import { extractContinuationFromMessage } from "./continuation.js";
-import { callAgentWithContinuation, resumeContinuationAndSend } from "./call.js";
+import { callHandlerWithContinuation, resumeContinuationAndSend } from "./call.js";
 import { postCopMessage } from "./transport.js";
 import { COP_VERSION } from "./message.js";
 
 /**
- * Create an AgentContext bound to a single COP_MESSAGE.
+ * Create a HandlerContext bound to a single COP_MESSAGE.
  *
  * @param {Object} params
  * @param {Object} params.msg
  * @param {string} [params.baseUrl]
  * @param {string} [params.endpoint]
  */
-export function createAgentContext(params) {
+export function createHandlerContext(params) {
   const { msg, baseUrl = null, endpoint = null } = params || {};
   if (!msg || typeof msg !== "object") {
-    throw new Error("createAgentContext: 'msg' is required");
+    throw new Error("createHandlerContext: 'msg' is required");
   }
 
   const correlationId = msg.correlation_id || msg.message_id || null;
@@ -39,8 +39,8 @@ export function createAgentContext(params) {
   async function log(stage, direction, payload, extraMetadata) {
     const metadata = {
       ...(extraMetadata || {}),
-      agent_from: fromAddr,
-      agent_to: toAddr,
+      handler_from: fromAddr,
+      handler_to: toAddr,
       intent: msg.intent,
     };
 
@@ -59,7 +59,7 @@ export function createAgentContext(params) {
   async function startTask(options) {
     const {
       taskType,
-      workerAgentName,
+      workerHandlerName,
       sourceEntityId,
       sourceEntityType,
       idempotencyHash,
@@ -71,7 +71,7 @@ export function createAgentContext(params) {
 
     const task = await createTask({
       taskType,
-      workerAgentName,
+      workerHandlerName,
       rootCorrelationId: rootCorrelationId || correlationId,
       channel: channel || msg.channel || null,
       sourceEntityId: sourceEntityId || null,
@@ -201,11 +201,11 @@ export function createAgentContext(params) {
       eventId: null,
       taskId: task && task.id ? task.id : null,
       taskStepId: step && step.id ? step.id : null,
-      agent: {
+      handler: {
         networkId: null,
         nodeId: null,
         instanceId: null,
-        agentName: toAddr,
+        handlerName: toAddr,
       },
       content,
       metadata: {
@@ -290,7 +290,7 @@ export function createAgentContext(params) {
     };
   }
 
-  async function callAgent(options) {
+  async function callHandler(options) {
     const {
       to,
       intent,
@@ -302,11 +302,11 @@ export function createAgentContext(params) {
       step,
     } = options || {};
 
-    if (!to) throw new Error("callAgent: 'to' is required");
-    if (!intent) throw new Error("callAgent: 'intent' is required");
-    if (!resumeIntent) throw new Error("callAgent: 'resumeIntent' is required");
+    if (!to) throw new Error("callHandler: 'to' is required");
+    if (!intent) throw new Error("callHandler: 'intent' is required");
+    if (!resumeIntent) throw new Error("callHandler: 'resumeIntent' is required");
 
-    return callAgentWithContinuation({
+    return callHandlerWithContinuation({
       from: toAddr,
       to,
       intent,
@@ -358,7 +358,7 @@ export function createAgentContext(params) {
 
     // messaging
     reply,
-    callAgent,
+    callHandler,
     resumeContinuation,
   };
 }

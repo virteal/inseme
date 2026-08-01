@@ -21,7 +21,7 @@ review:
 # 🧠 @inseme/cop-kernel - COP Runtime & Orchestration
 
 **@inseme/cop-kernel** is the runtime engine for the Cognitive Orchestration Protocol (COP) in the
-Inseme monorepo. It provides the essential infrastructure for managing agents, nodes, and their
+Inseme monorepo. It provides the essential infrastructure for managing handlers, nodes, and their
 interactions.
 
 Built on top of `cop-core`, the kernel handles the practical execution of the protocol, ensuring
@@ -39,9 +39,9 @@ that various components can communicate and collaborate effectively.
 It serves as the "Operating System" for the Inseme ecosystem, providing the runtime helpers and
 registries needed for a decentralized, AI-assisted platform.
 
-### 1. 🤖 Agent & Node Management
+### 1. 🤖 handler & Node Management
 
-Utilities for defining, registering, and managing the lifecycle of autonomous agents and protocol
+Utilities for defining, registering, and managing the lifecycle of autonomous handlers and protocol
 nodes.
 
 ### 2. 📋 Service Registry
@@ -51,7 +51,7 @@ within the ecosystem.
 
 ### 3. 🔄 Interaction Orchestration
 
-Helpers for managing complex multi-agent interactions and ensuring protocol compliance across the
+Helpers for managing complex multi-handler interactions and ensuring protocol compliance across the
 runtime.
 
 ---
@@ -62,7 +62,7 @@ runtime.
 packages/cop-kernel/
 ├── PROFILE.md      # Implementation profile and conformance status
 ├── src/
-│   ├── agents/        # Agent definition and management logic
+│   ├── handlers/        # handler definition and management logic
 │   ├── nodes/         # Node utilities and helpers
 │   ├── registry/      # Service and capability registries
 │   └── index.js       # Main kernel entry point

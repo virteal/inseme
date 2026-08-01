@@ -88,33 +88,33 @@ describe("FileBasedStorage Audit Integration", () => {
     await fs.rm(tempDir, { recursive: true, force: true });
   });
 
-  it("should log AgentIdentityUpserted event on agentIdentities.upsert", async () => {
-    const identity = { agent_id: "agent1", agent_name: "Agent One", status: "active" };
-    await storage.agentIdentities.upsert(identity);
+  it("should log LogicalAgentIdentityUpserted event on logicalAgents.upsert", async () => {
+    const identity = { logical_agent_id: "agent1", logical_agent_name: "identity One", status: "active" };
+    await storage.logicalAgents.upsert(identity);
 
     const content = await fs.readFile(testAuditLogPath, "utf8");
     const lines = content.trim().split("\n");
     assert.strictEqual(lines.length, 1);
 
     const loggedEvent = JSON.parse(lines[0]);
-    assert.strictEqual(loggedEvent.eventType, "AgentIdentityUpserted");
-    assert.strictEqual(loggedEvent.entityType, "agentIdentity");
+    assert.strictEqual(loggedEvent.eventType, "LogicalAgentIdentityUpserted");
+    assert.strictEqual(loggedEvent.entityType, "logicalAgentIdentity");
     assert.strictEqual(loggedEvent.entityId, "agent1");
     assert.deepStrictEqual(loggedEvent.payload, identity);
   });
 
-  it("should log AgentIdentityStatusUpdated event on agentIdentities.updateStatus", async () => {
-    const identity = { agent_id: "agent2", agent_name: "Agent Two", status: "active" };
-    await storage.agentIdentities.upsert(identity);
-    await storage.agentIdentities.updateStatus("agent2", "inactive");
+  it("should log LogicalAgentIdentityStatusUpdated event on logicalAgents.updateStatus", async () => {
+    const identity = { logical_agent_id: "agent2", logical_agent_name: "identity Two", status: "active" };
+    await storage.logicalAgents.upsert(identity);
+    await storage.logicalAgents.updateStatus("agent2", "inactive");
 
     const content = await fs.readFile(testAuditLogPath, "utf8");
     const lines = content.trim().split("\n");
     assert.strictEqual(lines.length, 2); // upsert + updateStatus
 
     const loggedEvent = JSON.parse(lines[1]); // Second event
-    assert.strictEqual(loggedEvent.eventType, "AgentIdentityStatusUpdated");
-    assert.strictEqual(loggedEvent.entityType, "agentIdentity");
+    assert.strictEqual(loggedEvent.eventType, "LogicalAgentIdentityStatusUpdated");
+    assert.strictEqual(loggedEvent.entityType, "logicalAgentIdentity");
     assert.strictEqual(loggedEvent.entityId, "agent2");
     assert.deepStrictEqual(loggedEvent.payload, { oldStatus: "active", newStatus: "inactive" });
   });
