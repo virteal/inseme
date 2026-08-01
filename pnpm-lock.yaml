@@ -464,9 +464,6 @@ importers:
       html2canvas:
         specifier: ^1.4.1
         version: 1.4.1
-      jsonwebtoken:
-        specifier: ^9.0.2
-        version: 9.0.3
       jspdf:
         specifier: ^2.5.1
         version: 2.5.2
