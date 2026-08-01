@@ -152,8 +152,11 @@ export interface COPTask {
   /** Hierarchical relationship. */
   parentTaskId?: UUID;
 
-  /** Agent or Role responsible. */
-  assignedTo?: string;
+  /** Optional durable mandate-bearing continuity responsible for the work. */
+  assignedLogicalAgentRef?: string;
+
+  /** Optional handler profile expected to execute the work. */
+  assignedHandlerProfile?: string;
 
   status: TaskStatus;
   title?: string;
@@ -194,40 +197,41 @@ export interface COPStep {
 export const ARTIFACT_TYPE_CONTINUATION = "cop/continuation";
 
 /**
- * Reserved wildcard value for the Continuation `agent` field.
- * Means "any compliant agent may resume" — capability-bound resumption,
- * as opposed to identity-bound (`agent: "<specific-name>"`).
- * See Architecture.md §2.7.4.
+ * Reserved wildcard value for a capability-bound Continuation.
+ * Means "any compliant Handler whose offered capabilities match may resume".
  */
-export const CONTINUATION_AGENT_ANY = "*";
+export const CONTINUATION_HANDLER_PROFILE_ANY = "*";
 
 /**
  * Standard payload for a Continuation Artifact.
  * Represents suspended or deferred work.
+ *
+ * A Continuation is capability-bound by default. A logical-agent reference is
+ * optional and records an explicit identity-bound return or resumption policy;
+ * it does not identify the concrete HandlerInstance that will execute work.
  */
 export type ContinuationPayload = {
   /**
-   * The Agent responsible for resuming work. OPTIONAL.
-   *
-   * - Identity-bound: a specific agent name (e.g. "claude-3", "ophelia").
-   *   Schedulers route the Continuation to that agent.
-   * - Capability-bound: the reserved value `"*"` (CONTINUATION_AGENT_ANY) or
-   *   omission. Any agent whose capabilities match the resumption schema MAY
-   *   pick up the work. Used by provider-neutral profiles such as
-   *   cogentia.continuation.v1 to keep the orchestration contract free of
-   *   embedded provider dependencies.
-   *
-   * Implementations that route by identity SHOULD treat `"*"` and omission
-   * as equivalent. See Architecture.md §2.7.4.
+   * Optional stable handler profile requested for resumption.
+   * The reserved "*" value means any compatible Handler profile.
    */
-  agent?: string;
+  handlerProfile?: string;
+
+  /** Capabilities required to resume the work. */
+  requiredCapabilities?: string[];
+
+  /**
+   * Optional durable mandate-bearing identity for identity-bound resumption.
+   * This MUST NOT be used as a substitute for a HandlerInstance record.
+   */
+  logicalAgentRef?: string;
 
   /** Context identifiers. */
   topicId: UUID;
   taskId?: UUID;
   stepId?: UUID;
 
-  /** Opaque state for the agent to resume. */
+  /** Opaque, externally durable state needed for correct resumption. */
   state: JsonValue;
 
   /** Resume conditions. */
@@ -261,23 +265,25 @@ export interface COPContinuation extends COPArtifact<ContinuationPayload> {
 // ----------------------------------------------------------------------
 
 /**
- * Minimal Agent interface.
- * Stateless and Idempotent.
+ * Minimal Handler interface.
+ * A Handler is a stateless, idempotent executor; it does not itself establish
+ * mandate authority. Concrete executions are recorded as HandlerInstances by
+ * profiles or runtimes when accountability requires it.
  */
-export interface COPAgent {
-  readonly name: string;
+export interface COPHandler {
+  readonly profile: string;
 
   /** Core reaction to events. */
-  onEvent(event: COPEvent, ctx: AgentContext): Promise<void>;
+  onEvent(event: COPEvent, ctx: HandlerContext): Promise<void>;
 
   /** Optional periodic supervision. */
-  onTick?(ctx: AgentContext): Promise<void>;
+  onTick?(ctx: HandlerContext): Promise<void>;
 }
 
 /**
- * Context passed to agents during execution.
+ * Context passed to handlers during execution.
  */
-export interface AgentContext {
+export interface HandlerContext {
   bus: COPBus;
   store: COPStore;
 
