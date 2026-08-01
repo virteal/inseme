@@ -20,11 +20,16 @@ last_stamped_at: 2026-06-01
 
 ### 0.4 Terminology and Conventions
 
+The normative terminology for mandate, execution, and accountability is
+[Terminology.md](Terminology.md). The bare term `Agent` is not normative in new COP contracts; it
+appears elsewhere in this historical draft only where a later revision has not yet been made, in an
+external proper name, or in a compound term such as `LogicalAgent`.
+
 ### 0.5 Notational Conventions (JSON, JSON-LD, JCS, CloudEvents)
 
 ## 1. Core Concepts
 
-### 1.1 Actors and Agents
+### 1.1 Actors and Handlers
 
 ### 1.2 Human Actors (HITL)
 
@@ -76,7 +81,7 @@ last_stamped_at: 2026-06-01
 
 ## 4. Projections and the COP Store
 
-### 4.1 COPReadOnlyStore (agent view)
+### 4.1 COPReadOnlyStore (handler view)
 
 ### 4.2 COPStore (full projection store)
 
@@ -100,13 +105,13 @@ last_stamped_at: 2026-06-01
 
 #### 5.2.3 Ticks and Time-based Execution
 
-### 5.3 Agents
+### 5.3 Handlers
 
 #### 5.3.1 Statelessness Requirements
 
 #### 5.3.2 Idempotence
 
-#### 5.3.3 Agent Context
+#### 5.3.3 Handler Context
 
 ### 5.4 Human-in-the-loop Execution
 
@@ -152,7 +157,7 @@ last_stamped_at: 2026-06-01
 
 ### 9.3 Optional Signatures
 
-### 9.4 Identity of Nodes, Agents, Topics
+### 9.4 Identity of Nodes, Handlers, Topics
 
 ### 9.5 Trust and Auditability
 
@@ -166,13 +171,13 @@ last_stamped_at: 2026-06-01
 
 #### 10.2.2 HITL-specific Artifacts
 
-### 10.3 COP/AI (Agent-to-Agent Orchestration)
+### 10.3 COP/AI (Handler-to-Handler Orchestration)
 
 #### 10.3.1 AI Message Types
 
 #### 10.3.2 Tool Invocation Events
 
-#### 10.3.3 Agent Reasoning Continuations
+#### 10.3.3 Handler Reasoning Continuations
 
 ## 11. Conformance
 
@@ -212,19 +217,19 @@ Architecture and Specification – Version 1.0
 ### 0.1 Purpose of COP
 
 The Cognitive Orchestration Protocol (COP) defines a common, implementation-independent protocol for
-coordinating cognitive agents (including AI systems and human actors) through an event-driven model.
+coordinating cognitive handlers (including AI systems and human actors) through an event-driven model.
 
 COP focuses on:
 
 - A **canonical event log** as the durable source of truth.
 - A **projection model** (store) for derived state.
-- A **task/step model** to structure work across agents.
+- A **task/step model** to structure work across handlers.
 - A **uniform representation** of human and machine actions.
 - A **continuation model** to resume reasoning across time and systems.
 
 COP is designed to:
 
-- Support distributed, multi-agent systems (AI agents + humans).
+- Support distributed, multi-handler systems (AI handlers + humans).
 - Enable reliable replay, audit, and reasoning over past interactions.
 - Provide a stable semantic layer for higher-level frameworks and runtimes.
 
@@ -236,8 +241,11 @@ conform to.
 
 This specification defines:
 
+> **Pre-operational clean break.** The handler terminology and field names are intentionally
+> breaking for early prototypes; COP has no installed-base compatibility obligation at this stage.
+
 - Core concepts: **Event**, **Topic**, **Task**, **Step**, **Artifact**, **Continuation**,
-  **Agent**, **Projector**, **Scheduler**, **Store**, **Bus**.
+  **Handler**, **Projector**, **Scheduler**, **Store**, **Bus**.
 - Core data model:
   - canonical JSON representation of COP objects,
   - identifiers and versioning rules.
@@ -253,7 +261,7 @@ This specification defines:
   - result and error semantics.
 
 - Execution model:
-  - stateless agents,
+  - stateless handlers,
   - at-least-once delivery,
   - projectors and schedulers.
 
@@ -274,7 +282,7 @@ This specification defines:
 
 Out of scope (non-goals):
 
-- Specific algorithms for planning, reasoning, or task allocation between agents.
+- Specific algorithms for planning, reasoning, or task allocation between handlers.
 - User interfaces, UX patterns, or presentation details.
 - Low-level transport protocols (HTTP, Kafka, NATS, etc.), except for interoperability guidelines.
 - Authentication, authorization, or full security architecture (only minimal identity and integrity
@@ -285,9 +293,9 @@ Out of scope (non-goals):
 
 COP explicitly does **not** attempt to:
 
-- Replace existing agent **frameworks** (LangGraph, AutoGen, Swarm, etc.). COP is a protocol they
+- Replace existing handler **frameworks** (LangGraph, AutoGen, Swarm, etc.). COP is a protocol they
   can target, not a competing runtime.
-- Standardize any particular **AI model** or inference API. COP treats AI agents as black-box actors
+- Standardize any particular **AI model** or inference API. COP treats AI handlers as black-box actors
   that emit and consume events.
 - Define a universal **business ontology**. COP provides a semantic scaffolding (JSON-LD context,
   patterns) but leaves domain ontologies to profiles or applications.
@@ -335,29 +343,29 @@ All timestamps in this specification are expressed in ISO-8601 format in UTC (e.
 This section defines the conceptual entities that COP operates on. Later sections formalize their
 data model and runtime behavior.
 
-### 1.1 Actors and Agents
+### 1.1 Actors, Logical Agents, and Handlers
 
-An **Actor** is any entity that can cause Events to appear in COP. There are two broad categories of
-actors:
+The terms in [Terminology.md](Terminology.md) are normative. In particular, an **Actor** is the
+generic possible author or participant in an Act; a **LogicalAgent** is a durable mandate-bearing
+identity; and a **Handler** is a competent executor.
 
-- **Agents**: software components (often AI-based) that receive Events and produce new Events and
-  Artifacts.
-- **Human actors**: human users interacting with the system (through a UI, API, or other means)
-  whose actions are represented as Events and Artifacts.
+A Handler may be software, a human, a model, a script, a tool, a repository, a review queue, a
+publication process, a runtime, or a governance process. A HandlerInstance is its concrete,
+potentially ephemeral incarnation.
 
-An **Agent** in COP is a logical, named component that:
+A **Handler** in COP is a named handling profile that:
 
 - consumes Events related to one or more Topics,
 - may query projections via a read-only Store,
 - may emit new Events (and thus indirectly produce new Tasks, Steps, Artifacts, or Continuations).
 
-Agents are expected to be:
+Handlers are expected to be:
 
 - **stateless** between invocations (no hidden in-memory state required for correctness),
 - **idempotent** with respect to repeated Events,
 - somehow determined by the input Event(s), their configuration, and the Store contents.
 
-COP does not prescribe how agents are implemented (LLM calls, classical programs, rule engines,
+COP does not prescribe how Handlers are implemented (LLM calls, classical programs, rule engines,
 etc.). It only constrains how they observe and mutate the shared world: via Events and the Store.
 
 ### 1.2 Human Actors (HITL)
@@ -367,7 +375,7 @@ A **Human actor** is an actor controlled by a person.
 COP treats human interactions as first-class events:
 
 - A human asking a question,
-- providing input requested by an agent,
+- providing input requested by an handler,
 - approving or rejecting a decision,
 - annotating or correcting an Artifact.
 
@@ -378,7 +386,7 @@ These interactions are represented as specific Event and Artifact types in the *
 - Their inputs, decisions, or messages can be represented as Artifacts (e.g. `human/utterance`,
   `human/decision`).
 
-Thus, human and software agents are modeled uniformly at the event level, even if they have
+Thus, human and software handlers are modeled uniformly at the event level, even if they have
 radically different runtimes.
 
 ### 1.3 Topics
@@ -408,7 +416,7 @@ declared.
 A **Task** represents a unit of work within a Topic. Tasks:
 
 - belong to exactly one Topic,
-- are usually associated with one or more Agents (or human actors),
+- are usually associated with one or more Handlers (or human actors),
 - may be hierarchical (a Task may reference a parent Task),
 - evolve through a lifecycle (e.g. `pending`, `running`, `needs_input`, `done`, `failed`,
   `cancelled`).
@@ -428,7 +436,7 @@ fields MUST always be explainable by replaying the Event log for the Topic (Sect
 
 A **Step** is a finer-grained unit within a Task, often corresponding to:
 
-- a single agent action (e.g. one response message),
+- a single handler action (e.g. one response message),
 - a single external call or tool invocation,
 - a single human interaction,
 - a sub-decision or sub-phase in a longer Task.
@@ -443,7 +451,7 @@ Steps are useful to:
 
 - model multi-phase reasoning (e.g. “analyze → plan → act → summarize”),
 - align Events and Artifacts with visible actions in a UI or log,
-- trace responsibility (which agent or human actor performed which action).
+- trace responsibility (which handler or human actor performed which action).
 
 Like Tasks, Steps are derived from Events and are part of the projection maintained by the Store.
 
@@ -505,9 +513,9 @@ A **Continuation** in COP is a standardized way to represent suspended or deferr
 
 Conceptually, a Continuation encodes:
 
-- which Agent is responsible for resuming work,
+- which Handler is responsible for resuming work,
 - which Topic (and optionally Task/Step) it relates to,
-- a JSON-serializable “state” that the Agent can use to resume,
+- a JSON-serializable “state” that the Handler can use to resume,
 - optional conditions for resuming (events to wait for, time windows, retry hints).
 
 In COP, Continuations are represented as a **special type of Artifact**:
@@ -546,10 +554,10 @@ This specification defines three key profiles:
   - Artifact types for human messages and decisions,
   - patterns for suspending and resuming Tasks based on human input.
 
-- **COP/AI (Agent-to-Agent Orchestration)** A profile that standardizes:
+- **COP/AI (Handler-to-Handler Orchestration)** A profile that standardizes:
   - message types for AI conversations,
   - tool invocation events,
-  - reasoning continuations specific to AI agents,
+  - reasoning continuations specific to AI handlers,
   - common patterns such as “analyze → plan → act → summarize”.
 
 Profiles MUST NOT contradict COP/Core, but MAY add additional constraints and semantics. Profiles
@@ -623,7 +631,7 @@ A COP Event MUST have the following form:
   - MUST be unique per `(topicId, topicSeq)`.
   - Defines the total order of Events in that Topic.
 
-- **type**: opaque string naming the Event type (e.g. `task.created`, `agent.reply`,
+- **type**: opaque string naming the Event type (e.g. `task.created`, `handler.reply`,
   `human.input.provided`).
 - **schemaVersion**: version identifier for the payload schema.
 - **createdAt**: timestamp for when the Event became durable.
@@ -703,7 +711,8 @@ Terminal states: `done`, `failed`, `cancelled`.
   - MUST NOT introduce cycles.
   - Children are derived by querying `parentTaskId`; they are NOT stored explicitly.
 
-- **assignedTo**: name of the Agent or human role responsible for the Task.
+- **assignedLogicalAgentRef**: optional durable mandate-bearing continuity responsible for the Task.
+- **assignedHandlerProfile**: optional Handler profile expected to execute the Task.
 
 ### 2.4.4 Invariants
 
@@ -759,7 +768,7 @@ An **Artifact** is immutable data produced within a Topic.
 
 ### 2.6.2 Field Semantics
 
-- **type**: opaque string describing the Artifact (e.g. `text/plain`, `agent/message`,
+- **type**: opaque string describing the Artifact (e.g. `text/plain`, `handler/message`,
   `human/decision`, `cop/continuation`).
 - **format**: optional MIME-like descriptor; MAY be omitted.
 - **payload**: immutable JSON value.
@@ -779,7 +788,7 @@ A **Continuation** is represented as a reserved Artifact type with a specific pa
   "type": "cop/continuation",
   "format": "application/json",
   "payload": {
-    "agent": "string (optional; reserved value \"*\" = any compliant agent)",
+    "handlerProfile": "string (optional; reserved value \"*\" = any compliant handler)",
     "topicId": "string",
     "taskId": "string",
     "stepId": "string",
@@ -803,12 +812,12 @@ A **Continuation** is represented as a reserved Artifact type with a specific pa
 
 A Continuation expresses:
 
-- where to resume work (`agent`, `topicId`, `taskId`, `stepId`),
+- where to resume work (`handlerProfile`, `topicId`, `taskId`, `stepId`),
 - how to resume it (`state`),
 - under which conditions (`waitForEvents`, `resumeAfter`, `resumeBefore`),
 - retry hints (`retry`).
 
-The `agent` field is OPTIONAL. See Section 2.7.4 on agent identity and the wildcard reserved value.
+The `handlerProfile` field is OPTIONAL. See Section 2.7.4 on handler identity and the wildcard reserved value.
 
 Continuation execution semantics are defined in Section 5.5.
 
@@ -822,32 +831,31 @@ type = "cop/continuation"
 
 All implementations MUST support this Artifact schema.
 
-### 2.7.4 Agent Identity and the Wildcard Reserved Value
+### 2.7.4 Handler Profiles, Capabilities, and Logical Handlers
 
-The `agent` field names the Agent expected to resume the Continuation. It MAY be omitted, and the
-reserved value `"*"` (asterisk) is interpreted as **any compliant agent**.
+A Continuation is capability-bound by default. Its optional fields have distinct meanings:
+
+- **handlerProfile**: a stable profile expected to resume work; the reserved value `"*"` means any
+  compatible Handler profile;
+- **requiredCapabilities**: capabilities that a resuming Handler MUST offer;
+- **logicalAgentRef**: an optional durable, mandate-bearing identity when an identity-bound
+  resumption or return is expressly required.
+
+Examples:
 
 ```json
-{ "agent": "*" }      // any agent that conforms to the resumption schema
-{ }                    // equivalent: agent unspecified
-{ "agent": "claude-3" } // identity-bound: only this agent should resume
+{ "handlerProfile": "*", "requiredCapabilities": ["research.retrieve"] }
+{ "requiredCapabilities": ["human.judgment"] }
+{ "handlerProfile": "jhn.corpus-curator", "logicalAgentRef": "logical-handler:jhn" }
 ```
 
-This supports two complementary deployment modes:
+A HandlerProfile is not a HandlerInstance. A Scheduler or runtime MAY select a substitutable
+HandlerInstance that satisfies the profile, capability, mandate, and policy conditions.
 
-- **Identity-bound resumption** (`agent: "claude-3"`, `agent: "ophelia"`): the Scheduler routes the
-  Continuation to a specific Agent. Standard COP/HITL.
+Identity-bound resumption MUST NOT be inferred merely from a Handler profile or a successful
+capability invocation. Where a `logicalAgentRef` is present, a relevant profile such as
+COP/Mandate determines the authority and delegation conditions.
 
-- **Capability-bound resumption** (`agent: "*"` or omitted): any Agent whose capabilities match the
-  Continuation's `expected_result_schema` and constraints MAY resume. This is the
-  **provider-neutral** mode used by profiles such as `cogentia.continuation.v1` to guarantee that no
-  specific AI provider is embedded in the orchestration contract.
-
-A profile MAY restrict which form it accepts. COP/Core MUST accept both.
-
-Implementations that route Continuations by agent identity SHOULD treat `"*"` and the absent field
-as equivalent: a signal that routing is open and the next qualifying Agent (human or automated) may
-pick up the work.
 
 ## 2.8 Identifiers (IDs, URNs, IRIs)
 
@@ -935,7 +943,7 @@ parentEventIds: ["event-id-1", "event-id-2", ...]
 If Event `E` lists Event `P` in its `parentEventIds`, then:
 
 - `E` is causally dependent on `P`.
-- Systems SHOULD NOT deliver `E` to agents before delivering `P`.
+- Systems SHOULD NOT deliver `E` to handlers before delivering `P`.
 - Projectors MUST apply `P` before applying `E`.
 - Replaying the system MUST preserve the causal order:
   - replay(P) occurs before replay(E).
@@ -959,7 +967,7 @@ Events MAY omit `parentEventIds` if they have no external dependencies.
 - Human approval:
   - event `approval.received` causally follows a `approval.requested`.
 
-- Multi-agent orchestration:
+- Multi-handler orchestration:
   - planner output → worker steps → final summary.
 
 - Cross-topic workflows:
@@ -1010,11 +1018,11 @@ Projectors MUST:
 
 ### 3.3.4 Scheduler Requirements
 
-Schedulers SHOULD, when possible, deliver causally necessary Events to agents before dependent
+Schedulers SHOULD, when possible, deliver causally necessary Events to handlers before dependent
 Events, but:
 
-- Agents MUST NOT rely on this for correctness.
-- Agents MUST remain idempotent and robust to reordering or delayed delivery.
+- Handlers MUST NOT rely on this for correctness.
+- Handlers MUST remain idempotent and robust to reordering or delayed delivery.
 
 ## 3.4 Time in COP
 
@@ -1039,7 +1047,7 @@ timestamp and differ in order, or be out of chronological order due to clock ske
 Time MAY be used for:
 
 - resuming Continuations (`resumeAfter`, `resumeBefore`),
-- scheduling agent execution,
+- scheduling handler execution,
 - anchoring ledgers or audits,
 - conflict resolution in higher-level profiles,
 - user-facing displays.
@@ -1074,8 +1082,8 @@ at execution time. Replay reuses these recorded outcomes rather than re-executin
 
 This distinction is fundamental: the protocol mechanics (event ordering, projectors, continuation
 conditions, causal links) are designed for deterministic replay of structure and traces. The
-cognitive content produced by agents — whether human or artificial — is not re-executed during
-replay. The same inputs to an agentic step may legitimately produce different outputs; this
+cognitive content produced by handlers — whether human or artificial — is not re-executed during
+replay. The same inputs to an handler-based step may legitimately produce different outputs; this
 non-determinism is not a defect but a source of useful diversity in exploration and reasoning.
 
 Projectors MUST be **pure functions** over Events → Projections. Given identical Event sequences,
@@ -1109,11 +1117,11 @@ If the projection logic changes (e.g. code upgrade):
 - Implementations SHOULD support full replay from the event log.
 - If a full replay is impractical, implementations SHOULD provide compatibility layers.
 
-### 3.5.5 Impact on Agents
+### 3.5.5 Impact on Handlers
 
-Replay feeds only the Store, not the Agents.
+Replay feeds only the Store, not the Handlers.
 
-Agents SHOULD NOT be invoked during replay. Their behavior is driven by Event delivery, not by
+Handlers SHOULD NOT be invoked during replay. Their behavior is driven by Event delivery, not by
 replay semantics.
 
 ---
@@ -1137,7 +1145,7 @@ A **projection** is any derived structure computed from Events. Projections exis
 
 - index data for fast lookup,
 - maintain Task/Step/Topic state,
-- provide the view that Agents rely on for decision-making,
+- provide the view that Handlers rely on for decision-making,
 - support UI queries and audit tools,
 - track mutable but replayable information.
 
@@ -1149,20 +1157,20 @@ A COP implementation usually maintains projections such as:
 
 - **Topic projection**: topic ID, title, status, last sequence number.
 
-- **Task projection**: status, assigned agent, parent-child relationships.
+- **Task projection**: status, assigned handler, parent-child relationships.
 
 - **Step projection**: execution status, artifact references.
 
 - **Artifact index**: immutable artifacts indexed by topic, type, and metadata.
 
-- **Continuation index**: pending continuations, grouped by agent or by resume conditions.
+- **Continuation index**: pending continuations, grouped by handler or by resume conditions.
 
 Implementations MAY maintain additional projections (e.g. conversation summaries, search indexes).
 All projections MUST remain _reconstructable_ by replay.
 
-## 4.2 COPReadOnlyStore (Agent-Facing Store)
+## 4.2 COPReadOnlyStore (Handler-Facing Store)
 
-Agents interact only with the **read-only** view of the Store.
+Handlers interact only with the **read-only** view of the Store.
 
 A `COPReadOnlyStore` MUST support queries such as:
 
@@ -1174,24 +1182,24 @@ A `COPReadOnlyStore` MUST support queries such as:
 This store MUST:
 
 - expose projection state only,
-- never allow mutation via agent APIs,
+- never allow mutation via handler APIs,
 - return results wrapped in `COPResult<T>` structures,
 - behave reasonnably deterministically during replay.
 
 ### 4.2.1 Reason for Read-Only Constraint
 
-Agents (especially AI agents) MUST NOT:
+Handlers (especially AI handlers) MUST NOT:
 
 - modify shared state directly,
 - bypass Event production,
 - introduce hidden state mutations.
 
-Agents influence the world **only** through Events.
+Handlers influence the world **only** through Events.
 
 This guarantees:
 
 - best effort determinism under replay,
-- isolation between agents,
+- isolation between handlers,
 - reproducibility,
 - auditability.
 
@@ -1210,7 +1218,7 @@ A `COPStore` MUST support:
 - updating their fields according to replay logic,
 - maintaining indexes.
 
-Agents MUST **never** receive a `COPStore`. They receive only a `COPReadOnlyStore`.
+Handlers MUST **never** receive a `COPStore`. They receive only a `COPReadOnlyStore`.
 
 ### 4.3.1 Mutation Semantics
 
@@ -1290,7 +1298,7 @@ COP defines three high-level error categories:
    - projector inconsistency
    - invalid state violation
 
-Only categories (1) and (2) should reach agents. Category (3) SHOULD be considered fatal to the
+Only categories (1) and (2) should reach handlers. Category (3) SHOULD be considered fatal to the
 implementation and MAY trigger safeguards.
 
 ### 4.4.5 Helper: unwrap
@@ -1304,7 +1312,7 @@ unwrap(result: COPResult<T>) => T
 - If `ok = true`, return `data`.
 - If `ok = false`, throw an exception containing `error.*`.
 
-Agents MAY or MAY NOT use `unwrap`, depending on language constraints.
+Handlers MAY or MAY NOT use `unwrap`, depending on language constraints.
 
 ## 4.5 Projection Invariants
 
@@ -1357,7 +1365,7 @@ Transitions MUST obey the normative lifecycle diagrams in Section 2.
 
 Illegal transitions (e.g. `done` → `running`) MUST raise projection errors.
 
-These errors MUST NOT reach agents; they indicate internal bugs.
+These errors MUST NOT reach handlers; they indicate internal bugs.
 
 ## 4.6 Rebuild / Replay Requirements
 
@@ -1405,24 +1413,24 @@ But MUST ensure:
 - per-topic sequentiality,
 - integrity of cross-topic causal references (parentEventIds).
 
-### 4.6.5 Impact on Agents
+### 4.6.5 Impact on Handlers
 
-Replay MUST NOT trigger agent execution.
+Replay MUST NOT trigger handler execution.
 
-Agents respond only to new durable Events, not to effects of replay.
+Handlers respond only to new durable Events, not to effects of replay.
 
 ---
 
 # 5. Execution Model
 
 This section defines the normative execution semantics of COP. It specifies the roles and
-responsibilities of **Projectors**, **Schedulers**, **Agents**, and **Continuations**, and how they
+responsibilities of **Projectors**, **Schedulers**, **Handlers**, and **Continuations**, and how they
 interact through Events and the Store.
 
 COP enforces a strict separation between:
 
 - **state evolution** (driven exclusively by Events), and
-- **execution** (driven by schedulers and agents reacting to Events).
+- **execution** (driven by schedulers and handlers reacting to Events).
 
 ## 5.1 Projectors
 
@@ -1455,37 +1463,37 @@ Any non-deterministic behavior MUST be encoded explicitly as Events.
 Projectors MUST be pure with respect to COP state:
 
 - They MUST NOT emit Events.
-- They MUST NOT invoke Agents.
+- They MUST NOT invoke Handlers.
 - They MUST NOT perform side effects outside the Store.
 
 Projectors exist solely to transform Events into projections.
 
 ## 5.2 Scheduler
 
-A **Scheduler** orchestrates the execution of Agents in response to Events and time.
+A **Scheduler** orchestrates the execution of Handlers in response to Events and time.
 
 ### 5.2.1 Responsibilities
 
 A Scheduler MAY:
 
-- deliver Events to Agents,
-- trigger Agent execution based on time (ticks),
+- deliver Events to Handlers,
+- trigger Handler execution based on time (ticks),
 - resume Continuations,
-- retry Agent execution after failures.
+- retry Handler execution after failures.
 
 A Scheduler MUST:
 
 - preserve at-least-once delivery semantics,
 - avoid violating per-Topic ordering guarantees,
-- ensure that Agents see a Store state consistent with applied Events.
+- ensure that Handlers see a Store state consistent with applied Events.
 
 ### 5.2.2 Delivery Semantics
 
-Event delivery to Agents is **at-least-once**.
+Event delivery to Handlers is **at-least-once**.
 
 Implications:
 
-- Agents MUST be idempotent.
+- Handlers MUST be idempotent.
 - Duplicate delivery MUST NOT cause incorrect behavior.
 - Schedulers MAY redeliver Events after crashes or timeouts.
 
@@ -1495,7 +1503,7 @@ Schedulers SHOULD attempt best-effort ordering but MUST NOT rely on it for corre
 
 Schedulers MUST ensure that:
 
-- For a given Topic, Events are delivered to Agents in non-decreasing `topicSeq` order, whenever
+- For a given Topic, Events are delivered to Handlers in non-decreasing `topicSeq` order, whenever
   feasible.
 
 Schedulers MAY:
@@ -1519,13 +1527,13 @@ Schedulers MAY implement periodic “ticks”:
 
 Ticks MUST NOT mutate COP state directly. Any durable effect MUST be expressed via Events.
 
-## 5.3 Agents
+## 5.3 Handlers
 
-An **Agent** is an active component that reacts to Events and may emit new Events.
+An **Handler** is an active component that reacts to Events and may emit new Events.
 
-### 5.3.1 Agent Interface (Conceptual)
+### 5.3.1 Handler Interface (Conceptual)
 
-Conceptually, an Agent behaves like:
+Conceptually, an Handler behaves like:
 
 ```
 onEvent(event, context) → zero or more new Events
@@ -1539,11 +1547,11 @@ Where `context` provides access to:
 
 ### 5.3.2 Statelessness Requirement
 
-Agents MUST be stateless between invocations.
+Handlers MUST be stateless between invocations.
 
 This means:
 
-- An Agent MUST NOT rely on in-memory state from previous invocations.
+- An Handler MUST NOT rely on in-memory state from previous invocations.
 - All durable state MUST be:
   - read from the Store, or
   - encoded in Events or Artifacts.
@@ -1557,21 +1565,21 @@ This requirement ensures:
 
 ### 5.3.3 Idempotence Requirement
 
-Agents MUST be idempotent.
+Handlers MUST be idempotent.
 
 Given the same Event and the same Store state:
 
 - repeated invocations MUST produce the same emitted Events, or
 - no Events at all.
 
-Agents SHOULD:
+Handlers SHOULD:
 
 - detect whether their intended effects have already occurred,
 - avoid emitting duplicate Events.
 
 ### 5.3.4 Isolation
 
-Agents MUST NOT:
+Handlers MUST NOT:
 
 - directly mutate the Store,
 - bypass the Event log,
@@ -1592,14 +1600,14 @@ Human actions (messages, approvals, decisions) MUST be represented as Events:
 - appended to the Event log like any other Event,
 - projected into the Store by Projectors.
 
-From the perspective of Agents and Schedulers, human-generated Events are indistinguishable from
-agent-generated Events.
+From the perspective of Handlers and Schedulers, human-generated Events are indistinguishable from
+handler-generated Events.
 
 ### 5.4.2 Interaction Patterns
 
 Typical patterns include:
 
-- An Agent emits an Event requesting human input.
+- An Handler emits an Event requesting human input.
 - A Continuation is created waiting for a human response.
 - A human submits input, producing a new Event.
 - The Scheduler resumes the waiting Continuation.
@@ -1639,13 +1647,13 @@ expired.
 
 When resuming a Continuation:
 
-1. The Scheduler invokes the designated Agent.
-2. The Agent receives:
+1. The Scheduler invokes the designated Handler.
+2. The Handler receives:
    - the Continuation state,
    - the triggering Event (if any),
    - access to the COPReadOnlyStore.
 
-3. The Agent MAY:
+3. The Handler MAY:
    - emit new Events,
    - create new Artifacts,
    - create a new Continuation (to replace or extend the current one).
@@ -1676,11 +1684,11 @@ If a Continuation cannot be resumed successfully:
 
 The following separations are **mandatory**:
 
-| Component | May Emit Events | May Mutate Store | May Invoke Agents |
+| Component | May Emit Events | May Mutate Store | May Invoke Handlers |
 | --------- | --------------- | ---------------- | ----------------- |
 | Projector | No              | Yes              | No                |
 | Scheduler | No              | No               | Yes               |
-| Agent     | Yes             | No               | No                |
+| Handler     | Yes             | No               | No                |
 | Human UI  | Yes             | No               | No                |
 
 This separation is fundamental to COP’s correctness, replayability, and auditability.
@@ -1781,7 +1789,7 @@ These extensions MUST be prefixed with `cop` to avoid collisions.
   "copCorrelationId": "urn:cop:correlation:abc",
   "copParentEventIds": ["urn:cop:event:122"],
   "copMetadata": {
-    "initiator": "agent:explainer"
+    "initiator": "handler:explainer"
   }
 }
 ```
@@ -1816,7 +1824,7 @@ Transports:
 - MUST NOT reorder Events within the same Topic in a way that violates `copTopicSeq`.
 
 If a transport cannot guarantee per-Topic ordering, the Scheduler MUST buffer or reorder Events
-before delivery to Agents and Projectors.
+before delivery to Handlers and Projectors.
 
 ## 6.4 Ingesting External CloudEvents
 
@@ -1888,7 +1896,7 @@ The COP semantic layer exists to:
 
 - provide unambiguous meaning to COP concepts across implementations,
 - enable graph-based reasoning and inspection,
-- allow external systems (including knowledge graphs and AI agents) to interpret COP data
+- allow external systems (including knowledge graphs and AI handlers) to interpret COP data
   consistently,
 - support long-term archival, audit, and analysis.
 
@@ -1927,7 +1935,7 @@ The following terms are RESERVED by the COP specification:
 | `cop:Step`         | COP Step         |
 | `cop:Artifact`     | COP Artifact     |
 | `cop:Continuation` | COP Continuation |
-| `cop:Agent`        | Software agent   |
+| `cop:Handler`        | Software handler   |
 | `cop:HumanActor`   | Human actor      |
 
 ## 7.3 Mapping Rules (Normative)
@@ -2032,7 +2040,7 @@ When expanded, COP JSON-LD representations form an RDF graph with the following 
 This enables:
 
 - graph traversal queries (e.g. SPARQL),
-- reasoning about agent behavior,
+- reasoning about handler behavior,
 - temporal and causal analysis at the semantic level.
 
 ## 7.6 Extending the COP Ontology
@@ -2076,9 +2084,9 @@ Implications:
 
 The COP semantic layer is intentionally compatible with AI systems:
 
-- JSON-LD graphs can be ingested by knowledge-based agents.
+- JSON-LD graphs can be ingested by knowledge-based handlers.
 - Semantic typing enables reasoning over Tasks, Steps, and Artifacts.
-- Human-in-the-loop interactions can be interpreted uniformly alongside agent actions.
+- Human-in-the-loop interactions can be interpreted uniformly alongside handler actions.
 
 However:
 
@@ -2195,7 +2203,7 @@ The following relationships MUST be expressed via explicit fields, not `$ref`:
 | Step → Task          | `taskId`        |
 | Task → Parent Task   | `parentTaskId`  |
 | Step → Artifacts     | `artifactIds[]` |
-| Continuation → Agent | `payload.agent` |
+| Continuation → Handler profile | `payload.handlerProfile` |
 
 ### 8.4.2 Informative Linking
 
@@ -2377,17 +2385,17 @@ Node identifiers MUST:
 - be stable over time,
 - appear in Event metadata or CloudEvents `source`.
 
-### 9.3.2 Agent Identity
+### 9.3.2 Handler Identity
 
-Agents are identified by opaque strings:
+Handlers are identified by opaque strings:
 
 ```
-agent:<name>
+handler:<profile>
 ```
 
-Agent identity is **logical**, not cryptographic.
+Handler identity is **logical**, not cryptographic.
 
-Agent identifiers are used for:
+Handler identifiers are used for:
 
 - attribution,
 - debugging,
@@ -2602,7 +2610,7 @@ COP/Core defines:
 - Events, Topics, Tasks, Steps, Artifacts, Continuations,
 - causality and ordering rules,
 - projection and Store semantics,
-- execution model (Projector / Scheduler / Agent separation),
+- execution model (Projector / Scheduler / Handler separation),
 - transport interoperability (CloudEvents),
 - integrity primitives (JCS hashing, optional ledger).
 
@@ -2614,7 +2622,7 @@ COP/Core guarantees:
 
 - autitable replay and sometimes deterministic replay,
 - auditability,
-- stateless agent execution,
+- stateless handler execution,
 - transport independence,
 - extensibility via profiles.
 
@@ -2640,7 +2648,7 @@ COP/HITL aims to:
 
 - treat humans as first-class actors,
 - preserve full auditability of human actions,
-- integrate humans into agent workflows without special cases,
+- integrate humans into handler workflows without special cases,
 - support pauses, approvals, and corrections.
 
 ### 10.2.2 Standard Event Types (Normative)
@@ -2649,9 +2657,9 @@ The following Event types are RECOMMENDED by COP/HITL:
 
 | Event Type                 | Meaning                              |
 | -------------------------- | ------------------------------------ |
-| `human.input.requested`    | An agent requests input from a human |
+| `human.input.requested`    | An handler requests input from a human |
 | `human.input.provided`     | A human provides input               |
-| `human.decision.requested` | An agent requests a decision         |
+| `human.decision.requested` | An handler requests a decision         |
 | `human.decision.provided`  | A human provides a decision          |
 | `human.feedback`           | Human feedback or correction         |
 
@@ -2675,9 +2683,9 @@ These Artifacts:
 
 COP/HITL defines standard patterns such as:
 
-- Agent emits `human.input.requested`
-- Agent creates a `cop/continuation` waiting for `human.input.provided`
-- Scheduler resumes Agent upon human response
+- Handler emits `human.input.requested`
+- Handler creates a `cop/continuation` waiting for `human.input.provided`
+- Scheduler resumes Handler upon human response
 
 This pattern ensures:
 
@@ -2685,7 +2693,7 @@ This pattern ensures:
 - no hidden blocking,
 - full traceability.
 
-## 10.3 COP/AI Profile (Agent-Oriented Orchestration)
+## 10.3 COP/AI Profile (Handler-Oriented Orchestration)
 
 The **COP/AI** profile standardizes patterns common in AI agent systems.
 
@@ -2693,7 +2701,7 @@ The **COP/AI** profile standardizes patterns common in AI agent systems.
 
 COP/AI aims to:
 
-- support multi-agent reasoning,
+- support multi-handler reasoning,
 - support long-running, interruptible cognition,
 - make AI behavior auditable and inspectable,
 - integrate seamlessly with HITL workflows.
@@ -2702,12 +2710,12 @@ COP/AI aims to:
 
 | Event Type           | Meaning                      |
 | -------------------- | ---------------------------- |
-| `agent.started`      | Agent begins work            |
-| `agent.message`      | Agent emits a message        |
-| `agent.tool.invoked` | Agent calls an external tool |
-| `agent.tool.result`  | Tool returns a result        |
-| `agent.completed`    | Agent completes work         |
-| `agent.failed`       | Agent fails                  |
+| `handler.started`      | Handler begins work            |
+| `handler.message`      | Handler emits a message        |
+| `handler.tool.invoked` | Handler calls an external tool |
+| `handler.tool.result`  | Tool returns a result        |
+| `handler.completed`    | Handler completes work         |
+| `handler.failed`       | Handler fails                  |
 
 These Events:
 
@@ -2718,10 +2726,10 @@ These Events:
 
 COP/AI commonly uses Artifacts such as:
 
-- `agent/thought` (internal reasoning, optional),
-- `agent/plan`,
-- `agent/result`,
-- `agent/summary`.
+- `handler/thought` (internal reasoning, optional),
+- `handler/plan`,
+- `handler/result`,
+- `handler/summary`.
 
 The profile explicitly allows **private reasoning artifacts** to be omitted, redacted, or
 summarized, without breaking COP semantics.
@@ -2731,7 +2739,7 @@ summarized, without breaking COP semantics.
 In COP/AI:
 
 - Continuations are the _primary_ mechanism for multi-step reasoning.
-- Agents SHOULD externalize state into Continuations rather than memory.
+- Handlers SHOULD externalize state into Continuations rather than memory.
 - Long chains of reasoning become explicit, resumable, and auditable.
 
 This is a key differentiator from most existing agent frameworks.
@@ -2773,7 +2781,7 @@ Profiles enable interoperability at multiple levels:
 
 - two systems sharing COP/Core can exchange Events safely,
 - systems sharing COP/HITL can interoperate on human workflows,
-- systems sharing COP/AI can exchange agent behavior traces.
+- systems sharing COP/AI can exchange handler behavior traces.
 
 Unknown profiles MUST be ignored safely.
 
@@ -2814,12 +2822,12 @@ A COP/Core–compliant implementation MUST:
 
 3. Implement **projection semantics** (Section 4):
    - auditable, sometimes replayable Store,
-   - read-only store for Agents,
+   - read-only store for Handlers,
    - mutation only via Projectors.
 
 4. Implement the **execution model** (Section 5):
-   - separation of Projector, Scheduler, and Agent roles,
-   - stateless and idempotent Agents.
+   - separation of Projector, Scheduler, and Handler roles,
+   - stateless and idempotent Handlers.
 
 5. Support **CloudEvents interoperability** (Section 6):
    - valid CloudEvents 1.0 mapping.
@@ -2857,10 +2865,10 @@ An implementation MAY claim **AI-capable** compliance if it supports the COP/AI 
 
 An AI-capable implementation MUST:
 
-- Support agent lifecycle Events.
-- Support agent-produced Artifacts.
+- Support handler lifecycle Events.
+- Support handler-produced Artifacts.
 - Support multi-step reasoning via Continuations.
-- Allow agents to resume execution, hopefully deterministically.
+- Allow handlers to resume execution, hopefully deterministically.
 
 Private reasoning MAY be redacted or summarized without violating compliance.
 
@@ -2963,7 +2971,7 @@ If an implementation:
 
 - produces immutable Events,
 - derives all state from those Events,
-- treats Agents as stateless,
+- treats Handlers as stateless,
 - makes reasoning resumable and inspectable,
 
 then it is aligned with the spirit and the letter of COP.
