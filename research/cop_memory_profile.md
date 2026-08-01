@@ -88,6 +88,13 @@ A trace should be easier to retrieve when it is near the current activity along 
 
 COP/Memory should therefore not provide a single flat lookup model. It should provide poly-indexed retrieval.
 
+Locality also has an operational dimension. When compatible with mandate,
+durability, privacy and resilience requirements, a COP implementation should
+keep execution, working state and the traces needed by that execution close to
+the activity that uses them. Remote calls, replication and global publication
+remain deliberate boundary crossings: they should serve a needed capability,
+coordination or preservation purpose rather than be the default placement.
+
 ## 5. Temperature
 
 Trace temperature expresses expected usefulness under bounded attention and bounded resources.
