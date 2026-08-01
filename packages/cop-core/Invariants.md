@@ -82,7 +82,7 @@ All meaningful system state MUST be derivable from:
 
 No critical state MAY live exclusively in:
 
-- agent memory,
+- handler-instance memory,
 - process-local variables,
 - ephemeral caches.
 
@@ -90,9 +90,9 @@ If a system cannot be reconstructed from Events and Artifacts, it is not COP-com
 
 ---
 
-## 5. Stateless Agents
+## 5. Stateless Handlers
 
-Agents MUST be stateless.
+Handlers MUST be stateless.
 
 This means:
 
@@ -100,7 +100,7 @@ This means:
 - no reliance on hidden local caches for correctness,
 - all context must be obtained from the Store or Continuation payloads.
 
-Stateless agents enable:
+Stateless handlers enable:
 
 - horizontal scalability,
 - restartability,
@@ -111,7 +111,7 @@ Stateless agents enable:
 
 ## 6. Isolation via Events
 
-Agents MUST NOT communicate directly with each other.
+Handlers MUST NOT communicate directly with each other.
 
 All coordination MUST occur via:
 
@@ -171,7 +171,7 @@ The invariants guarantee deterministic replay of the _trace_ (Events, causal ord
 produced, continuation states). They do not require or promise deterministic re-execution of the
 cognitive processes that generated those Artifacts.
 
-When an agentic step (human judgment or AI reasoning) is involved, the same inputs and context may
+When a handler step (human judgment or AI reasoning) is involved, the same inputs and context may
 produce different outputs. This non-determinism is often valuable for exploration. What matters for
 auditability and imputability is that the _trace_ — including the specific output chosen and, when
 relevant, the human decision that enacted or validated it — is immutably recorded.
