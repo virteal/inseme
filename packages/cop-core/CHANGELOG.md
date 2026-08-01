@@ -18,6 +18,14 @@ COP is a protocol. This changelog tracks **conceptual evolution**, not feature v
 
 ## [Unreleased]
 
+### Breaking pre-operational terminology clean break
+
+- Added `Terminology.md` as the normative vocabulary for authority, execution, and accountability.
+- Replaced the overloaded Core contract names `COPAgent` and `AgentContext` with `COPHandler` and `HandlerContext`.
+- Replaced Continuation `agent` routing with distinct `handlerProfile`, `requiredCapabilities`, and optional `logicalAgentRef` fields.
+- Reframed the statelessness invariant as applying to Handlers and HandlerInstances.
+- No compatibility alias, adapter, or legacy schema is provided for early prototypes. This is intentional: COP has no installed base at this stage.
+
 - Ongoing hardening of the reference implementation (`cop-kernel`)
 - Feedback-driven clarification of edge cases
 
@@ -76,9 +84,9 @@ This release marks a **major consolidation phase**: COP transitions from an expl
 
 ## Compatibility Notes
 
-- All changes in v0.x are **additive or clarifying**
-- No breaking changes to the core data model
-- Future breaking changes, if any, will require a **major version bump**
+- The current handler terminology revision is an intentional breaking pre-operational change.
+- Early prototypes are preserved by Git history and are not a compatibility target.
+- A future operational release MUST declare its supported schema and compatibility boundary explicitly.
 
 ---
 
