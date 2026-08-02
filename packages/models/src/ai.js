@@ -1102,7 +1102,7 @@ function startServer() {
             : [{ role: "user", content: prompt }];
 
         // --- Embedded Magistral routing ---
-        if (isMagistralEnabled() && body.model === "magistral") {
+        if (isMagistralEnabled() && (ROUTER_ONLY || body.model === "magistral" || body.model === "fractavolta-guide")) {
           try {
             const upstreamRes = await routeMagistral({ ...body, messages, stream });
             if (stream) {
