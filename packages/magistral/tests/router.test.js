@@ -98,6 +98,36 @@ test("does not duplicate fallback nodes when fallback tier is requested", () => 
   assert.equal(sequence[0].id, "local");
 });
 
+test("uses max_completion_tokens for GPT-5 Chat Completions nodes", async () => {
+  await withMockServer(
+    (req, res) => {
+      let body = "";
+      req.on("data", (chunk) => (body += chunk));
+      req.on("end", () => {
+        const parsed = JSON.parse(body);
+        assert.equal(parsed.model, "gpt-5.4-nano");
+        assert.equal(parsed.max_tokens, undefined);
+        assert.equal(parsed.max_completion_tokens, 42);
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ choices: [{ message: { content: "ok" } }] }));
+      });
+    },
+    async (baseUrl) => {
+      const router = createRouter({
+        map: [{ id: "gpt-5", url: baseUrl, model: "gpt-5.4-nano", tier: "fast" }],
+        log: () => {},
+      });
+
+      const response = await router.route({
+        model: "magistral",
+        messages: [{ role: "user", content: "hello" }],
+        max_tokens: 42,
+      });
+      assert.equal(response.status, 200);
+    }
+  );
+});
+
 test("serializes metrics with map metadata", () => {
   const registry = new NodeRegistry();
   const start = registry.recordStart("node-a");
