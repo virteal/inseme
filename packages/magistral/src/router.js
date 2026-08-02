@@ -324,6 +324,13 @@ export function createRouter({
         delete nodePayload.max_tokens;
       }
 
+      // GPT-5 Chat Completions uses max_completion_tokens rather than the
+      // legacy max_tokens field that older OpenAI-compatible callers send.
+      if (/^gpt-5(?:[.-]|$)/.test(node.model) && nodePayload.max_tokens !== undefined) {
+        nodePayload.max_completion_tokens = nodePayload.max_tokens;
+        delete nodePayload.max_tokens;
+      }
+
       // Base log entry
       const logEntry = {
         id: reqId,
