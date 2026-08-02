@@ -30,6 +30,17 @@ Usage:
 
 Env vars: `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `SUPABASE_ANON_KEY`.
 
+## Portable runtime writes
+
+`portableRuntimeGateway.js` is the new write path for the JHN COP runtime. It serialises portable
+rows before persistence and evaluates principal + mandate permissions in ESM, before any SQLite or
+Supabase adapter is called.
+
+`createPortableCopRuntimeHandlers({ gateway, resolveContext })` exposes its append/upsert handlers
+only when the host supplies `resolveContext(request)`. That resolver must verify a cryptographic
+capability or another instance-owned identity proof, then return `{ principal, mandate }`. It must
+not treat an unverified HTTP header or source network location as a principal.
+
 Bus abstraction:
 
 - The repository includes a bus abstraction at `mcp/cop/bus.js` that chooses a bus implementation at
@@ -64,3 +75,71 @@ Netlify Deno Edge functions pattern:
 This design favors short-running stateless functions paired with DB-level task leasing for
 robustness and auto-retry (Erlang-style supervision can be simulated by a worker supervisor that
 re-queues or monitors task counts).
+
+## Portable runtime authorization
+
+The portable runtime gateway authorizes each write in application code. A host can use
+`createSignedCapabilityContextResolver()` with short-lived Ed25519 capabilities: the capability
+proves the caller identity and references a `cop_mandates` row, while `resolveMandate()` reads the
+instance's current mandate state. Suspension, reassignment, revocation, or a mandate version change
+therefore invalidates a previously signed capability immediately.
+
+The signing private key is host-only configuration and must never be committed or sent to a browser.
+Public keys are selected by `kid` to permit rotation. The capability is audience-bound; neither a
+Tailscale address nor an unverified HTTP header is an identity assertion. Supabase Auth and RLS may
+be adapters and defence in depth, but are not the authority decision or a runtime dependency.
+
+For a local Node instance, `createSqliteCopRuntimeStore(database)` supplies both the write executor
+and `resolveMandate`. It accepts a `DatabaseSync` compatible database that has received the portable
+migration. Malformed or missing mandate rows fail closed. Mandate mutation is intentionally not
+exposed through the runtime write gateway: it requires a distinct, explicitly governed
+administrative path.
+
+`pnpm --filter platform bootstrap:jhn:local-cop` performs that first local bootstrap into
+`apps/platform/instances/jhn-cop-local/` (Git-ignored). It creates the private Ed25519 key,
+public-key configuration, migrated SQLite database, minimal JHN runtime mandate, and one auditable
+bootstrap event. It refuses to overwrite state and never prints the private key or a bearer
+capability.
+
+The state directory is deliberately portable: `cop-runtime.sqlite`, the public key configuration,
+and the private JWK can be moved together to a Node host such as the Fracta VPS. The runtime does
+not rely on Windows ACLs, Tailscale, or any OS-specific key store. The destination host remains
+responsible for keeping the private JWK out of source control and transferring it through its normal
+secret channel. After a stopped-runtime copy, run
+`pnpm --filter platform verify:jhn:local-cop -- --state-dir <directory>`; it checks the SQLite
+bootstrap state and that the private/public key pair matches, without disclosing either key or a
+bearer capability.
+
+`pnpm --filter platform start:jhn:local-cop` starts the next boundary on `127.0.0.1:8787`:
+`GET /health` and the six protected COP write routes. It never binds a public interface and loads
+only the public capability keys. A separate local issuer must hold the private JWK and provide
+short-lived bearer capabilities to callers.
+
+`createJhnLocalCapabilityIssuer()` is that host-only issuer. It confirms the private/public key
+match and the current SQLite mandate before issuing a 1–300-second capability; the subject must
+equal the mandate grantee. For an agent command,
+`pnpm --filter platform run:jhn:local-cop -- -- <command>` passes the capability only as
+`COP_CAPABILITY` and the loopback URL as `COP_RUNTIME_URL`. Neither is printed or written to disk.
+
+`chat:jhn:local` is the first conversational loop. It calls an OpenAI Responses adapter with
+`store: false`, then records the user and assistant messages as COP events through the local
+protected boundary. It is invoked by the issuer wrapper, for example with
+`run:jhn:local-cop -- pnpm --filter platform chat:jhn:local -- --message "Bonjour John"`.
+
+### Future optimisation: provider conversation cache
+
+The current profile is deliberately stateless: each turn reconstructs its useful context from the
+durable COP/SQLite conversation. This is the portable baseline and must remain a working fallback.
+
+Some providers, including the OpenAI Responses API, can retain a short-lived working state and
+accept only a new turn plus a provider response reference. That state is an optional cache, never
+the source of truth. A future router may select a `responses-stateful` profile, store its provider
+reference alongside the local conversation, and fall back to the stateless profile after expiry,
+provider failure, migration, or hibernation. Keep conversation routing and the reasoner adapter
+separate so that this optimisation does not change the COP event model or require a specific
+provider.
+
+For local interactive use, `pnpm --filter platform repl:jhn:local` starts a terminal REPL for the
+`john` conversation (or pass another conversation id as its first argument). It starts and stops the
+loopback runtime itself, issues a fresh short-lived capability for each turn, and persists every
+turn to SQLite.

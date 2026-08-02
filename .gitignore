@@ -103,3 +103,4 @@ test_file_storage_data_*/
 # Local personal instance config (may contain keys)
 apps/platform/instances/jhn.json
 apps/platform/instances/sql/jhn-vault.sql
+apps/platform/instances/jhn-cop-local/
