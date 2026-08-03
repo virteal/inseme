@@ -1,8 +1,14 @@
+---
+shared_instructions: https://github.com/JeanHuguesRobert/cogentia/blob/main/instructions/AGENTS.shared.md
+---
+
 # AGENTS.md — Inseme Multi-Agent Working Contract
 
-This file defines the working contract for coding agents, research agents, and review agents contributing to this repository.
+This file defines the working contract for coding agents, research agents, and review agents
+contributing to this repository.
 
-It is intentionally short. Agents should read it before modifying code, documents, workflows, or package structure.
+It is intentionally short. Agents should read it before modifying code, documents, workflows, or
+package structure.
 
 ---
 
@@ -11,11 +17,13 @@ It is intentionally short. Agents should read it before modifying code, document
 Before acting here:
 
 1. read this repository-local `AGENTS.md`;
-2. read the shared [`cogentia/AGENTS.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/AGENTS.md);
+2. read the shared
+   [`cogentia/AGENTS.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/AGENTS.md);
 3. inspect any closer package-level rule files;
 4. apply the most specific and most restrictive applicable mandate.
 
-The shared baseline supplies the default corpus workflow. This file specializes it for Inseme, COP, the monorepo, and implementation work; it does not silently widen permissions.
+The shared baseline supplies the default corpus workflow. This file specializes it for Inseme, COP,
+the monorepo, and implementation work; it does not silently widen permissions.
 
 ---
 
@@ -23,7 +31,8 @@ The shared baseline supplies the default corpus workflow. This file specializes 
 
 `inseme` is the platform repository of the corpus.
 
-Current priority: stabilize the **Cognitive Orchestration Protocol (COP)** implementation path, especially:
+Current priority: stabilize the **Cognitive Orchestration Protocol (COP)** implementation path,
+especially:
 
 - `packages/cop-core` — protocol, data model, invariants, interfaces;
 - `packages/cop-kernel` — reference runtime / implementation layer;
@@ -60,7 +69,8 @@ Do not expand the scope silently. If the work reveals a new problem, create or p
 
 ## 3. Branch / PR discipline
 
-Current solo-corpus rule: write directly to the default branch unless Jean Hugues Robert explicitly asks for a branch or a pull request.
+Current solo-corpus rule: write directly to the default branch unless Jean Hugues Robert explicitly
+asks for a branch or a pull request.
 
 This repository follows **Optimistic Mainline Governance** by reference:
 
@@ -72,8 +82,10 @@ Rationale:
 1. Jean Hugues Robert is currently the sole active corpus operator.
 2. Branches add cognitive and operational complexity.
 3. By Occam's razor, unnecessary workflow layers should be avoided.
-4. The corpus already has traceability through source documents, commits, diffs, issues, future corrections and explicit continuation notes.
-5. Direct-main work remains legitimate only when scoped, reversible, inspectable by diff and reported.
+4. The corpus already has traceability through source documents, commits, diffs, issues, future
+   corrections and explicit continuation notes.
+5. Direct-main work remains legitimate only when scoped, reversible, inspectable by diff and
+   reported.
 
 Therefore agents MUST NOT create feature branches or pull requests by default.
 
@@ -90,7 +102,8 @@ Branches or PRs MAY be used only when:
 - the change is a high-risk refactor that should be isolated;
 - external collaboration requires review before integration;
 - repository protection rules make direct commits impossible;
-- the change affects COP invariants, security, irreversible migrations, package structure, or several subsystems at once.
+- the change affects COP invariants, security, irreversible migrations, package structure, or
+  several subsystems at once.
 
 If a branch is used exceptionally, explain why in the work report.
 
@@ -109,7 +122,8 @@ If mixed changes are unavoidable, explain why in the commit or PR description.
 
 ## 4. Preserve COP invariants
 
-Any change touching COP must preserve these invariants unless the change explicitly proposes a versioned protocol revision:
+Any change touching COP must preserve these invariants unless the change explicitly proposes a
+versioned protocol revision:
 
 - immutable Events and Artifacts;
 - topic-local ordering;
@@ -164,7 +178,8 @@ At minimum, report:
 - files intentionally not tested;
 - assumptions requiring human review.
 
-If no tests exist, say so and propose the smallest conformance or regression test that would reduce risk.
+If no tests exist, say so and propose the smallest conformance or regression test that would reduce
+risk.
 
 ---
 
@@ -205,7 +220,8 @@ Human decision artifacts are part of the governance model, not optional ceremony
 
 ### Context7
 
-Use Context7 or equivalent documentation tools when you need to understand third-party or internal packages instead of guessing.
+Use Context7 or equivalent documentation tools when you need to understand third-party or internal
+packages instead of guessing.
 
 Typical uses:
 
@@ -228,11 +244,15 @@ Also inspect, when present:
 - `.api-docs.md` — important API references;
 - `ARCHITECTURE.md` — system architecture;
 - `ROADMAP-TECH.md` — technical roadmap.
-- [`cogentia/AGENTS.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/AGENTS.md) — shared operational baseline and default read order.
-- [`cogentia/research/agent_configuration_layer.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/agent_configuration_layer.md) — AGENTS.md, `.agents/`, and governed operational projections of the corpus.
-- [`cogentia/research/optimistic_mainline_governance.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/optimistic_mainline_governance.md) — direct agent work on `main` under trace, reversibility and scoped authorization.
+- [`cogentia/AGENTS.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/AGENTS.md) — shared
+  operational baseline and default read order.
+- [`cogentia/research/agent_configuration_layer.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/agent_configuration_layer.md)
+  — AGENTS.md, `.agents/`, and governed operational projections of the corpus.
+- [`cogentia/research/optimistic_mainline_governance.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/optimistic_mainline_governance.md)
+  — direct agent work on `main` under trace, reversibility and scoped authorization.
 
-If these files disagree with this document, preserve the conflict and report it. Do not silently choose one.
+If these files disagree with this document, preserve the conflict and report it. Do not silently
+choose one.
 
 ---
 
@@ -250,4 +270,5 @@ Next step:
 Human validation needed: yes/no
 ```
 
-This keeps multi-agent work reviewable, resumable, and compatible with the Cogentia / COP traceability doctrine.
+This keeps multi-agent work reviewable, resumable, and compatible with the Cogentia / COP
+traceability doctrine.
