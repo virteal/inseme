@@ -1,9 +1,8 @@
 [build]
-  base = "apps/platform"
-  command = "npm run build"
-  publish = "dist"
-  functions = "netlify/functions"
-  edge_functions = "netlify/edge-functions"
+  command = "pnpm platform:build"
+  publish = "apps/platform/dist"
+  functions = "apps/platform/netlify/functions"
+  edge_functions = "apps/platform/netlify/edge-functions"
 
 [build.environment]
   NODE_OPTIONS = "--max-old-space-size=4096"
