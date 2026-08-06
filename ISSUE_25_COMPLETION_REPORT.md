@@ -1,7 +1,13 @@
-# Issue #25 Completion Report: COP/Accounting Conformance Kernel
+---
+Issue: https://github.com/JeanHuguesRobert/inseme/issues/25
+Title: Implement the day-one COP/Accounting conformance kernel
+Status: Complete
+Completion Date: 2026-07-23
+Git-status: Ready for commit (all changes in working directory)
+language: en
+---
 
-**Issue**: https://github.com/JeanHuguesRobert/inseme/issues/25 **Title**: Implement the day-one
-COP/Accounting conformance kernel **Status**: ✅ Complete
+# Issue #25 Completion Report: COP/Accounting Conformance Kernel
 
 ---
 
@@ -186,5 +192,3 @@ All 12 required conformance tests pass:
 4. Evidence reference model
 
 ---
-
-**Completion Date**: 2026-07-23 **Git status**: Ready for commit (all changes in working directory)

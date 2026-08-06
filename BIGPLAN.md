@@ -1,14 +1,26 @@
+---
+Author: Jean Hugues Robert, baron Mariani. email:jean_hugues_robert@yahoo.com
+Date: 2026-03-15
+Update: 2026-08-05
+Status: Obsolete
+language: fr
+---
+
 # Inseme – Documentation de l’architecture COP & Ophélia
+
+Ce fichier est obsolète.
+
+A retenir : usage futur potentiel de Obsedian, Zotero et Solid.
 
 ## 1. Objectif général
 
 Le projet **Inseme** vise à créer un **écosystème multi-tenant pour la gestion et la traçabilité
-d’artefacts numériques**, où chaque instance représente une **personne numérique**, liée à une
-personne physique ou morale.
+d’artefacts numériques**, où chaque instance représente une **personne numérique** (Cogentia Digital
+Twin Instance), liée à une personne physique ou morale (de jure ou de fait).
 
 Objectifs :
 
-- Gestion des **rôles multiples** (membre, électeur, contributeur, usager, mandataire).
+- Gestion des **rôles multiples** (membre, électeur, contributeur, usager, mandataire, ...).
 - Coopération **multi-agent** via COP (Cognitive Orchestration Protocol) avec HIL (Human in the
   Loop).
 - **Traçabilité et sécurité** des données.
@@ -25,21 +37,21 @@ Objectifs :
 - **Sécurité** : RLS, rôles, chiffrement des données sensibles.
 - **Sauvegardes** : snapshots, exports SQL, historisation.
 
-### 2.2 Obsidian – Vaults locaux
+### 2.2 Option Obsidian – Vaults locaux
 
 - Gestion des **notes et documentation**.
 - Vaults thématiques par projet ou rôle.
 - Versioning via Git ou plugins Obsidian.
 - Intégration Zotero pour bibliographie.
 
-### 2.3 Zotero – références bibliographiques
+### 2.3 Option Zotero – références bibliographiques
 
 - Gestion des collections, métadonnées, PDFs.
 - Une référence peut appartenir à **plusieurs collections**.
 - Export BibTeX ou CSL JSON pour ingestion dans Obsidian/Supabase.
-- Données sensibles stockées sur Solid si nécessaire.
+- Données sensibles stockées sur Solid si nécessaire ?
 
-### 2.4 Solid – backup et usage externe
+### 2.4 Option Solid – backup et usage externe
 
 - Hébergement **sécurisé et décentralisé** des Vaults et exports.
 - Partage granulaire pour tiers ou agents IA.
@@ -52,7 +64,7 @@ Objectifs :
 ```mermaid
 flowchart LR
     subgraph Notes/Docs
-        OB[Obsidian Vaults] -->|Extraction/Ingestion| SB[Supabase Embeddings & SQL]
+        WI[O] -->|Extraction/Ingestion| SB[Supabase Embeddings & SQL]
         ZT[Zotero References] -->|Export (BibTeX/JSON)| SB
     end
 
@@ -61,12 +73,12 @@ flowchart LR
     end
 
     subgraph Backup/Secure
-        OB -->|Backup| SOL[Solid Pods]
+        WI -->|Backup| SOL[Solid Pods]
         ZT -->|Export Backup| SOL
         SB -->|Snapshot Backup| SOL
     end
 
-    COP -->|Suggestions / Actions| OB
+    COP -->|Suggestions / Actions| WI
 ```
 
 - Notes → Supabase : ingestion pour raisonnement par agents.
@@ -104,6 +116,3 @@ Dépôt `inseme` comme **référence centralisée** pour :
 5. Mettre en place workflow de mise à jour pour synchronisation avec tous les outils.
 
 ---
-
-**Auteur** : Jean Hugues Robert, baron Mariani. email:jean_hugues_robert@yahoo.com **Date** :
-2026-03-15

@@ -1,5 +1,6 @@
 ---
 shared_instructions: https://github.com/JeanHuguesRobert/cogentia/blob/main/instructions/AGENTS.shared.md
+language: en
 ---
 
 # AGENTS.md — Inseme Multi-Agent Working Contract
@@ -110,7 +111,8 @@ Do not expand the scope silently. If the work reveals a new problem, create or p
 
 ## 3. Branch / PR discipline
 
-Current solo-corpus rule: write directly to the default branch unless Jean Hugues Robert explicitly asks for a branch or a pull request.
+Current solo-corpus rule: write directly to the default branch unless Jean Hugues Robert explicitly
+authorizes a branch or a pull request.
 
 This repository follows **Optimistic Mainline Governance** by reference:
 
