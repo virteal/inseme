@@ -81,6 +81,11 @@ models/
 
 
 # --- Generated Briques wrappers ---
+apps/*/netlify/edge-functions/gen-*.js
+apps/*/netlify/functions/gen-*.js
+apps/*/tests/integration/gen-*.js
+apps/*/test-results/
+packages/*/edge/lib/gen-*.js
 **/netlify/functions/generated/
 **/netlify/edge-functions/generated/
 **/src/netlify/functions/generated/
@@ -89,7 +94,6 @@ models/
 **/public/generated/
 **/generated/
 src/brique-registry.gen.js
-+
 # Nettoyage des résidus de storage de tests (vu dans packages/cop-kernel/)
 test_file_storage_data_*/
 # Supabase local logs & temp
