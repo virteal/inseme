@@ -120,6 +120,7 @@ export async function createJhnLocalCopRuntime({
       return { host, port: address.port };
     },
     async close() {
+      server.closeAllConnections?.();
       await close(server);
       database.close();
     },
