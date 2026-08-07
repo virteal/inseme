@@ -54,12 +54,29 @@ node scripts/smoke-jhn-cogentia-turn.js --message "What is a Cognitive Packet?"
 # pnpm --filter platform run:jhn:local-cop  # see package scripts
 ```
 
+## Principal verification checklist (agent-prepared)
+
+Run before declaring FixBugsFirst:
+
+| #   | Check                    | Command / URL                                                 | Expected                                                          |
+| --- | ------------------------ | ------------------------------------------------------------- | ----------------------------------------------------------------- |
+| P1  | Public site + SSL        | `node scripts/smoke-jhn-live.mjs`                             | `ok: true`, cert authorized                                       |
+| P2  | Landing + `/john`        | https://jhn.baronsmariani.org/ · `/john`                      | 200, John markers in bundle                                       |
+| P3  | John→Cogentia dogfood    | `cd apps/platform && node scripts/smoke-jhn-cogentia-turn.js` | `conversational_identity=John`, `cogentia_auth=jhn`, citations ≥1 |
+| P4  | Governed Act unit        | `node scripts/test-governed-act.js`                           | green                                                             |
+| P5  | JHN Cogentia unit        | `pnpm --filter platform run test:jhn:cogentia`                | green                                                             |
+| P6  | Anon MCP still read-only | tools/list without token → no emit                            | 26 tools, no mutate                                               |
+| P7  | Chat login (manual)      | Principal signs in on `/john`                                 | session works (agent cannot complete)                             |
+
+**Agent cannot close #33 alone** — Principal must record one of the decisions below after P1–P7.
+
 ## Principal checkpoint (template)
 
 When ready:
 
 ```text
 JHN usable threshold reached → activate FixBugsFirst
+Evidence: smoke-jhn-live + smoke-jhn-cogentia-turn + test-governed-act (dates…)
 ```
 
 or:
