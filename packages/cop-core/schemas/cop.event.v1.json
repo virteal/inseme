@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inseme.local/schemas/cop.event.v1.json",
+  "title": "cop.event/v1",
+  "description": "Canonical COP durable event envelope (Inseme #28). Values only; no secrets.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "event_id",
+    "event_type",
+    "topic",
+    "time",
+    "epistemic_status",
+    "payload",
+    "payload_hash"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "cop.event/v1"
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "log_id": {
+      "type": ["string", "null"]
+    },
+    "topic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "seq"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "seq": { "type": "integer", "exclusiveMinimum": 0 }
+      }
+    },
+    "time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recorded_at"],
+      "properties": {
+        "occurred_at": { "type": ["string", "null"] },
+        "observed_at": { "type": ["string", "null"] },
+        "recorded_at": { "type": "string", "minLength": 1 }
+      }
+    },
+    "origin_ref": { "type": ["string", "null"] },
+    "subject_ref": { "type": ["string", "null"] },
+    "actor_ref": { "type": ["string", "null"] },
+    "correlation_id": { "type": ["string", "null"] },
+    "causation_id": { "type": ["string", "null"] },
+    "parent_event_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "packet_id": { "type": ["string", "null"] },
+    "mandate_ref": { "type": ["string", "null"] },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "open",
+        "redacted",
+        "restricted",
+        "sealed",
+        "opaque_but_escrowed"
+      ]
+    },
+    "epistemic_status": {
+      "type": "string",
+      "enum": [
+        "observed",
+        "computed",
+        "declared",
+        "inferred",
+        "normative",
+        "proposed",
+        "decided",
+        "published"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    },
+    "payload_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "artifact_ref": { "type": ["string", "null"] },
+    "idempotency_key": { "type": ["string", "null"] },
+    "meta": {
+      "type": "object"
+    }
+  }
+}
