@@ -1,11 +1,15 @@
+# Build context: Netlify site package_path = apps/platform (cwd = this folder).
+# Climb to monorepo root for pnpm workspace install + filter build.
 [build]
-  command = "pnpm platform:build"
-  publish = "apps/platform/dist"
-  functions = "apps/platform/netlify/functions"
-  edge_functions = "apps/platform/netlify/edge-functions"
+  command = "cd ../.. && corepack enable && pnpm install --frozen-lockfile=false && pnpm --filter platform run build"
+  publish = "dist"
+  functions = "netlify/functions"
+  edge_functions = "netlify/edge-functions"
 
 [build.environment]
   NODE_OPTIONS = "--max-old-space-size=4096"
+  NODE_VERSION = "24"
+  PNPM_VERSION = "10.28.2"
 
 [dev]
   command = "node ../../scripts/check-tunnel.js && pnpm vite"
@@ -16,7 +20,6 @@
 
 [functions]
   node_bundler = "esbuild"
-
 
 # --- GENERATED BRIQUE REDIRECTS START ---
 [[redirects]]
@@ -180,3 +183,8 @@
   function = "gen-host-robots"
   path = "/robots.txt"
 # --- GENERATED BRIQUE EDGE END ---
+# SPA fallback — must remain last so /api/* rules win first
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
