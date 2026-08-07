@@ -36,6 +36,8 @@
     "chat:jhn:local": "node scripts/run-jhn-local-chat.js",
     "repl:jhn:local": "node scripts/run-jhn-local-repl.js",
     "console:jhn:local": "node scripts/run-jhn-local-console.js",
+    "smoke:jhn:cogentia": "node scripts/smoke-jhn-cogentia-turn.js",
+    "test:jhn:cogentia": "node mcp/test/cogentiaMcpClient.test.js && node mcp/test/jhnCogentiaTurn.test.js",
     "verify:jhn:local-cop": "node scripts/verify-jhn-cop-local.js",
     "schema:check": "node scripts/check-schema-versions.js",
     "test:cop:portable": "node --test mcp/test/portableRuntimeGateway.test.js mcp/test/portableRuntimeRouter.test.js mcp/test/signedCapability.test.js mcp/test/localRuntimeServer.test.js mcp/test/jhnLocalAgent.test.js",

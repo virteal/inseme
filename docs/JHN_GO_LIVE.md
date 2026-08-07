@@ -79,6 +79,10 @@ curl -fsS -m 20 https://jhn.baronsmariani.org/   # after SSL ready
 ## Not required for first public smoke
 
 - Full U1–U6 Principal checkpoint
+- **Dogfood John→Cogentia** (agent evidence 2026-08-07):  
+  `node apps/platform/scripts/smoke-jhn-cogentia-turn.js`  
+  Live: auth=`jhn`, mutate allowed with vault token, citations from public corpus, COP event chain  
+  `user_message → capability.invocation → assistant_message` (identity remains John)
 - Live GitHub App webhooks
 - Multi-tenant hub
 
