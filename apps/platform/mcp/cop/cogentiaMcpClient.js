@@ -195,6 +195,15 @@ export function createCogentiaMcpClient(options = {}) {
     return callTool("cogentia_continuation_emit", { question, ...args }, opts);
   }
 
+  /**
+   * #79 monotonic attenuation check before subagent / nested mandate.
+   * @param {object} parent
+   * @param {object} child
+   */
+  async function mandateAttenuationCheck(parent, child, opts = {}) {
+    return callTool("cogentia_mandate_attenuation_check", { parent, child }, opts);
+  }
+
   return {
     url,
     hasToken: Boolean(token),
@@ -210,6 +219,7 @@ export function createCogentiaMcpClient(options = {}) {
     continuationList,
     continuationResolve,
     continuationEmit,
+    mandateAttenuationCheck,
     /** Create a client bound to a subagent id under JHN. */
     forSubagent(subagentId) {
       return createCogentiaMcpClient({
