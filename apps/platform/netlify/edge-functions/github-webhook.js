@@ -123,6 +123,35 @@ export default async (request, _context) => {
   const payloadHash = `sha256:${payloadHashHex}`;
   const rawBytes = new TextEncoder().encode(rawText || "").length;
 
+  // Allowlist: comma-separated owner/repo (Inseme #29). Empty = allow all (dev only).
+  const allowlistRaw = Deno.env.get("GITHUB_REPO_ALLOWLIST") || "";
+  const allowlist = allowlistRaw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  let allowlistOutcome = "not_checked";
+  if (repositoryName && allowlist.length > 0) {
+    const allowed = allowlist.some((r) => r.toLowerCase() === repositoryName.toLowerCase());
+    if (!allowed) {
+      allowlistOutcome = "ignored";
+      // Still 202 — do not leak existence; optional durable ignore without event
+      return new Response(
+        JSON.stringify({
+          ok: true,
+          accepted: true,
+          delivery_id: deliveryId,
+          event: eventName,
+          repository: repositoryName,
+          durable: "ignored_allowlist",
+          spooled: false,
+          artifact: false,
+        }),
+        { status: 202, headers: corsHeaders }
+      );
+    }
+    allowlistOutcome = "allowed";
+  }
+
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const supabaseServiceKey =
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_SERVICE_KEY");
@@ -245,6 +274,7 @@ export default async (request, _context) => {
       durable,
       spooled,
       artifact: Boolean(artifactRef),
+      allowlist: allowlistOutcome,
     }),
     {
       status: 202,

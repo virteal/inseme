@@ -8,63 +8,51 @@ lifecycle_state: active
 related_issues:
   - "https://github.com/JeanHuguesRobert/inseme/issues/28"
   - "https://github.com/JeanHuguesRobert/inseme/issues/29"
-  - "https://github.com/JeanHuguesRobert/inseme/issues/30"
 ---
 
 # COP append-only + GitHub webhook — MVP status
 
-## #28 status: **DONE** (2026-08-07)
+## #28 status: **DONE**
 
-Issue #28 acceptance (append-only persistence profile + local spool) is met. Issue **#29** remains
-open for live GitHub App E2E, full event map, and activity projection.
+## #29 status: **DONE (MVP)** (2026-08-07)
 
-## Shipped
+Software path complete: full subscription map, allowlist, activity feed, replay, reconcile helper,
+edge allowlist, operator docs. **Live GitHub App install and production webhook hits remain operator
+steps** (documented, not blocked on code).
 
-| Surface                                  | Location                                                                         | Tests / evidence                   |
-| ---------------------------------------- | -------------------------------------------------------------------------------- | ---------------------------------- |
-| Append-only SQL profile                  | `apps/platform/supabase/migrations/20260731180000_cop_append_only_event_log.sql` | schema tests; **applied on JHN**   |
-| Envelope columns + `cop_event_append`    | `…/20260807120000_cop_event_log_envelope_columns.sql`                            | schema tests; **applied on JHN**   |
-| Live JHN objects                         | `cop_event_log`, `github_webhook_deliveries`, `cop_spool_queue`, RPCs            | `supabase db query` 2026-08-07     |
-| Envelope schema + runtime validation     | `packages/cop-core/schemas/cop.event.v1.json`, `cop-event-envelope.js`           | `test-cop-event-spool.js`          |
-| Memory store + NDJSON spool/replay       | `cop-event-spool.js`                                                             | `test-cop-event-spool.js`          |
-| Artifacts + visibility projection        | `cop-event-artifacts.js`                                                         | `test-cop-event-artifacts.js`      |
-| Persist pipeline (store → spool on fail) | `cop-event-persist.js`                                                           | `test-cop-event-artifacts.js`      |
-| Supabase row/RPC shapes                  | `cop-event-supabase-shape.js`                                                    | unit tests                         |
-| Edge durable path                        | `github-webhook.js`: delivery → artifact → `cop_event_append` → spool            | `test-deno-github-webhook-edge.js` |
-| Source vs projection note                | `docs/cop-persistence-source-vs-projection.md`                                   | —                                  |
+## Shipped (#28 + #29)
 
-## #28 checklist (complete)
+| Surface                  | Location                                              | Evidence             |
+| ------------------------ | ----------------------------------------------------- | -------------------- |
+| #28 persistence          | migrations, spool, artifacts, edge RPC                | applied on JHN       |
+| Full event subscriptions | `github-ingress.js` `GITHUB_EVENT_SUBSCRIPTIONS` (21) | unit tests           |
+| Ingress decision         | `evaluateGithubIngress`                               | HMAC, allowlist, map |
+| Activity feed            | `github-activity-feed.js`                             | unit + sim           |
+| Delivery replay          | `github-delivery-replay.js`                           | unit                 |
+| Reconcile gaps           | `github-reconcile.js`                                 | unit (inject list)   |
+| Edge allowlist           | `GITHUB_REPO_ALLOWLIST`                               | edge function        |
+| Operator doc             | `docs/github-webhook-ingress.md`                      | —                    |
+| Local E2E sim            | `scripts/simulate-github-webhook-e2e.js`              | green                |
 
-- [x] COP/Core storage interfaces independent of Supabase
-- [x] Working NDJSON spool + replay
-- [x] `cop.event/v1` schema + runtime validation
-- [x] Topic order, duplicate ingestion, rejected UPDATE/DELETE tests
-- [x] Export/import path
-- [x] Artifact externalization (hash + ref) + restricted visibility tests
-- [x] Source vs artifact vs projection note
-- [x] Migration applied on target Supabase project (**JHN** `ndiysuhzmztatpxbkezn`)
-- [x] Wire edge webhook path to durable append + spool fallback
+## #29 checklist
 
-## Residual checklist — #29 (still OPEN)
+- [x] Explicit event subscription set + mapper coverage
+- [x] Allowlist validation (code + edge env)
+- [x] Activity-feed projection (private, rebuildable)
+- [x] Delivery replay after mapper changes
+- [x] Reconcile helper (injectable GitHub list)
+- [x] Docs: delivery ≠ COP event ≠ activity feed
+- [x] Tests: signature, idempotency, allowlist, map, visibility, unhandled
+- [ ] Operator: create/install GitHub App + set Netlify secrets (human)
+- [ ] Operator: provision `cop-artifacts` bucket if needed (human)
+- [ ] Live production ping/push smoke (human after App install)
 
-- [ ] Live GitHub App install on explicit allowlist
-- [ ] End-to-end: `ping` / `push` / issue / PR / workflow → delivery → COP event
-- [ ] Full event subscription set from issue body
-- [ ] Activity-feed projection for the mandant
-- [ ] Periodic GitHub API reconcile for gaps
-- [ ] Storage bucket `cop-artifacts` provisioned in each instance (edge upload optional)
-- [ ] Config/docs: delivery ≠ COP event ≠ FractaLog in operator runbook
-
-## Operator / agent commands
+## Commands
 
 ```bash
 cd inseme
-node scripts/test-cop-event-log-schema.js
-node scripts/test-cop-event-spool.js
-node scripts/test-cop-event-artifacts.js
 node scripts/test-github-webhook-ingress.js
+node scripts/test-github-activity-feed.js
+node scripts/simulate-github-webhook-e2e.js
 node scripts/test-deno-github-webhook-edge.js
-
-# Apply migrations (linked project)
-cd apps/platform && supabase db push --linked
 ```

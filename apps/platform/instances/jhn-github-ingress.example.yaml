@@ -1,0 +1,26 @@
+# Example GitHub ingress profile for Agent JHN (Inseme #29)
+# Copy values into Netlify/edge env and instance_config — never commit secrets.
+
+instance_id: jhn-personal
+anchor_repository: JeanHuguesRobert/JeanHuguesRobert
+
+observed_repositories:
+  - name: JeanHuguesRobert/JeanHuguesRobert
+    role: anchor
+  - name: JeanHuguesRobert/inseme
+    role: work
+  - name: JeanHuguesRobert/cogentia
+    role: work
+  - name: JeanHuguesRobert/operium
+    role: work
+
+# Edge env: GITHUB_REPO_ALLOWLIST=JeanHuguesRobert/JeanHuguesRobert,JeanHuguesRobert/inseme,...
+
+# Webhook URL (after Netlify deploy):
+#   https://<site>/api/webhooks/github
+# Secrets:
+#   GITHUB_WEBHOOK_SECRET
+#   SUPABASE_URL
+#   SUPABASE_SERVICE_ROLE_KEY
+# Optional:
+#   COP_ARTIFACT_BUCKET=cop-artifacts
