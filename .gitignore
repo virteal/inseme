@@ -42,7 +42,9 @@ css-class-report.*
 .inline-css-map.json
 .classfinder-cache.json
 tmp-tailwind-input.css
-scripts/test-*.js
+# Temporary script scratch only — unit suites are scripts/test-*.js (tracked).
+scripts/tmp-*.js
+scripts/test-scratch-*.js
 
 # --- OS & IDE ---
 .DS_Store
