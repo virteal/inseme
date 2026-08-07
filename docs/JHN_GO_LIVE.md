@@ -10,15 +10,17 @@ visibility: public
 
 **Goal:** public site usable as personal Twin entry (John), without touching lepp.fr.
 
-## Observed blockers (2026-08-07)
+## Status (2026-08-07)
 
-| Check                                                             | Status                                          |
-| ----------------------------------------------------------------- | ----------------------------------------------- |
-| DNS `jhn.baronsmariani.org` → `jhn-baronsmariani-org.netlify.app` | OK                                              |
-| Netlify site `jhn-baronsmariani-org`                              | exists, linked to `JeanHuguesRobert/inseme`     |
-| **Published deploy**                                              | **was null → must deploy**                      |
-| SSL custom domain                                                 | false until first successful prod deploy + cert |
-| Env `VITE_SUPABASE_*` / `SUPABASE_*`                              | present on site                                 |
+| Check                                                             | Status                                                             |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------ |
+| DNS `jhn.baronsmariani.org` → `jhn-baronsmariani-org.netlify.app` | OK                                                                 |
+| Netlify site `jhn-baronsmariani-org`                              | exists, linked to `JeanHuguesRobert/inseme`                        |
+| **Published deploy**                                              | **ready** (manual zip of `apps/platform/dist`)                     |
+| `https://jhn-baronsmariani-org.netlify.app/`                      | **HTTP 200** (`/` and `/john`)                                     |
+| `https://jhn.baronsmariani.org/`                                  | **HTTP 200** (TLS custom cert still incomplete — browser may warn) |
+| Env `VITE_SUPABASE_*` / `SUPABASE_*`                              | present on site                                                    |
+| Landing                                                           | `HomeRoute` → John when host is `jhn.*`                            |
 
 ## Deploy (operator / agent on trusted machine)
 
