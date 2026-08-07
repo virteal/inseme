@@ -26,3 +26,16 @@ Short implementation note for #28 (append-only event profile).
 2. Hiding content (`visibility`) must not erase causal existence of the event row.
 3. Receipt ≠ acceptance: delivery can be `received` without an authorized act.
 4. Identity/mandate policy is #30; this profile only stores evidence.
+
+## Runtime pieces (2026-08-07)
+
+| Component                                             | Role                                                      |
+| ----------------------------------------------------- | --------------------------------------------------------- |
+| `createMemoryCopEventStore` / NDJSON spool            | Local / test / degraded Node paths                        |
+| `createMemoryArtifactStore` / `createFsArtifactStore` | Immutable raw bodies by hash                              |
+| `projectEventForViewer`                               | Restricted visibility without erasing event rows          |
+| `createCopEventPersistPipeline`                       | delivery → artifact → store; store fail → spool           |
+| `cop_event_append` (SQL)                              | Atomic `topic_seq` on Supabase                            |
+| Edge `github-webhook.js`                              | HMAC → delivery → optional storage artifact → RPC → spool |
+
+See `docs/cop-append-only-mvp-status.md` for #28 closeout evidence.

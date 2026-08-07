@@ -1,13 +1,16 @@
 /* global Deno */
-// Deno Edge Function: GitHub App Webhook Ingress (Issue #29)
+// Deno Edge Function: GitHub App Webhook Ingress (Issues #28 / #29)
 // Path: /api/webhooks/github
-// Environment: Netlify Deno Edge Functions / Supabase Edge Runtime
+//
+// #28 durable path: delivery row → optional artifact → cop_event_append RPC
+// (atomic topic_seq). On append failure → cop_spool_queue. Returns 202 after
+// validation. Secret values never logged.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-/**
- * Verify GitHub App Webhook HMAC-SHA256 signature using native Web Crypto API (Deno standard).
- */
+const ARTIFACT_THRESHOLD = 8 * 1024;
+const ARTIFACT_BUCKET = Deno.env.get("COP_ARTIFACT_BUCKET") || "cop-artifacts";
+
 async function verifyHmacSignature(rawText, signatureHeader, secret) {
   if (!signatureHeader || !secret || !rawText) return false;
   const parts = signatureHeader.trim().split("=");
@@ -27,25 +30,37 @@ async function verifyHmacSignature(rawText, signatureHeader, secret) {
     const signatureBytes = new Uint8Array(
       expectedHex.match(/.{1,2}/g).map((byte) => parseInt(byte, 16))
     );
-
     return await crypto.subtle.verify("HMAC", key, signatureBytes, data);
   } catch {
     return false;
   }
 }
 
-/**
- * Calculate canonical SHA-256 hex digest using Web Crypto API.
- */
 async function sha256Hex(text) {
   const encoder = new TextEncoder();
   const data = encoder.encode(text);
   const hashBuffer = await crypto.subtle.digest("SHA-256", data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  return hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-export default async (request, context) => {
+function sortKeys(value) {
+  if (value === null || typeof value !== "object") return value;
+  if (Array.isArray(value)) return value.map(sortKeys);
+  const out = {};
+  for (const key of Object.keys(value).sort()) {
+    out[key] = sortKeys(value[key]);
+  }
+  return out;
+}
+
+async function payloadHashSha256(payload) {
+  const canonical = JSON.stringify(sortKeys(payload ?? {}));
+  const hex = await sha256Hex(canonical);
+  return `sha256:${hex}`;
+}
+
+export default async (request, _context) => {
   const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers":
@@ -80,7 +95,6 @@ export default async (request, context) => {
     Deno.env.get("GITHUB_WEBHOOK_SECRET") || Deno.env.get("COGENTIA_GITHUB_WEBHOOK_SECRET");
   const rawText = await request.text();
 
-  // 1. HMAC Signature Verification (if secret is configured)
   if (webhookSecret) {
     const isValid = await verifyHmacSignature(rawText, signatureHeader, webhookSecret);
     if (!isValid) {
@@ -105,65 +119,122 @@ export default async (request, context) => {
   const action = payload?.action || null;
   const senderLogin = payload?.sender?.login || null;
   const installationId = payload?.installation?.id ? Number(payload.installation.id) : null;
-  const payloadHash = await sha256Hex(rawText);
+  const payloadHashHex = await sha256Hex(rawText);
+  const payloadHash = `sha256:${payloadHashHex}`;
+  const rawBytes = new TextEncoder().encode(rawText || "").length;
 
-  // 2. Supabase Storage & Event Normalization
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const supabaseServiceKey =
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_SERVICE_KEY");
 
+  let durable = "skipped_no_supabase";
+  let artifactRef = null;
+  let spooled = false;
+
   if (supabaseUrl && supabaseServiceKey) {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Persist raw delivery record
-    await supabase.from("github_webhook_deliveries").upsert(
-      {
-        delivery_id: deliveryId,
-        event_name: eventName,
+    if (rawBytes >= ARTIFACT_THRESHOLD) {
+      const objectPath = `github-webhooks/${payloadHashHex.slice(0, 2)}/${payloadHashHex}-${deliveryId}.json`;
+      const { error: upErr } = await supabase.storage
+        .from(ARTIFACT_BUCKET)
+        .upload(objectPath, rawText, {
+          contentType: "application/json",
+          upsert: true,
+        });
+      if (!upErr) {
+        artifactRef = `artifact:supabase:${ARTIFACT_BUCKET}/${objectPath}`;
+      }
+    }
+
+    const deliveryRow = {
+      delivery_id: deliveryId,
+      event_name: eventName,
+      action,
+      repository_name: repositoryName,
+      installation_id: installationId,
+      sender_login: senderLogin,
+      signature_sha256: signatureHeader,
+      payload_sha256: payloadHash,
+      raw_artifact_ref: artifactRef,
+      processing_state: "received",
+      received_at: new Date().toISOString(),
+    };
+
+    const { error: deliveryError } = await supabase
+      .from("github_webhook_deliveries")
+      .upsert(deliveryRow, { onConflict: "delivery_id" });
+
+    if (deliveryError) {
+      durable = "delivery_failed";
+    } else {
+      const topicId = `github:${repositoryName || "global"}`;
+      const actorId = senderLogin ? `github:${senderLogin}` : "github:anonymous";
+      const idempotencyKey = `github:${deliveryId}:${eventName}`;
+      const eventPayload = {
+        github_event: eventName,
         action,
-        repository_name: repositoryName,
+        repository: repositoryName,
         installation_id: installationId,
-        sender_login: senderLogin,
-        signature_sha256: signatureHeader,
-        payload_sha256: payloadHash,
-        processing_state: "received",
-        received_at: new Date().toISOString(),
-      },
-      { onConflict: "delivery_id" }
-    );
-
-    // Normalize cop.event/v1 fact
-    const topicId = `github:${repositoryName || "global"}`;
-    const actorId = senderLogin ? `github:${senderLogin}` : "github:anonymous";
-    const idempotencyKey = `github:${deliveryId}:${eventName}`;
-
-    await supabase.from("cop_event_log").upsert(
-      {
-        topic_id: topicId,
-        topic_seq: Date.now(), // Monotonic sequence timestamp
-        event_type: "cop.event/v1",
-        actor_id: actorId,
-        epistemic_status: "observed",
-        origin_ref: `github:delivery:${deliveryId}`,
-        payload: {
-          github_event: eventName,
-          action,
-          repository: repositoryName,
-          installation_id: installationId,
-          summary: `GitHub Event ${eventName} (${action || "no-action"}) on ${repositoryName || "unknown"}`,
-          details: { sender: senderLogin, payload_hash: payloadHash },
+        summary: `GitHub Event ${eventName} (${action || "no-action"}) on ${repositoryName || "unknown"}`,
+        details: {
+          sender: senderLogin,
+          payload_hash: payloadHash,
+          externalized: Boolean(artifactRef),
         },
-        meta: {
+      };
+      const eventPayloadHash = await payloadHashSha256(eventPayload);
+
+      const { error: appendError } = await supabase.rpc("cop_event_append", {
+        p_topic_id: topicId,
+        p_event_type: "cop.event/v1",
+        p_actor_id: actorId,
+        p_epistemic_status: "observed",
+        p_origin_ref: `github:delivery:${deliveryId}`,
+        p_payload: eventPayload,
+        p_meta: {
           delivery_id: deliveryId,
           received_at: new Date().toISOString(),
+          raw_payload_hash: payloadHash,
         },
-        idempotency_key: idempotencyKey,
-      },
-      { onConflict: "idempotency_key" }
-    );
+        p_idempotency_key: idempotencyKey,
+        p_payload_hash: eventPayloadHash,
+        p_artifact_ref: artifactRef,
+        p_visibility: "restricted",
+      });
+
+      if (appendError) {
+        const { error: spoolError } = await supabase.from("cop_spool_queue").insert({
+          topic_id: topicId,
+          event_type: "cop.event/v1",
+          payload: {
+            envelope_hint: eventPayload,
+            delivery_id: deliveryId,
+            idempotency_key: idempotencyKey,
+            artifact_ref: artifactRef,
+            payload_hash: eventPayloadHash,
+            raw_payload_hash: payloadHash,
+          },
+          status: "pending",
+          attempts: 0,
+          max_attempts: 5,
+          last_error: String(appendError.message || appendError).slice(0, 500),
+        });
+        spooled = !spoolError;
+        durable = spooled ? "spooled" : "append_and_spool_failed";
+      } else {
+        durable = "appended";
+        await supabase
+          .from("github_webhook_deliveries")
+          .update({
+            processing_state: "normalized",
+            normalized_at: new Date().toISOString(),
+          })
+          .eq("delivery_id", deliveryId);
+      }
+    }
   }
 
-  // 3. Fast 202 Accepted Response
   return new Response(
     JSON.stringify({
       ok: true,
@@ -171,6 +242,9 @@ export default async (request, context) => {
       delivery_id: deliveryId,
       event: eventName,
       repository: repositoryName,
+      durable,
+      spooled,
+      artifact: Boolean(artifactRef),
     }),
     {
       status: 202,

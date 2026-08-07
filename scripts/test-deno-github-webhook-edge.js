@@ -9,7 +9,10 @@ console.log("===================================================================
 console.log("    TESTING DENO EDGE FUNCTION: GITHUB WEBHOOK (INSEME #29)               ");
 console.log("==========================================================================");
 
-const edgeFuncPath = path.join(process.cwd(), "apps/platform/netlify/edge-functions/github-webhook.js");
+const edgeFuncPath = path.join(
+  process.cwd(),
+  "apps/platform/netlify/edge-functions/github-webhook.js"
+);
 
 // 1. Verify Deno Edge Function File Exists
 console.log("\n[Test 1] Checking Deno Edge Function File Presence...");
@@ -20,8 +23,14 @@ const code = fs.readFileSync(edgeFuncPath, "utf-8");
 
 // 2. Assert Deno Modern Imports & Exports
 console.log("\n[Test 2] Verifying Modern Deno Syntax & ESM Export...");
-assert.ok(code.includes("export default async (request, context) =>"), "Must export default Deno edge function handler");
-assert.ok(code.includes("crypto.subtle.importKey"), "Must use Web Crypto API crypto.subtle for HMAC verification");
+assert.ok(
+  /export default async \(request,\s*_?context\)\s*=>/.test(code),
+  "Must export default Deno edge function handler"
+);
+assert.ok(
+  code.includes("crypto.subtle.importKey"),
+  "Must use Web Crypto API crypto.subtle for HMAC verification"
+);
 assert.ok(code.includes("new Response("), "Must return native Response object");
 console.log("  ✓ Modern Deno syntax & Web Crypto API verified.");
 
@@ -37,6 +46,17 @@ console.log("\n[Test 4] Verifying 202 Accepted Asynchronous Acknowledgement...")
 assert.ok(code.includes("status: 202"), "Must return 202 status code for async processing");
 assert.ok(code.includes("accepted: true"), "Must contain accepted: true in body");
 console.log("  ✓ 202 Accepted async acknowledgement verified.");
+
+// 5. #28 durable path: append RPC + spool fallback + optional artifacts
+console.log("\n[Test 5] Verifying #28 durable persist path...");
+assert.ok(code.includes("cop_event_append"), "Must call cop_event_append RPC for atomic topic_seq");
+assert.ok(code.includes("cop_spool_queue"), "Must fall back to cop_spool_queue on append failure");
+assert.ok(code.includes("github_webhook_deliveries"), "Must persist delivery row");
+assert.ok(
+  code.includes("raw_artifact_ref") || code.includes("artifact"),
+  "Must support artifact externalization"
+);
+console.log("  ✓ delivery → append RPC → spool path verified.");
 
 console.log("\n==========================================================================");
 console.log("✓ ALL DENO EDGE FUNCTION WEBHOOK TESTS PASSED (100% SUCCESS)");
