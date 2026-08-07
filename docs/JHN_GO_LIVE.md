@@ -12,15 +12,28 @@ visibility: public
 
 ## Status (2026-08-07)
 
-| Check                                                             | Status                                                             |
-| ----------------------------------------------------------------- | ------------------------------------------------------------------ |
-| DNS `jhn.baronsmariani.org` → `jhn-baronsmariani-org.netlify.app` | OK                                                                 |
-| Netlify site `jhn-baronsmariani-org`                              | exists, linked to `JeanHuguesRobert/inseme`                        |
-| **Published deploy**                                              | **ready** (manual zip of `apps/platform/dist`)                     |
-| `https://jhn-baronsmariani-org.netlify.app/`                      | **HTTP 200** (`/` and `/john`)                                     |
-| `https://jhn.baronsmariani.org/`                                  | **HTTP 200** (TLS custom cert still incomplete — browser may warn) |
-| Env `VITE_SUPABASE_*` / `SUPABASE_*`                              | present on site                                                    |
-| Landing                                                           | `HomeRoute` → John when host is `jhn.*`                            |
+| Check                                                             | Status                                                                                        |
+| ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| DNS `jhn.baronsmariani.org` → `jhn-baronsmariani-org.netlify.app` | OK                                                                                            |
+| Netlify site `jhn-baronsmariani-org`                              | exists, linked to `JeanHuguesRobert/inseme`                                                   |
+| **Published deploy**                                              | **ready** (manual zip of `apps/platform/dist`)                                                |
+| `https://jhn-baronsmariani-org.netlify.app/`                      | **HTTP 200** (`/` and `/john`)                                                                |
+| `https://jhn.baronsmariani.org/`                                  | **HTTPS 200**, cert **issued** (Let's Encrypt `CN=jhn.baronsmariani.org`, expires 2026-11-05) |
+| Env `VITE_SUPABASE_*` / `SUPABASE_*`                              | present on site                                                                               |
+| Landing                                                           | `HomeRoute` → John when host is `jhn.*`                                                       |
+
+### SSL note
+
+DNS CNAME is correct:
+
+```text
+jhn.baronsmariani.org.  CNAME  jhn-baronsmariani-org.netlify.app.
+```
+
+A missing trailing dot on the CNAME target can break ACME verification (Netlify appears “blocked”
+until DNS is fixed and rechecked). After propagation, Netlify issued LE cert (`ssl=true`,
+`force_ssl=true`, state `issued`). Verified with strict `curl` (no `-k`): HTTP 200 on `/` and
+`/john`.
 
 ## Deploy (operator / agent on trusted machine)
 
