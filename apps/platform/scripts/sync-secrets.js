@@ -83,6 +83,9 @@ const VAULT_KEY_MAPPING = {
   // Cogentia system bearer (Magistral coding nodes / Agent CLI Gateway).
   // Edge functions have no FS access to inseme/.env — vault is their authority.
   COGENTIA_API_KEY: "cogentia_api_key",
+  COGENTIA_MCP_JHN_TOKEN: "cogentia_mcp_jhn_token",
+  COGENTIA_MCP_JHN_MUTATE: "cogentia_mcp_jhn_mutate",
+  COGENTIA_MCP_URL: "cogentia_mcp_url",
   AGENT_JHN_WHATSAPP_ALLOWED_SELF_JID: "agent_jhn_whatsapp_allowed_self_jid",
   AGENT_JHN_WHATSAPP_MODE: "agent_jhn_whatsapp_mode",
   AGENT_JHN_WHATSAPP_SEND_ENABLED: "agent_jhn_whatsapp_send_enabled",

@@ -69,6 +69,10 @@ const ENV_KEY_MAPPING = {
   cartesia_api_key: ["CARTESIA_API_KEY"],
   // Cogentia system bearer — edge has no inseme/.env FS; vault is edge authority
   cogentia_api_key: ["COGENTIA_API_KEY"],
+  // Cogentia MCP Agent JHN attested mutate (Phase 5) — secret; never public
+  cogentia_mcp_jhn_token: ["COGENTIA_MCP_JHN_TOKEN"],
+  cogentia_mcp_jhn_mutate: ["COGENTIA_MCP_JHN_MUTATE"],
+  cogentia_mcp_url: ["COGENTIA_MCP_URL"],
 
   // Agent JHN WhatsApp (Cogentia adapter; config/PII — not Baileys session files)
   // Session material stays on workstation under STATE_DIR (registre-mariani/runtime/…).

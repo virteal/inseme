@@ -3,9 +3,11 @@
  * delegation (Inseme #33 P1/P3).
  *
  * Provider/handler is never the conversational identity.
+ * Optional Cogentia MCP client: Agent JHN (or subagent) attested write path.
  */
 
 import { conversationTopic } from "./jhnConversationState.js";
+import { loadCogentiaMcpClientFromEnv } from "./cogentiaMcpClient.js";
 
 function requireText(value, name) {
   if (typeof value !== "string" || value.length === 0) throw new TypeError(`${name} is required`);
@@ -19,6 +21,7 @@ function requireText(value, name) {
  * @param {object} [options.handler]  optional external capability { id, invoke }
  * @param {object} options.identity  principal/mandate/logical_agent refs
  * @param {(input: object) => boolean} [options.shouldDelegate]
+ * @param {object} [options.cogentia]  createCogentiaMcpClient() or env-loaded client
  */
 export function createJhnDelegatingAgent(options = {}) {
   const { store, reasoner, handler, identity, shouldDelegate } = options;
@@ -32,6 +35,16 @@ export function createJhnDelegatingAgent(options = {}) {
   requireText(identity?.mandate_ref, "identity.mandate_ref");
   requireText(identity?.logical_agent_ref, "identity.logical_agent_ref");
 
+  const cogentia =
+    options.cogentia ||
+    loadCogentiaMcpClientFromEnv({
+      actor: identity.logical_agent_ref?.startsWith("agent:jhn")
+        ? identity.logical_agent_ref
+        : "agent:jhn",
+      mandate_ref: identity.mandate_ref,
+      principal_ref: identity.principal_ref,
+    });
+
   return {
     identity: {
       conversational: "John",
@@ -39,6 +52,8 @@ export function createJhnDelegatingAgent(options = {}) {
       principal_ref: identity.principal_ref,
       mandate_ref: identity.mandate_ref,
     },
+    /** Cogentia MCP (read + JHN-attested mutate when token configured). */
+    cogentia,
 
     /**
      * Principal → John turn. Optional handler delegation under mandate.
