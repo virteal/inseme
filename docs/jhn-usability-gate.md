@@ -32,8 +32,8 @@ FixBugsFirst.
 | **U2** bounded context / privacy    | **partial**    | Restricted visibility on COP events; full public/private overlay still instance config    |
 | **U3** governed handler delegation  | **yes (unit)** | Handler id recorded separately; failure path does not wipe store                          |
 | **U4** first real governed Act      | **yes (unit)** | Four-event chain + receipt; not yet a live repo write                                     |
-| **U5** interrupt/revoke             | **not yet**    | Needs mandate revoke path                                                                 |
-| **U6** runbook + tests              | **partial**    | This doc + unit tests; full start/stop runbook still RUNBOOK_JHN                          |
+| **U5** interrupt/revoke             | **yes (unit)** | `recordMandateControl` + `isMandateActive` + refuse further Acts                          |
+| **U6** runbook + tests              | **partial**    | Unit tests + `docs/JHN_GO_LIVE.md` for public site; Principal checkpoint still open       |
 
 ## Commands
 

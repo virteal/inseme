@@ -199,3 +199,112 @@ function appendOne(store, partial) {
 function require(value, name) {
   if (value == null || value === "") throw new TypeError(`${name} is required`);
 }
+
+/**
+ * U5 — record mandate or handler suspension/revocation before further Acts.
+ * Stale results remain in the log; callers must check isMandateActive.
+ *
+ * @param {object} store
+ * @param {object} input
+ * @param {string} input.principal_ref
+ * @param {string} input.mandate_ref
+ * @param {string} [input.logical_agent_ref]
+ * @param {string} [input.handler_instance_ref]
+ * @param {'suspend'|'revoke'} input.action
+ * @param {string} [input.reason]
+ * @param {string} [input.topic_id]
+ */
+export function recordMandateControl(store, input) {
+  require(input.principal_ref, "principal_ref");
+  require(input.mandate_ref, "mandate_ref");
+  const action = input.action === "suspend" ? "suspend" : "revoke";
+  const controlId = randomUUID();
+  const topicId = input.topic_id || `mandate-control:${input.mandate_ref}`;
+
+  const result = store.append(
+    createCopEventEnvelope({
+      topic_id: topicId,
+      epistemic_status: "normative",
+      actor_ref: input.principal_ref,
+      subject_ref: input.logical_agent_ref || input.mandate_ref,
+      mandate_ref: input.mandate_ref,
+      visibility: "restricted",
+      payload: {
+        kind: "MandateControl",
+        control_id: controlId,
+        action,
+        principal_ref: input.principal_ref,
+        mandate_ref: input.mandate_ref,
+        logical_agent_ref: input.logical_agent_ref || null,
+        handler_instance_ref: input.handler_instance_ref || null,
+        reason: input.reason || null,
+        effective_at: new Date().toISOString(),
+      },
+      idempotency_key: `mandate-control:${input.mandate_ref}:${action}:${controlId}`,
+    })
+  );
+
+  if (!result.ok) {
+    throw new Error(`mandate_control_append_failed:${result.error}`);
+  }
+
+  return {
+    ok: true,
+    control_id: controlId,
+    action,
+    mandate_ref: input.mandate_ref,
+    event: result.event,
+    receipt: {
+      schema: "cop.mandate-control.receipt.v1",
+      control_id: controlId,
+      action,
+      mandate_ref: input.mandate_ref,
+      principal_ref: input.principal_ref,
+      event_id: result.event.event_id,
+    },
+  };
+}
+
+/**
+ * Whether a mandate is still active given append-only control events.
+ * Latest MandateControl for the mandate_ref wins (revoke/suspend → inactive).
+ *
+ * @param {object} store
+ * @param {string} mandateRef
+ */
+export function isMandateActive(store, mandateRef) {
+  require(mandateRef, "mandateRef");
+  const events =
+    typeof store.replay === "function" ? store.replay() : Array.isArray(store) ? store : [];
+  const controls = events
+    .filter(
+      (e) =>
+        e.payload?.kind === "MandateControl" &&
+        (e.payload.mandate_ref === mandateRef || e.mandate_ref === mandateRef)
+    )
+    .sort((a, b) => {
+      const ta = a.time?.recorded_at || a.payload?.effective_at || "";
+      const tb = b.time?.recorded_at || b.payload?.effective_at || "";
+      return ta.localeCompare(tb);
+    });
+  if (controls.length === 0) return true;
+  const last = controls[controls.length - 1];
+  const action = last.payload?.action;
+  return action !== "revoke" && action !== "suspend";
+}
+
+/**
+ * Refuse to record a governed Act if mandate is suspended/revoked.
+ */
+export function recordGovernedActIfActive(store, input) {
+  if (!isMandateActive(store, input.mandate_ref)) {
+    return {
+      ok: false,
+      error: "mandate_inactive",
+      act_id: null,
+      events: [],
+      receipt: null,
+    };
+  }
+  return recordGovernedAct(store, input);
+}

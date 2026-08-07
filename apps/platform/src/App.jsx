@@ -74,6 +74,7 @@ import ConsultationsHome, {
 
 import FractalFeedPage from "./pages/FractalFeedPage";
 import CafeSessionPage from "./pages/CafeSessionPage";
+import HomeRoute from "./pages/HomeRoute";
 
 // Suspense wrapper for lazy-loaded routes
 const LazyRoute = ({ children }) => (
@@ -87,7 +88,7 @@ export function App() {
     <>
       <GlobalStatusIndicator />
       <Routes>
-        <Route path="/" element={<ConsultationsHome />} />
+        <Route path="/" element={<HomeRoute />} />
         <Route path="/ophelia-land" element={<OpheliaLandingPage />} />
         <Route path="/cop-core" element={<CopCoreLandingPage />} />
         <Route path="/consultations" element={<ConsultationsHome />} />
@@ -103,6 +104,15 @@ export function App() {
         <Route path="/kudocracy" element={<Kudocracy />} />
         <Route path="/propositions/:id" element={<Proposition />} />
         <Route path="/proposition/:id" element={<Proposition />} />
+        {/* John = primary conversational surface for personal Twin (JHN) */}
+        <Route
+          path="/john"
+          element={
+            <FeatureRoute feature={FEATURES.CHATBOT}>
+              <Bob />
+            </FeatureRoute>
+          }
+        />
         <Route
           path="/bob"
           element={

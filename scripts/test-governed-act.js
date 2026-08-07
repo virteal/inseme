@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 
 import assert from "node:assert/strict";
-import { recordGovernedAct, jhnDelegateToHandler } from "../packages/cop-core/src/governed-act.js";
+import {
+  recordGovernedAct,
+  recordGovernedActIfActive,
+  recordMandateControl,
+  isMandateActive,
+  jhnDelegateToHandler,
+} from "../packages/cop-core/src/governed-act.js";
 import { createMemoryCopEventStore } from "../packages/cop-core/src/cop-event-spool.js";
 import { createJhnDelegatingAgent } from "../apps/platform/mcp/cop/jhnDelegatingAgent.js";
 
@@ -96,6 +102,34 @@ assert.ok(coded.text.includes("handler-note"));
 // Handler failure must not destroy store
 assert.ok(store3.stats().events >= 4);
 console.log("  ✓ John remains identity; handler is metadata");
+
+console.log("\n[Test 4] U5 mandate revoke blocks further Acts...");
+const store4 = createMemoryCopEventStore();
+assert.equal(isMandateActive(store4, "mandate:MND-JHN-LOCAL-v1"), true);
+const rev = recordMandateControl(store4, {
+  principal_ref: "principal:jhn",
+  mandate_ref: "mandate:MND-JHN-LOCAL-v1",
+  logical_agent_ref: "agent:jhn",
+  action: "revoke",
+  reason: "principal interrupted",
+});
+assert.equal(rev.ok, true);
+assert.equal(isMandateActive(store4, "mandate:MND-JHN-LOCAL-v1"), false);
+const blocked = recordGovernedActIfActive(store4, {
+  principal_ref: "principal:jhn",
+  mandate_ref: "mandate:MND-JHN-LOCAL-v1",
+  logical_agent_ref: "agent:jhn",
+  handler_instance_ref: "handler:x",
+  capability: "coding.assist",
+});
+assert.equal(blocked.ok, false);
+assert.equal(blocked.error, "mandate_inactive");
+// Stale control event remains reconstructible
+assert.equal(
+  store4.replay().some((e) => e.payload?.kind === "MandateControl"),
+  true
+);
+console.log("  ✓ revoke leaves trace; further Acts refused");
 
 console.log("\n==========================================================================");
 console.log("✓ ALL #33 GOVERNED ACT / JHN TESTS PASSED");

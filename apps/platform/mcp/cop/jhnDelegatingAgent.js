@@ -70,20 +70,36 @@ export function createJhnDelegatingAgent(options = {}) {
           : Boolean(handler && /code|implement|fix|review/i.test(message));
 
       if (wantsDelegate && handler) {
-        const { jhnDelegateToHandler } =
+        const { jhnDelegateToHandler, isMandateActive } =
           await import("../../../../packages/cop-core/src/governed-act.js");
-        handlerReceipt = await jhnDelegateToHandler({
-          store,
-          handler,
-          identity: { ...identity, topic_id: topicId },
-          capability: handler.capability || "reasoning.assist",
-          input: { message, history },
-        });
-        handlerText =
-          handlerReceipt.events?.find((e) => e.payload?.kind === "Trace")?.payload?.effect?.text ||
-          handlerReceipt.events?.find((e) => e.payload?.kind === "Trace")?.payload?.effect
-            ?.summary ||
-          null;
+        if (!isMandateActive(store, identity.mandate_ref)) {
+          store.append({
+            topic_id: topicId,
+            epistemic_status: "observed",
+            actor_ref: identity.logical_agent_ref,
+            visibility: "restricted",
+            payload: {
+              kind: "conversation.delegation_refused",
+              reason: "mandate_inactive",
+              mandate_ref: identity.mandate_ref,
+            },
+            idempotency_key: `conv:${conversationId}:refused:${Date.now()}`,
+          });
+        } else {
+          handlerReceipt = await jhnDelegateToHandler({
+            store,
+            handler,
+            identity: { ...identity, topic_id: topicId },
+            capability: handler.capability || "reasoning.assist",
+            input: { message, history },
+          });
+          handlerText =
+            handlerReceipt.events?.find((e) => e.payload?.kind === "Trace")?.payload?.effect
+              ?.text ||
+            handlerReceipt.events?.find((e) => e.payload?.kind === "Trace")?.payload?.effect
+              ?.summary ||
+            null;
+        }
       }
 
       const result = await reasoner.respond({
