@@ -11,7 +11,8 @@
   },
   "peerDependencies": {
     "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react-dom": ">=18.0.0",
+    "react-router-dom": ">=6.20.0"
   },
   "dependencies": {
     "lucide-react": "^0.562.0",
@@ -19,7 +20,6 @@
     "remark-gfm": "^4.0.1",
     "marked": "^17.0.1",
     "dompurify": "^3.3.1",
-    "react-router-dom": "^6.20.0",
     "@inseme/cop-host": "*"
   }
 }

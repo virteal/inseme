@@ -1049,7 +1049,7 @@ importers:
         specifier: '>=18.0.0'
         version: 18.3.1(react@18.3.1)
       react-router-dom:
-        specifier: ^6.20.0
+        specifier: '>=6.20.0'
         version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
   packages/ui:
@@ -1076,7 +1076,7 @@ importers:
         specifier: ^10.1.0
         version: 10.1.0(@types/react@19.2.8)(react@18.3.1)
       react-router-dom:
-        specifier: ^6.20.0
+        specifier: '>=6.20.0'
         version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       remark-gfm:
         specifier: ^4.0.1

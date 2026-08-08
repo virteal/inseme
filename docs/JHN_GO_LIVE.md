@@ -10,17 +10,39 @@ visibility: public
 
 **Goal:** public site usable as personal Twin entry (John), without touching lepp.fr.
 
-## Status (2026-08-07)
+## Status (2026-08-08)
 
 | Check                                                             | Status                                                                                        |
 | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | DNS `jhn.baronsmariani.org` → `jhn-baronsmariani-org.netlify.app` | OK                                                                                            |
 | Netlify site `jhn-baronsmariani-org`                              | exists, linked to `JeanHuguesRobert/inseme`                                                   |
-| **Published deploy**                                              | **ready** (manual zip of `apps/platform/dist`)                                                |
+| **Published deploy**                                              | rebuild after P7 chat fix (`useOpheliaChat` + single `react-router-dom` + `jhn` fallback)     |
 | `https://jhn-baronsmariani-org.netlify.app/`                      | **HTTP 200** (`/` and `/john`)                                                                |
 | `https://jhn.baronsmariani.org/`                                  | **HTTPS 200**, cert **issued** (Let's Encrypt `CN=jhn.baronsmariani.org`, expires 2026-11-05) |
 | Env `VITE_SUPABASE_*` / `SUPABASE_*`                              | present on site                                                                               |
 | Landing                                                           | `HomeRoute` → John when host is `jhn.*`                                                       |
+| Instance `jhn`                                                    | known-fallback when registry missing (`KNOWN_SUBDOMAIN_FALLBACKS`) + site env credentials     |
+| `/john` chat                                                      | no longer hard-depends on dual Router context; Vite aliases host `react-router-dom` v7        |
+
+### P7 incident (console on production)
+
+**Symptoms:** `⚠️ Instance non trouvée: jhn` → local fallback; ErrorBoundary on `useOpheliaChat` →
+`useNavigate` (`router.js`).
+
+**Root causes:**
+
+1. Dual `react-router-dom` (platform **v7** vs nested package **v6**) → `useNavigate()` without
+   matching `BrowserRouter` context.
+2. Dead `useNavigate()` in `useOpheliaChat` (never used) still ran at hook top-level.
+3. No central registry (`VITE_REGISTRY_URL`) for subdomain `jhn`.
+
+**Fixes (code):**
+
+- `packages/room/hooks/chat/useOpheliaChat.js` — remove unused `useNavigate`
+- `apps/platform/vite.config.js` — alias `react-router-dom` to app copy; dedupe `react`/`react-dom`
+- `packages/room` + `packages/ui` — `react-router-dom` as **peerDependency** (host supplies)
+- `packages/cop-host/.../instanceResolver.js` — `KNOWN_SUBDOMAIN_FALLBACKS.jhn` using env Supabase
+  keys
 
 ### SSL note
 

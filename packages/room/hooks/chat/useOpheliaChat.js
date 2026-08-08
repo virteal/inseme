@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { getSupabase } from "@inseme/cop-host";
-import { useNavigate } from "react-router-dom";
 import useAIProviders from "./useAIProviders.js";
 import useAITools from "./useAITools.js";
 import {
@@ -16,10 +15,12 @@ import { useApiCaller } from "@inseme/cop-host";
 
 /**
  * useOpheliaChat - Refactored and modularized chat logic.
+ * Note: do not call useNavigate here — this hook must not require a Router
+ * context (and historically crashed when room resolved a different
+ * react-router-dom instance than the host app).
  */
 export default function useOpheliaChat(initial = {}) {
   const { user = null } = initial;
-  const navigate = useNavigate();
   const [messages, setMessages] = useState(initial.messages || []);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);

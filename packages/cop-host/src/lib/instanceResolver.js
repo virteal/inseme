@@ -20,6 +20,23 @@ const BASE_DOMAINS = ["lepp.fr", "kudocracy.org", "inseme.org", "baronsmariani.o
 // Sous-domaines à ignorer (pas des instances)
 const IGNORED_SUBDOMAINS = ["www", "app", "api", "admin", "staging", "preview"];
 
+/**
+ * Built-in personal / known twins when the central registry is unavailable.
+ * Credentials still come from env (Netlify site env for jhn.baronsmariani.org).
+ * Keeps subdomain + twin metadata correct so vault/config and HomeRoute stay coherent.
+ */
+const KNOWN_SUBDOMAIN_FALLBACKS = {
+  jhn: {
+    displayName: "JHN",
+    deployment_kind: "personal",
+    application_profile: "personal-twin",
+    host_domain: "baronsmariani.org",
+    canonical_url: "https://jhn.baronsmariani.org",
+    twin_root_ref: "twin:jhn",
+    represented_subject_ref: "subject:jhn",
+  },
+};
+
 // ============================================================================
 // ÉTAT GLOBAL
 // ============================================================================
@@ -149,8 +166,56 @@ async function lookupInstance(subdomain) {
   if (remoteInstance) {
     return remoteInstance;
   }
+
+  // 2. Built-in personal-twin / known hosts (no registry required)
+  const known = getKnownSubdomainFallback(subdomain);
+  if (known) {
+    console.log(`🏠 Instance connue (fallback): ${subdomain}`);
+    return known;
+  }
+
   console.warn(`⚠️ Instance non trouvée: ${subdomain}`);
   return null;
+}
+
+/**
+ * Env-backed fallback for known subdomains (e.g. jhn without VITE_REGISTRY_URL).
+ * @param {string} subdomain
+ * @returns {InstanceConfig|null}
+ */
+function getKnownSubdomainFallback(subdomain) {
+  const key = String(subdomain || "").toLowerCase();
+  const meta = KNOWN_SUBDOMAIN_FALLBACKS[key];
+  if (!meta) return null;
+
+  const env = import.meta.env || {};
+  const supabaseUrl = env.VITE_SUPABASE_URL || env.SUPABASE_URL || null;
+  const supabaseAnonKey = env.VITE_SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY || null;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.warn(
+      `⚠️ Fallback "${key}" sans VITE_SUPABASE_URL/ANON_KEY — impossible de monter l'instance`
+    );
+    return null;
+  }
+
+  return {
+    subdomain: key,
+    displayName: meta.displayName || key,
+    supabaseUrl,
+    supabaseAnonKey,
+    isDefault: false,
+    isConfigured: true,
+    source: "known-fallback",
+    metadata: {
+      deployment_kind: meta.deployment_kind,
+      application_profile: meta.application_profile,
+      host_domain: meta.host_domain,
+      canonical_url: meta.canonical_url,
+      twin_root_ref: meta.twin_root_ref,
+      represented_subject_ref: meta.represented_subject_ref,
+    },
+  };
 }
 
 /**
