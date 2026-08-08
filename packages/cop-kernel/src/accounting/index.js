@@ -13,6 +13,7 @@
 export * from "./quantity.js";
 export * from "./validator.js";
 export * from "./projector.js";
+export * from "./packetAccounting.js";
 
 /**
  * Main entry point for accounting operations.

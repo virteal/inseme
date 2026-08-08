@@ -60,3 +60,6 @@ export * from "./cogitorCooperation.js";
 // Provides exact quantity arithmetic, event validation, and deterministic projection.
 // See accounting/README.md for conformance tests and usage.
 export * from "./accounting/index.js";
+
+// FractaBlog projections derived from Cognitive Packet Ground Truth
+export * from "./projections/fractaBlog.js";
