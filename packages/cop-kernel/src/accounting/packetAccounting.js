@@ -10,20 +10,7 @@
  */
 
 import { addQuantities, fromDecimal, toDecimal } from "./quantity.js";
-
-/** Standard Model Provisional Rate Cards ($ / 1,000,000 tokens) */
-export const MODEL_RATE_CARDS = {
-  "openai/gpt-4o-mini": { input_per_m: 0.15, output_per_m: 0.6, scale: 8 },
-  "openai/gpt-4o": { input_per_m: 2.5, output_per_m: 10.0, scale: 8 },
-  "openai/text-embedding-3-small": { input_per_m: 0.02, output_per_m: 0, scale: 8 },
-  "groq/llama-3.3-70b-versatile": { input_per_m: 0.59, output_per_m: 0.79, scale: 8 },
-  "mistral/mistral-small-latest": { input_per_m: 0.2, output_per_m: 0.6, scale: 8 },
-  "mistral/mistral-large-latest": { input_per_m: 2.0, output_per_m: 6.0, scale: 8 },
-  "google/gemini-2.5-flash": { input_per_m: 0.15, output_per_m: 0.6, scale: 8 },
-};
-
-/** Default Rate Card Fallback if specific model is unknown */
-export const DEFAULT_RATE_CARD = { input_per_m: 0.2, output_per_m: 0.8, scale: 8 };
+import { getModelRateCard } from "@inseme/cop-core";
 
 /**
  * Calculate exact provisional cost in USD decimal format.
@@ -41,9 +28,7 @@ export function calculateProvisionalCost({
   prompt_tokens = 0,
   completion_tokens = 0,
 }) {
-  const key = `${provider}/${model}`.toLowerCase();
-  const card = MODEL_RATE_CARDS[key] || DEFAULT_RATE_CARD;
-  const rate_basis = MODEL_RATE_CARDS[key] ? `rate:${key}:2026-08` : `rate:default:2026-08`;
+  const card = getModelRateCard(provider, model);
 
   const inputCost = (prompt_tokens / 1_000_000) * card.input_per_m;
   const outputCost = (completion_tokens / 1_000_000) * card.output_per_m;
@@ -51,7 +36,7 @@ export function calculateProvisionalCost({
 
   const decimalStr = totalCost.toFixed(card.scale || 8);
   const costQuantity = fromDecimal(decimalStr, "USD");
-  return { cost: costQuantity, rate_basis };
+  return { cost: costQuantity, rate_basis: card.rate_basis };
 }
 
 /**

@@ -1,0 +1,2380 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "2026-08-08",
+  "updated_at": "2026-08-08T15:01:06.483Z",
+  "description": "Authoritative Model Rate Cards for Provisional COP Accounting (dynamically fetched)",
+  "source": "https://openrouter.ai/api/v1/models",
+  "fetched_models_count": 400,
+  "providers": {
+    "local": {
+      "default": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      }
+    },
+    "inclusionai": {
+      "ling-3.0-tiny:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "ling-3.0-flash": {
+        "input_per_m": 0.021,
+        "output_per_m": 0.063,
+        "cached_input_per_m": 0.0042,
+        "scale": 8
+      },
+      "ring-2.6-1t": {
+        "input_per_m": 0.075,
+        "output_per_m": 0.625,
+        "cached_input_per_m": 0.015,
+        "scale": 8
+      },
+      "ling-2.6-1t": {
+        "input_per_m": 0.075,
+        "output_per_m": 0.625,
+        "cached_input_per_m": 0.015,
+        "scale": 8
+      },
+      "ling-2.6-flash": {
+        "input_per_m": 0.01,
+        "output_per_m": 0.03,
+        "cached_input_per_m": 0.002,
+        "scale": 8
+      }
+    },
+    "meta": {
+      "muse-spark-1.2": {
+        "input_per_m": 1.25,
+        "output_per_m": 4.25,
+        "cached_input_per_m": 0.15,
+        "scale": 8
+      },
+      "muse-spark-1.1": {
+        "input_per_m": 1.25,
+        "output_per_m": 4.25,
+        "cached_input_per_m": 0.15,
+        "scale": 8
+      }
+    },
+    "qwen": {
+      "qwen3.8-max": {
+        "input_per_m": 2,
+        "output_per_m": 6,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "qwen3.7-flash": {
+        "input_per_m": 0.03,
+        "output_per_m": 0.13,
+        "cached_input_per_m": 0.006,
+        "scale": 8
+      },
+      "qwen3.7-plus": {
+        "input_per_m": 0.32,
+        "output_per_m": 1.28,
+        "cached_input_per_m": 0.064,
+        "scale": 8
+      },
+      "qwen3.7-max": {
+        "input_per_m": 1.475,
+        "output_per_m": 4.425,
+        "cached_input_per_m": 0.295,
+        "scale": 8
+      },
+      "qwen3.5-plus-20260420": {
+        "input_per_m": 0.3,
+        "output_per_m": 1.8,
+        "scale": 8
+      },
+      "qwen3.6-flash": {
+        "input_per_m": 0.1875,
+        "output_per_m": 1.125,
+        "scale": 8
+      },
+      "qwen3.6-35b-a3b": {
+        "input_per_m": 0.14,
+        "output_per_m": 1,
+        "cached_input_per_m": 0.05,
+        "scale": 8
+      },
+      "qwen3.6-max-preview": {
+        "input_per_m": 1.027,
+        "output_per_m": 6.162,
+        "scale": 8
+      },
+      "qwen3.6-27b": {
+        "input_per_m": 0.6,
+        "output_per_m": 3.6,
+        "cached_input_per_m": 0.12,
+        "scale": 8
+      },
+      "qwen3.6-plus": {
+        "input_per_m": 0.325,
+        "output_per_m": 1.95,
+        "scale": 8
+      },
+      "qwen3.5-9b": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.15,
+        "scale": 8
+      },
+      "qwen3.5-35b-a3b": {
+        "input_per_m": 0.14,
+        "output_per_m": 1,
+        "scale": 8
+      },
+      "qwen3.5-27b": {
+        "input_per_m": 0.195,
+        "output_per_m": 1.56,
+        "scale": 8
+      },
+      "qwen3.5-122b-a10b": {
+        "input_per_m": 0.29,
+        "output_per_m": 2.4,
+        "scale": 8
+      },
+      "qwen3.5-flash-02-23": {
+        "input_per_m": 0.065,
+        "output_per_m": 0.26,
+        "scale": 8
+      },
+      "qwen3.5-plus-02-15": {
+        "input_per_m": 0.26,
+        "output_per_m": 1.56,
+        "scale": 8
+      },
+      "qwen3.5-397b-a17b": {
+        "input_per_m": 0.39,
+        "output_per_m": 2.34,
+        "scale": 8
+      },
+      "qwen3-max-thinking": {
+        "input_per_m": 0.78,
+        "output_per_m": 3.9,
+        "scale": 8
+      },
+      "qwen3-coder-next": {
+        "input_per_m": 0.12,
+        "output_per_m": 0.8,
+        "cached_input_per_m": 0.07,
+        "scale": 8
+      },
+      "qwen3-vl-32b-instruct": {
+        "input_per_m": 0.104,
+        "output_per_m": 0.416,
+        "scale": 8
+      },
+      "qwen3-vl-8b-thinking": {
+        "input_per_m": 0.18,
+        "output_per_m": 2.1,
+        "scale": 8
+      },
+      "qwen3-vl-8b-instruct": {
+        "input_per_m": 0.117,
+        "output_per_m": 0.455,
+        "scale": 8
+      },
+      "qwen3-vl-30b-a3b-thinking": {
+        "input_per_m": 0.2,
+        "output_per_m": 2.4,
+        "scale": 8
+      },
+      "qwen3-vl-30b-a3b-instruct": {
+        "input_per_m": 0.15,
+        "output_per_m": 0.6,
+        "scale": 8
+      },
+      "qwen3-vl-235b-a22b-thinking": {
+        "input_per_m": 0.4,
+        "output_per_m": 4,
+        "scale": 8
+      },
+      "qwen3-vl-235b-a22b-instruct": {
+        "input_per_m": 0.21,
+        "output_per_m": 1.9,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "qwen3-max": {
+        "input_per_m": 0.78,
+        "output_per_m": 3.9,
+        "cached_input_per_m": 0.156,
+        "scale": 8
+      },
+      "qwen3-coder-plus": {
+        "input_per_m": 0.65,
+        "output_per_m": 3.25,
+        "cached_input_per_m": 0.13,
+        "scale": 8
+      },
+      "qwen3-coder-flash": {
+        "input_per_m": 0.195,
+        "output_per_m": 0.975,
+        "cached_input_per_m": 0.039,
+        "scale": 8
+      },
+      "qwen3-next-80b-a3b-thinking": {
+        "input_per_m": 0.15,
+        "output_per_m": 1.2,
+        "scale": 8
+      },
+      "qwen3-next-80b-a3b-instruct": {
+        "input_per_m": 0.09,
+        "output_per_m": 1.1,
+        "scale": 8
+      },
+      "qwen-plus-2025-07-28": {
+        "input_per_m": 0.26,
+        "output_per_m": 0.78,
+        "scale": 8
+      },
+      "qwen-plus-2025-07-28:thinking": {
+        "input_per_m": 0.4,
+        "output_per_m": 1.2,
+        "scale": 8
+      },
+      "qwen3-30b-a3b-thinking-2507": {
+        "input_per_m": 0.2,
+        "output_per_m": 2.4,
+        "scale": 8
+      },
+      "qwen3-coder-30b-a3b-instruct": {
+        "input_per_m": 0.07,
+        "output_per_m": 0.27,
+        "scale": 8
+      },
+      "qwen3-30b-a3b-instruct-2507": {
+        "input_per_m": 0.04815,
+        "output_per_m": 0.19305,
+        "scale": 8
+      },
+      "qwen3-235b-a22b-thinking-2507": {
+        "input_per_m": 0.23,
+        "output_per_m": 2.3,
+        "scale": 8
+      },
+      "qwen3-coder": {
+        "input_per_m": 0.3,
+        "output_per_m": 1,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "qwen3-235b-a22b-2507": {
+        "input_per_m": 0.09,
+        "output_per_m": 0.55,
+        "scale": 8
+      },
+      "qwen3-30b-a3b": {
+        "input_per_m": 0.12,
+        "output_per_m": 0.5,
+        "scale": 8
+      },
+      "qwen3-8b": {
+        "input_per_m": 0.117,
+        "output_per_m": 0.455,
+        "scale": 8
+      },
+      "qwen3-14b": {
+        "input_per_m": 0.2275,
+        "output_per_m": 0.91,
+        "scale": 8
+      },
+      "qwen3-32b": {
+        "input_per_m": 0.08,
+        "output_per_m": 0.28,
+        "scale": 8
+      },
+      "qwen3-235b-a22b": {
+        "input_per_m": 0.455,
+        "output_per_m": 1.82,
+        "scale": 8
+      },
+      "qwen2.5-vl-72b-instruct": {
+        "input_per_m": 0.25,
+        "output_per_m": 0.75,
+        "scale": 8
+      },
+      "qwen-plus": {
+        "input_per_m": 0.26,
+        "output_per_m": 0.78,
+        "cached_input_per_m": 0.052,
+        "scale": 8
+      },
+      "qwen-2.5-coder-32b-instruct": {
+        "input_per_m": 0.66,
+        "output_per_m": 1,
+        "scale": 8
+      },
+      "qwen-2.5-7b-instruct": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.2,
+        "scale": 8
+      },
+      "qwen-2.5-72b-instruct": {
+        "input_per_m": 0.36,
+        "output_per_m": 0.4,
+        "scale": 8
+      }
+    },
+    "~deepseek": {
+      "deepseek-v4-flash-latest": {
+        "input_per_m": 0.09,
+        "output_per_m": 0.18,
+        "cached_input_per_m": 0.018,
+        "scale": 8
+      }
+    },
+    "deepseek": {
+      "deepseek-v4-flash-0731": {
+        "input_per_m": 0.09,
+        "output_per_m": 0.18,
+        "cached_input_per_m": 0.018,
+        "scale": 8
+      },
+      "deepseek-v4-pro": {
+        "input_per_m": 0.435,
+        "output_per_m": 0.87,
+        "cached_input_per_m": 0.003625,
+        "scale": 8
+      },
+      "deepseek-v4-flash": {
+        "input_per_m": 0.14,
+        "output_per_m": 0.28,
+        "cached_input_per_m": 0.028,
+        "scale": 8
+      },
+      "deepseek-v3.2": {
+        "input_per_m": 0.26,
+        "output_per_m": 0.38,
+        "cached_input_per_m": 0.13,
+        "scale": 8
+      },
+      "deepseek-v3.2-exp": {
+        "input_per_m": 0.27,
+        "output_per_m": 0.41,
+        "scale": 8
+      },
+      "deepseek-v3.1-terminus": {
+        "input_per_m": 0.27,
+        "output_per_m": 1,
+        "cached_input_per_m": 0.135,
+        "scale": 8
+      },
+      "deepseek-chat-v3.1": {
+        "input_per_m": 0.25,
+        "output_per_m": 0.95,
+        "cached_input_per_m": 0.13,
+        "scale": 8
+      },
+      "deepseek-r1-0528": {
+        "input_per_m": 0.5,
+        "output_per_m": 2.15,
+        "cached_input_per_m": 0.35,
+        "scale": 8
+      },
+      "deepseek-chat-v3-0324": {
+        "input_per_m": 0.27,
+        "output_per_m": 1.12,
+        "cached_input_per_m": 0.135,
+        "scale": 8
+      },
+      "deepseek-r1-distill-llama-70b": {
+        "input_per_m": 0.8,
+        "output_per_m": 0.8,
+        "scale": 8
+      },
+      "deepseek-r1": {
+        "input_per_m": 0.7,
+        "output_per_m": 2.5,
+        "scale": 8
+      },
+      "deepseek-chat": {
+        "input_per_m": 0.2574,
+        "output_per_m": 1.0287,
+        "scale": 8
+      }
+    },
+    "thinkingmachines": {
+      "inkling-small": {
+        "input_per_m": 0.45,
+        "output_per_m": 1.2,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "inkling": {
+        "input_per_m": 0.95,
+        "output_per_m": 4.05,
+        "cached_input_per_m": 0.16,
+        "scale": 8
+      },
+      "inkling:batch": {
+        "input_per_m": 0.5,
+        "output_per_m": 2.025,
+        "cached_input_per_m": 0.085,
+        "scale": 8
+      }
+    },
+    "anthropic": {
+      "claude-opus-5-fast": {
+        "input_per_m": 10,
+        "output_per_m": 50,
+        "cached_input_per_m": 1,
+        "scale": 8
+      },
+      "claude-opus-5": {
+        "input_per_m": 5,
+        "output_per_m": 25,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      },
+      "claude-opus-5:batch": {
+        "input_per_m": 2.5,
+        "output_per_m": 12.5,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "claude-sonnet-5": {
+        "input_per_m": 2,
+        "output_per_m": 10,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "claude-sonnet-5:batch": {
+        "input_per_m": 1,
+        "output_per_m": 5,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "claude-fable-5": {
+        "input_per_m": 10,
+        "output_per_m": 50,
+        "cached_input_per_m": 1,
+        "scale": 8
+      },
+      "claude-fable-5:batch": {
+        "input_per_m": 5,
+        "output_per_m": 25,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      },
+      "claude-opus-4.8-fast": {
+        "input_per_m": 10,
+        "output_per_m": 50,
+        "cached_input_per_m": 1,
+        "scale": 8
+      },
+      "claude-opus-4.8": {
+        "input_per_m": 5,
+        "output_per_m": 25,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      },
+      "claude-opus-4.8:batch": {
+        "input_per_m": 2.5,
+        "output_per_m": 12.5,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "claude-opus-4.7-fast": {
+        "input_per_m": 30,
+        "output_per_m": 150,
+        "cached_input_per_m": 3,
+        "scale": 8
+      },
+      "claude-opus-4.7": {
+        "input_per_m": 5,
+        "output_per_m": 25,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      },
+      "claude-opus-4.7:batch": {
+        "input_per_m": 2.5,
+        "output_per_m": 12.5,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "claude-sonnet-4.6": {
+        "input_per_m": 3,
+        "output_per_m": 15,
+        "cached_input_per_m": 0.3,
+        "scale": 8
+      },
+      "claude-sonnet-4.6:batch": {
+        "input_per_m": 1.5,
+        "output_per_m": 7.5,
+        "cached_input_per_m": 0.15,
+        "scale": 8
+      },
+      "claude-opus-4.6": {
+        "input_per_m": 5,
+        "output_per_m": 25,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      },
+      "claude-opus-4.6:batch": {
+        "input_per_m": 2.5,
+        "output_per_m": 12.5,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "claude-opus-4.5": {
+        "input_per_m": 5,
+        "output_per_m": 25,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      },
+      "claude-opus-4.5:batch": {
+        "input_per_m": 2.5,
+        "output_per_m": 12.5,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "claude-haiku-4.5": {
+        "input_per_m": 1,
+        "output_per_m": 5,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "claude-haiku-4.5:batch": {
+        "input_per_m": 0.5,
+        "output_per_m": 2.5,
+        "cached_input_per_m": 0.05,
+        "scale": 8
+      },
+      "claude-sonnet-4.5": {
+        "input_per_m": 3,
+        "output_per_m": 15,
+        "cached_input_per_m": 0.3,
+        "scale": 8
+      },
+      "claude-sonnet-4.5:batch": {
+        "input_per_m": 1.5,
+        "output_per_m": 7.5,
+        "cached_input_per_m": 0.15,
+        "scale": 8
+      },
+      "claude-opus-4.1": {
+        "input_per_m": 15,
+        "output_per_m": 75,
+        "cached_input_per_m": 1.5,
+        "scale": 8
+      },
+      "claude-opus-4.1:batch": {
+        "input_per_m": 7.5,
+        "output_per_m": 37.5,
+        "cached_input_per_m": 0.75,
+        "scale": 8
+      },
+      "claude-opus-4": {
+        "input_per_m": 15,
+        "output_per_m": 75,
+        "cached_input_per_m": 1.5,
+        "scale": 8
+      },
+      "claude-sonnet-4": {
+        "input_per_m": 3,
+        "output_per_m": 15,
+        "cached_input_per_m": 0.3,
+        "scale": 8
+      },
+      "claude-3-haiku": {
+        "input_per_m": 0.25,
+        "output_per_m": 1.25,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      }
+    },
+    "poolside": {
+      "laguna-s-2.1": {
+        "input_per_m": 0.09,
+        "output_per_m": 0.18,
+        "cached_input_per_m": 0.009,
+        "scale": 8
+      },
+      "laguna-s-2.1:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "laguna-xs-2.1": {
+        "input_per_m": 0.06,
+        "output_per_m": 0.12,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      },
+      "laguna-xs-2.1:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      }
+    },
+    "google": {
+      "gemini-3.6-flash": {
+        "input_per_m": 1.5,
+        "output_per_m": 7.5,
+        "cached_input_per_m": 0.15,
+        "scale": 8
+      },
+      "gemini-3.6-flash:batch": {
+        "input_per_m": 0.75,
+        "output_per_m": 3.75,
+        "cached_input_per_m": 0.075,
+        "scale": 8
+      },
+      "gemini-3.5-flash-lite": {
+        "input_per_m": 0.3,
+        "output_per_m": 2.5,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      },
+      "gemini-3.5-flash-lite:batch": {
+        "input_per_m": 0.15,
+        "output_per_m": 1.25,
+        "cached_input_per_m": 0.015,
+        "scale": 8
+      },
+      "gemini-3.1-flash-lite-image": {
+        "input_per_m": 0.25,
+        "output_per_m": 1.5,
+        "scale": 8
+      },
+      "gemini-3.1-flash-image": {
+        "input_per_m": 0.5,
+        "output_per_m": 3,
+        "scale": 8
+      },
+      "gemini-3-pro-image": {
+        "input_per_m": 2,
+        "output_per_m": 12,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "gemini-3.5-flash": {
+        "input_per_m": 1.5,
+        "output_per_m": 9,
+        "cached_input_per_m": 0.15,
+        "scale": 8
+      },
+      "gemini-3.5-flash:batch": {
+        "input_per_m": 0.75,
+        "output_per_m": 4.5,
+        "cached_input_per_m": 0.075,
+        "scale": 8
+      },
+      "gemini-3.1-flash-lite": {
+        "input_per_m": 0.25,
+        "output_per_m": 1.5,
+        "cached_input_per_m": 0.025,
+        "scale": 8
+      },
+      "gemini-3.1-flash-lite:batch": {
+        "input_per_m": 0.125,
+        "output_per_m": 0.75,
+        "cached_input_per_m": 0.0125,
+        "scale": 8
+      },
+      "gemma-4-26b-a4b-it": {
+        "input_per_m": 0.07,
+        "output_per_m": 0.34,
+        "scale": 8
+      },
+      "gemma-4-26b-a4b-it:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "gemma-4-31b-it": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.34,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "gemma-4-31b-it:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "lyria-3-pro-preview": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "lyria-3-clip-preview": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "gemini-3.1-flash-lite-preview": {
+        "input_per_m": 0.25,
+        "output_per_m": 1.5,
+        "cached_input_per_m": 0.025,
+        "scale": 8
+      },
+      "gemini-3.1-flash-image-preview": {
+        "input_per_m": 0.5,
+        "output_per_m": 3,
+        "scale": 8
+      },
+      "gemini-3.1-pro-preview-customtools": {
+        "input_per_m": 2,
+        "output_per_m": 12,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "gemini-3.1-pro-preview": {
+        "input_per_m": 2,
+        "output_per_m": 12,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "gemini-3.1-pro-preview:batch": {
+        "input_per_m": 1,
+        "output_per_m": 6,
+        "scale": 8
+      },
+      "gemini-3-flash-preview": {
+        "input_per_m": 0.5,
+        "output_per_m": 3,
+        "cached_input_per_m": 0.05,
+        "scale": 8
+      },
+      "gemini-3-flash-preview:batch": {
+        "input_per_m": 0.25,
+        "output_per_m": 1.5,
+        "scale": 8
+      },
+      "gemini-3-pro-image-preview": {
+        "input_per_m": 2,
+        "output_per_m": 12,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "gemini-2.5-flash-image": {
+        "input_per_m": 0.3,
+        "output_per_m": 2.5,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      },
+      "gemini-2.5-flash-lite": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.4,
+        "cached_input_per_m": 0.01,
+        "scale": 8
+      },
+      "gemini-2.5-flash-lite:batch": {
+        "input_per_m": 0.05,
+        "output_per_m": 0.2,
+        "cached_input_per_m": 0.01,
+        "scale": 8
+      },
+      "gemini-2.5-flash": {
+        "input_per_m": 0.3,
+        "output_per_m": 2.5,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      },
+      "gemini-2.5-flash:batch": {
+        "input_per_m": 0.15,
+        "output_per_m": 1.25,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      },
+      "gemini-2.5-pro": {
+        "input_per_m": 1.25,
+        "output_per_m": 10,
+        "cached_input_per_m": 0.125,
+        "scale": 8
+      },
+      "gemini-2.5-pro:batch": {
+        "input_per_m": 0.625,
+        "output_per_m": 5,
+        "cached_input_per_m": 0.125,
+        "scale": 8
+      },
+      "gemini-2.5-pro-preview": {
+        "input_per_m": 1.25,
+        "output_per_m": 10,
+        "cached_input_per_m": 0.125,
+        "scale": 8
+      },
+      "gemma-3n-e4b-it": {
+        "input_per_m": 0.06,
+        "output_per_m": 0.12,
+        "scale": 8
+      },
+      "gemini-2.5-pro-preview-05-06": {
+        "input_per_m": 1.25,
+        "output_per_m": 10,
+        "cached_input_per_m": 0.125,
+        "scale": 8
+      },
+      "gemma-3-4b-it": {
+        "input_per_m": 0.05,
+        "output_per_m": 0.1,
+        "scale": 8
+      },
+      "gemma-3-12b-it": {
+        "input_per_m": 0.05,
+        "output_per_m": 0.15,
+        "scale": 8
+      },
+      "gemma-3-27b-it": {
+        "input_per_m": 0.08,
+        "output_per_m": 0.45,
+        "cached_input_per_m": 0.04,
+        "scale": 8
+      },
+      "gemma-2-27b-it": {
+        "input_per_m": 0.65,
+        "output_per_m": 0.65,
+        "scale": 8
+      }
+    },
+    "meituan": {
+      "longcat-2.0": {
+        "input_per_m": 0.3,
+        "output_per_m": 1.2,
+        "cached_input_per_m": 0.006,
+        "scale": 8
+      }
+    },
+    "openrouter": {
+      "auto-beta": {
+        "input_per_m": -1000000,
+        "output_per_m": -1000000,
+        "scale": 8
+      },
+      "fusion": {
+        "input_per_m": -1000000,
+        "output_per_m": -1000000,
+        "scale": 8
+      },
+      "pareto-code": {
+        "input_per_m": -1000000,
+        "output_per_m": -1000000,
+        "scale": 8
+      },
+      "free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "bodybuilder": {
+        "input_per_m": -1000000,
+        "output_per_m": -1000000,
+        "scale": 8
+      },
+      "auto": {
+        "input_per_m": -1000000,
+        "output_per_m": -1000000,
+        "scale": 8
+      }
+    },
+    "moonshotai": {
+      "kimi-k3": {
+        "input_per_m": 3,
+        "output_per_m": 15,
+        "cached_input_per_m": 0.3,
+        "scale": 8
+      },
+      "kimi-k2.7-code": {
+        "input_per_m": 0.7,
+        "output_per_m": 3.5,
+        "cached_input_per_m": 0.15,
+        "scale": 8
+      },
+      "kimi-k2.7-code:batch": {
+        "input_per_m": 0.475,
+        "output_per_m": 2,
+        "cached_input_per_m": 0.095,
+        "scale": 8
+      },
+      "kimi-k2.6": {
+        "input_per_m": 0.5795,
+        "output_per_m": 2.44,
+        "cached_input_per_m": 0.0976,
+        "scale": 8
+      },
+      "kimi-k2.5": {
+        "input_per_m": 0.57,
+        "output_per_m": 2.85,
+        "cached_input_per_m": 0.095,
+        "scale": 8
+      },
+      "kimi-k2-thinking": {
+        "input_per_m": 0.6,
+        "output_per_m": 2.5,
+        "cached_input_per_m": 0.15,
+        "scale": 8
+      },
+      "kimi-k2-0905": {
+        "input_per_m": 0.6,
+        "output_per_m": 2.5,
+        "scale": 8
+      },
+      "kimi-k2": {
+        "input_per_m": 0.57,
+        "output_per_m": 2.3,
+        "scale": 8
+      }
+    },
+    "kwaipilot": {
+      "kat-coder-air-v2.5": {
+        "input_per_m": 0.15,
+        "output_per_m": 0.6,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      },
+      "kat-coder-pro-v2.5": {
+        "input_per_m": 0.74,
+        "output_per_m": 2.96,
+        "cached_input_per_m": 0.15,
+        "scale": 8
+      },
+      "kat-coder-pro-v2": {
+        "input_per_m": 0.3,
+        "output_per_m": 1.2,
+        "cached_input_per_m": 0.06,
+        "scale": 8
+      }
+    },
+    "openai": {
+      "gpt-5.6-luna-pro": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.6,
+        "cached_input_per_m": 0.01,
+        "scale": 8
+      },
+      "gpt-5.6-luna-pro:batch": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.6,
+        "cached_input_per_m": 0.01,
+        "scale": 8
+      },
+      "gpt-5.6-luna": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.6,
+        "cached_input_per_m": 0.01,
+        "scale": 8
+      },
+      "gpt-5.6-luna:batch": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.6,
+        "cached_input_per_m": 0.01,
+        "scale": 8
+      },
+      "gpt-5.6-terra-pro": {
+        "input_per_m": 1,
+        "output_per_m": 6,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "gpt-5.6-terra-pro:batch": {
+        "input_per_m": 1,
+        "output_per_m": 6,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "gpt-5.6-terra": {
+        "input_per_m": 1,
+        "output_per_m": 6,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "gpt-5.6-terra:batch": {
+        "input_per_m": 1,
+        "output_per_m": 6,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "gpt-5.6-sol-pro": {
+        "input_per_m": 5,
+        "output_per_m": 30,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      },
+      "gpt-5.6-sol-pro:batch": {
+        "input_per_m": 2.5,
+        "output_per_m": 15,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "gpt-5.6-sol": {
+        "input_per_m": 5,
+        "output_per_m": 30,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      },
+      "gpt-5.6-sol:batch": {
+        "input_per_m": 2.5,
+        "output_per_m": 15,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "gpt-chat-latest": {
+        "input_per_m": 5,
+        "output_per_m": 30,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      },
+      "gpt-5.5-pro": {
+        "input_per_m": 30,
+        "output_per_m": 180,
+        "scale": 8
+      },
+      "gpt-5.5-pro:batch": {
+        "input_per_m": 15,
+        "output_per_m": 90,
+        "scale": 8
+      },
+      "gpt-5.5": {
+        "input_per_m": 5,
+        "output_per_m": 30,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      },
+      "gpt-5.5:batch": {
+        "input_per_m": 2.5,
+        "output_per_m": 15,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "gpt-5.4-image-2": {
+        "input_per_m": 8,
+        "output_per_m": 15,
+        "cached_input_per_m": 2,
+        "scale": 8
+      },
+      "gpt-5.4-nano": {
+        "input_per_m": 0.2,
+        "output_per_m": 1.25,
+        "cached_input_per_m": 0.02,
+        "scale": 8
+      },
+      "gpt-5.4-nano:batch": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.625,
+        "cached_input_per_m": 0.01,
+        "scale": 8
+      },
+      "gpt-5.4-mini": {
+        "input_per_m": 0.75,
+        "output_per_m": 4.5,
+        "cached_input_per_m": 0.075,
+        "scale": 8
+      },
+      "gpt-5.4-mini:batch": {
+        "input_per_m": 0.375,
+        "output_per_m": 2.25,
+        "cached_input_per_m": 0.0375,
+        "scale": 8
+      },
+      "gpt-5.4-pro": {
+        "input_per_m": 30,
+        "output_per_m": 180,
+        "scale": 8
+      },
+      "gpt-5.4-pro:batch": {
+        "input_per_m": 15,
+        "output_per_m": 90,
+        "scale": 8
+      },
+      "gpt-5.4": {
+        "input_per_m": 2.5,
+        "output_per_m": 15,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "gpt-5.4:batch": {
+        "input_per_m": 1.25,
+        "output_per_m": 7.5,
+        "cached_input_per_m": 0.125,
+        "scale": 8
+      },
+      "gpt-5.3-chat": {
+        "input_per_m": 1.75,
+        "output_per_m": 14,
+        "cached_input_per_m": 0.175,
+        "scale": 8
+      },
+      "gpt-5.3-codex": {
+        "input_per_m": 1.75,
+        "output_per_m": 14,
+        "cached_input_per_m": 0.175,
+        "scale": 8
+      },
+      "gpt-audio": {
+        "input_per_m": 2.5,
+        "output_per_m": 10,
+        "scale": 8
+      },
+      "gpt-audio-mini": {
+        "input_per_m": 0.6,
+        "output_per_m": 2.4,
+        "scale": 8
+      },
+      "gpt-5.2-codex": {
+        "input_per_m": 1.75,
+        "output_per_m": 14,
+        "cached_input_per_m": 0.175,
+        "scale": 8
+      },
+      "gpt-5.2-chat": {
+        "input_per_m": 1.75,
+        "output_per_m": 14,
+        "cached_input_per_m": 0.175,
+        "scale": 8
+      },
+      "gpt-5.2-pro": {
+        "input_per_m": 21,
+        "output_per_m": 168,
+        "scale": 8
+      },
+      "gpt-5.2-pro:batch": {
+        "input_per_m": 10.5,
+        "output_per_m": 84,
+        "scale": 8
+      },
+      "gpt-5.2": {
+        "input_per_m": 1.75,
+        "output_per_m": 14,
+        "cached_input_per_m": 0.175,
+        "scale": 8
+      },
+      "gpt-5.2:batch": {
+        "input_per_m": 0.875,
+        "output_per_m": 7,
+        "cached_input_per_m": 0.0875,
+        "scale": 8
+      },
+      "gpt-5.1-codex-max": {
+        "input_per_m": 1.25,
+        "output_per_m": 10,
+        "cached_input_per_m": 0.125,
+        "scale": 8
+      },
+      "gpt-5.1": {
+        "input_per_m": 1.25,
+        "output_per_m": 10,
+        "cached_input_per_m": 0.125,
+        "scale": 8
+      },
+      "gpt-5.1:batch": {
+        "input_per_m": 0.625,
+        "output_per_m": 5,
+        "cached_input_per_m": 0.0625,
+        "scale": 8
+      },
+      "gpt-5.1-codex": {
+        "input_per_m": 1.25,
+        "output_per_m": 10,
+        "cached_input_per_m": 0.13,
+        "scale": 8
+      },
+      "gpt-5.1-codex-mini": {
+        "input_per_m": 0.25,
+        "output_per_m": 2,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      },
+      "gpt-oss-safeguard-20b": {
+        "input_per_m": 0.075,
+        "output_per_m": 0.3,
+        "cached_input_per_m": 0.0375,
+        "scale": 8
+      },
+      "gpt-5-image-mini": {
+        "input_per_m": 2.5,
+        "output_per_m": 2,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "gpt-5-image": {
+        "input_per_m": 10,
+        "output_per_m": 10,
+        "cached_input_per_m": 1.25,
+        "scale": 8
+      },
+      "gpt-5-pro": {
+        "input_per_m": 15,
+        "output_per_m": 120,
+        "scale": 8
+      },
+      "gpt-5-pro:batch": {
+        "input_per_m": 7.5,
+        "output_per_m": 60,
+        "scale": 8
+      },
+      "gpt-5-codex:batch": {
+        "input_per_m": 0.625,
+        "output_per_m": 5,
+        "cached_input_per_m": 0.0625,
+        "scale": 8
+      },
+      "gpt-5": {
+        "input_per_m": 1.25,
+        "output_per_m": 10,
+        "cached_input_per_m": 0.125,
+        "scale": 8
+      },
+      "gpt-5:batch": {
+        "input_per_m": 0.625,
+        "output_per_m": 5,
+        "cached_input_per_m": 0.0625,
+        "scale": 8
+      },
+      "gpt-5-mini": {
+        "input_per_m": 0.25,
+        "output_per_m": 2,
+        "cached_input_per_m": 0.025,
+        "scale": 8
+      },
+      "gpt-5-mini:batch": {
+        "input_per_m": 0.125,
+        "output_per_m": 1,
+        "cached_input_per_m": 0.0125,
+        "scale": 8
+      },
+      "gpt-5-nano": {
+        "input_per_m": 0.05,
+        "output_per_m": 0.4,
+        "cached_input_per_m": 0.005,
+        "scale": 8
+      },
+      "gpt-5-nano:batch": {
+        "input_per_m": 0.025,
+        "output_per_m": 0.2,
+        "cached_input_per_m": 0.0025,
+        "scale": 8
+      },
+      "gpt-oss-120b": {
+        "input_per_m": 0.037,
+        "output_per_m": 0.17,
+        "scale": 8
+      },
+      "gpt-oss-20b": {
+        "input_per_m": 0.03,
+        "output_per_m": 0.13,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      },
+      "gpt-oss-20b:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "o3-pro": {
+        "input_per_m": 20,
+        "output_per_m": 80,
+        "scale": 8
+      },
+      "o3-pro:batch": {
+        "input_per_m": 10,
+        "output_per_m": 40,
+        "scale": 8
+      },
+      "o4-mini-high": {
+        "input_per_m": 1.1,
+        "output_per_m": 4.4,
+        "cached_input_per_m": 0.275,
+        "scale": 8
+      },
+      "o4-mini-high:batch": {
+        "input_per_m": 0.55,
+        "output_per_m": 2.2,
+        "cached_input_per_m": 0.1375,
+        "scale": 8
+      },
+      "o3": {
+        "input_per_m": 2,
+        "output_per_m": 8,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      },
+      "o3:batch": {
+        "input_per_m": 1,
+        "output_per_m": 4,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "o4-mini": {
+        "input_per_m": 1.1,
+        "output_per_m": 4.4,
+        "cached_input_per_m": 0.275,
+        "scale": 8
+      },
+      "o4-mini:batch": {
+        "input_per_m": 0.55,
+        "output_per_m": 2.2,
+        "cached_input_per_m": 0.1375,
+        "scale": 8
+      },
+      "gpt-4.1": {
+        "input_per_m": 2,
+        "output_per_m": 8,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      },
+      "gpt-4.1:batch": {
+        "input_per_m": 1,
+        "output_per_m": 4,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "gpt-4.1-mini": {
+        "input_per_m": 0.4,
+        "output_per_m": 1.6,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "gpt-4.1-mini:batch": {
+        "input_per_m": 0.2,
+        "output_per_m": 0.8,
+        "cached_input_per_m": 0.05,
+        "scale": 8
+      },
+      "gpt-4.1-nano": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.4,
+        "cached_input_per_m": 0.025,
+        "scale": 8
+      },
+      "gpt-4.1-nano:batch": {
+        "input_per_m": 0.05,
+        "output_per_m": 0.2,
+        "cached_input_per_m": 0.0125,
+        "scale": 8
+      },
+      "o1-pro": {
+        "input_per_m": 150,
+        "output_per_m": 600,
+        "scale": 8
+      },
+      "o1-pro:batch": {
+        "input_per_m": 75,
+        "output_per_m": 300,
+        "scale": 8
+      },
+      "o3-mini-high": {
+        "input_per_m": 1.1,
+        "output_per_m": 4.4,
+        "cached_input_per_m": 0.55,
+        "scale": 8
+      },
+      "o3-mini-high:batch": {
+        "input_per_m": 0.55,
+        "output_per_m": 2.2,
+        "cached_input_per_m": 0.275,
+        "scale": 8
+      },
+      "o3-mini": {
+        "input_per_m": 1.1,
+        "output_per_m": 4.4,
+        "cached_input_per_m": 0.55,
+        "scale": 8
+      },
+      "o3-mini:batch": {
+        "input_per_m": 0.55,
+        "output_per_m": 2.2,
+        "cached_input_per_m": 0.275,
+        "scale": 8
+      },
+      "o1": {
+        "input_per_m": 15,
+        "output_per_m": 60,
+        "cached_input_per_m": 7.5,
+        "scale": 8
+      },
+      "o1:batch": {
+        "input_per_m": 7.5,
+        "output_per_m": 30,
+        "cached_input_per_m": 3.75,
+        "scale": 8
+      },
+      "gpt-4o-2024-11-20": {
+        "input_per_m": 2.5,
+        "output_per_m": 10,
+        "cached_input_per_m": 1.25,
+        "scale": 8
+      },
+      "gpt-4o-2024-08-06": {
+        "input_per_m": 2.5,
+        "output_per_m": 10,
+        "cached_input_per_m": 1.25,
+        "scale": 8
+      },
+      "gpt-4o-mini": {
+        "input_per_m": 0.15,
+        "output_per_m": 0.6,
+        "cached_input_per_m": 0.075,
+        "scale": 8
+      },
+      "gpt-4o-mini-2024-07-18": {
+        "input_per_m": 0.15,
+        "output_per_m": 0.6,
+        "cached_input_per_m": 0.075,
+        "scale": 8
+      },
+      "gpt-4o-mini:batch": {
+        "input_per_m": 0.075,
+        "output_per_m": 0.3,
+        "cached_input_per_m": 0.0375,
+        "scale": 8
+      },
+      "gpt-4o": {
+        "input_per_m": 2.5,
+        "output_per_m": 10,
+        "cached_input_per_m": 1.25,
+        "scale": 8
+      },
+      "gpt-4o-2024-05-13": {
+        "input_per_m": 5,
+        "output_per_m": 15,
+        "scale": 8
+      },
+      "gpt-4o:batch": {
+        "input_per_m": 1.25,
+        "output_per_m": 5,
+        "cached_input_per_m": 0.625,
+        "scale": 8
+      },
+      "gpt-4-turbo": {
+        "input_per_m": 10,
+        "output_per_m": 30,
+        "scale": 8
+      },
+      "gpt-4-turbo:batch": {
+        "input_per_m": 5,
+        "output_per_m": 15,
+        "scale": 8
+      },
+      "gpt-3.5-turbo-0613": {
+        "input_per_m": 1,
+        "output_per_m": 2,
+        "scale": 8
+      },
+      "gpt-4-turbo-preview": {
+        "input_per_m": 10,
+        "output_per_m": 30,
+        "scale": 8
+      },
+      "gpt-3.5-turbo-instruct": {
+        "input_per_m": 1.5,
+        "output_per_m": 2,
+        "scale": 8
+      },
+      "gpt-3.5-turbo-16k": {
+        "input_per_m": 3,
+        "output_per_m": 4,
+        "scale": 8
+      },
+      "gpt-3.5-turbo": {
+        "input_per_m": 0.5,
+        "output_per_m": 1.5,
+        "scale": 8
+      },
+      "gpt-3.5-turbo:batch": {
+        "input_per_m": 0.25,
+        "output_per_m": 0.75,
+        "scale": 8
+      },
+      "gpt-4": {
+        "input_per_m": 30,
+        "output_per_m": 60,
+        "scale": 8
+      }
+    },
+    "x-ai": {
+      "grok-4.5": {
+        "input_per_m": 2,
+        "output_per_m": 6,
+        "cached_input_per_m": 0.3,
+        "scale": 8
+      },
+      "grok-build-0.1": {
+        "input_per_m": 1,
+        "output_per_m": 2,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "grok-4.3": {
+        "input_per_m": 1.25,
+        "output_per_m": 2.5,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "grok-4.20-multi-agent": {
+        "input_per_m": 1.25,
+        "output_per_m": 2.5,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "grok-4.20": {
+        "input_per_m": 1.25,
+        "output_per_m": 2.5,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      }
+    },
+    "~x-ai": {
+      "grok-latest": {
+        "input_per_m": 2,
+        "output_per_m": 6,
+        "cached_input_per_m": 0.3,
+        "scale": 8
+      }
+    },
+    "aion-labs": {
+      "aion-3.0-mini": {
+        "input_per_m": 0.7,
+        "output_per_m": 1.4,
+        "cached_input_per_m": 0.18,
+        "scale": 8
+      },
+      "aion-3.0": {
+        "input_per_m": 3,
+        "output_per_m": 6,
+        "cached_input_per_m": 0.75,
+        "scale": 8
+      },
+      "aion-2.0": {
+        "input_per_m": 0.8,
+        "output_per_m": 1.6,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "aion-rp-llama-3.1-8b": {
+        "input_per_m": 0.8,
+        "output_per_m": 1.6,
+        "scale": 8
+      }
+    },
+    "tencent": {
+      "hy3": {
+        "input_per_m": 0.132,
+        "output_per_m": 0.528,
+        "cached_input_per_m": 0.033,
+        "scale": 8
+      },
+      "hy3-preview": {
+        "input_per_m": 0.063,
+        "output_per_m": 0.21,
+        "cached_input_per_m": 0.021,
+        "scale": 8
+      },
+      "hunyuan-a13b-instruct": {
+        "input_per_m": 0.14,
+        "output_per_m": 0.57,
+        "scale": 8
+      }
+    },
+    "nex-agi": {
+      "nex-n2-mini": {
+        "input_per_m": 0.025,
+        "output_per_m": 0.1,
+        "cached_input_per_m": 0.0025,
+        "scale": 8
+      },
+      "nex-n2-pro": {
+        "input_per_m": 0.25,
+        "output_per_m": 1,
+        "cached_input_per_m": 0.025,
+        "scale": 8
+      }
+    },
+    "sakana": {
+      "fugu-ultra": {
+        "input_per_m": 5,
+        "output_per_m": 30,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      }
+    },
+    "cohere": {
+      "north-mini-code:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "command-a": {
+        "input_per_m": 2.5,
+        "output_per_m": 10,
+        "scale": 8
+      },
+      "command-r7b-12-2024": {
+        "input_per_m": 0.0375,
+        "output_per_m": 0.15,
+        "scale": 8
+      },
+      "command-r-08-2024": {
+        "input_per_m": 0.15,
+        "output_per_m": 0.6,
+        "scale": 8
+      },
+      "command-r-plus-08-2024": {
+        "input_per_m": 2.5,
+        "output_per_m": 10,
+        "scale": 8
+      }
+    },
+    "z-ai": {
+      "glm-5.2": {
+        "input_per_m": 0.2058,
+        "output_per_m": 0.6468,
+        "cached_input_per_m": 0.03822,
+        "scale": 8
+      },
+      "glm-5.2:batch": {
+        "input_per_m": 0.7,
+        "output_per_m": 2.2,
+        "cached_input_per_m": 0.13,
+        "scale": 8
+      },
+      "glm-5.1": {
+        "input_per_m": 0.952,
+        "output_per_m": 2.992,
+        "cached_input_per_m": 0.1768,
+        "scale": 8
+      },
+      "glm-5v-turbo": {
+        "input_per_m": 1.2,
+        "output_per_m": 4,
+        "cached_input_per_m": 0.24,
+        "scale": 8
+      },
+      "glm-5-turbo": {
+        "input_per_m": 1.2,
+        "output_per_m": 4,
+        "cached_input_per_m": 0.24,
+        "scale": 8
+      },
+      "glm-5": {
+        "input_per_m": 0.95,
+        "output_per_m": 2.55,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "glm-4.7-flash": {
+        "input_per_m": 0.06,
+        "output_per_m": 0.4,
+        "cached_input_per_m": 0.01,
+        "scale": 8
+      },
+      "glm-4.7": {
+        "input_per_m": 0.4,
+        "output_per_m": 1.75,
+        "cached_input_per_m": 0.08,
+        "scale": 8
+      },
+      "glm-4.6v": {
+        "input_per_m": 0.3,
+        "output_per_m": 0.9,
+        "cached_input_per_m": 0.055,
+        "scale": 8
+      },
+      "glm-4.6": {
+        "input_per_m": 0.5,
+        "output_per_m": 2,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "glm-4.5v": {
+        "input_per_m": 0.6,
+        "output_per_m": 1.8,
+        "cached_input_per_m": 0.11,
+        "scale": 8
+      },
+      "glm-4.5": {
+        "input_per_m": 0.6,
+        "output_per_m": 2.2,
+        "cached_input_per_m": 0.11,
+        "scale": 8
+      },
+      "glm-4.5-air": {
+        "input_per_m": 0.13,
+        "output_per_m": 0.85,
+        "cached_input_per_m": 0.025,
+        "scale": 8
+      }
+    },
+    "~anthropic": {
+      "claude-fable-latest": {
+        "input_per_m": 10,
+        "output_per_m": 50,
+        "cached_input_per_m": 1,
+        "scale": 8
+      },
+      "claude-haiku-latest": {
+        "input_per_m": 1,
+        "output_per_m": 5,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "claude-sonnet-latest": {
+        "input_per_m": 2,
+        "output_per_m": 10,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "claude-opus-latest": {
+        "input_per_m": 5,
+        "output_per_m": 25,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      }
+    },
+    "nvidia": {
+      "nemotron-3.5-content-safety:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "nemotron-3-ultra-550b-a55b": {
+        "input_per_m": 0.6,
+        "output_per_m": 3.6,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "nemotron-3-ultra-550b-a55b:batch": {
+        "input_per_m": 0.3,
+        "output_per_m": 1.8,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      },
+      "nemotron-3-ultra-550b-a55b:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "nemotron-3-nano-omni-30b-a3b-reasoning:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "nemotron-3-super-120b-a12b": {
+        "input_per_m": 0.085,
+        "output_per_m": 0.4,
+        "scale": 8
+      },
+      "nemotron-3-super-120b-a12b:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "nemotron-3-nano-30b-a3b": {
+        "input_per_m": 0.05,
+        "output_per_m": 0.2,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      },
+      "nemotron-3-nano-30b-a3b:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "nemotron-nano-12b-v2-vl:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      },
+      "nemotron-nano-9b-v2:free": {
+        "input_per_m": 0,
+        "output_per_m": 0,
+        "scale": 8
+      }
+    },
+    "minimax": {
+      "minimax-m3": {
+        "input_per_m": 0.3,
+        "output_per_m": 1.2,
+        "cached_input_per_m": 0.06,
+        "scale": 8
+      },
+      "minimax-m3:batch": {
+        "input_per_m": 0.15,
+        "output_per_m": 0.6,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      },
+      "minimax-m2.7": {
+        "input_per_m": 0.27,
+        "output_per_m": 1.08,
+        "cached_input_per_m": 0.054,
+        "scale": 8
+      },
+      "minimax-m2.5": {
+        "input_per_m": 0.22,
+        "output_per_m": 0.9,
+        "cached_input_per_m": 0.05,
+        "scale": 8
+      },
+      "minimax-m2-her": {
+        "input_per_m": 0.3,
+        "output_per_m": 1.2,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      },
+      "minimax-m2.1": {
+        "input_per_m": 0.3,
+        "output_per_m": 1.2,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      },
+      "minimax-m2": {
+        "input_per_m": 0.255,
+        "output_per_m": 1.02,
+        "scale": 8
+      },
+      "minimax-m1": {
+        "input_per_m": 0.55,
+        "output_per_m": 2.2,
+        "scale": 8
+      },
+      "minimax-01": {
+        "input_per_m": 0.2,
+        "output_per_m": 1.1,
+        "scale": 8
+      }
+    },
+    "stepfun": {
+      "step-3.7-flash": {
+        "input_per_m": 0.2,
+        "output_per_m": 1.15,
+        "cached_input_per_m": 0.04,
+        "scale": 8
+      },
+      "step-3.5-flash": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.3,
+        "scale": 8
+      }
+    },
+    "perceptron": {
+      "perceptron-mk1": {
+        "input_per_m": 0.15,
+        "output_per_m": 1.5,
+        "scale": 8
+      }
+    },
+    "ibm-granite": {
+      "granite-4.1-8b": {
+        "input_per_m": 0.05,
+        "output_per_m": 0.1,
+        "cached_input_per_m": 0.05,
+        "scale": 8
+      },
+      "granite-4.0-h-micro": {
+        "input_per_m": 0.017,
+        "output_per_m": 0.112,
+        "scale": 8
+      }
+    },
+    "mistralai": {
+      "mistral-medium-3-5": {
+        "input_per_m": 1.5,
+        "output_per_m": 7.5,
+        "scale": 8
+      },
+      "mistral-small-2603": {
+        "input_per_m": 0.15,
+        "output_per_m": 0.6,
+        "cached_input_per_m": 0.015,
+        "scale": 8
+      },
+      "ministral-14b-2512": {
+        "input_per_m": 0.2,
+        "output_per_m": 0.2,
+        "cached_input_per_m": 0.02,
+        "scale": 8
+      },
+      "ministral-8b-2512": {
+        "input_per_m": 0.15,
+        "output_per_m": 0.15,
+        "cached_input_per_m": 0.015,
+        "scale": 8
+      },
+      "ministral-3b-2512": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.1,
+        "cached_input_per_m": 0.01,
+        "scale": 8
+      },
+      "mistral-large-2512": {
+        "input_per_m": 0.5,
+        "output_per_m": 1.5,
+        "cached_input_per_m": 0.05,
+        "scale": 8
+      },
+      "voxtral-small-24b-2507": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.3,
+        "cached_input_per_m": 0.01,
+        "scale": 8
+      },
+      "mistral-medium-3.1": {
+        "input_per_m": 0.4,
+        "output_per_m": 2,
+        "cached_input_per_m": 0.04,
+        "scale": 8
+      },
+      "codestral-2508": {
+        "input_per_m": 0.3,
+        "output_per_m": 0.9,
+        "cached_input_per_m": 0.03,
+        "scale": 8
+      },
+      "mistral-small-3.2-24b-instruct": {
+        "input_per_m": 0.09375,
+        "output_per_m": 0.25,
+        "scale": 8
+      },
+      "mistral-medium-3": {
+        "input_per_m": 0.4,
+        "output_per_m": 2,
+        "cached_input_per_m": 0.04,
+        "scale": 8
+      },
+      "mistral-small-3.1-24b-instruct": {
+        "input_per_m": 0.351,
+        "output_per_m": 0.555,
+        "scale": 8
+      },
+      "mistral-saba": {
+        "input_per_m": 0.2,
+        "output_per_m": 0.6,
+        "cached_input_per_m": 0.02,
+        "scale": 8
+      },
+      "mistral-small-24b-instruct-2501": {
+        "input_per_m": 0.05,
+        "output_per_m": 0.08,
+        "scale": 8
+      },
+      "mistral-large-2407": {
+        "input_per_m": 2,
+        "output_per_m": 6,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "mistral-nemo": {
+        "input_per_m": 0.019,
+        "output_per_m": 0.03,
+        "scale": 8
+      },
+      "mixtral-8x22b-instruct": {
+        "input_per_m": 2,
+        "output_per_m": 6,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "mistral-large": {
+        "input_per_m": 2,
+        "output_per_m": 6,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      }
+    },
+    "~openai": {
+      "gpt-mini-latest": {
+        "input_per_m": 0.75,
+        "output_per_m": 4.5,
+        "cached_input_per_m": 0.075,
+        "scale": 8
+      },
+      "gpt-latest": {
+        "input_per_m": 5,
+        "output_per_m": 30,
+        "cached_input_per_m": 0.5,
+        "scale": 8
+      }
+    },
+    "~google": {
+      "gemini-pro-latest": {
+        "input_per_m": 2,
+        "output_per_m": 12,
+        "cached_input_per_m": 0.2,
+        "scale": 8
+      },
+      "gemini-flash-latest": {
+        "input_per_m": 1.5,
+        "output_per_m": 7.5,
+        "cached_input_per_m": 0.15,
+        "scale": 8
+      }
+    },
+    "~moonshotai": {
+      "kimi-latest": {
+        "input_per_m": 2.5,
+        "output_per_m": 14,
+        "cached_input_per_m": 0.29,
+        "scale": 8
+      }
+    },
+    "xiaomi": {
+      "mimo-v2.5-pro": {
+        "input_per_m": 0.435,
+        "output_per_m": 0.87,
+        "cached_input_per_m": 0.0036,
+        "scale": 8
+      },
+      "mimo-v2.5": {
+        "input_per_m": 0.14,
+        "output_per_m": 0.28,
+        "cached_input_per_m": 0.0028,
+        "scale": 8
+      }
+    },
+    "arcee-ai": {
+      "trinity-large-thinking": {
+        "input_per_m": 0.22,
+        "output_per_m": 0.85,
+        "cached_input_per_m": 0.06,
+        "scale": 8
+      },
+      "virtuoso-large": {
+        "input_per_m": 0.75,
+        "output_per_m": 1.2,
+        "scale": 8
+      }
+    },
+    "rekaai": {
+      "reka-edge": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.1,
+        "scale": 8
+      },
+      "reka-flash-3": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.2,
+        "scale": 8
+      }
+    },
+    "bytedance-seed": {
+      "seed-2.0-lite": {
+        "input_per_m": 0.25,
+        "output_per_m": 2,
+        "scale": 8
+      },
+      "seed-2.0-mini": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.4,
+        "scale": 8
+      },
+      "seed-1.6-flash": {
+        "input_per_m": 0.075,
+        "output_per_m": 0.3,
+        "scale": 8
+      },
+      "seed-1.6": {
+        "input_per_m": 0.25,
+        "output_per_m": 2,
+        "scale": 8
+      }
+    },
+    "inception": {
+      "mercury-2": {
+        "input_per_m": 0.25,
+        "output_per_m": 0.75,
+        "cached_input_per_m": 0.025,
+        "scale": 8
+      }
+    },
+    "upstage": {
+      "solar-pro-3": {
+        "input_per_m": 0.15,
+        "output_per_m": 0.6,
+        "cached_input_per_m": 0.015,
+        "scale": 8
+      }
+    },
+    "writer": {
+      "palmyra-x5": {
+        "input_per_m": 0.6,
+        "output_per_m": 6,
+        "scale": 8
+      }
+    },
+    "relace": {
+      "relace-search": {
+        "input_per_m": 1,
+        "output_per_m": 3,
+        "scale": 8
+      },
+      "relace-apply-3": {
+        "input_per_m": 0.85,
+        "output_per_m": 1.25,
+        "scale": 8
+      }
+    },
+    "amazon": {
+      "nova-2-lite-v1": {
+        "input_per_m": 0.3,
+        "output_per_m": 2.5,
+        "scale": 8
+      },
+      "nova-premier-v1": {
+        "input_per_m": 2.5,
+        "output_per_m": 12.5,
+        "cached_input_per_m": 0.625,
+        "scale": 8
+      },
+      "nova-lite-v1": {
+        "input_per_m": 0.06,
+        "output_per_m": 0.24,
+        "scale": 8
+      },
+      "nova-micro-v1": {
+        "input_per_m": 0.035,
+        "output_per_m": 0.14,
+        "scale": 8
+      },
+      "nova-pro-v1": {
+        "input_per_m": 0.8,
+        "output_per_m": 3.2,
+        "scale": 8
+      }
+    },
+    "allenai": {
+      "olmo-3-32b-think": {
+        "input_per_m": 0.15,
+        "output_per_m": 0.5,
+        "scale": 8
+      }
+    },
+    "deepcogito": {
+      "cogito-v2.1-671b": {
+        "input_per_m": 1.25,
+        "output_per_m": 1.25,
+        "scale": 8
+      }
+    },
+    "perplexity": {
+      "sonar-pro-search": {
+        "input_per_m": 3,
+        "output_per_m": 15,
+        "scale": 8
+      },
+      "sonar-reasoning-pro": {
+        "input_per_m": 2,
+        "output_per_m": 8,
+        "scale": 8
+      },
+      "sonar-pro": {
+        "input_per_m": 3,
+        "output_per_m": 15,
+        "scale": 8
+      },
+      "sonar-deep-research": {
+        "input_per_m": 2,
+        "output_per_m": 8,
+        "scale": 8
+      },
+      "sonar": {
+        "input_per_m": 1,
+        "output_per_m": 1,
+        "scale": 8
+      }
+    },
+    "thedrummer": {
+      "cydonia-24b-v4.1": {
+        "input_per_m": 0.3,
+        "output_per_m": 0.5,
+        "cached_input_per_m": 0.15,
+        "scale": 8
+      },
+      "skyfall-36b-v2": {
+        "input_per_m": 0.55,
+        "output_per_m": 0.8,
+        "cached_input_per_m": 0.25,
+        "scale": 8
+      },
+      "unslopnemo-12b": {
+        "input_per_m": 0.4,
+        "output_per_m": 0.4,
+        "scale": 8
+      },
+      "rocinante-12b": {
+        "input_per_m": 0.25,
+        "output_per_m": 0.5,
+        "scale": 8
+      }
+    },
+    "nousresearch": {
+      "hermes-4-70b": {
+        "input_per_m": 0.13,
+        "output_per_m": 0.4,
+        "scale": 8
+      },
+      "hermes-4-405b": {
+        "input_per_m": 1,
+        "output_per_m": 3,
+        "scale": 8
+      },
+      "hermes-3-llama-3.1-70b": {
+        "input_per_m": 0.7,
+        "output_per_m": 0.7,
+        "scale": 8
+      },
+      "hermes-3-llama-3.1-405b": {
+        "input_per_m": 1,
+        "output_per_m": 1,
+        "scale": 8
+      }
+    },
+    "ai21": {
+      "jamba-large-1.7": {
+        "input_per_m": 2,
+        "output_per_m": 8,
+        "scale": 8
+      }
+    },
+    "bytedance": {
+      "ui-tars-1.5-7b": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.2,
+        "cached_input_per_m": 0.1,
+        "scale": 8
+      }
+    },
+    "cognitivecomputations": {
+      "dolphin-mistral-24b-venice-edition": {
+        "input_per_m": 0.2,
+        "output_per_m": 0.9,
+        "scale": 8
+      }
+    },
+    "morph": {
+      "morph-v3-large": {
+        "input_per_m": 0.9,
+        "output_per_m": 1.9,
+        "scale": 8
+      },
+      "morph-v3-fast": {
+        "input_per_m": 0.8,
+        "output_per_m": 1.2,
+        "scale": 8
+      }
+    },
+    "baidu": {
+      "ernie-4.5-vl-424b-a47b": {
+        "input_per_m": 0.42,
+        "output_per_m": 1.25,
+        "scale": 8
+      }
+    },
+    "meta-llama": {
+      "llama-guard-4-12b": {
+        "input_per_m": 0.18,
+        "output_per_m": 0.18,
+        "scale": 8
+      },
+      "llama-4-maverick": {
+        "input_per_m": 0.2,
+        "output_per_m": 0.8,
+        "scale": 8
+      },
+      "llama-4-scout": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.3,
+        "scale": 8
+      },
+      "llama-3.3-70b-instruct": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.32,
+        "scale": 8
+      },
+      "llama-3.2-1b-instruct": {
+        "input_per_m": 0.027,
+        "output_per_m": 0.201,
+        "scale": 8
+      },
+      "llama-3.2-3b-instruct": {
+        "input_per_m": 0.05,
+        "output_per_m": 0.33,
+        "scale": 8
+      },
+      "llama-3.1-70b-instruct": {
+        "input_per_m": 0.4,
+        "output_per_m": 0.4,
+        "scale": 8
+      },
+      "llama-3.1-8b-instruct": {
+        "input_per_m": 0.05,
+        "output_per_m": 0.08,
+        "cached_input_per_m": 0.025,
+        "scale": 8
+      }
+    },
+    "microsoft": {
+      "phi-4": {
+        "input_per_m": 0.07,
+        "output_per_m": 0.14,
+        "scale": 8
+      },
+      "wizardlm-2-8x22b": {
+        "input_per_m": 0.62,
+        "output_per_m": 0.62,
+        "scale": 8
+      }
+    },
+    "sao10k": {
+      "l3.3-euryale-70b": {
+        "input_per_m": 0.65,
+        "output_per_m": 0.75,
+        "scale": 8
+      },
+      "l3.1-euryale-70b": {
+        "input_per_m": 0.85,
+        "output_per_m": 0.85,
+        "scale": 8
+      },
+      "l3-lunaris-8b": {
+        "input_per_m": 0.04,
+        "output_per_m": 0.05,
+        "scale": 8
+      }
+    },
+    "groq": {
+      "llama-3.3-70b-versatile": {
+        "input_per_m": 0.1,
+        "output_per_m": 0.32,
+        "scale": 8
+      }
+    },
+    "anthracite-org": {
+      "magnum-v4-72b": {
+        "input_per_m": 3,
+        "output_per_m": 5,
+        "scale": 8
+      }
+    },
+    "mancer": {
+      "weaver": {
+        "input_per_m": 0.5,
+        "output_per_m": 0.75,
+        "scale": 8
+      }
+    },
+    "undi95": {
+      "remm-slerp-l2-13b": {
+        "input_per_m": 0.45,
+        "output_per_m": 0.65,
+        "scale": 8
+      }
+    },
+    "gryphe": {
+      "mythomax-l2-13b": {
+        "input_per_m": 0.08,
+        "output_per_m": 0.11,
+        "scale": 8
+      }
+    }
+  },
+  "default_fallback": {
+    "input_per_m": 0.2,
+    "output_per_m": 0.8,
+    "scale": 8
+  }
+}

@@ -1,5 +1,5 @@
-export * from "./types";
-export * from "./accounting";
+export * from "./types.js";
+export * from "./accounting.js";
 export * from "./github-ingress.js";
 export * from "./github-activity-feed.js";
 export * from "./github-delivery-replay.js";
@@ -10,4 +10,5 @@ export * from "./cop-event-spool.js";
 export * from "./cop-event-artifacts.js";
 export * from "./cop-event-persist.js";
 export * from "./cop-event-supabase-shape.js";
-export * from "./packet";
+export * from "./packet.js";
+export * from "./modelPricing.js";
