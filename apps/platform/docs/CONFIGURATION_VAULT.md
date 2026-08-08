@@ -143,6 +143,17 @@ Provisioning: `docs/PROVISIONING_GUIDE.md` (step-vault).
 
 ---
 
+## OpenAI keys (inference vs admin usage)
+
+| Env                | Vault key          | Role                                                                                                                                                                   |
+| ------------------ | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENAI_API_KEY`   | `openai_api_key`   | Chat, embeddings, normal API (project key)                                                                                                                             |
+| `OPENAI_ADMIN_KEY` | `openai_admin_key` | **Organization Admin API** only — usage/costs (`api.usage.read`). **Not** for chat completions. Create at https://platform.openai.com/settings/organization/admin-keys |
+
+Fill `openai_admin_key` in the JHN vault (or `OPENAI_ADMIN_KEY=` in `inseme/.env` then
+`push-env-to-vault --apply`) after creating the Admin key. Do not put the admin key on Fracta unless
+a usage-snapshot job needs it.
+
 ## Agent JHN WhatsApp (John / personal twin)
 
 Config for the Cogentia WhatsApp adapter lives in the **JHN** vault (project `ndiysuh…`), not

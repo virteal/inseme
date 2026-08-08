@@ -52,6 +52,7 @@ const ENV_KEY_MAPPING = {
 
   // Providers IA
   openai_api_key: ["OPENAI_API_KEY"],
+  openai_admin_key: ["OPENAI_ADMIN_KEY"], // Org Admin API (usage/costs) — not for chat completions
   openai_model: ["OPENAI_MODEL", "OPENAI_CHAT_MODEL"],
   openai_moderation_model: ["OPENAI_MODERATION_MODEL"],
   anthropic_api_key: ["ANTHROPIC_API_KEY"],

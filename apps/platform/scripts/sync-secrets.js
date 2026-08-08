@@ -68,6 +68,7 @@ const VAULT_KEY_MAPPING = {
   ANTHROPIC_API_KEY: "anthropic_api_key",
   ZAI_API_KEY: "zai_api_key",
   OPENAI_API_KEY: "openai_api_key",
+  OPENAI_ADMIN_KEY: "openai_admin_key",
   MISTRAL_API_KEY: "mistral_api_key",
   GEMINI_API_KEY: "gemini_api_key",
   GITHUB_TOKEN: "github_token",
