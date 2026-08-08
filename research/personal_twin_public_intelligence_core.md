@@ -229,12 +229,23 @@ MCP:
 
 - [x] Inventory of fragments
 - [x] Superset invariant Guide ⊆ John public
-- [ ] Issues #37 / #85 open; pointers in AGENTS / indexes
+- [x] Issues #37 / #85 open; pointers in AGENTS / indexes
 - [ ] Principal confirm: model ids + SAS public scope when incorporated
+
+### Phase 0.5 — OpenAI surface on Fracta (UX clients ↔ JHN server) — 2026-08-08
+
+Not about local model hosting: JHN **is** the Chat Completions endpoint for Open WebUI / curl / etc.
+
+- [x] `produceGuideTurn` + `cogentia/scripts/lib/jhn-openai-surface.js` (public / Jean Hugues keys)
+- [x] `GET/POST https://cogentia.fractavolta.com/guide/v1/{models,chat/completions}`
+- [x] Docs: `cogentia/docs/jhn-openai-surface.md`; unit + live smoke scripts
+- [ ] Restart mcp-cogentia on fracta; set `COGENTIA_JHN_OWNER_API_KEY` in secrets
+- [ ] Live smoke green; optional Open WebUI dogfood
 
 ### Phase 1 — Single turn runner behind Guide (Cogentia)
 
-1. Extract shared `runPublicTurn` from `/guide/chat` path (no behavior change).
+1. Extract shared `runPublicTurn` from `/guide/chat` path (no behavior change). _Partial:_
+   `produceGuideTurn` backs Guide non-stream + JHN OpenAI.
 2. `guide-cli` and HTTP both call it.
 3. Tests: guide-cli + guide-eval still green.
 4. Document public repo list used by the view.
@@ -249,10 +260,10 @@ MCP:
 
 ### Phase 3 — Factorized OpenAI + MCP surfaces
 
-1. One OpenAI-compat adapter over `runPublicTurn` (deprecate divergent Ophelia-only `/v1` for
-   public, or make it a proxy).
+1. One OpenAI-compat adapter over `runPublicTurn` — **started on Fracta** (`/guide/v1/*`); Netlify
+   edge can proxy later.
 2. Twin MCP pack = Cogentia public tools + persona metadata (`twin:jhn`, surface=`public`).
-3. Model catalog documents `jhn-public` and `fractavolta-guide`.
+3. Model catalog documents `jhn-public` and `fractavolta-guide` (+ `jhn-owner` with owner key).
 
 ### Phase 4 — Shared web UX kit (optional but valuable)
 
