@@ -133,6 +133,75 @@ export function createCopEventPersistPipeline(options) {
       }
       return spool.replayInto(store, opts);
     },
+
+    /**
+     * Persist a COP accounting transaction event with offline spool fallback.
+     *
+     * @param {object} input
+     * @param {object} input.transactionEvent - COP accounting/transaction payload
+     * @param {string} [input.idempotency_key]
+     * @param {string} [input.visibility="restricted"]
+     */
+    async persistAccountingEvent(input) {
+      const txn = input.transactionEvent || {};
+      const idempotency_key =
+        input.idempotency_key || txn.idempotency_key || `txn:${txn.transaction_id}`;
+
+      const rawVis = input.visibility || txn.disclosure_class || "restricted";
+      const visibility = rawVis === "public" ? "open" : rawVis;
+
+      const envelope = createCopEventEnvelope({
+        event_type: txn.eventType || "accounting/transaction",
+        topic: { id: "cop/accounting" },
+        source: txn.governance?.actor_subject_id || "agent:jhn:main",
+        visibility,
+        idempotency_key,
+        payload: txn,
+        meta: txn.metadata || {},
+      });
+
+      const validation = validateCopEventEnvelope(envelope, {
+        requirePositiveSeq: false,
+      });
+      if (!validation.ok) {
+        return {
+          ok: false,
+          error: "invalid_envelope",
+          errors: validation.errors,
+          spooled: false,
+        };
+      }
+
+      const appended = store.append(envelope);
+      if (appended.ok) {
+        return {
+          ok: true,
+          duplicate: Boolean(appended.duplicate),
+          event: appended.event,
+          spooled: false,
+        };
+      }
+
+      // Degraded: spool for later replay
+      if (spool) {
+        const q = spool.enqueue(envelope);
+        return {
+          ok: false,
+          error: appended.error || "store_append_failed",
+          errors: appended.errors,
+          spooled: q.ok,
+          spool_error: q.ok ? null : q.error,
+          event: envelope,
+        };
+      }
+
+      return {
+        ok: false,
+        error: appended.error || "store_append_failed",
+        errors: appended.errors,
+        spooled: false,
+      };
+    },
   };
 }
 

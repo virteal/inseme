@@ -210,3 +210,31 @@ export function calculatePacketTotalSpending(packet) {
   }
   return total;
 }
+
+/**
+ * Persist an accounting transaction event using a persist pipeline with degraded NDJSON spool fallback.
+ *
+ * @param {object} transactionEvent
+ * @param {object} pipeline - cop_event_persist_pipeline instance
+ * @returns {Promise<object>}
+ */
+export async function persistPacketAccountingTransaction(transactionEvent, pipeline) {
+  if (!pipeline || typeof pipeline.persistAccountingEvent !== "function") {
+    throw new Error("Invalid persist pipeline: persistAccountingEvent required");
+  }
+  return pipeline.persistAccountingEvent({ transactionEvent });
+}
+
+/**
+ * Replay spooled accounting transaction events from an NDJSON spool into a store.
+ *
+ * @param {object} pipeline - cop_event_persist_pipeline instance
+ * @param {object} [opts]
+ * @returns {object} Replay report
+ */
+export function replayPacketAccountingSpool(pipeline, opts = {}) {
+  if (!pipeline || typeof pipeline.replaySpool !== "function") {
+    return { ok: false, error: "no_spool_pipeline" };
+  }
+  return pipeline.replaySpool(opts);
+}
