@@ -44,6 +44,12 @@ access —
 [personal_twin_access_policy.md](personal_twin_access_policy.md) —
 **[inseme#35](https://github.com/JeanHuguesRobert/inseme/issues/35)**.
 
+**Public intelligence:** John public chat is a readonly **superset** of the FractaVolta Guide
+(public corpus about the Principal). Factorization plan —
+[personal_twin_public_intelligence_core.md](personal_twin_public_intelligence_core.md) —
+**[inseme#37](https://github.com/JeanHuguesRobert/inseme/issues/37)** ·
+**[cogentia#85](https://github.com/JeanHuguesRobert/cogentia/issues/85)**.
+
 See also:
 [personal_instance_democracy_and_non_capturable_match.md](personal_instance_democracy_and_non_capturable_match.md),  
 [RUNBOOK_JHN_PERSONAL_INSTANCE.md](../apps/platform/docs/RUNBOOK_JHN_PERSONAL_INSTANCE.md),  

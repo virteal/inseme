@@ -106,6 +106,13 @@ JeanHuguesRobert/registre-mariani
   Tracking: [inseme#36](https://github.com/JeanHuguesRobert/inseme/issues/36),
   [JeanHuguesRobert#2](https://github.com/JeanHuguesRobert/JeanHuguesRobert/issues/2),
   [cogentia#84](https://github.com/JeanHuguesRobert/cogentia/issues/84).
+- **Public intelligence core (factorize):** John public chat is a **readonly superset** of the
+  FractaVolta Guide (full public GitHub corpus about the Principal, incl. FractaVolta / future SAS
+  public material; exclude private repos). One core turn runner; surfaces = web UX, OpenAI-compat
+  (`jhn-public`), MCP skills/tools, CLI. Plan:
+  [`research/personal_twin_public_intelligence_core.md`](research/personal_twin_public_intelligence_core.md).
+  Tracking: [inseme#37](https://github.com/JeanHuguesRobert/inseme/issues/37),
+  [cogentia#85](https://github.com/JeanHuguesRobert/cogentia/issues/85).
 
 Do not hard-code JHN-specific doctrine into generic COP contracts merely because JHN is the first
 implementation. Missing abstractions discovered by the JHN vertical slice should be repaired
