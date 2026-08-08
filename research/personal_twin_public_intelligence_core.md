@@ -300,7 +300,36 @@ MCP:
 
 ---
 
-## 7. Open questions for Principal
+## 7. Adjacent idea (not a product commitment) — Twin as coding-agent orchestrator
+
+**Status:** remember only. Principal (2026-08-08): _not_ intended to be proposed or built seriously
+right now.
+
+Because the Principal is a **veteran software developer**, a natural _adjacent_ use of the Personal
+Twin is as a **coding agent** — with a structural trick:
+
+```text
+Twin (John / twin:jhn)
+  does not replace coding agents
+  uses / routes / mandates other coding agents
+  (Grok, Claude, Codex, local gateway adapters, …)
+  under owner policy + COP trace
+```
+
+That fits existing pieces without inventing a new product line today:
+
+- Agent CLI Gateway + Magistral maps (handlers, not twin identity)
+- Public intelligence core (this note) as _knowledge_ about the Principal’s code and doctrine
+- Access class `owner` / `delegate` (#35) for who may invoke heavy coding tools
+- Mandates / FixBugsFirst so the twin does not claim principal commitment authority
+
+**Do not** treat this as Phase 6 of the public-chat factorization, market “John as a coding
+product,” or expand scope of #37/#85. If revived later, open a dedicated issue under twin +
+agent-gateway doctrine.
+
+---
+
+## 8. Open questions for Principal
 
 1. Should anonymous John cite GitHub issue/PR text as first-class sources, or only research
    markdown?
@@ -310,10 +339,10 @@ MCP:
 
 ---
 
-## 8. See also
+## 9. See also
 
 - [Personal twin access policy](personal_twin_access_policy.md)
 - [Interactions registry plan](interactions_registry_and_multichannel_messaging.md)
 - FractaVolta Guide plan (upstream site)
-- Cogentia digital twin roadmap + navigator contract  
-  )
+- Cogentia digital twin roadmap + navigator contract
+- Agent CLI Gateway / Magistral boundary (capacity vs identity) )
