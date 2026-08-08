@@ -5,6 +5,8 @@
  * Works in both Deno and Node.js with standard ESM imports.
  */
 
+import { createCognitivePacket, appendPacketHop, appendPacketSpending } from "@inseme/cop-kernel";
+
 export const MAGISTRAL_PROTOCOL = "MAGISTRAL-v1";
 export const DEFAULT_EXHAUSTION_TTL_MS = 24 * 60 * 60 * 1000;
 
@@ -388,20 +390,63 @@ export function createRouter({
           const content = data.choices?.[0]?.message?.content || "";
           logEntry.preview = content.slice(0, 200);
 
+          // Strict Cognitive Packet Accounting Trace
+          try {
+            const providerName = node.url.includes("openai.com")
+              ? "openai"
+              : node.url.includes("groq.com")
+                ? "groq"
+                : node.url.includes("mistral.ai")
+                  ? "mistral"
+                  : "provider";
+            const packet =
+              payload._packet ||
+              createCognitivePacket({
+                mandate_id: payload._mandate_id || "mandate:magistral:router",
+                treatment_id: reqId,
+                account_id: payload._account_id || "https://jhn.baronsmariani.org/",
+                initial_node_id: "node:fracta:magistral",
+                initial_instance_id: node.id,
+                payload: {
+                  title: payload.messages?.[0]?.content?.slice(0, 80) || "Magistral Request",
+                },
+              });
+            const { spendingEntry } = appendPacketSpending(packet, {
+              capability: "ai/chat-completion",
+              provider: providerName,
+              model: node.model,
+              prompt_tokens: logEntry.promptTokens || 0,
+              completion_tokens: logEntry.completionTokens || 0,
+            });
+            logEntry.provisionalCostUsd = spendingEntry.provisional_cost.coefficient;
+            logEntry.packetId = packet.packet_id;
+            data._cop_packet_id = packet.packet_id;
+            data._cop_provisional_cost_usd = spendingEntry.provisional_cost.coefficient;
+          } catch (e) {}
+
           trafficLog.append(logEntry);
-          log(`[Magistral] ✓ Routed via ${node.id} (${node.tier})`);
+          log(
+            `[Magistral] ✓ Routed via ${node.id} (${node.tier}) | Cost: $${logEntry.provisionalCostUsd ? (Number(logEntry.provisionalCostUsd) / 1e8).toFixed(8) : "0"}`
+          );
+
+          const resHeaders = new Headers(res.headers);
+          if (logEntry.packetId) resHeaders.set("X-COP-Packet-ID", logEntry.packetId);
+          if (logEntry.provisionalCostUsd)
+            resHeaders.set(
+              "X-COP-Provisional-Cost-USD",
+              (Number(logEntry.provisionalCostUsd) / 1e8).toFixed(8)
+            );
 
           return new Response(JSON.stringify(data), {
             status: res.status,
             statusText: res.statusText,
-            headers: res.headers,
+            headers: resHeaders,
           });
         }
 
         // Handle Streaming (Intercept & Count)
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
-        // const encoder = new TextEncoder(); // Unused
 
         let gatheredTokens = 0;
         let previewBuffer = "";
@@ -445,9 +490,39 @@ export function createRouter({
               logEntry.latencyMs = Date.now() - startTime;
               if (!logEntry.completionTokens) logEntry.completionTokens = gatheredTokens;
               logEntry.preview = previewBuffer.slice(0, 200);
+
+              // Strict Cognitive Packet Accounting Trace for Stream
+              try {
+                const providerName = node.url.includes("openai.com")
+                  ? "openai"
+                  : node.url.includes("groq.com")
+                    ? "groq"
+                    : node.url.includes("mistral.ai")
+                      ? "mistral"
+                      : "provider";
+                const packet =
+                  payload._packet ||
+                  createCognitivePacket({
+                    mandate_id: payload._mandate_id || "mandate:magistral:router",
+                    treatment_id: reqId,
+                    account_id: payload._account_id || "https://jhn.baronsmariani.org/",
+                    initial_node_id: "node:fracta:magistral",
+                    initial_instance_id: node.id,
+                  });
+                const { spendingEntry } = appendPacketSpending(packet, {
+                  capability: "ai/chat-completion",
+                  provider: providerName,
+                  model: node.model,
+                  prompt_tokens: logEntry.promptTokens || 0,
+                  completion_tokens: logEntry.completionTokens || 0,
+                });
+                logEntry.provisionalCostUsd = spendingEntry.provisional_cost.coefficient;
+                logEntry.packetId = packet.packet_id;
+              } catch (e) {}
+
               trafficLog.append(logEntry);
               log(
-                `[Magistral] ✓ Stream via ${node.id} completed (${logEntry.completionTokens} toks)`
+                `[Magistral] ✓ Stream via ${node.id} completed (${logEntry.completionTokens} toks) | Cost: $${logEntry.provisionalCostUsd ? (Number(logEntry.provisionalCostUsd) / 1e8).toFixed(8) : "0"}`
               );
             }
           },

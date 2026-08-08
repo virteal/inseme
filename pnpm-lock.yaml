@@ -995,6 +995,12 @@ importers:
 
   packages/magistral:
     dependencies:
+      '@inseme/cop-core':
+        specifier: workspace:*
+        version: link:../cop-core
+      '@inseme/cop-kernel':
+        specifier: workspace:*
+        version: link:../cop-kernel
       node-fetch:
         specifier: ^3.0.0
         version: 3.3.2

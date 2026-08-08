@@ -1,0 +1,73 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { createRouter } from "../src/router.js";
+
+test("Magistral Router Strict Cognitive Packet Accounting Integration", async (t) => {
+  await t.test(
+    "emits X-COP-Packet-ID and X-COP-Provisional-Cost-USD headers on completion",
+    async () => {
+      const mockMap = [
+        {
+          id: "mock-openai-fast",
+          url: "https://api.openai.com/v1/chat/completions",
+          model: "gpt-5.4-nano",
+          tier: "fast",
+          weight: 10,
+        },
+      ];
+
+      // Mock fetch returning OpenAI chat completion response
+      globalThis.fetch = async (url, opts) => {
+        return new Response(
+          JSON.stringify({
+            id: "chatcmpl-mock123",
+            object: "chat.completion",
+            created: Date.now(),
+            model: "gpt-5.4-nano",
+            choices: [
+              {
+                index: 0,
+                message: { role: "assistant", content: "Hello! Governed packet accounting test." },
+                finish_reason: "stop",
+              },
+            ],
+            usage: {
+              prompt_tokens: 100,
+              completion_tokens: 50,
+              total_tokens: 150,
+            },
+          }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+      };
+
+      const router = createRouter({
+        map: mockMap,
+        apiKeys: { OPENAI_API_KEY: "sk-mock-key" },
+        log: () => {},
+      });
+
+      const res = await router.route(
+        {
+          messages: [{ role: "user", content: "Test prompt for strict accounting trace" }],
+        },
+        "fast"
+      );
+
+      assert.equal(res.status, 200);
+      const body = await res.json();
+
+      // Verify COP Packet accounting response fields
+      assert.ok(body._cop_packet_id);
+      assert.ok(body._cop_packet_id.startsWith("urn:cop:packet:"));
+      assert.ok(body._cop_provisional_cost_usd);
+
+      // Verify HTTP Headers
+      assert.ok(res.headers.get("X-COP-Packet-ID"));
+      assert.ok(res.headers.get("X-COP-Provisional-Cost-USD"));
+    }
+  );
+});

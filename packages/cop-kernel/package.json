@@ -9,6 +9,11 @@
     "runtime"
   ],
   "license": "MIT",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.0.0",
     "@inseme/cop-core": "workspace:*",

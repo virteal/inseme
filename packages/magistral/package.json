@@ -29,6 +29,8 @@
     "dev:full": "node scripts/dev.js --full"
   },
   "dependencies": {
+    "@inseme/cop-core": "workspace:*",
+    "@inseme/cop-kernel": "workspace:*",
     "node-fetch": "^3.0.0"
   }
 }
