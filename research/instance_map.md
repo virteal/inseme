@@ -28,6 +28,23 @@ canonical_path: "research/instance_map.md"
 Agents/personas are COP objects **inside** an instance, not new DNS tenants.  
 Rename only by explicit human decision and a new version of this note.
 
+### Federation vs person↔twin link (do not conflate)
+
+| Concern                     | Where                                                                                                                                                  |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Instance registry / hub** | Discovery of _instances_ in the Pertitellu federation (Corte = first collective + bootstrap hub). Optional dual-role on the hub Supabase.              |
+| **User ↔ personal twin**    | Optional association of a _collective member account_ with a _personal TwinRoot address_ (email match as primary verification). **Not in schema yet.** |
+
+Full plan (agents must read before inventing columns):  
+[user_personal_twin_link.md](user_personal_twin_link.md) — tracking
+**[inseme#34](https://github.com/JeanHuguesRobert/inseme/issues/34)**.
+
+**Access on the personal twin host** (`jhn.baronsmariani.org`): visitor classes and owner full
+access —  
+[personal_twin_access_policy.md](personal_twin_access_policy.md) —
+**[inseme#35](https://github.com/JeanHuguesRobert/inseme/issues/35)**.
+
 See also:
 [personal_instance_democracy_and_non_capturable_match.md](personal_instance_democracy_and_non_capturable_match.md),  
-[RUNBOOK_JHN_PERSONAL_INSTANCE.md](../apps/platform/docs/RUNBOOK_JHN_PERSONAL_INSTANCE.md).
+[RUNBOOK_JHN_PERSONAL_INSTANCE.md](../apps/platform/docs/RUNBOOK_JHN_PERSONAL_INSTANCE.md),  
+[user_personal_twin_link.md](user_personal_twin_link.md).

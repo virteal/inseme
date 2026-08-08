@@ -5,9 +5,11 @@ language: en
 
 # AGENTS.md — Inseme Multi-Agent Working Contract
 
-This file defines the working contract for coding agents, research agents, and review agents contributing to this repository.
+This file defines the working contract for coding agents, research agents, and review agents
+contributing to this repository.
 
-It is intentionally short. Agents should read it before modifying code, documents, workflows, or package structure.
+It is intentionally short. Agents should read it before modifying code, documents, workflows, or
+package structure.
 
 ---
 
@@ -16,11 +18,13 @@ It is intentionally short. Agents should read it before modifying code, document
 Before acting here:
 
 1. read this repository-local `AGENTS.md`;
-2. read the shared [`cogentia/AGENTS.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/AGENTS.md);
+2. read the shared
+   [`cogentia/AGENTS.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/AGENTS.md);
 3. inspect any closer package-level rule files;
 4. apply the most specific and most restrictive applicable mandate.
 
-The shared baseline supplies the default corpus workflow. This file specializes it for Inseme, COP, the monorepo, and implementation work; it does not silently widen permissions.
+The shared baseline supplies the default corpus workflow. This file specializes it for Inseme, COP,
+the monorepo, and implementation work; it does not silently widen permissions.
 
 ---
 
@@ -38,7 +42,8 @@ TwinRoot: twin:jhn
 first LogicalAgent: Agent JHN / John
 ```
 
-The purpose of current COP work is not to perfect protocol components in isolation. It is to make this first Twin capable of performing real, bounded, replayable work through replaceable handlers.
+The purpose of current COP work is not to perfect protocol components in isolation. It is to make
+this first Twin capable of performing real, bounded, replayable work through replaceable handlers.
 
 Target governed execution chain:
 
@@ -54,9 +59,12 @@ Principal
 → Imputation
 ```
 
-Consequential capabilities additionally require the applicable budget/resource discipline and proportional trace regime.
+Consequential capabilities additionally require the applicable budget/resource discipline and
+proportional trace regime.
 
-Use Issue #17 as the JHN vertical-slice epic and Issue #31 as the immediate COP semantic integration track. The scoped runtime instructions in `apps/platform/mcp/cop/AGENTS.md` define the current implementation frontier.
+Use Issue #17 as the JHN vertical-slice epic and Issue #31 as the immediate COP semantic integration
+track. The scoped runtime instructions in `apps/platform/mcp/cop/AGENTS.md` define the current
+implementation frontier.
 
 Keep generic and instance-specific layers separate:
 
@@ -71,7 +79,37 @@ JeanHuguesRobert/registre-mariani
 = private/restricted overlay for the same Twin
 ```
 
-Do not hard-code JHN-specific doctrine into generic COP contracts merely because JHN is the first implementation. Missing abstractions discovered by the JHN vertical slice should be repaired generically when they are genuinely reusable.
+**Federation / twin association (planned, shared doctrine):**
+
+- Pertitellu = informal federation of **collective** citizen twin instances; Corte
+  (`pertitellu-corte` / lepp.fr) is first city node + bootstrap hub — not a formal _personne morale_
+  registry product.
+- **Instance registry** discovers _instances_; it is not person↔twin binding. Personal TwinRoot
+  (`jhn`) is not the steady-state hub.
+- Optional **user ↔ personal twin** link on collective membership (claim personal twin address;
+  verify primarily by **email match**; **personal twin email is authoritative** when following
+  address changes later). Schema **not** implemented yet — do not invent columns without an explicit
+  task.
+- Canonical note (all agents):
+  [`research/user_personal_twin_link.md`](research/user_personal_twin_link.md); map pointer:
+  [`research/instance_map.md`](research/instance_map.md); tracking issue:
+  [inseme#34](https://github.com/JeanHuguesRobert/inseme/issues/34).
+- **Personal Twin access policy** (who may do what on `jhn.baronsmariani.org`): visitors ≠ owner;
+  conversational agent must receive `access_class` + server-enforced capabilities. One living person
+  = one Personal Twin; owner has full access. Note:
+  [`research/personal_twin_access_policy.md`](research/personal_twin_access_policy.md); tracking:
+  [inseme#35](https://github.com/JeanHuguesRobert/inseme/issues/35).
+- **Interactions Registry / multichannel messaging**: prefer traceable interactions; email as
+  durable spine; extend existing Interaction Packets (method in cogentia, public traces in
+  JeanHuguesRobert, private in registre-mariani); Personal Twin “desk” later. Plan:
+  [`research/interactions_registry_and_multichannel_messaging.md`](research/interactions_registry_and_multichannel_messaging.md).
+  Tracking: [inseme#36](https://github.com/JeanHuguesRobert/inseme/issues/36),
+  [JeanHuguesRobert#2](https://github.com/JeanHuguesRobert/JeanHuguesRobert/issues/2),
+  [cogentia#84](https://github.com/JeanHuguesRobert/cogentia/issues/84).
+
+Do not hard-code JHN-specific doctrine into generic COP contracts merely because JHN is the first
+implementation. Missing abstractions discovered by the JHN vertical slice should be repaired
+generically when they are genuinely reusable.
 
 Current COP implementation priority remains especially:
 
@@ -119,22 +157,27 @@ This repository follows **Optimistic Mainline Governance** by reference:
 - [`cogentia/AGENTS.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/AGENTS.md)
 - [`cogentia/research/optimistic_mainline_governance.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/optimistic_mainline_governance.md)
 
-Direct-main work remains legitimate only when scoped, reversible, inspectable by diff and reported. Branches or PRs are exceptions when they materially improve safety, review or external collaboration.
+Direct-main work remains legitimate only when scoped, reversible, inspectable by diff and reported.
+Branches or PRs are exceptions when they materially improve safety, review or external
+collaboration.
 
-Avoid mixing protocol changes, runtime changes, UI changes, documentation updates, refactors and generated files unless the coupling is necessary and explained.
+Avoid mixing protocol changes, runtime changes, UI changes, documentation updates, refactors and
+generated files unless the coupling is necessary and explained.
 
 ---
 
 ## 4. Preserve COP invariants
 
-Any change touching COP must preserve these invariants unless the change explicitly proposes a versioned protocol revision:
+Any change touching COP must preserve these invariants unless the change explicitly proposes a
+versioned protocol revision:
 
 - immutable Events and Artifacts;
 - topic-local ordering;
 - idempotency under at-least-once delivery;
 - durability of meaningful state;
 - stateless / replaceable handlers;
-- durable `LogicalAgent` identity and resumable work state must not depend solely on inaccessible `HandlerInstance` memory;
+- durable `LogicalAgent` identity and resumable work state must not depend solely on inaccessible
+  `HandlerInstance` memory;
 - coordination via Events and Artifacts, not hidden direct coupling;
 - deterministic replay of recorded traces and projections;
 - explicit schema versioning;
@@ -150,9 +193,11 @@ When working on COP or related systems, separate:
 
 - **abstract level** — concepts, invariants, interfaces, conformance;
 - **implementation level** — concrete runtime, storage, bus, scheduler, UI, adapter, package;
-- **instance level** — JHN-specific configuration, public definition, private overlays and situated mandates.
+- **instance level** — JHN-specific configuration, public definition, private overlays and situated
+  mandates.
 
-Do not let an implementation or one personal instance silently redefine the protocol. Do not let protocol documents drift into untested speculation.
+Do not let an implementation or one personal instance silently redefine the protocol. Do not let
+protocol documents drift into untested speculation.
 
 ---
 
@@ -182,9 +227,11 @@ At minimum, report:
 - files intentionally not tested;
 - assumptions requiring human review.
 
-If no tests exist, say so and propose the smallest conformance or regression test that would reduce risk.
+If no tests exist, say so and propose the smallest conformance or regression test that would reduce
+risk.
 
-For the JHN vertical slice, prefer integration tests that demonstrate governed real Acts rather than only conversational quality.
+For the JHN vertical slice, prefer integration tests that demonstrate governed real Acts rather than
+only conversational quality.
 
 ---
 
@@ -200,7 +247,8 @@ When making decisions, state:
 - what remains uncertain;
 - what could break.
 
-For consequential execution, keep material actor / `HandlerInstance`, `LogicalAgent`, Principal, Mandate, CapabilityInvocation, Act, evidence/effect and Imputation distinguishable where applicable.
+For consequential execution, keep material actor / `HandlerInstance`, `LogicalAgent`, Principal,
+Mandate, CapabilityInvocation, Act, evidence/effect and Imputation distinguishable where applicable.
 
 Do not conceal uncertainty behind confident prose.
 
@@ -219,7 +267,9 @@ Stop and request human validation when a change affects:
 - deletion of documents or package structure;
 - anything likely to affect several repositories.
 
-A valid explicit ongoing mandate may cover ordinary in-scope reversible acts; use judgment rather than adding approval ceremony to every micro-action. Human decision artifacts remain part of the governance model.
+A valid explicit ongoing mandate may cover ordinary in-scope reversible acts; use judgment rather
+than adding approval ceremony to every micro-action. Human decision artifacts remain part of the
+governance model.
 
 ---
 
@@ -239,7 +289,8 @@ Also inspect, when present:
 - [`cogentia/research/agent_configuration_layer.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/agent_configuration_layer.md);
 - [`cogentia/research/optimistic_mainline_governance.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/optimistic_mainline_governance.md).
 
-If these files disagree with this document, preserve the conflict and report it. Do not silently choose one.
+If these files disagree with this document, preserve the conflict and report it. Do not silently
+choose one.
 
 ---
 
@@ -257,4 +308,5 @@ Next step:
 Human validation needed: yes/no
 ```
 
-This keeps multi-agent work reviewable, resumable, and compatible with the Cogentia / COP traceability doctrine.
+This keeps multi-agent work reviewable, resumable, and compatible with the Cogentia / COP
+traceability doctrine.
