@@ -62,6 +62,15 @@ Principal
 Consequential capabilities additionally require the applicable budget/resource discipline and
 proportional trace regime.
 
+**Irreversibility rule (binding):** the more irreversible or high-effect an intended change is, the
+more strictly the associated Acts must be checked **before** execution against a well-identified
+**Mandate** and **Budget** (resource / effect ceiling), and the stronger the **Trace / Imputation**
+must be. Reversible in-scope micro-acts may proceed under a standing mandate without ceremony;
+irreversible or hard-to-undo acts require ex ante filtering (and human principal validation when
+listed under §9). Skills and agents must not widen mandate, budget, disclosure, or effect ceiling
+(see also `cogentia/docs/agent-skills-contract.md`, digital-twin agile roadmap, barons-Mariani agile
+second method). Twin surface restatement: `research/personal_twin_access_policy.md` §2.2bis.
+
 Use Issue #17 as the JHN vertical-slice epic and Issue #31 as the immediate COP semantic integration
 track. The scoped runtime instructions in `apps/platform/mcp/cop/AGENTS.md` define the current
 implementation frontier.

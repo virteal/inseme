@@ -103,6 +103,43 @@ Until a dedicated `owner_subject_id` field exists, document transitional rule:
 **Delegates** never get a silent superset of owner; each capability is **mandate-scoped** and
 traceable (COP Event / CapabilityInvocation).
 
+### 2.2bis Irreversibility → pre-act mandate, budget, and proportional trace (general rule)
+
+This is **not** a special “extra confirm for email” product quirk. It is the same regime as COP /
+second-method / skills contracts, restated for the twin surface.
+
+```text
+The more irreversible (or high-effect / high-cost) an intended change is,
+the more the associated Acts must be:
+  (1) checked against a well-identified Mandate  BEFORE execution
+  (2) checked against applicable Budget / resource ceiling  BEFORE execution
+  (3) recorded under a proportional Trace / Imputation regime  (stronger when costlier to undo)
+```
+
+| Regime                                | When                                                                           | What agents/tools must do                                                                         |
+| ------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| **Reversible, in-scope, low effect**  | Local UI, drafts, dry-runs, reversible config                                  | Act under standing mandate; light trace OK; no approval theater for every micro-step              |
+| **Consequential / costly / external** | Send mail, public post, spend quota, external write                            | **Pre-act:** valid mandate + budget/effect ceiling; **then** Act; **then** proportional trace     |
+| **Irreversible or hard to undo**      | Destructive migration, deletion, commitment-like statements, one-way publishes | **Filter before action** (ex ante precaution); human principal when required; full governed chain |
+
+Canonical pointers (already in corpus — this subsection only makes them **hard to miss** on the twin
+access path):
+
+| Source                                        | Statement                                                                                                                                        |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `inseme/AGENTS.md`                            | Governed chain Principal→…→Act→Trace→Imputation; consequential caps need budget + proportional trace; irreversible migrations → human validation |
+| `cogentia/docs/digital-twin-agile-roadmap.md` | _When the error is irreversible, filter before action. When the trial is reversible, learn by traceable action._                                 |
+| `barons-Mariani/research/agile.md`            | Irreversible → strong ex ante precaution; reversible → disciplined, traceable experimentation                                                    |
+| `cogentia/docs/agent-skills-contract.md`      | Skills must not widen mandate, budget, disclosure, or effect ceiling (#79)                                                                       |
+| COP `governed-act` / Identity profile         | Mandate explicit; capability ≠ authorization; authorization ≠ execution                                                                          |
+
+**UI “extra confirm”** (e.g. before external mail) is only an **affordance** when it helps enforce
+pre-act checks — not a substitute for mandate/budget/trace, and not required for every reversible
+owner click.
+
+The conversational agent must **refuse or gate** tools that would skip pre-act checks on
+consequential/irreversible classes, even for `owner`.
+
 ### 2.3 Conversational agent behavior by class
 
 | Class                 | Agent should                                                                                                             |
@@ -192,7 +229,10 @@ can’t open your private notes”).
 1. May **registered** users leave **private messages** for the owner (inbox) without reading vault?
 2. Is **public** chat allowed to use **public** Cogentia corpus tools only, or also light personal
    public bio?
-3. Should owner mode require re-auth for high-risk tools (send external mail)?
+3. ~~Should owner mode require re-auth for high-risk tools (send external mail)?~~  
+   **Resolved (2026-08-08):** not a special re-auth product rule. Apply the general
+   **irreversibility → pre-act Mandate + Budget + proportional Trace** rule (§2.2bis). UI confirm is
+   optional affordance only.
 4. Rename tokens if French UI labels needed (`visiteur`, `propriétaire`)?
 
 ---
@@ -202,5 +242,8 @@ can’t open your private notes”).
 - [User ↔ Personal Twin link (#34)](user_personal_twin_link.md)
 - [Instance map](instance_map.md)
 - [Personal instance democracy](personal_instance_democracy_and_non_capturable_match.md)
-- [COP Identity profile](cop_identity_kudocracy_profile.md)  
-  )
+- [COP Identity profile](cop_identity_kudocracy_profile.md)
+- `inseme/AGENTS.md` (governed chain + irreversibility rule)
+- `cogentia/docs/digital-twin-agile-roadmap.md` (filter before irreversible action)
+- `barons-Mariani/research/agile.md` (second method)
+- `cogentia/docs/agent-skills-contract.md` (mandate/budget ceiling) )
