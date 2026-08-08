@@ -121,6 +121,8 @@ export function recordGovernedAct(store, input) {
       // handler is material executor only
       responsibility: "logical_agent_under_mandate",
       material_executor: input.handler_instance_ref,
+      packet_id: input.packet_id || input.packet?.packet_id || null,
+      provisional_cost: input.provisional_cost || null,
     },
     idempotency_key: `${correlation}:imputation`,
   });
@@ -174,6 +176,21 @@ export async function jhnDelegateToHandler(options) {
     effect = { error: String(err.message || err) };
   }
 
+  let provisional_cost = options.provisional_cost || null;
+  const packet_id = options.packet_id || options.packet?.packet_id || null;
+
+  if (effect && effect.usage && !provisional_cost) {
+    try {
+      const { getModelRateCard } = await import("./modelPricing.js");
+      const card = getModelRateCard(effect.provider || "openai", effect.model || "gpt-5.4-nano");
+      const inputCost = ((effect.usage.prompt_tokens || 0) / 1_000_000) * card.input_per_m;
+      const outputCost = ((effect.usage.completion_tokens || 0) / 1_000_000) * card.output_per_m;
+      const totalCost = (inputCost + outputCost).toFixed(card.scale || 8);
+      const coeff = Math.round(Number(totalCost) * 1e8).toString();
+      provisional_cost = { coefficient: coeff, scale: 8, unit: "USD" };
+    } catch {}
+  }
+
   return recordGovernedAct(store, {
     principal_ref: identity.principal_ref,
     mandate_ref: identity.mandate_ref,
@@ -184,6 +201,8 @@ export async function jhnDelegateToHandler(options) {
     effect,
     outcome,
     topic_id: identity.topic_id,
+    packet_id,
+    provisional_cost,
   });
 }
 
