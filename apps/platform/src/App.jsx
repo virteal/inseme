@@ -75,6 +75,7 @@ import ConsultationsHome, {
 import FractalFeedPage from "./pages/FractalFeedPage";
 import CafeSessionPage from "./pages/CafeSessionPage";
 import HomeRoute from "./pages/HomeRoute";
+import NasaPage from "./pages/NasaPage";
 
 // Suspense wrapper for lazy-loaded routes
 const LazyRoute = ({ children }) => (
@@ -89,6 +90,7 @@ export function App() {
       <GlobalStatusIndicator />
       <Routes>
         <Route path="/" element={<HomeRoute />} />
+        <Route path="/nasa" element={<NasaPage />} />
         <Route path="/ophelia-land" element={<OpheliaLandingPage />} />
         <Route path="/cop-core" element={<CopCoreLandingPage />} />
         <Route path="/consultations" element={<ConsultationsHome />} />

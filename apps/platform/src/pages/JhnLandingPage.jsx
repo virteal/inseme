@@ -1,6 +1,6 @@
 /**
- * Public entry for personal Twin JHN (jhn.baronsmariani.org).
- * John is the conversational identity — providers are not.
+ * Public entry for John, the personal agent at jhn.baronsmariani.org.
+ * It is deliberately separate from civic/collective consultation surfaces.
  */
 import { Link } from "react-router-dom";
 import { getConfig } from "../common/config/instanceConfig.client.js";
@@ -16,13 +16,12 @@ export default function JhnLandingPage() {
         <header className="space-y-6 border-b border-slate-800 pb-12">
           <div className="inline-flex items-center rounded-full border border-emerald-800/60 bg-emerald-950/40 px-3 py-1 text-xs font-medium text-emerald-300">
             <span className="mr-2 inline-block h-2 w-2 rounded-full bg-emerald-400" />
-            Instance personnelle · TwinRoot JHN
+            Personal instance · John
           </div>
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">John</h1>
           <p className="max-w-2xl text-base leading-relaxed text-slate-300">
-            Assistant conversationnel et continuité mandataire pour{" "}
-            <strong className="text-slate-100">{name}</strong>. Les modèles et outils externes sont
-            des capacités gouvernées — l’identité visible reste{" "}
+            The personal conversational agent for <strong className="text-slate-100">{name}</strong>
+            . External models and tools are governed capabilities; the public-facing identity is{" "}
             <strong className="text-slate-100">John</strong>.
           </p>
           <p className="text-sm text-slate-500">{canonical}</p>
@@ -31,43 +30,38 @@ export default function JhnLandingPage() {
         <main className="mt-10 space-y-8">
           <section className="grid gap-4 sm:grid-cols-2">
             <Card
-              title="Parler à John"
-              body="Interface de conversation (chat). Nécessite une session autorisée selon la configuration de l’instance."
+              title="Talk to John"
+              body="The personal conversation space. Sign in when the instance requires an authenticated session."
               to="/john"
-              cta="Ouvrir le chat"
+              cta="Open the conversation"
               primary
             />
             <Card
-              title="Tableau de bord"
-              body="Vue d’accueil instance (statut, accès, administration si mandat)."
-              to="/dashboard"
-              cta="Tableau de bord"
+              title="La Nasa"
+              body="A public window on Fractanet, with a work area reserved for the authenticated Principal and delegated agents."
+              to="/nasa"
+              cta="Open La Nasa"
             />
           </section>
 
           <section className="rounded-xl border border-slate-800 bg-slate-900/50 p-6 text-sm text-slate-300">
-            <h2 className="mb-3 text-base font-semibold text-slate-100">Gouvernance (rappel)</h2>
+            <h2 className="mb-3 text-base font-semibold text-slate-100">
+              How this space is governed
+            </h2>
             <ul className="list-disc space-y-2 pl-5">
+              <li>Public reading does not grant publication or editing rights.</li>
               <li>
-                Lecture ≠ divulgation : un mandat de lecture n’autorise pas la publication externe.
+                The Principal can delegate specific work to agents without making that work public.
               </li>
               <li>
-                Les Actes gouvernés enregistrent Principal, Mandat, Agent logique et Handler
-                (exécuteur remplaçable).
-              </li>
-              <li>
-                Un handler ou modèle peut être remplacé sans casser la continuité conversationnelle
-                de John.
+                This is a personal agent space, not a collective consultation or survey service.
               </li>
             </ul>
           </section>
 
           <section className="flex flex-wrap gap-3 text-sm">
-            <Link className="text-emerald-400 hover:underline" to="/cop-core">
-              COP
-            </Link>
             <Link className="text-emerald-400 hover:underline" to="/legal/privacy">
-              Confidentialité
+              Privacy
             </Link>
             <Link className="text-emerald-400 hover:underline" to="/contact">
               Contact

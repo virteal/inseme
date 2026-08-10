@@ -29,7 +29,10 @@ export default defineConfig(({ mode }) => ({
       "@inseme/brique-actes": path.resolve(__dirname, "../../packages/brique-actes/src"),
       "@inseme/brique-group": path.resolve(__dirname, "../../packages/brique-group/src"),
       "@inseme/cop-core": path.resolve(__dirname, "../../packages/cop-core/dist/index.js"),
-      "@inseme/cop-kernel": path.resolve(__dirname, "../../packages/cop-kernel/src/index.js"),
+      // The browser must not bundle the full kernel: it exports Node-only
+      // persistence, stdio and webhook modules. Platform UI uses the safe
+      // accounting subset instead.
+      "@inseme/cop-kernel": path.resolve(__dirname, "../../packages/cop-kernel/src/browser.js"),
       "@inseme/brique-ophelia": path.resolve(__dirname, "../../packages/brique-ophelia/index.jsx"),
       // Workspace packages (room, ui, briques) import react-router-dom as a peer.
       // Vite resolves from the importing file's tree, so force the app's single v7 copy.

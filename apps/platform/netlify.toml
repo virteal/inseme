@@ -182,6 +182,10 @@
 [[edge_functions]]
   function = "gen-host-robots"
   path = "/robots.txt"
+
+[[edge_functions]]
+  function = "nasa-control"
+  path = "/api/nasa/control"
 # --- GENERATED BRIQUE EDGE END ---
 # SPA fallback — must remain last so /api/* rules win first
 [[redirects]]
