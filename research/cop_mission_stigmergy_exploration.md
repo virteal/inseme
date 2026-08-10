@@ -18,6 +18,7 @@ related_documents:
   - "sandbox/cop-continuation-bac-a-sable/scenarios/machine-a-explorer-gabarit-abstrait.js"
   - "research/cop_fractalog_profile.md"
   - "barons-Mariani/research/rational_odysseys_the_possible.md"
+  - "barons-Mariani/research/presencology.md"
   - "FractaVolta/research/fractalog.md"
   - "FractaVolta/research/ownership_packets_and_cop.md"
 tags:
@@ -30,6 +31,8 @@ tags:
   - rational-exploration
   - agents
   - corpus
+  - presencology
+  - presence-map
 ---
 
 # COP Mission Stigmergy and Rational Exploration
@@ -180,6 +183,97 @@ This grammar is not required for machine execution. It is useful for human under
 }
 ```
 
+### Presence as a generic adjacent primitive
+
+COP should not define `COPPresence` as the canonical ontology of presence. Presence is a more general primitive, defined in the Barons Mariani research corpus by **Presencology**, and may concern humans, physical objects, software agents, populations, or other subjects.
+
+COP consumes this generic concept for Mission exploration.
+
+A Mission may therefore associate qualified presence information with an agent and a region of a possible-space:
+
+```json
+{
+  "type": "PresenceClaim",
+  "subjectRef": "urn:cop:agent:...",
+  "spaceRef": "urn:cop:possible-space:...",
+  "regionRef": "concept://cop/mission/stigmergy",
+  "validTime": {
+    "start": "2026-08-10T18:00:00+02:00",
+    "end": null
+  },
+  "modality": "observed|inferred|declared|scheduled|expected|predicted|conditional|hypothetical",
+  "evidenceRefs": [],
+  "confidence": null
+}
+```
+
+The exact Presence schema remains a Presencology research problem and MUST NOT be frozen by this technical note.
+
+### Possible-space maps as projections
+
+`COPPossibleSpace.mapArtifactRefs` should be understood as references to **projections** of a multidimensional possible-space, not as a claim that the Mission possesses a complete map of The Possible.
+
+A map artifact SHOULD declare, when relevant:
+
+```text
+projection purpose
+dimensions retained
+dimensions collapsed
+resolution
+known distortions
+provenance
+validity domain
+uncertainty
+```
+
+A Mission may maintain multiple simultaneous maps.
+
+### Potentiality, presence and trace layers
+
+A Cartographer may maintain distinct but alignable layers:
+
+```text
+Potentiality Map  -> where exploration appears promising
+Presence Map      -> where explorers are / were / may be
+Trace Map         -> what earlier exploration left behind
+Constraint Map    -> what inhibits or bounds movement / actualization
+```
+
+These layers MUST NOT be silently collapsed.
+
+In particular:
+
+```text
+PresenceDensity != Potentiality
+Presence != Trace
+Map != The Possible
+```
+
+The joint structure of those layers may guide exploration, but any inferred "underexplored region" remains a contestable Mission hypothesis.
+
+### Latent Functional Map
+
+COP SHOULD NOT assume that collective map knowledge must be centralized.
+
+A flotilla may functionally orient through the evolving configuration of:
+
+```text
+agent local state
+presences
+stigmergic traces
+continuations
+artifacts
+base-camp memory
+environmental state
+interaction rules
+```
+
+without any single agent or artifact containing a complete representation.
+
+Presencology calls this a **Latent Functional Map**.
+
+The COP Cartographer therefore externalizes useful map projections; it does not claim to exhaust the distributed informational state of the Mission.
+
 ### COPStigmergicTrace
 
 ```json
@@ -295,6 +389,12 @@ cop.mission.path_opened
 cop.mission.trace_left
 cop.mission.trace_reinforced
 cop.mission.trace_contradicted
+cop.mission.presence_claimed
+cop.mission.presence_observed
+cop.mission.presence_estimated
+cop.mission.presence_forecast
+cop.mission.presence_invalidated
+cop.mission.presence_map_updated
 cop.mission.continuation_created
 cop.mission.continuation_suspended
 cop.mission.continuation_resumed
@@ -323,7 +423,7 @@ A rational exploration Mission may assign specialized agents:
 | Role | Function |
 |---|---|
 | Scout | Explore quickly and leave lightweight traces. |
-| Cartographer | Maintain possible-space maps. |
+| Cartographer | Maintain explicit projections of possible-space, including potentiality, presence, trace and constraint layers; preserve provenance, uncertainty and contradictions; never imply that one projection is The Possible itself. |
 | Verifier | Check sources and reduce false positives. |
 | Contradictor | Seek objections, dead ends, hidden inhibitors. |
 | Synthesizer | Detect patterns and candidate theory. |
@@ -497,6 +597,13 @@ Minimal support for Mission Stigmergy in COP:
 ```text
 COPMission schema
 COPPossibleSpace schema
+generic Presence reference/profile
+Presence Claim / Estimate references
+presence lifecycle events
+presence-map artifacts
+projection metadata
+Potentiality / Presence / Trace layer separation
+latent-functional-map compatibility
 COPStigmergicTrace schema
 mission lifecycle events
 trace lifecycle events
@@ -517,6 +624,7 @@ corpus integration hooks
 ```text
 Task executes.
 Mission explores.
+Presence locates.
 Trace orients.
 Continuation preserves return.
 FractaLog proves.
