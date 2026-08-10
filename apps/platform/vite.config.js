@@ -1,3 +1,4 @@
+import process from "node:process";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
@@ -5,6 +6,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const isJhnProfileBuild = process.env.INSEME_DEPLOYMENT_PROFILE === "jhn";
 
 export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss()],
@@ -45,7 +47,11 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     sourcemap: true,
-    minify: mode === "production" ? "esbuild" : false,
+    // Vite/esbuild minification currently hangs or terminates with STATUS_STACK_BUFFER_OVERRUN
+    // on the JHN profile's large legacy frontend bundle under Windows/Node 24. Keep source maps
+    // and preserve production minification for every other profile until frontend minimization
+    // makes this workaround unnecessary.
+    minify: isJhnProfileBuild ? false : mode === "production" ? "esbuild" : false,
   },
   server: {
     watch: {

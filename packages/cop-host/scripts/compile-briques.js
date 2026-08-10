@@ -17,6 +17,7 @@ import {
   symlinkSync as fsSymlinkSync,
 } from "fs";
 import { platform } from "os";
+import { loadBriqueProfile, selectBriqueCapabilities } from "../src/brique-profile.js";
 
 /**
  * PATH NORMALIZATION
@@ -88,6 +89,38 @@ function findRoot(startDir) {
 const ROOT = findRoot(__dirname);
 const APPS_PATH = join(ROOT, "apps");
 
+function readCliOption(name) {
+  const index = process.argv.indexOf(name);
+  if (index >= 0) return process.argv[index + 1];
+  const prefix = `${name}=`;
+  return process.argv.find((value) => value.startsWith(prefix))?.slice(prefix.length);
+}
+
+const selectedHostApp = readCliOption("--app");
+const profileArgument = readCliOption("--profile");
+const isReportOnly = process.argv.includes("--report");
+const profilePath = profileArgument
+  ? resolve(
+      profileArgument.includes("/") ||
+        profileArgument.includes("\\") ||
+        profileArgument.endsWith(".json")
+        ? profileArgument
+        : join(
+            APPS_PATH,
+            selectedHostApp || profileArgument,
+            "brique-profiles",
+            `${profileArgument}.json`
+          )
+    )
+  : null;
+const BRIQUE_PROFILE = profilePath ? loadBriqueProfile(profilePath) : null;
+
+if (BRIQUE_PROFILE && selectedHostApp && selectedHostApp !== BRIQUE_PROFILE.host_app) {
+  throw new Error(
+    `Profile ${BRIQUE_PROFILE.id} belongs to host app ${BRIQUE_PROFILE.host_app}, not ${selectedHostApp}`
+  );
+}
+
 const isDebug = process.argv.includes("--debug");
 const isVerbose =
   process.argv.includes("--verbose") || process.argv.includes("-v") || process.env.DEBUG || isDebug;
@@ -118,6 +151,59 @@ function safeMkdir(path) {
   if (!existsSync(absolutePath)) {
     if (isVerbose) console.log(`  📁 Creation dossier: ${relative(ROOT, absolutePath)}`);
     mkdirSync(absolutePath, { recursive: true });
+  }
+}
+
+function netlifyOutputDir(appPath, kind) {
+  if (!BRIQUE_PROFILE) return join(appPath, "netlify", kind);
+  return join(appPath, "netlify", "profiles", BRIQUE_PROFILE.id, kind);
+}
+
+function generateProfileCoreEdgeFunctions(appPath, generatedFiles) {
+  if (!BRIQUE_PROFILE) return;
+
+  const genDir = netlifyOutputDir(appPath, "edge-functions");
+  safeMkdir(genDir);
+
+  for (const edgeFunction of BRIQUE_PROFILE.core.edge_functions) {
+    const sourcePath = resolve(appPath, edgeFunction.source);
+    if (!existsSync(sourcePath)) {
+      throw new Error(
+        `Core edge source for profile ${BRIQUE_PROFILE.id} not found: ${edgeFunction.source}`
+      );
+    }
+    const targetPath = join(genDir, `${edgeFunction.function}.js`);
+    const source = readFileSync(sourcePath, "utf8");
+    const content = `// GENERATED FROM ${edgeFunction.source} FOR PROFILE ${BRIQUE_PROFILE.id}\n${source}`;
+    generatedFiles.add(targetPath);
+    writeIfChanged(targetPath, content);
+  }
+}
+
+function profileModuleSpecifier(briqueDir, sourcePath) {
+  const packagePath = join(briqueDir, "package.json");
+  if (!existsSync(packagePath)) return null;
+  const packageName = JSON.parse(readFileSync(packagePath, "utf8")).name;
+  if (!packageName) return null;
+  const packageRelativePath = relative(briqueDir, sourcePath).replace(/\\/g, "/");
+  return `${packageName}/${packageRelativePath}`;
+}
+
+function validateProfileRuntime(appPath) {
+  if (!BRIQUE_PROFILE) return;
+  const packagePath = join(appPath, "package.json");
+  const appPackage = JSON.parse(readFileSync(packagePath, "utf8"));
+  const declaredPackages = {
+    ...(appPackage.dependencies || {}),
+    ...(appPackage.devDependencies || {}),
+  };
+  const missing = BRIQUE_PROFILE.core.runtime.required_packages.filter(
+    (packageName) => !declaredPackages[packageName]
+  );
+  if (missing.length > 0) {
+    throw new Error(
+      `Profile ${BRIQUE_PROFILE.id} requires COP runtime packages missing from ${BRIQUE_PROFILE.host_app}: ${missing.join(", ")}`
+    );
   }
 }
 
@@ -161,18 +247,36 @@ async function compile() {
     })
   ).sort();
 
-  const hostApps = hostAppsGlob
+  const discoveredHostApps = hostAppsGlob
     .map((p) => p.split(/[\\/]/)[0])
     .filter((v, i, a) => a.indexOf(v) === i)
     .filter((appName) => appName.toLowerCase() !== "apps");
 
+  const requestedHostApp = BRIQUE_PROFILE?.host_app || selectedHostApp;
+  const hostApps = requestedHostApp
+    ? discoveredHostApps.filter((appName) => appName === requestedHostApp)
+    : discoveredHostApps;
+
+  if (requestedHostApp && hostApps.length === 0) {
+    throw new Error(`Host app not found: ${requestedHostApp}`);
+  }
+
+  for (const appName of hostApps) validateProfileRuntime(join(APPS_PATH, appName));
+
   if (isVerbose) console.log(`🏠 Host applications detected: ${hostApps.join(", ")}`);
+  if (BRIQUE_PROFILE) {
+    console.log(
+      `🎛️  Applying deployment profile ${BRIQUE_PROFILE.id} to ${BRIQUE_PROFILE.host_app}: ${BRIQUE_PROFILE.briques.map((brique) => brique.id).join(", ") || "core only"}`
+    );
+  }
 
   for (const manifestPath of manifests) {
     const fullPath = resolve(ROOT, manifestPath);
     const briqueDir = dirname(fullPath);
 
-    const { default: config } = await import(`file://${fullPath}?t=${Date.now()}`);
+    const { default: manifestConfig } = await import(`file://${fullPath}?t=${Date.now()}`);
+    const config = selectBriqueCapabilities(manifestConfig, BRIQUE_PROFILE);
+    if (!config) continue;
 
     const normalizedStatus =
       config.status && Object.values(BRIQUE_STATUSES).includes(config.status)
@@ -194,11 +298,13 @@ async function compile() {
       _briqueDir: briqueDir,
     });
 
+    if (isReportOnly) continue;
+
     for (const appName of hostApps) {
       const appPath = join(APPS_PATH, appName);
 
       if (config.functions) {
-        const genDir = join(appPath, "netlify/functions");
+        const genDir = netlifyOutputDir(appPath, "functions");
         safeMkdir(genDir);
 
         const runtimePath = resolve(ROOT, "packages/cop-host/src/runtime/function.js");
@@ -287,7 +393,7 @@ export default defineNodeFunctionWithLogging(DEFINE_FUNCTION(handler), {
       }
 
       if (config.edgeFunctions) {
-        const genDir = join(appPath, "netlify/edge-functions");
+        const genDir = netlifyOutputDir(appPath, "edge-functions");
         safeMkdir(genDir);
 
         const runtimePath = resolve(ROOT, "packages/cop-host/src/runtime/edge.js");
@@ -322,13 +428,33 @@ export default defineNodeFunctionWithLogging(DEFINE_FUNCTION(handler), {
             ROOT,
             "packages/cop-host/src/lib/logging/edge-wrapper.js"
           );
-          const relEdgeWrapperPath = relative(genDir, edgeWrapperPath).replace(/\\/g, "/");
+          const relEdgeWrapperPath = BRIQUE_PROFILE
+            ? "@inseme/cop-host/logging/edge-wrapper.js"
+            : relative(genDir, edgeWrapperPath).replace(/\\/g, "/");
+          const handlerImportPath = BRIQUE_PROFILE
+            ? profileModuleSpecifier(briqueDir, handlerPath)
+            : relHandlerPath;
+          if (!handlerImportPath) {
+            throw new Error(`Profile handler must belong to a named package: ${handlerPath}`);
+          }
 
           let wrapperContent;
           if (isAlreadyLoggingWrapped) {
             // Already has logging, just use it as-is
             wrapperContent = `// GENERATED AUTOMATICALLY BY COP-HOST COMPILER
-import handler from "${relHandlerPath}";
+import handler from "${handlerImportPath}";
+
+export default handler;
+
+export const config = {
+  path: "${funcConfig.path}"
+};
+`;
+          } else if (BRIQUE_PROFILE && isAlreadyWrapped) {
+            // Profile builds must remain Edge-native. The handler already uses defineEdgeFunction,
+            // while the legacy logging wrapper bundles Node-oriented logging modules.
+            wrapperContent = `// GENERATED AUTOMATICALLY BY COP-HOST COMPILER
+import handler from "${handlerImportPath}";
 
 export default handler;
 
@@ -340,7 +466,7 @@ export const config = {
             // Has defineEdgeFunction but not logging, wrap with logging
             wrapperContent = `// GENERATED AUTOMATICALLY BY COP-HOST COMPILER
 import { defineEdgeFunctionWithLogging } from "${relEdgeWrapperPath}";
-import handler from "${relHandlerPath}";
+import handler from "${handlerImportPath}";
 
 export default defineEdgeFunctionWithLogging(handler, {
   name: '${config.id}-${funcName}',
@@ -361,7 +487,7 @@ export const config = {
             // No wrapper at all, add logging wrapper
             wrapperContent = `// GENERATED AUTOMATICALLY BY COP-HOST COMPILER
 import { defineEdgeFunctionWithLogging } from "${relEdgeWrapperPath}";
-import handler from "${relHandlerPath}";
+import handler from "${handlerImportPath}";
 
 export default defineEdgeFunctionWithLogging(handler, {
   name: '${config.id}-${funcName}',
@@ -387,7 +513,7 @@ export const config = {
 
       // --- NEW: GENERATE TOOL HANDLERS AS EDGE FUNCTIONS ---
       if (config.tools) {
-        const genDir = join(appPath, "netlify/edge-functions");
+        const genDir = netlifyOutputDir(appPath, "edge-functions");
         safeMkdir(genDir);
 
         const runtimePath = resolve(ROOT, "packages/cop-host/src/runtime/edge.js");
@@ -448,7 +574,7 @@ export const config = {
       }
 
       const briquePublicDir = join(briqueDir, "public");
-      if (existsSync(briquePublicDir)) {
+      if (!BRIQUE_PROFILE && existsSync(briquePublicDir)) {
         const appPublicGenDir = join(appPath, "public/briques", config.id);
         const parentDir = dirname(appPublicGenDir);
         safeMkdir(parentDir);
@@ -471,28 +597,60 @@ export const config = {
     }
   }
 
+  if (isReportOnly) {
+    console.log(
+      JSON.stringify(
+        {
+          profile: BRIQUE_PROFILE
+            ? {
+                id: BRIQUE_PROFILE.id,
+                host_app: BRIQUE_PROFILE.host_app,
+                core: BRIQUE_PROFILE.core,
+              }
+            : null,
+          host_apps: hostApps,
+          briques: briques.map((brique) => ({
+            id: brique.id,
+            routes: (brique.routes || []).map((route) => route.path),
+            functions: Object.keys(brique.functions || {}),
+            edge_functions: Object.keys(brique.edgeFunctions || {}),
+          })),
+        },
+        null,
+        2
+      )
+    );
+    return;
+  }
+
+  for (const appName of hostApps) {
+    generateProfileCoreEdgeFunctions(join(APPS_PATH, appName), generatedFiles);
+  }
+
   for (const appName of hostApps) {
     const appPath = join(APPS_PATH, appName);
-    const appSrc = join(appPath, "src");
-    if (existsSync(appSrc)) {
-      const registryPath = generateFrontendRegistry(appSrc, briques);
-      if (registryPath) generatedFiles.add(registryPath);
-    }
+    if (!BRIQUE_PROFILE) {
+      const appSrc = join(appPath, "src");
+      if (existsSync(appSrc)) {
+        const registryPath = generateFrontendRegistry(appSrc, briques);
+        if (registryPath) generatedFiles.add(registryPath);
+      }
 
-    // --- NEW: GENERATE TEST REGISTRY ---
-    const appTests = join(appPath, "tests/integration");
-    if (existsSync(appTests)) {
-      const testRegistryPath = generateTestRegistry(appTests, briques);
-      if (testRegistryPath) generatedFiles.add(testRegistryPath);
-    }
+      // --- NEW: GENERATE TEST REGISTRY ---
+      const appTests = join(appPath, "tests/integration");
+      if (existsSync(appTests)) {
+        const testRegistryPath = generateTestRegistry(appTests, briques);
+        if (testRegistryPath) generatedFiles.add(testRegistryPath);
+      }
 
-    updateNetlifyToml(appName, briques);
-    syncDependencies(appName, briques);
+      updateNetlifyToml(appName, briques);
+      syncDependencies(appName, briques);
+    }
 
     const dirsToCheck = [
-      join(appPath, "netlify/functions"),
-      join(appPath, "netlify/edge-functions"),
-      join(appPath, "public/briques"),
+      netlifyOutputDir(appPath, "functions"),
+      netlifyOutputDir(appPath, "edge-functions"),
+      ...(BRIQUE_PROFILE ? [] : [join(appPath, "public/briques")]),
     ];
 
     for (const dir of dirsToCheck) {
@@ -512,22 +670,24 @@ export const config = {
     }
   }
 
-  const roomPath = resolve(ROOT, "packages/room");
-  if (existsSync(roomPath)) {
-    const registryPath = generateFrontendRegistry(roomPath, briques);
-    if (registryPath) generatedFiles.add(registryPath);
+  if (!BRIQUE_PROFILE) {
+    const roomPath = resolve(ROOT, "packages/room");
+    if (existsSync(roomPath)) {
+      const registryPath = generateFrontendRegistry(roomPath, briques);
+      if (registryPath) generatedFiles.add(registryPath);
+    }
+
+    const opheliaPath = resolve(ROOT, "packages/brique-ophelia/edge/lib");
+    if (existsSync(opheliaPath)) {
+      const toolsRegistryPath = generateToolsRegistry(opheliaPath, briques);
+      if (toolsRegistryPath) generatedFiles.add(toolsRegistryPath);
+
+      const promptsRegistryPath = generatePromptsRegistry(opheliaPath, briques);
+      if (promptsRegistryPath) generatedFiles.add(promptsRegistryPath);
+    }
+
+    await generateMagistralMaps();
   }
-
-  const opheliaPath = resolve(ROOT, "packages/brique-ophelia/edge/lib");
-  if (existsSync(opheliaPath)) {
-    const toolsRegistryPath = generateToolsRegistry(opheliaPath, briques);
-    if (toolsRegistryPath) generatedFiles.add(toolsRegistryPath);
-
-    const promptsRegistryPath = generatePromptsRegistry(opheliaPath, briques);
-    if (promptsRegistryPath) generatedFiles.add(promptsRegistryPath);
-  }
-
-  await generateMagistralMaps();
 
   // === Brique Maturity Report ===
   console.log("\n📊  Brique Maturity Report (post 2025 massive refactoring):");

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "jhn",
+  "host_app": "platform",
+  "deployment_kind": "personal",
+  "application_profile": "personal-twin",
+  "core": {
+    "runtime": {
+      "kind": "cop-orchestration",
+      "required_packages": ["@inseme/cop-kernel", "@inseme/cop-host"]
+    },
+    "routes": ["/", "/john", "/nasa"],
+    "edge_functions": [
+      {
+        "function": "nasa-control",
+        "path": "/api/nasa/control",
+        "source": "netlify/edge-functions/nasa-control.js"
+      },
+      {
+        "function": "gen-ophelia-chat-stream",
+        "path": "/api/chat-stream",
+        "source": "../../packages/brique-ophelia/edge/jhn-chat-stream.js"
+      },
+      {
+        "function": "jhn-cop-events",
+        "path": "/api/jhn-cop-events",
+        "source": "netlify/edge-functions/jhn-cop-events.js"
+      }
+    ]
+  },
+  "briques": [
+    {
+      "id": "ophelia",
+      "routes": [],
+      "functions": [],
+      "edge_functions": []
+    }
+  ]
+}
