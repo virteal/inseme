@@ -20,6 +20,11 @@ related:
   - "JeanHuguesRobert/inseme#17"
   - "JeanHuguesRobert/inseme#30"
   - "JeanHuguesRobert/inseme#33"
+lifecycle_state: "active"
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "explicit-metadata"
+classification_confidence: "medium"
 ---
 
 # User ↔ Personal Twin link on collective instances

@@ -43,6 +43,10 @@ tags:
   - control-plane
   - packet-attractor
   - fractanet
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "explicit-metadata"
+classification_confidence: "medium"
 ---
 
 # COP Zero Draft — Mission-Bearing Cognitive Packet Kernel

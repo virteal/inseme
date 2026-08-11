@@ -24,6 +24,11 @@ related:
   - "JeanHuguesRobert/inseme#36"
   - "JeanHuguesRobert/JeanHuguesRobert#2"
   - "JeanHuguesRobert/cogentia#84"
+lifecycle_state: "active"
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "explicit-metadata"
+classification_confidence: "medium"
 ---
 
 # Interactions Registry & multichannel messaging

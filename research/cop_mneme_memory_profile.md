@@ -11,59 +11,60 @@ provenance:
   origin_type: conversation
   origin_repository: JeanHuguesRobert/inseme
   origin_ref: main
-  origin_date: '2026-07-31'
+  origin_date: "2026-07-31"
   derived_from:
     - JeanHuguesRobert/cogentia/research/mneme_memory_architecture.md
 review:
   status: unreviewed
   reviewed_by: []
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "explicit-metadata"
+classification_confidence: "medium"
 ---
 
 # COP Mneme Memory Profile
 
 ## Status
 
-Working architecture note. This document proposes a memory-profile extension
-for COP implementations. It does not modify COP core invariants or create a
-protocol requirement until those changes are separately specified and tested.
+Working architecture note. This document proposes a memory-profile extension for COP
+implementations. It does not modify COP core invariants or create a protocol requirement until those
+changes are separately specified and tested.
 
 ## Problem
 
-COP needs memory that is durable enough for replay, audit, continuation and
-governed delegation, while remaining portable across repositories, relational
-stores, local nodes and object stores.
+COP needs memory that is durable enough for replay, audit, continuation and governed delegation,
+while remaining portable across repositories, relational stores, local nodes and object stores.
 
-A single database record, blob or vector index is insufficient. Each has a
-different role and failure mode.
+A single database record, blob or vector index is insufficient. Each has a different role and
+failure mode.
 
 ## Mneme
 
-A **mneme** is an addressable, durable and governed unit of external memory.
-It links content to provenance, epistemic status, relations, versions and
-access capabilities.
+A **mneme** is an addressable, durable and governed unit of external memory. It links content to
+provenance, epistemic status, relations, versions and access capabilities.
 
 A mneme is not a source asset, a working context, an engram, or a Cogentigram.
 
 ## COP object mapping
 
-| COP-facing object | Memory role |
-|---|---|
-| Source Asset | immutable original or capture |
-| Locator | precise reference inside an asset |
-| Mneme | governed memory artifact or assertion |
-| Memory View | mandate-filtered projection for a task |
-| Working Context | ephemeral invocation-local context |
-| Cogentigraphic Observation | measured behavioural or structural observation |
-| Cogentigram | versioned structural model, separate from biographical memory |
-| Recovery Exercise | evidence-producing test of restoration or migration |
+| COP-facing object          | Memory role                                                   |
+| -------------------------- | ------------------------------------------------------------- |
+| Source Asset               | immutable original or capture                                 |
+| Locator                    | precise reference inside an asset                             |
+| Mneme                      | governed memory artifact or assertion                         |
+| Memory View                | mandate-filtered projection for a task                        |
+| Working Context            | ephemeral invocation-local context                            |
+| Cogentigraphic Observation | measured behavioural or structural observation                |
+| Cogentigram                | versioned structural model, separate from biographical memory |
+| Recovery Exercise          | evidence-producing test of restoration or migration           |
 
-Meaningful state must remain durable and replayable. Working context remains
-ephemeral unless an explicit promotion produces an Artifact or Event.
+Meaningful state must remain durable and replayable. Working context remains ephemeral unless an
+explicit promotion produces an Artifact or Event.
 
 ## Storage capability profile
 
-A COP implementation should describe storage through capabilities, not vendor
-names:
+A COP implementation should describe storage through capabilities, not vendor names:
 
 ```text
 versioned_repository

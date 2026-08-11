@@ -33,19 +33,24 @@ tags:
   - corpus
   - presencology
   - presence-map
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "explicit-metadata"
+classification_confidence: "medium"
 ---
 
 # COP Mission Stigmergy and Rational Exploration
 
 ## Technical bridge between Mission, The Possible, continuations, stigmergic traces, FractaLog, and corpus return
 
-*Working note — 2026-07-10*
+_Working note — 2026-07-10_
 
 ---
 
 ## 1. Purpose
 
-COP currently has strong primitives for events, artifacts, tasks, steps, continuations, traces, and resumable workflows. This note introduces a higher-level operational object: **Mission**.
+COP currently has strong primitives for events, artifacts, tasks, steps, continuations, traces, and
+resumable workflows. This note introduces a higher-level operational object: **Mission**.
 
 A Mission is the protocol-level envelope for the rational exploration of **The Possible**.
 

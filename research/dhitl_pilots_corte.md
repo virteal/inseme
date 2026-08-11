@@ -18,23 +18,35 @@ related_documents:
   - "https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/DHITL.md"
   - "https://github.com/JeanHuguesRobert/marenostrum/blob/main/research/dhitl-membership-and-federation.md"
   - "../packages/cop-core/Invariants.md"
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "explicit-metadata"
+classification_confidence: "medium"
 ---
 
 # DHITL — Pilotes de Corte
 
 ## Objet
 
-Ce document décrit une méthode provisoire pour expérimenter DHITL dans des communautés réelles situées à Corte.
+Ce document décrit une méthode provisoire pour expérimenter DHITL dans des communautés réelles
+situées à Corte.
 
-Il ne prétend pas résoudre abstraitement la question du pouvoir constituant initial. Il part d'un constat : une institution démocratique complète ne peut pas être décrétée par son initiateur, mais l'attente de cette institution complète empêcherait toute expérimentation susceptible d'en démontrer la possibilité.
+Il ne prétend pas résoudre abstraitement la question du pouvoir constituant initial. Il part d'un
+constat : une institution démocratique complète ne peut pas être décrétée par son initiateur, mais
+l'attente de cette institution complète empêcherait toute expérimentation susceptible d'en démontrer
+la possibilité.
 
 La stratégie est donc :
 
-> **Commencer dans les périmètres où un mandat réel peut être obtenu, rendre l'expérience vérifiable, laisser l'adhésion volontaire produire l'extension et fédérer progressivement les expériences qui le souhaitent.**
+> **Commencer dans les périmètres où un mandat réel peut être obtenu, rendre l'expérience
+> vérifiable, laisser l'adhésion volontaire produire l'extension et fédérer progressivement les
+> expériences qui le souhaitent.**
 
 Formule populaire : **« Qui m'aime me suive. »**
 
-Cette formule signifie ici : personne n'est obligé de participer ; l'initiateur ne reçoit aucune autorité implicite sur les autres ; les méthodes et résultats doivent être reprenables, contestables et forkables.
+Cette formule signifie ici : personne n'est obligé de participer ; l'initiateur ne reçoit aucune
+autorité implicite sur les autres ; les méthodes et résultats doivent être reprenables, contestables
+et forkables.
 
 ---
 

@@ -47,6 +47,10 @@ tags:
   - durability
   - traceability
 human_validation_required: true
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "explicit-metadata"
+classification_confidence: "medium"
 ---
 
 # COP Reference Runtime Plan

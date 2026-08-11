@@ -42,6 +42,10 @@ tags:
   - openclaw
   - cop
   - agents-jhn
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "explicit-metadata"
+classification_confidence: "medium"
 ---
 
 # Instance personnelle, démocratie et match non achetable

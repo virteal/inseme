@@ -20,6 +20,11 @@ related:
   - "JeanHuguesRobert/inseme#17"
   - "JeanHuguesRobert/inseme#33"
   - "JeanHuguesRobert/inseme#34"
+lifecycle_state: "active"
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "explicit-metadata"
+classification_confidence: "medium"
 ---
 
 # Personal Twin access policy — visitors, members, owner, agent

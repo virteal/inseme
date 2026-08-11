@@ -24,6 +24,11 @@ related:
   - "JeanHuguesRobert/inseme#35"
   - "JeanHuguesRobert/inseme#36"
   - "JeanHuguesRobert/inseme#33"
+lifecycle_state: "active"
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "explicit-metadata"
+classification_confidence: "medium"
 ---
 
 # Personal Twin public intelligence core

@@ -46,6 +46,10 @@ document_role: "source"
 document_kind: "protocol-profile"
 visibility: "public"
 lifecycle_state: "working"
+classification_source: "cogentia.js"
+classification_version: "1"
+classification_rule: "explicit-metadata"
+classification_confidence: "medium"
 ---
 
 # COP FractaLog Profile
