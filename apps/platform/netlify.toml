@@ -32,6 +32,10 @@
 [[edge_functions]]
   function = "jhn-cop-events"
   path = "/api/jhn-cop-events"
+
+[[edge_functions]]
+  function = "github-webhook"
+  path = "/api/webhooks/github"
 # SPA fallback — must remain last so /api/* rules win first
 [[redirects]]
   from = "/*"

@@ -1,0 +1,91 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+import { auditConfigHygiene } from "./lib/config-hygiene-audit.js";
+import { createJhnConfigPolicyRegistry } from "./lib/config-policy-registry.js";
+
+const mapping = { openai_api_key: ["OPENAI_API_KEY"] };
+
+test("configuration hygiene audit reports statuses without values", () => {
+  const policyRegistry = createJhnConfigPolicyRegistry(mapping);
+  const report = auditConfigHygiene({
+    instance: "jhn",
+    envKeyMapping: mapping,
+    vaultRows: [
+      {
+        key: "openai_api_key",
+        value: "same",
+        is_secret: true,
+        is_public: false,
+        version: 4,
+        updated_at: "2026-08-11T00:00:00Z",
+      },
+      {
+        key: "unclassified",
+        value: "value",
+        is_secret: null,
+        is_public: null,
+        version: 1,
+        updated_at: "2026-08-11T00:00:00Z",
+      },
+    ],
+    cacheTargets: [
+      {
+        id: "inseme/.env",
+        values: {
+          OPENAI_API_KEY: "same",
+          UNKNOWN_TOKEN: "local-only",
+          SUPABASE_SERVICE_ROLE_KEY: "super-secret-bootstrap",
+          HTTP_PROXY: "machine-only",
+        },
+      },
+    ],
+    policyRegistry,
+  });
+
+  assert.equal(report.read_only, true);
+  assert.equal(report.summary.matches_vault, 1);
+  assert.equal(report.summary.local_policy_review_required, 0);
+  assert.equal(report.summary.unmapped_local_key, 1);
+  assert.equal(report.summary.bootstrap_excluded, 1);
+  assert.equal(report.summary.workstation_only_excluded, 1);
+  assert.equal(report.summary.unclassified_vault_keys, 0);
+  assert.equal(report.summary.registry_missing, 1);
+  assert.equal(JSON.stringify(report).includes("same"), false);
+  assert.equal(JSON.stringify(report).includes("local-only"), false);
+  assert.equal(JSON.stringify(report).includes("super-secret-bootstrap"), false);
+});
+
+test("policy registry classifies a local pending key without promoting it", () => {
+  const registry = createJhnConfigPolicyRegistry({});
+  const report = auditConfigHygiene({
+    instance: "jhn",
+    envKeyMapping: {},
+    vaultRows: [],
+    cacheTargets: [{ id: "inseme/.env", values: { COGENTIA_BLACKBOARD_UPSERT_TOKEN: "local" } }],
+    policyRegistry: registry,
+  });
+  assert.equal(report.summary.local_policy_review_required, 1);
+  assert.equal(report.summary.missing_in_vault, 0);
+  assert.equal(JSON.stringify(report).includes('local"'), false);
+});
+
+test("policy registry reports required Vault configuration without exposing it", () => {
+  const registry = createJhnConfigPolicyRegistry({});
+  const report = auditConfigHygiene({
+    instance: "jhn",
+    envKeyMapping: {},
+    vaultRows: [{ key: "github_webhook_secret", value: "", is_secret: true, is_public: false }],
+    cacheTargets: [],
+    policyRegistry: registry,
+  });
+  assert.equal(report.summary.required_vault_issues, 2);
+  assert.equal(
+    report.required_vault_issues.some((issue) => issue.status === "required_vault_value_missing"),
+    true
+  );
+  assert.equal(
+    report.required_vault_issues.some((issue) => issue.status === "required_vault_key_missing"),
+    true
+  );
+});

@@ -13,6 +13,7 @@ const edgeFuncPath = path.join(
   process.cwd(),
   "apps/platform/netlify/edge-functions/github-webhook.js"
 );
+const jhnProfilePath = path.join(process.cwd(), "apps/platform/brique-profiles/jhn.json");
 
 // 1. Verify Deno Edge Function File Exists
 console.log("\n[Test 1] Checking Deno Edge Function File Presence...");
@@ -20,6 +21,13 @@ assert.ok(fs.existsSync(edgeFuncPath), "❌ Deno Edge Function github-webhook.js
 console.log("  ✓ Deno Edge Function file found:", edgeFuncPath);
 
 const code = fs.readFileSync(edgeFuncPath, "utf-8");
+const jhnProfile = JSON.parse(fs.readFileSync(jhnProfilePath, "utf-8"));
+assert.ok(
+  jhnProfile.core?.edge_functions?.some(
+    (entry) => entry.function === "github-webhook" && entry.path === "/api/webhooks/github"
+  ),
+  "JHN deployment profile must include the GitHub webhook edge function"
+);
 
 // 2. Assert Deno Modern Imports & Exports
 console.log("\n[Test 2] Verifying Modern Deno Syntax & ESM Export...");
@@ -32,6 +40,34 @@ assert.ok(
   "Must use Web Crypto API crypto.subtle for HMAC verification"
 );
 assert.ok(code.includes("new Response("), "Must return native Response object");
+assert.ok(
+  code.includes("loadInstanceConfig"),
+  "Must load webhook configuration from the instance Vault"
+);
+assert.ok(
+  code.includes("webhook_secret_unconfigured"),
+  "Must fail closed when no webhook secret is configured"
+);
+assert.ok(
+  code.includes("webhook_allowlist_unconfigured"),
+  "Must fail closed when no allowlist is configured"
+);
+assert.ok(
+  code.includes("github_repo_allowlist"),
+  "Must read the repository allowlist from the Vault"
+);
+assert.ok(
+  code.includes("newSupabase(true)"),
+  "Must use the Vault adapter's server-side Supabase client"
+);
+assert.ok(
+  !code.includes('Deno.env.get("GITHUB_WEBHOOK_SECRET")'),
+  "Must not read a duplicate webhook secret from host env"
+);
+assert.ok(
+  !code.includes('Deno.env.get("GITHUB_REPO_ALLOWLIST")'),
+  "Must not read the allowlist from host env"
+);
 console.log("  ✓ Modern Deno syntax & Web Crypto API verified.");
 
 // 3. Assert HMAC & SHA256 Web Crypto Logic

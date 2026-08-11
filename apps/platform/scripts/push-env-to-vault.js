@@ -35,17 +35,9 @@ Dry-run by default. --apply performs upsert with is_secret inference.
 
 const isApply = Boolean(argv.apply) && !argv["dry-run"];
 
-function mask(v) {
-  if (v == null || v === "") return "(empty)";
-  const s = String(v);
-  if (s.length <= 10) return "***";
-  return s.slice(0, 6) + "…(" + s.length + ")";
-}
-
 async function main() {
-  const { pushEnvSecretsToVault, loadConfig, getConfig, createSupabaseClient } = await import(
-    "./lib/config.js"
-  );
+  const { pushEnvSecretsToVault, loadConfig, getConfig, createSupabaseClient } =
+    await import("./lib/config.js");
 
   const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
   const hasService = Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -71,12 +63,12 @@ async function main() {
   createSupabaseClient();
 
   await loadConfig(true);
-  // loadConfig already attempts align when service role is set — but only on first cache.
-  // Explicit apply path uses pushEnvSecretsToVault for a full pass.
+  // loadConfig is read-only. Explicit apply uses pushEnvSecretsToVault for a
+  // full local-to-Vault promotion.
   if (!isApply) {
-    console.log("\nMode: DRY-RUN (no extra write beyond loadConfig align if any)");
+    console.log("\nMode: DRY-RUN (read-only; no local or Vault writes)");
     console.log("Run with --apply to force full .env → vault push.\n");
-    // Show which secret-ish keys are now in vault vs env
+    // Presence only: never print secret-derived fragments in an audit.
     const sample = [
       "openai_api_key",
       "anthropic_api_key",
@@ -93,10 +85,10 @@ async function main() {
       "context7_api_key",
       "legalize_api_key",
     ];
-    console.log("Vault presence (masked):");
+    console.log("Vault presence:");
     for (const k of sample) {
       const v = getConfig(k);
-      console.log(`  ${k}: ${v ? mask(v) : "(missing)"}`);
+      console.log(`  ${k}: ${v ? "present" : "missing"}`);
     }
     process.exit(0);
   }

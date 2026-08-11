@@ -1,10 +1,12 @@
 // scripts/lib/config.js
 //
 // loadConfig() :
-// - lit le vault (instance_config)
-// - répare les entrées dont is_secret est NULL uniquement si suspectes
-// - aligne le vault sur .env (valeurs explicites + autodécouverte whitelistée)
-// - recharge le vault pour retourner un snapshot stable
+// - reads the Vault (instance_config) and local runtime configuration;
+// - never writes Vault rows or local files.
+//
+// Vault repair and local-to-Vault promotion are explicit operations. A
+// configuration read must remain safe for health checks, dry-runs and periodic
+// hygiene audits.
 //
 // Politique secrets :
 // - si valeur paraît sensible : on force is_secret=true en DB (NULL/false -> true), jamais l'inverse
@@ -21,14 +23,14 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
-dotenv.config({ path: path.join(__dirname, "..", "..", "..", "..", ".env") });
+dotenv.config({ path: path.join(__dirname, "..", "..", ".env"), quiet: true });
+dotenv.config({ path: path.join(__dirname, "..", "..", "..", "..", ".env"), quiet: true });
 
 // ============================================================================
 // 1) MAPPINGS EXPLICITES
 // ============================================================================
 
-const ENV_KEY_MAPPING = {
+export const ENV_KEY_MAPPING = {
   // App / Netlify
   app_url: ["APP_URL", "VITE_APP_URL", "URL", "DEPLOY_PRIME_URL"],
   app_base_url: ["APP_BASE_URL", "DEPLOY_URL", "URL"],
@@ -643,34 +645,10 @@ export async function loadConfig(forceRefresh = false) {
 
   // 1) Vault
   if (!vaultChecked || forceRefresh) {
-    // 1.1) Réparer NULL -> true uniquement si suspect
-    await repairNullSecretsIfSuspect();
-
-    // 1.2) Lire config vault
+    // Read-only snapshot. Do not repair classifications or align local values
+    // here: callers use this path for normal runtime reads and dry-runs.
     const dbConfig = await loadFromVault();
-
-    // 2) Aligner .env explicite -> vault (requires SERVICE_ROLE client)
-    const toAlign = {};
-    for (const key of Object.keys(envExplicit)) {
-      if (!hasOwn(dbConfig, key) || envExplicit[key] !== dbConfig[key]) {
-        toAlign[key] = envExplicit[key];
-      }
-    }
-    if (Object.keys(toAlign).length > 0) {
-      if (getSupabaseForVault()) {
-        console.log(`[config] align .env → vault: ${Object.keys(toAlign).length} clés`);
-        await uploadToVault(toAlign);
-      } else {
-        console.warn(
-          `[config] ${Object.keys(toAlign).length} clés .env absentes/différentes du vault, ` +
-            `mais SUPABASE_SERVICE_ROLE_KEY manquant — pas d'upload (edge ne verra pas ces secrets)`
-        );
-      }
-    }
-
-    // 4) Recharger vault après sync pour snapshot stable
-    const dbAfter = await loadFromVault();
-    configCache = { ...dbAfter, ...envExplicit };
+    configCache = { ...dbConfig, ...envExplicit };
 
     vaultChecked = true;
   }
@@ -700,6 +678,9 @@ export async function pushEnvSecretsToVault({ clearEmptySecrets = true } = {}) {
     );
   }
   const envExplicit = buildEnvExplicit();
+  // Secret metadata repair is a write and therefore belongs only to this
+  // explicitly requested promotion path, never to loadConfig().
+  await repairNullSecretsIfSuspect();
   // Never push VITE-only duplicates as separate public noise: buildEnvExplicit already collapses
   await uploadToVault(envExplicit);
 

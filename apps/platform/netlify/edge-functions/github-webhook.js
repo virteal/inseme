@@ -6,10 +6,29 @@
 // (atomic topic_seq). On append failure → cop_spool_queue. Returns 202 after
 // validation. Secret values never logged.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
 const ARTIFACT_THRESHOLD = 8 * 1024;
-const ARTIFACT_BUCKET = Deno.env.get("COP_ARTIFACT_BUCKET") || "cop-artifacts";
+const DEFAULT_ARTIFACT_BUCKET = "cop-artifacts";
+
+/**
+ * Resolve the ingress HMAC secret from the canonical instance Vault.
+ * Bootstrap Supabase credentials remain host-only; the webhook secret itself
+ * is never duplicated in Netlify environment configuration.
+ */
+async function loadWebhookConfig() {
+  const config = await import("@inseme/cop-host/config/instanceConfig.edge.js");
+  const table = await config.loadInstanceConfig();
+  return { config, table };
+}
+
+function vaultValue(table, key) {
+  const row = table[String(key).trim().toLowerCase()];
+  return row?.value_json ?? row?.value ?? null;
+}
+
+function parseAllowlist(value) {
+  const values = Array.isArray(value) ? value : String(value || "").split(",");
+  return values.map((item) => String(item).trim()).filter(Boolean);
+}
 
 async function verifyHmacSignature(rawText, signatureHeader, secret) {
   if (!signatureHeader || !secret || !rawText) return false;
@@ -91,18 +110,41 @@ export default async (request, _context) => {
     });
   }
 
-  const webhookSecret =
-    Deno.env.get("GITHUB_WEBHOOK_SECRET") || Deno.env.get("COGENTIA_GITHUB_WEBHOOK_SECRET");
+  let vault;
+  try {
+    vault = await loadWebhookConfig();
+  } catch (error) {
+    console.error("GitHub webhook Vault configuration failed", { message: error?.message });
+    return new Response(JSON.stringify({ ok: false, error: "webhook_vault_unavailable" }), {
+      status: 503,
+      headers: corsHeaders,
+    });
+  }
+  const webhookSecret = String(vaultValue(vault.table, "github_webhook_secret") || "").trim();
+  if (!webhookSecret) {
+    return new Response(JSON.stringify({ ok: false, error: "webhook_secret_unconfigured" }), {
+      status: 503,
+      headers: corsHeaders,
+    });
+  }
+  const allowlist = parseAllowlist(vaultValue(vault.table, "github_repo_allowlist"));
+  if (!allowlist.length) {
+    return new Response(JSON.stringify({ ok: false, error: "webhook_allowlist_unconfigured" }), {
+      status: 503,
+      headers: corsHeaders,
+    });
+  }
+  const artifactBucket = String(
+    vaultValue(vault.table, "cop_artifact_bucket") || DEFAULT_ARTIFACT_BUCKET
+  ).trim();
   const rawText = await request.text();
 
-  if (webhookSecret) {
-    const isValid = await verifyHmacSignature(rawText, signatureHeader, webhookSecret);
-    if (!isValid) {
-      return new Response(JSON.stringify({ ok: false, error: "invalid_hmac_signature" }), {
-        status: 401,
-        headers: corsHeaders,
-      });
-    }
+  const isValid = await verifyHmacSignature(rawText, signatureHeader, webhookSecret);
+  if (!isValid) {
+    return new Response(JSON.stringify({ ok: false, error: "invalid_hmac_signature" }), {
+      status: 401,
+      headers: corsHeaders,
+    });
   }
 
   let payload = {};
@@ -123,12 +165,7 @@ export default async (request, _context) => {
   const payloadHash = `sha256:${payloadHashHex}`;
   const rawBytes = new TextEncoder().encode(rawText || "").length;
 
-  // Allowlist: comma-separated owner/repo (Inseme #29). Empty = allow all (dev only).
-  const allowlistRaw = Deno.env.get("GITHUB_REPO_ALLOWLIST") || "";
-  const allowlist = allowlistRaw
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
+  // Allowlist is canonical Vault configuration; empty fails closed above.
   let allowlistOutcome = "not_checked";
   if (repositoryName && allowlist.length > 0) {
     const allowed = allowlist.some((r) => r.toLowerCase() === repositoryName.toLowerCase());
@@ -152,27 +189,29 @@ export default async (request, _context) => {
     allowlistOutcome = "allowed";
   }
 
-  const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const supabaseServiceKey =
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_SERVICE_KEY");
-
   let durable = "skipped_no_supabase";
   let artifactRef = null;
   let spooled = false;
 
-  if (supabaseUrl && supabaseServiceKey) {
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  {
+    const supabase = vault.config.newSupabase(true);
+    if (!supabase) {
+      return new Response(JSON.stringify({ ok: false, error: "webhook_store_unavailable" }), {
+        status: 503,
+        headers: corsHeaders,
+      });
+    }
 
     if (rawBytes >= ARTIFACT_THRESHOLD) {
       const objectPath = `github-webhooks/${payloadHashHex.slice(0, 2)}/${payloadHashHex}-${deliveryId}.json`;
       const { error: upErr } = await supabase.storage
-        .from(ARTIFACT_BUCKET)
+        .from(artifactBucket)
         .upload(objectPath, rawText, {
           contentType: "application/json",
           upsert: true,
         });
       if (!upErr) {
-        artifactRef = `artifact:supabase:${ARTIFACT_BUCKET}/${objectPath}`;
+        artifactRef = `artifact:supabase:${artifactBucket}/${objectPath}`;
       }
     }
 

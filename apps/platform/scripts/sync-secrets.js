@@ -104,9 +104,7 @@ const VAULT_KEY_MAPPING = {
 };
 
 function mask(value) {
-  if (!value) return "(empty)";
-  if (value.length <= 12) return "***";
-  return value.slice(0, 10) + "…(" + value.length + " chars)";
+  return value ? "(present)" : "(empty)";
 }
 
 function scanClaudeSettings() {

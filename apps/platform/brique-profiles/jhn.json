@@ -25,6 +25,11 @@
         "function": "jhn-cop-events",
         "path": "/api/jhn-cop-events",
         "source": "netlify/edge-functions/jhn-cop-events.js"
+      },
+      {
+        "function": "github-webhook",
+        "path": "/api/webhooks/github",
+        "source": "netlify/edge-functions/github-webhook.js"
       }
     ]
   },
