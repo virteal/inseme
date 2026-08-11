@@ -11,8 +11,10 @@ function json(body, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: JSON_HEADERS });
 }
 
-function environment(name) {
-  return String(Deno.env.get(name) || "").trim();
+async function loadVaultConfig() {
+  const config = await import("@inseme/cop-host/config/instanceConfig.edge.js");
+  await config.loadInstanceConfig();
+  return config;
 }
 
 function conversationId(body) {
@@ -72,10 +74,19 @@ export default async function jhnChatStream(request) {
   }
   if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405);
 
+  let vault;
+  try {
+    vault = await loadVaultConfig();
+  } catch (error) {
+    console.error("JHN vault configuration failed", { message: error?.message });
+    return json({ error: "jhn_vault_unavailable" }, 503);
+  }
+
+  const config = (name) => String(vault.getConfig(name) || "").trim();
   const copEndpoint =
-    environment("JHN_COP_EVENT_URL") || new URL("/api/jhn-cop-events", request.url).toString();
-  const copCapability = environment("JHN_COP_CAPABILITY");
-  const openaiKey = environment("OPENAI_API_KEY");
+    config("JHN_COP_EVENT_URL") || new URL("/api/jhn-cop-events", request.url).toString();
+  const copCapability = config("JHN_COP_CAPABILITY");
+  const openaiKey = config("OPENAI_API_KEY");
   if (!copCapability) return json({ error: "cop_orchestrator_unconfigured" }, 503);
   if (!openaiKey) return json({ error: "openai_unconfigured" }, 503);
 
@@ -89,7 +100,7 @@ export default async function jhnChatStream(request) {
   if (!message) return json({ error: "question_required" }, 400);
 
   const topicId = conversationId(body);
-  const model = environment("JHN_OPENAI_MODEL") || "gpt-4o-mini";
+  const model = config("JHN_OPENAI_MODEL") || "gpt-4o-mini";
   const history = Array.isArray(body.conversation_history)
     ? body.conversation_history.slice(-24)
     : [];

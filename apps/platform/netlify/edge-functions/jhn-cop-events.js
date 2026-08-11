@@ -1,6 +1,3 @@
-/* global Deno */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
 const JSON_HEADERS = {
   "Content-Type": "application/json; charset=utf-8",
   "Cache-Control": "no-store",
@@ -15,10 +12,24 @@ function bearerToken(request) {
   return request.headers.get("authorization")?.match(/^Bearer\s+(.+)$/i)?.[1] || null;
 }
 
+async function loadVaultConfig() {
+  const config = await import("@inseme/cop-host/config/instanceConfig.edge.js");
+  await config.loadInstanceConfig();
+  return config;
+}
+
 export default async function jhnCopEvents(request) {
   if (request.method !== "POST") return response({ error: "method_not_allowed" }, 405);
 
-  const capability = String(Deno.env.get("JHN_COP_CAPABILITY") || "").trim();
+  let vault;
+  try {
+    vault = await loadVaultConfig();
+  } catch (error) {
+    console.error("JHN COP vault configuration failed", { message: error?.message });
+    return response({ error: "cop_vault_unavailable" }, 503);
+  }
+
+  const capability = String(vault.getConfig("JHN_COP_CAPABILITY") || "").trim();
   if (!capability) return response({ error: "cop_ingress_unconfigured" }, 503);
   if (bearerToken(request) !== capability)
     return response({ error: "invalid_cop_capability" }, 401);
@@ -41,13 +52,8 @@ export default async function jhnCopEvents(request) {
     return response({ error: "invalid_cop_event" }, 400);
   }
 
-  const supabaseUrl = String(Deno.env.get("SUPABASE_URL") || "").trim();
-  const serviceRole = String(Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "").trim();
-  if (!supabaseUrl || !serviceRole) return response({ error: "cop_store_unconfigured" }, 503);
-
-  const supabase = createClient(supabaseUrl, serviceRole, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
+  const supabase = vault.newSupabase(true);
+  if (!supabase) return response({ error: "cop_store_unconfigured" }, 503);
   const { data, error } = await supabase.rpc("cop_event_append", {
     p_topic_id: event.topic_id,
     p_event_type: "cop.event/v1",
