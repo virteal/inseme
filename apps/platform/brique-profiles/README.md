@@ -37,11 +37,12 @@ The profile compiler intentionally leaves the shared frontend registry, public b
 Magistral maps, and legacy Netlify outputs untouched. Frontend route minimization is a separate
 increment: it must not be hidden inside a backend deployment change.
 
-The JHN chat adapter fails closed until `JHN_COP_CAPABILITY` and `OPENAI_API_KEY` are configured as
-server-only Netlify variables. `JHN_COP_EVENT_URL` is optional: by default the adapter calls the
-same-origin `jhn-cop-events` ingress, which is the only public-facing COP write boundary. The
-ingress uses the existing server-only Supabase service-role variable to append to `cop_event_log`.
-No secret is sent to the browser, and no chat turn is permitted without COP persistence.
+The JHN chat adapter reads `openai_api_key` and `jhn_cop_capability` from the instance Vault
+(`instance_config`) after the existing service-role Supabase bootstrap. Netlify retains only
+`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` for that bootstrap; it is not a second store for
+John's application secrets. `JHN_COP_EVENT_URL` is optional: by default the adapter calls the
+same-origin `jhn-cop-events` ingress, which is the only public-facing COP write boundary. No secret
+is sent to the browser, and no chat turn is permitted without COP persistence.
 
 Until that minimization is complete, `build:jhn` disables only esbuild minification for the JHN
 bundle. This is a documented Windows/Node 24 workaround for a reproducible native crash after Vite
