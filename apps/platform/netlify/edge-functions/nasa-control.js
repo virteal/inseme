@@ -1,6 +1,3 @@
-/* global Deno */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
 const JSON_HEADERS = {
   "Content-Type": "application/json; charset=utf-8",
   "Cache-Control": "no-store",
@@ -10,17 +7,25 @@ function response(body, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: JSON_HEADERS });
 }
 
-function operatorSubjects() {
+function subjects(value) {
   return new Set(
-    String(Deno.env.get("NASA_OPERATOR_SUBJECTS") || "")
+    String(value || "")
       .split(",")
       .map((value) => value.trim())
       .filter(Boolean)
   );
 }
 
-function principalSubject() {
-  return String(Deno.env.get("NASA_PRINCIPAL_SUBJECT") || "").trim();
+async function loadVaultConfig() {
+  const config = await import("@inseme/cop-host/config/instanceConfig.edge.js");
+  const table = await config.loadInstanceConfig();
+  return { config, table };
+}
+
+function vaultValue(table, name) {
+  const row = table[String(name).trim().toLowerCase()];
+  const value = row?.value_json ?? row?.value;
+  return typeof value === "string" ? value.trim() : "";
 }
 
 function bearerToken(request) {
@@ -37,26 +42,26 @@ export default async function nasaControl(request) {
   const token = bearerToken(request);
   if (!token) return response({ error: "missing_bearer_token" }, 401);
 
-  const url = Deno.env.get("SUPABASE_URL");
-  const publishableKey =
-    Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("VITE_SUPABASE_ANON_KEY");
-  if (!url || !publishableKey) {
-    return response({ error: "jhn_auth_not_configured" }, 503);
+  let vault;
+  try {
+    vault = await loadVaultConfig();
+  } catch (error) {
+    console.error("NASA vault configuration failed", { message: error?.message });
+    return response({ error: "nasa_vault_unavailable" }, 503);
   }
 
-  const supabase = createClient(url, publishableKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
+  const supabase = vault.config.newSupabase(true);
+  if (!supabase) return response({ error: "jhn_auth_not_configured" }, 503);
   const { data, error } = await supabase.auth.getUser(token);
   if (error || !data.user) return response({ error: "invalid_session" }, 401);
 
-  const subjects = operatorSubjects();
-  const principal = principalSubject();
+  const operators = subjects(vaultValue(vault.table, "NASA_OPERATOR_SUBJECTS"));
+  const principal = vaultValue(vault.table, "NASA_PRINCIPAL_SUBJECT");
   if (!principal) {
     return response({ error: "principal_subject_unconfigured" }, 503);
   }
   const accessClass =
-    data.user.id === principal ? "principal" : subjects.has(data.user.id) ? "delegate" : null;
+    data.user.id === principal ? "principal" : operators.has(data.user.id) ? "delegate" : null;
   if (!accessClass) {
     return response({ authenticated: true, authorized: false }, 403);
   }

@@ -12,8 +12,9 @@ deployment dependency merely because it exists in the monorepo.
 - Core routes are the landing page, John conversation, and La Nasa.
 - COP orchestration (`@inseme/cop-kernel` and `@inseme/cop-host`) is a required foundation, not a
   selectable brique. The compiler verifies that the host application declares both packages.
-- The core Edge boundary is `nasa-control`; it verifies a John Supabase session and deliberately
-  exposes no action bridge.
+- The core Edge boundary is `nasa-control`; it verifies a John Supabase session, resolves the
+  principal and optional delegates from the instance Vault, and deliberately exposes no action
+  bridge.
 - The John conversation uses Ophélia's Edge-native JHN adapter. It records the user turn and the
   answer through the capability-protected COP event boundary before returning the answer. Its civic
   routes, tools, collective-room runtime, and other Edge endpoints are intentionally not selected.

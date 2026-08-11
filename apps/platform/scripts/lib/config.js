@@ -76,6 +76,9 @@ const ENV_KEY_MAPPING = {
   cogentia_mcp_url: ["COGENTIA_MCP_URL"],
   // JHN Edge-to-COP bearer; secret, stored in the instance vault rather than Netlify.
   jhn_cop_capability: ["JHN_COP_CAPABILITY"],
+  // JHN NASA authorization subjects; UUIDs are server-only instance configuration.
+  nasa_principal_subject: ["NASA_PRINCIPAL_SUBJECT"],
+  nasa_operator_subjects: ["NASA_OPERATOR_SUBJECTS"],
 
   // Agent JHN WhatsApp (Cogentia adapter; config/PII — not Baileys session files)
   // Session material stays on workstation under STATE_DIR (registre-mariani/runtime/…).

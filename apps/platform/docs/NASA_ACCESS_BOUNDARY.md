@@ -1,6 +1,6 @@
 ---
 title: "La Nasa access boundary"
-status: "implementation-ready, not deployed"
+status: "deployed authorization boundary; action bridge not configured"
 visibility: "public"
 ---
 
@@ -26,17 +26,21 @@ GET or POST /api/nasa/control
 
 The Netlify Edge Function `nasa-control` validates the token with the JHN Supabase project using
 `auth.getUser(token)`. It recognizes the Principal only when the user’s immutable Supabase subject
-(`auth.users.id`) matches the server-only Netlify variable:
+(`auth.users.id`) matches the server-only JHN Vault (`instance_config`) value:
 
 ```text
-NASA_PRINCIPAL_SUBJECT=<uuid-for-jeanhuguesrobert-gmail>
+nasa_principal_subject=<uuid-for-jeanhuguesrobert-gmail>
 ```
 
 Delegates are separately listed, only after a mandate exists:
 
 ```text
-NASA_OPERATOR_SUBJECTS=<uuid-for-a-mandated-agent-account>
+nasa_operator_subjects=<uuid-for-a-mandated-agent-account>
 ```
+
+Netlify holds only the JHN Supabase bootstrap (`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`)
+needed for the Edge runtime to read that Vault. The service-role key never reaches the browser; the
+presented browser access token is still independently validated.
 
 Do not use email addresses or editable `user_metadata` for the runtime authorization decision. The
 Principal’s authoritative email binding remains private configuration, not public site content. Each
@@ -60,11 +64,10 @@ Before publishing the John increment:
 1. Create or confirm the Principal’s designated email/password account on `jhn.baronsmariani.org`.
 2. In Supabase Authentication, identify that account’s UUID; create separate accounts only for
    mandated agents.
-3. In the JHN Netlify site environment, set `NASA_PRINCIPAL_SUBJECT` to the Principal UUID. Add
-   `NASA_OPERATOR_SUBJECTS` only for approved delegates.
-4. Ensure the existing server-only `SUPABASE_URL` and `SUPABASE_ANON_KEY` (or
-   `VITE_SUPABASE_ANON_KEY`) refer to the JHN project. Do not add a service-role key for this
-   endpoint.
+3. In the JHN Vault, set `nasa_principal_subject` to the Principal UUID. Add
+   `nasa_operator_subjects` only for approved delegates.
+4. Ensure the existing server-only `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` refer to the JHN
+   project. Do not add principal or delegate subjects to Netlify.
 5. Deploy, then test the four outcomes above from a browser and HTTP client.
 6. Only then implement a narrow, audited action bridge. It must receive the validated John identity
    server-side and use a host-only Fracta credential; it must never accept a Fracta token supplied
