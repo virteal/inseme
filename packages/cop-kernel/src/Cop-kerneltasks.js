@@ -4,13 +4,23 @@
 
 import { getStorage } from "./storage.js";
 
-// Optional bus integration for genericity (events as the packet layer)
+// Optional bus integration for genericity (events as the packet layer).
+// Load it lazily: Netlify Edge bundles target ES2020, where top-level await is
+// unavailable. Task APIs are already asynchronous, so resolving the optional
+// dependency at the point of use preserves the same best-effort behaviour.
 let defaultBus = null;
-try {
-  const busMod = await import("./bus.js");
-  defaultBus = busMod.defaultBus || null;
-} catch (e) {
-  // bus not available in all environments (e.g. some tests) — that's ok
+let defaultBusLoad = null;
+
+function loadDefaultBus() {
+  if (!defaultBusLoad) {
+    defaultBusLoad = import("./bus.js")
+      .then((busMod) => {
+        defaultBus = busMod.defaultBus || null;
+        return defaultBus;
+      })
+      .catch(() => null);
+  }
+  return defaultBusLoad;
 }
 
 function nowIso() {
@@ -37,7 +47,7 @@ async function emitTaskEvent(busOrScheduler, eventType, payload) {
     const topicId = payload.topicId || payload.taskId || payload.data?.topicId;
     targetBus = busOrScheduler.getBusForTopic(topicId);
   } else if (!targetBus) {
-    targetBus = defaultBus;
+    targetBus = defaultBus || (await loadDefaultBus());
   }
 
   if (!targetBus || typeof targetBus.publish !== "function") return;
@@ -60,8 +70,8 @@ async function emitTaskEvent(busOrScheduler, eventType, payload) {
       data: eventData,
       timestamp: nowIso(),
     });
-  } catch (e) {
-    console.warn(`[cop-kernel/tasks] Failed to emit event ${eventType}:`, e.message);
+  } catch (error) {
+    console.warn(`[cop-kernel/tasks] Failed to emit event ${eventType}:`, error.message);
   }
 }
 
@@ -325,7 +335,7 @@ export async function createTaskWithInitialContinuation(params) {
       rootCorrelationId,
       channel,
     });
-  } catch (e) {
+  } catch (_error) {
     // Graceful degradation for environments without full task storage (e.g. early bac-à-sable runs)
     task = {
       id: genId(),
@@ -444,8 +454,8 @@ export function asCognitivePacket({
   // Callers (or the bac-à-sable ctx wrapper) can pass a bus (e.g. topic-scoped).
   // Falls back to the module's defaultBus if available (same pattern as emitTaskEvent).
   if (emit) {
-    const targetBus = bus || defaultBus;
-    if (targetBus && typeof targetBus.publish === "function") {
+    const publish = (targetBus) => {
+      if (!targetBus || typeof targetBus.publish !== "function") return;
       // Fire and forget; don't block the caller on router emission.
       targetBus
         .publish({
@@ -455,6 +465,12 @@ export function asCognitivePacket({
           timestamp: now,
         })
         .catch((e) => console.warn("[asCognitivePacket] emit failed:", e.message));
+    };
+    const targetBus = bus || defaultBus;
+    if (targetBus && typeof targetBus.publish === "function") {
+      publish(targetBus);
+    } else if (!bus) {
+      void loadDefaultBus().then(publish);
     }
   }
 
