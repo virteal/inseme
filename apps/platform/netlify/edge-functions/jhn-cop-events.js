@@ -14,8 +14,14 @@ function bearerToken(request) {
 
 async function loadVaultConfig() {
   const config = await import("@inseme/cop-host/config/instanceConfig.edge.js");
-  await config.loadInstanceConfig();
-  return config;
+  const table = await config.loadInstanceConfig();
+  return { config, table };
+}
+
+function vaultValue(table, name) {
+  const row = table[String(name).trim().toLowerCase()];
+  const value = row?.value_json ?? row?.value;
+  return typeof value === "string" ? value.trim() : "";
 }
 
 export default async function jhnCopEvents(request) {
@@ -29,7 +35,7 @@ export default async function jhnCopEvents(request) {
     return response({ error: "cop_vault_unavailable" }, 503);
   }
 
-  const capability = String(vault.getConfig("JHN_COP_CAPABILITY") || "").trim();
+  const capability = vaultValue(vault.table, "JHN_COP_CAPABILITY");
   if (!capability) return response({ error: "cop_ingress_unconfigured" }, 503);
   if (bearerToken(request) !== capability)
     return response({ error: "invalid_cop_capability" }, 401);
@@ -52,7 +58,7 @@ export default async function jhnCopEvents(request) {
     return response({ error: "invalid_cop_event" }, 400);
   }
 
-  const supabase = vault.newSupabase(true);
+  const supabase = vault.config.newSupabase(true);
   if (!supabase) return response({ error: "cop_store_unconfigured" }, 503);
   const { data, error } = await supabase.rpc("cop_event_append", {
     p_topic_id: event.topic_id,

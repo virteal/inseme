@@ -13,8 +13,14 @@ function json(body, status = 200) {
 
 async function loadVaultConfig() {
   const config = await import("@inseme/cop-host/config/instanceConfig.edge.js");
-  await config.loadInstanceConfig();
-  return config;
+  const table = await config.loadInstanceConfig();
+  return { config, table };
+}
+
+function vaultValue(table, name) {
+  const row = table[String(name).trim().toLowerCase()];
+  const value = row?.value_json ?? row?.value;
+  return typeof value === "string" ? value.trim() : "";
 }
 
 function conversationId(body) {
@@ -82,7 +88,7 @@ export default async function jhnChatStream(request) {
     return json({ error: "jhn_vault_unavailable" }, 503);
   }
 
-  const config = (name) => String(vault.getConfig(name) || "").trim();
+  const config = (name) => vaultValue(vault.table, name);
   const copEndpoint =
     config("JHN_COP_EVENT_URL") || new URL("/api/jhn-cop-events", request.url).toString();
   const copCapability = config("JHN_COP_CAPABILITY");
