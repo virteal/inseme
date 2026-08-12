@@ -1,17 +1,10 @@
 # Netlify evaluates these paths from the monorepo root, even though this file
 # lives in apps/platform. Keep every build artifact path root-relative.
-#
-# Deploy policy (2026-08-12): continuous Git rebuilds are NOT desired.
-# Preferred path: local/CI intentional build + `pnpm deploy:jhn` (CLI upload).
-# If a Git-linked build is still queued, [build].ignore skips it unless
-# INSEME_NETLIFY_BUILD=1 / [netlify-build] / manual hook title (see script).
 [build]
   command = "pnpm install --frozen-lockfile=false && pnpm --filter platform run build:jhn"
   publish = "apps/platform/dist"
   functions = "apps/platform/netlify/profiles/jhn/functions"
   edge_functions = "apps/platform/netlify/profiles/jhn/edge-functions"
-  # exit 0 = skip build; exit 1 = run build
-  ignore = "node scripts/netlify-ignore-auto-build.js"
 
 [build.environment]
   NODE_OPTIONS = "--max-old-space-size=4096"
@@ -43,10 +36,6 @@
 [[edge_functions]]
   function = "github-webhook"
   path = "/api/webhooks/github"
-
-[[edge_functions]]
-  function = "gen-oleole-presence-api"
-  path = "/api/oleole/*"
 
 [[edge_functions]]
   function = "gen-oleole-presence-api"
