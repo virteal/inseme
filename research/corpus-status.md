@@ -72,7 +72,7 @@ graph LR
   r_github[".github"]
   r_acorsica_org["acorsica.org"]
   r_structenv["StructEnv"]
-  r_cogentia -->|106| r_barons_mariani
+  r_cogentia -->|108| r_barons_mariani
   r_barons_mariani -->|71| r_cogentia
   r_jeanhuguesrobert -->|68| r_barons_mariani
   r_fractavolta -->|48| r_cogentia
@@ -80,8 +80,8 @@ graph LR
   r_inseme -->|36| r_cogentia
   r_jeanhuguesrobert -->|35| r_cogentia
   r_cogentia -->|28| r_inseme
+  r_fractavolta -->|24| r_inseme
   r_barons_mariani -->|22| r_marenostrum
-  r_fractavolta -->|22| r_inseme
   r_barons_mariani -->|19| r_fractavolta
   r_cogentia -->|19| r_marenostrum
   r_fractavolta -->|19| r_barons_mariani
@@ -114,13 +114,13 @@ graph LR
   r_operium -->|4| r_marenostrum
   r_ubikia -->|4| r_jeanhuguesrobert
   r_github -->|3| r_gouvernance
+  r_fractavolta -->|3| r_jeanhuguesrobert
   r_inseme -->|3| r_jeanhuguesrobert
   r_kudos -->|3| r_barons_mariani
   r_operium -->|3| r_cogentia
   r_operium -->|3| r_barons_mariani
   r_operium -->|3| r_inseme
   r_cogentia -->|2| r_inox
-  r_fractavolta -->|2| r_jeanhuguesrobert
   r_gouvernance -->|2| r_barons_mariani
   r_gouvernance -->|2| r_fractavolta
   r_inox -->|2| r_jeanhuguesrobert
