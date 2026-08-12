@@ -1,11 +1,29 @@
 /**
- * Instance-aware home: personal Twin (JHN) vs civic/default landing.
+ * Instance-aware home:
+ * - Olé Olé façade of Agent JHN (host oleole.* / ?facade=oleole)
+ * - Personal Twin JHN landing
+ * - Civic/default consultations
+ *
+ * Olé Olé is not a separate product: same Twin (twin:jhn), different service façade.
  */
+import { lazy, Suspense } from "react";
 import { getConfig } from "../common/config/instanceConfig.client.js";
+import { isOleoleFacade } from "@inseme/brique-oleole/src/lib/facade-host.js";
 import JhnLandingPage from "./JhnLandingPage";
 import ConsultationsHome from "./consultations";
 
+const OleoleHome = lazy(() => import("@inseme/brique-oleole/src/pages/OleoleHome.jsx"));
+
 export default function HomeRoute() {
+  // Presence / discovery façade of John (same agent, service-scoped UX)
+  if (isOleoleFacade()) {
+    return (
+      <Suspense fallback={<div className="p-8 text-center">Olé Olé…</div>}>
+        <OleoleHome />
+      </Suspense>
+    );
+  }
+
   const deploymentKind = String(getConfig("deployment_kind") || "").toLowerCase();
   const appProfile = String(getConfig("application_profile") || "").toLowerCase();
   const subdomain = String(getConfig("subdomain") || "").toLowerCase();

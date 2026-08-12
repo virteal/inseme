@@ -64,6 +64,7 @@
     "@inseme/brique-group": "workspace:*",
     "@inseme/brique-kudocracy": "workspace:*",
     "@inseme/brique-map": "workspace:*",
+    "@inseme/brique-oleole": "workspace:*",
     "@inseme/brique-ophelia": "*",
     "@inseme/brique-tasks": "workspace:*",
     "@inseme/cop-core": "workspace:*",

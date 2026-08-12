@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "id": "oleole",
+  "host_app": "oleole",
+  "deployment_kind": "service",
+  "application_profile": "presence-territorial",
+  "core": {
+    "runtime": {
+      "kind": "cop-orchestration",
+      "required_packages": ["@inseme/brique-oleole"]
+    },
+    "routes": ["/", "/oleole"],
+    "edge_functions": [
+      {
+        "function": "gen-oleole-presence-api",
+        "path": "/api/oleole/*",
+        "source": "netlify/oleole-presence-api.source.js"
+      }
+    ]
+  },
+  "briques": [
+    {
+      "id": "oleole",
+      "routes": ["/", "/oleole"],
+      "functions": [],
+      "edge_functions": []
+    }
+  ]
+}

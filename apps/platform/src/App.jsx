@@ -76,6 +76,9 @@ import FractalFeedPage from "./pages/FractalFeedPage";
 import CafeSessionPage from "./pages/CafeSessionPage";
 import HomeRoute from "./pages/HomeRoute";
 import NasaPage from "./pages/NasaPage";
+import { isOleoleFacade } from "@inseme/brique-oleole/src/lib/facade-host.js";
+
+const OleoleHome = lazy(() => import("@inseme/brique-oleole/src/pages/OleoleHome.jsx"));
 
 // Suspense wrapper for lazy-loaded routes
 const LazyRoute = ({ children }) => (
@@ -85,11 +88,31 @@ const LazyRoute = ({ children }) => (
 );
 
 export function App() {
+  // Olé Olé façade: hide civic chrome; John remains the service agent.
+  const oleoleFacade = typeof window !== "undefined" && isOleoleFacade();
+
   return (
     <>
-      <GlobalStatusIndicator />
+      {!oleoleFacade ? <GlobalStatusIndicator /> : null}
       <Routes>
         <Route path="/" element={<HomeRoute />} />
+        {/* Explicit path also works on jhn.* for testing: /oleole or /?facade=oleole */}
+        <Route
+          path="/oleole"
+          element={
+            <LazyRoute>
+              <OleoleHome />
+            </LazyRoute>
+          }
+        />
+        <Route
+          path="/oleole/*"
+          element={
+            <LazyRoute>
+              <OleoleHome />
+            </LazyRoute>
+          }
+        />
         <Route path="/nasa" element={<NasaPage />} />
         <Route path="/ophelia-land" element={<OpheliaLandingPage />} />
         <Route path="/cop-core" element={<CopCoreLandingPage />} />

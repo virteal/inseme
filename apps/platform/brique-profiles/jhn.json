@@ -9,7 +9,7 @@
       "kind": "cop-orchestration",
       "required_packages": ["@inseme/cop-kernel", "@inseme/cop-host"]
     },
-    "routes": ["/", "/john", "/nasa"],
+    "routes": ["/", "/john", "/nasa", "/oleole"],
     "edge_functions": [
       {
         "function": "nasa-control",
@@ -30,6 +30,11 @@
         "function": "github-webhook",
         "path": "/api/webhooks/github",
         "source": "netlify/edge-functions/github-webhook.js"
+      },
+      {
+        "function": "gen-oleole-presence-api",
+        "path": "/api/oleole/*",
+        "source": "netlify/edge-functions/oleole-presence-api.source.js"
       }
     ]
   },
@@ -37,6 +42,12 @@
     {
       "id": "ophelia",
       "routes": [],
+      "functions": [],
+      "edge_functions": []
+    },
+    {
+      "id": "oleole",
+      "routes": ["/", "/oleole"],
       "functions": [],
       "edge_functions": []
     }

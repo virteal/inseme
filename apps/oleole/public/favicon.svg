@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Olé Olé">
+  <rect width="32" height="32" fill="#fbf7f0"/>
+  <rect x="2" y="2" width="28" height="28" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+  <rect x="4" y="4" width="8" height="24" fill="#d63131"/>
+  <rect x="12" y="4" width="8" height="24" fill="#fbcb1c"/>
+  <rect x="20" y="4" width="8" height="24" fill="#0a3fa0"/>
+</svg>

@@ -1,0 +1,45 @@
+# Olé Olé early proto
+# Deploy from apps/oleole: netlify deploy --prod --dir dist --no-build
+# Or full CI build from monorepo root with base = apps/oleole
+
+[build]
+  command = "cd ../.. && pnpm install --frozen-lockfile=false && pnpm --filter @inseme/app-oleole run build"
+  publish = "dist"
+  edge_functions = "netlify/edge-functions"
+  # Prefer intentional CLI deploys; skip Git continuous builds by default
+  ignore = "node ../../scripts/netlify-ignore-auto-build.js"
+
+[build.environment]
+  NODE_OPTIONS = "--max-old-space-size=4096"
+  NODE_VERSION = "24"
+  PNPM_VERSION = "10.28.2"
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_SERVICE_ROLE_KEY"
+
+[dev]
+  command = "pnpm vite"
+  port = 8890
+  targetPort = 5190
+  publish = "dist"
+  edge_functions = "netlify/edge-functions"
+
+[functions]
+  node_bundler = "esbuild"
+  directory = "netlify/functions"
+
+[[edge_functions]]
+  function = "gen-oleole-presence-api"
+  path = "/api/oleole/*"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(self), interest-cohort=()"
+    X-Oleole-Release = "early-proto"

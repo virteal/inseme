@@ -15,7 +15,13 @@
 // ============================================================================
 
 // Domaine de base pour la détection des sous-domaines
-const BASE_DOMAINS = ["lepp.fr", "kudocracy.org", "inseme.org", "baronsmariani.org"];
+const BASE_DOMAINS = [
+  "lepp.fr",
+  "kudocracy.org",
+  "inseme.org",
+  "baronsmariani.org",
+  "acorsica.org",
+];
 
 // Sous-domaines à ignorer (pas des instances)
 const IGNORED_SUBDOMAINS = ["www", "app", "api", "admin", "staging", "preview"];
@@ -24,6 +30,9 @@ const IGNORED_SUBDOMAINS = ["www", "app", "api", "admin", "staging", "preview"];
  * Built-in personal / known twins when the central registry is unavailable.
  * Credentials still come from env (Netlify site env for jhn.baronsmariani.org).
  * Keeps subdomain + twin metadata correct so vault/config and HomeRoute stay coherent.
+ *
+ * oleole.acorsica.org is a *façade* of the same Twin JHN (not a second Twin):
+ * same credentials / agent John; UX is Presence/discovery (Olé Olé).
  */
 const KNOWN_SUBDOMAIN_FALLBACKS = {
   jhn: {
@@ -34,6 +43,21 @@ const KNOWN_SUBDOMAIN_FALLBACKS = {
     canonical_url: "https://jhn.baronsmariani.org",
     twin_root_ref: "twin:jhn",
     represented_subject_ref: "subject:jhn",
+  },
+  oleole: {
+    displayName: "Olé Olé",
+    deployment_kind: "personal",
+    application_profile: "personal-twin",
+    service_facade: "oleole",
+    host_domain: "acorsica.org",
+    /** Legal public site; éditeur Association C.O.R.S.I.C.A. */
+    canonical_url: "https://oleole.acorsica.org",
+    /** Twin facet (same code) under jhn DNS tree */
+    jhn_facet_url: "https://oleole.jhn.baronsmariani.org",
+    twin_root_ref: "twin:jhn",
+    represented_subject_ref: "subject:jhn",
+    agent_ref: "agent:jhn",
+    publisher: "Association C.O.R.S.I.C.A.",
   },
 };
 

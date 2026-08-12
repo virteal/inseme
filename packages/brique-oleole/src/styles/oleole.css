@@ -1,0 +1,420 @@
+/*
+ * Olé Olé — FractaVolta-derived Bauhaus / Mondrian tokens
+ * Source palette aligned with FractaVolta/docs/_sass/main.scss
+ * and logo-generator tokens (red/yellow/blue + ink/off-white).
+ * No glassmorphism, no decorative shadows, mobile-first.
+ */
+
+:root {
+  --oleole-bg: #fbf7f0;
+  --oleole-bg-alt: #f3ede2;
+  --oleole-ink: #1a1a1a;
+  --oleole-ink-soft: #4a4a4a;
+  --oleole-line: #1a1a1a;
+  --oleole-rule: #d8d0c0;
+  --oleole-red: #d63131;
+  --oleole-yellow: #fbcb1c;
+  --oleole-blue: #0a3fa0;
+  --oleole-surface: #ffffff;
+  --oleole-border: 2px solid var(--oleole-line);
+  --oleole-border-thin: 1px solid var(--oleole-rule);
+  --oleole-font:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial,
+    "Liberation Sans", sans-serif;
+  --oleole-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --oleole-header-h: 4.5rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--oleole-font);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--oleole-ink);
+  background: var(--oleole-bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Layout */
+.oleole-app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--oleole-bg);
+}
+
+.oleole-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: var(--oleole-border);
+  background: var(--oleole-surface);
+}
+
+.oleole-header__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.oleole-lang {
+  display: flex;
+  gap: 0;
+  border: var(--oleole-border);
+}
+
+.oleole-lang__btn {
+  border: none !important;
+  border-right: var(--oleole-border-thin) !important;
+  margin: 0;
+  min-width: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.oleole-lang__btn:last-child {
+  border-right: none !important;
+}
+
+.oleole-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.oleole-brand__mark {
+  width: 2rem;
+  height: 2rem;
+  border: var(--oleole-border);
+  background: linear-gradient(
+    90deg,
+    var(--oleole-red) 0 33%,
+    var(--oleole-yellow) 33% 66%,
+    var(--oleole-blue) 66% 100%
+  );
+  flex-shrink: 0;
+}
+
+.oleole-brand__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.oleole-brand__sub {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--oleole-ink-soft);
+}
+
+.oleole-banner {
+  padding: 0.5rem 1rem;
+  background: var(--oleole-yellow);
+  border-bottom: var(--oleole-border);
+  font-size: 0.875rem;
+}
+
+.oleole-banner--proto {
+  background: var(--oleole-red);
+  color: #fff;
+  font-weight: 600;
+}
+
+.oleole-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 0;
+}
+
+@media (min-width: 900px) {
+  .oleole-main {
+    grid-template-columns: 1.4fr 1fr;
+  }
+}
+
+.oleole-map-wrap {
+  min-height: 45vh;
+  border-bottom: var(--oleole-border);
+  position: relative;
+}
+
+@media (min-width: 900px) {
+  .oleole-map-wrap {
+    min-height: 0;
+    border-bottom: none;
+    border-right: var(--oleole-border);
+  }
+}
+
+.oleole-map {
+  height: 100%;
+  width: 100%;
+  background: var(--oleole-bg-alt);
+}
+
+.oleole-side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem 1.25rem;
+  overflow: auto;
+  background: var(--oleole-bg);
+}
+
+.oleole-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.oleole-time {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.oleole-chip {
+  appearance: none;
+  border: var(--oleole-border);
+  background: var(--oleole-surface);
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.oleole-chip--active {
+  background: var(--oleole-blue);
+  color: #fff;
+}
+
+.oleole-chip:focus-visible {
+  outline: 3px solid var(--oleole-yellow);
+  outline-offset: 2px;
+}
+
+.oleole-panel {
+  border: var(--oleole-border);
+  background: var(--oleole-surface);
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.oleole-panel__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  border-bottom: var(--oleole-border-thin);
+  padding-bottom: 0.4rem;
+}
+
+.oleole-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.oleole-field legend {
+  font-size: 0.875rem;
+  margin-bottom: 0.3rem;
+}
+
+.oleole-input {
+  border: var(--oleole-border);
+  background: var(--oleole-bg);
+  padding: 0.45rem 0.55rem;
+  border-radius: 0;
+}
+
+.oleole-input:focus-visible {
+  outline: 3px solid var(--oleole-blue);
+  outline-offset: 1px;
+}
+
+.oleole-intent-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.oleole-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.oleole-btn {
+  appearance: none;
+  border: var(--oleole-border);
+  background: var(--oleole-surface);
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.oleole-btn--primary {
+  background: var(--oleole-red);
+  color: #fff;
+}
+
+.oleole-btn--ghost {
+  background: var(--oleole-bg);
+}
+
+.oleole-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.oleole-btn:focus-visible {
+  outline: 3px solid var(--oleole-yellow);
+  outline-offset: 2px;
+}
+
+.oleole-disclaimer-sm,
+.oleole-muted {
+  font-size: 0.8rem;
+  color: var(--oleole-ink-soft);
+  margin: 0;
+}
+
+.oleole-status {
+  margin: 0;
+  padding: 0.5rem 0.65rem;
+  border: var(--oleole-border);
+  background: var(--oleole-yellow);
+  font-size: 0.875rem;
+}
+
+.oleole-footer {
+  font-size: 0.75rem;
+  color: var(--oleole-ink-soft);
+  border-top: var(--oleole-border-thin);
+  padding-top: 0.5rem;
+}
+
+.oleole-footer p {
+  margin: 0;
+}
+
+.oleole-footer__publisher {
+  margin-top: 0.4rem !important;
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+/* Chat */
+.oleole-chat {
+  border: var(--oleole-border);
+  background: var(--oleole-surface);
+  display: flex;
+  flex-direction: column;
+  min-height: 16rem;
+  max-height: 28rem;
+}
+
+.oleole-chat .oleole-panel__title {
+  padding: 0.65rem 0.75rem 0.4rem;
+  margin: 0;
+  border-bottom: var(--oleole-border);
+}
+
+.oleole-chat__log {
+  flex: 1;
+  overflow: auto;
+  padding: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--oleole-bg-alt);
+}
+
+.oleole-bubble {
+  border: var(--oleole-border-thin);
+  padding: 0.5rem 0.65rem;
+  background: var(--oleole-surface);
+  max-width: 95%;
+}
+
+.oleole-bubble--user {
+  align-self: flex-end;
+  border-color: var(--oleole-blue);
+}
+
+.oleole-bubble--john {
+  align-self: flex-start;
+  border-left: 4px solid var(--oleole-red);
+}
+
+.oleole-bubble__role {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--oleole-ink-soft);
+  margin-bottom: 0.2rem;
+}
+
+.oleole-bubble__text {
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+}
+
+.oleole-chat__form {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.55rem;
+  border-top: var(--oleole-border);
+}
+
+.oleole-chat__form .oleole-input {
+  flex: 1;
+}
+
+/* Leaflet popup tweaks — keep map legible over brand */
+.leaflet-container {
+  font-family: var(--oleole-font);
+}
+
+.oleole-popup {
+  min-width: 10rem;
+}
+
+.oleole-popup strong {
+  font-size: 1rem;
+}
+
+.oleole-intents {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+}

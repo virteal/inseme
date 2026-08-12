@@ -28,6 +28,7 @@ export default defineConfig(({ mode }) => ({
       "@inseme/brique-communes": path.resolve(__dirname, "../../packages/brique-communes/src"),
       "@inseme/brique-tasks": path.resolve(__dirname, "../../packages/brique-tasks/src"),
       "@inseme/brique-map": path.resolve(__dirname, "../../packages/brique-map/src"),
+      "@inseme/brique-oleole": path.resolve(__dirname, "../../packages/brique-oleole"),
       "@inseme/brique-actes": path.resolve(__dirname, "../../packages/brique-actes/src"),
       "@inseme/brique-group": path.resolve(__dirname, "../../packages/brique-group/src"),
       "@inseme/cop-core": path.resolve(__dirname, "../../packages/cop-core/dist/index.js"),

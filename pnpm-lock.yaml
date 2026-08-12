@@ -134,7 +134,7 @@ importers:
         version: 1.2.8
       netlify-cli:
         specifier: ^23.13.5
-        version: 23.13.5(@types/node@25.0.9)(encoding@0.1.13)(picomatch@4.0.3)(rollup@2.79.2)
+        version: 23.13.5(@types/node@25.0.9)(encoding@0.1.13)(picomatch@4.0.3)(rollup@4.55.1)
       ngrok:
         specifier: ^5.0.0-beta.2
         version: 5.0.0-beta.2
@@ -354,6 +354,127 @@ importers:
         specifier: ^7.2.7
         version: 7.3.1(@types/node@25.0.9)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(yaml@2.8.2)
 
+  apps/oleole:
+    dependencies:
+      '@axiomhq/js':
+        specifier: ^1.3.1
+        version: 1.3.1
+      '@axiomhq/logging':
+        specifier: ^0.1.6
+        version: 0.1.6(@axiomhq/js@1.3.1)
+      '@axiomhq/react':
+        specifier: ^0.1.6
+        version: 0.1.6(@axiomhq/logging@0.1.6(@axiomhq/js@1.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@dnd-kit/core':
+        specifier: ^6.1.0
+        version: 6.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@dnd-kit/utilities':
+        specifier: ^3.2.2
+        version: 3.2.2(react@18.3.1)
+      '@inseme/brique-oleole':
+        specifier: workspace:*
+        version: link:../../packages/brique-oleole
+      '@loglayer/transport-axiom':
+        specifier: ^2.1.16
+        version: 2.1.16(@axiomhq/js@1.3.1)
+      '@supabase/supabase-js':
+        specifier: ^2.0.0
+        version: 2.90.1
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.90.19(react@18.3.1)
+      date-fns:
+        specifier: ^3.6.0
+        version: 3.6.0
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
+      framer-motion:
+        specifier: ^10.16.4
+        version: 10.18.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      geoportal-extensions-leaflet:
+        specifier: ^2.4.3
+        version: 2.4.3(encoding@0.1.13)
+      glob:
+        specifier: ^10.3.10
+        version: 10.5.0
+      html2canvas:
+        specifier: ^1.4.1
+        version: 1.4.1
+      jspdf:
+        specifier: ^2.5.1
+        version: 2.5.2
+      leaflet:
+        specifier: ^1.9.4
+        version: 1.9.4
+      loglayer:
+        specifier: ^8.4.0
+        version: 8.4.0
+      lucide-react:
+        specifier: ^0.562.0
+        version: 0.562.0(react@18.3.1)
+      minimist:
+        specifier: ^1.2.8
+        version: 1.2.8
+      ngrok:
+        specifier: ^5.0.0-beta.2
+        version: 5.0.0-beta.2
+      openai:
+        specifier: ^4.52.5
+        version: 4.104.0(encoding@0.1.13)(ws@8.19.0)(zod@3.25.76)
+      qrcode:
+        specifier: ^1.5.3
+        version: 1.5.4
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-camera-pro:
+        specifier: ^1.4.0
+        version: 1.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@5.3.11(@babel/core@7.28.6)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1))
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+      react-leaflet:
+        specifier: ^4.2.1
+        version: 4.2.1(leaflet@1.9.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-router-dom:
+        specifier: ^6.20.0
+        version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      recharts:
+        specifier: ^2.10.3
+        version: 2.15.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      serialize-error:
+        specifier: ^11.0.0
+        version: 11.0.3
+      swr:
+        specifier: ^2.2.5
+        version: 2.3.8(react@18.3.1)
+      tau-prolog:
+        specifier: ^0.3.4
+        version: 0.3.4
+      undici:
+        specifier: ^7.18.2
+        version: 7.18.2
+    devDependencies:
+      '@tailwindcss/vite':
+        specifier: ^4.1.17
+        version: 4.1.18(vite@7.3.1(@types/node@25.0.9)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(yaml@2.8.2))
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.7.0(vite@7.3.1(@types/node@25.0.9)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(yaml@2.8.2))
+      netlify-cli:
+        specifier: ^23.13.5
+        version: 23.13.5(@types/node@25.0.9)(encoding@0.1.13)(picomatch@4.0.3)(rollup@2.79.2)
+      tailwindcss:
+        specifier: ^4.1.17
+        version: 4.1.18
+      vite:
+        specifier: ^7.2.7
+        version: 7.3.1(@types/node@25.0.9)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(yaml@2.8.2)
+      vite-plugin-pwa:
+        specifier: ^1.2.0
+        version: 1.2.0(vite@7.3.1(@types/node@25.0.9)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(yaml@2.8.2))(workbox-build@7.4.0(@types/babel__core@7.20.5))(workbox-window@7.4.0)
+
   apps/platform:
     dependencies:
       '@anthropic-ai/sdk':
@@ -398,6 +519,9 @@ importers:
       '@inseme/brique-map':
         specifier: workspace:*
         version: link:../../packages/brique-map
+      '@inseme/brique-oleole':
+        specifier: workspace:*
+        version: link:../../packages/brique-oleole
       '@inseme/brique-ophelia':
         specifier: '*'
         version: link:../../packages/brique-ophelia
@@ -777,6 +901,27 @@ importers:
         version: 18.3.1
       react-dom:
         specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      react-leaflet:
+        specifier: ^4.2.1
+        version: 4.2.1(leaflet@1.9.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-router-dom:
+        specifier: ^6.20.0
+        version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      swr:
+        specifier: ^2.2.5
+        version: 2.3.8(react@18.3.1)
+
+  packages/brique-oleole:
+    dependencies:
+      leaflet:
+        specifier: ^1.9.4
+        version: 1.9.4
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
       react-leaflet:
         specifier: ^4.2.1
@@ -7995,6 +8140,7 @@ packages:
   recharts@2.15.4:
     resolution: {integrity: sha512-UT/q6fwS3c1dHbXv2uFgYJ9BMFHu3fwnd7AYZaEQhXuYQ4hgsxLvsUXzGdKeZrW5xopzDCvuA2N41WJ88I7zIw==}
     engines: {node: '>=14'}
+    deprecated: 1.x and 2.x branches are no longer active. Bump to Recharts v3 to receive latest features and bugfixes. See https://github.com/recharts/recharts/wiki/3.0-migration-guide
     peerDependencies:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -11161,6 +11307,70 @@ snapshots:
       - react-native-b4a
       - rollup
 
+  '@netlify/build@35.5.10(@opentelemetry/api@1.8.0)(@types/node@25.0.9)(encoding@0.1.13)(picomatch@4.0.3)(rollup@4.55.1)':
+    dependencies:
+      '@bugsnag/js': 8.8.1
+      '@netlify/blobs': 10.5.0(supports-color@10.2.2)
+      '@netlify/cache-utils': 6.0.4
+      '@netlify/config': 24.2.0
+      '@netlify/edge-bundler': 14.9.3
+      '@netlify/functions-utils': 6.2.21(encoding@0.1.13)(rollup@4.55.1)(supports-color@10.2.2)
+      '@netlify/git-utils': 6.0.3
+      '@netlify/opentelemetry-utils': 2.0.1(@opentelemetry/api@1.8.0)
+      '@netlify/plugins-list': 6.81.1
+      '@netlify/run-utils': 6.0.2
+      '@netlify/zip-it-and-ship-it': 14.2.0(encoding@0.1.13)(rollup@4.55.1)(supports-color@10.2.2)
+      '@opentelemetry/api': 1.8.0
+      '@sindresorhus/slugify': 2.2.1
+      ansi-escapes: 7.2.0
+      ansis: 4.2.0
+      clean-stack: 5.3.0
+      execa: 8.0.1
+      fdir: 6.5.0(picomatch@4.0.3)
+      figures: 6.1.0
+      filter-obj: 6.1.0
+      hot-shots: 11.4.0
+      indent-string: 5.0.0
+      is-plain-obj: 4.1.0
+      keep-func-props: 6.0.0
+      log-process-errors: 11.0.1
+      memoize-one: 6.0.0
+      minimatch: 9.0.5
+      os-name: 6.1.0
+      p-event: 6.0.1
+      p-filter: 4.1.0
+      p-locate: 6.0.0
+      p-map: 7.0.3
+      p-reduce: 3.0.0
+      package-directory: 8.1.0
+      path-exists: 5.0.0
+      pretty-ms: 9.3.0
+      ps-list: 8.1.1
+      read-package-up: 11.0.0
+      readdirp: 4.1.2
+      resolve: 2.0.0-next.5
+      rfdc: 1.4.1
+      safe-json-stringify: 1.2.0
+      semver: 7.7.3
+      string-width: 7.2.0
+      supports-color: 10.2.2
+      terminal-link: 4.0.0
+      ts-node: 10.9.2(@types/node@25.0.9)(typescript@5.9.3)
+      typescript: 5.9.3
+      uuid: 11.1.0
+      yaml: 2.8.2
+      yargs: 17.7.2
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
+      - bare-abort-controller
+      - encoding
+      - picomatch
+      - react-native-b4a
+      - rollup
+
   '@netlify/cache-utils@6.0.4':
     dependencies:
       cpy: 11.1.0
@@ -11285,6 +11495,18 @@ snapshots:
   '@netlify/functions-utils@6.2.21(encoding@0.1.13)(rollup@2.79.2)(supports-color@10.2.2)':
     dependencies:
       '@netlify/zip-it-and-ship-it': 14.3.1(encoding@0.1.13)(rollup@2.79.2)(supports-color@10.2.2)
+      cpy: 11.1.0
+      path-exists: 5.0.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - encoding
+      - react-native-b4a
+      - rollup
+      - supports-color
+
+  '@netlify/functions-utils@6.2.21(encoding@0.1.13)(rollup@4.55.1)(supports-color@10.2.2)':
+    dependencies:
+      '@netlify/zip-it-and-ship-it': 14.3.1(encoding@0.1.13)(rollup@4.55.1)(supports-color@10.2.2)
       cpy: 11.1.0
       path-exists: 5.0.0
     transitivePeerDependencies:
@@ -11480,6 +11702,88 @@ snapshots:
       - rollup
       - supports-color
 
+  '@netlify/zip-it-and-ship-it@14.2.0(encoding@0.1.13)(rollup@4.55.1)':
+    dependencies:
+      '@babel/parser': 7.28.6
+      '@babel/types': 7.28.6
+      '@netlify/binary-info': 1.0.0
+      '@netlify/serverless-functions-api': 2.8.3
+      '@vercel/nft': 0.29.4(encoding@0.1.13)(rollup@4.55.1)
+      archiver: 7.0.1
+      common-path-prefix: 3.0.0
+      copy-file: 11.1.0
+      es-module-lexer: 1.7.0
+      esbuild: 0.27.2
+      execa: 8.0.1
+      fast-glob: 3.3.3
+      filter-obj: 6.1.0
+      find-up: 7.0.0
+      is-path-inside: 4.0.0
+      junk: 4.0.1
+      locate-path: 7.2.0
+      merge-options: 3.0.4
+      minimatch: 9.0.5
+      normalize-path: 3.0.0
+      p-map: 7.0.3
+      path-exists: 5.0.0
+      precinct: 12.2.0
+      require-package-name: 2.0.1
+      resolve: 2.0.0-next.5
+      semver: 7.7.3
+      tmp-promise: 3.0.3
+      toml: 3.0.0
+      unixify: 1.0.0
+      urlpattern-polyfill: 8.0.2
+      yargs: 17.7.2
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - encoding
+      - react-native-b4a
+      - rollup
+      - supports-color
+
+  '@netlify/zip-it-and-ship-it@14.2.0(encoding@0.1.13)(rollup@4.55.1)(supports-color@10.2.2)':
+    dependencies:
+      '@babel/parser': 7.28.6
+      '@babel/types': 7.28.6
+      '@netlify/binary-info': 1.0.0
+      '@netlify/serverless-functions-api': 2.8.3
+      '@vercel/nft': 0.29.4(encoding@0.1.13)(rollup@4.55.1)(supports-color@10.2.2)
+      archiver: 7.0.1
+      common-path-prefix: 3.0.0
+      copy-file: 11.1.0
+      es-module-lexer: 1.7.0
+      esbuild: 0.27.2
+      execa: 8.0.1
+      fast-glob: 3.3.3
+      filter-obj: 6.1.0
+      find-up: 7.0.0
+      is-path-inside: 4.0.0
+      junk: 4.0.1
+      locate-path: 7.2.0
+      merge-options: 3.0.4
+      minimatch: 9.0.5
+      normalize-path: 3.0.0
+      p-map: 7.0.3
+      path-exists: 5.0.0
+      precinct: 12.2.0(supports-color@10.2.2)
+      require-package-name: 2.0.1
+      resolve: 2.0.0-next.5
+      semver: 7.7.3
+      tmp-promise: 3.0.3
+      toml: 3.0.0
+      unixify: 1.0.0
+      urlpattern-polyfill: 8.0.2
+      yargs: 17.7.2
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - encoding
+      - react-native-b4a
+      - rollup
+      - supports-color
+
   '@netlify/zip-it-and-ship-it@14.3.1(encoding@0.1.13)(rollup@2.79.2)(supports-color@10.2.2)':
     dependencies:
       '@babel/parser': 7.28.6
@@ -11487,6 +11791,47 @@ snapshots:
       '@netlify/binary-info': 1.0.0
       '@netlify/serverless-functions-api': 2.8.3
       '@vercel/nft': 0.29.4(encoding@0.1.13)(rollup@2.79.2)(supports-color@10.2.2)
+      archiver: 7.0.1
+      common-path-prefix: 3.0.0
+      copy-file: 11.1.0
+      es-module-lexer: 1.7.0
+      esbuild: 0.27.2
+      execa: 8.0.1
+      fast-glob: 3.3.3
+      filter-obj: 6.1.0
+      find-up: 7.0.0
+      is-path-inside: 4.0.0
+      junk: 4.0.1
+      locate-path: 7.2.0
+      merge-options: 3.0.4
+      minimatch: 9.0.5
+      normalize-path: 3.0.0
+      p-map: 7.0.3
+      path-exists: 5.0.0
+      precinct: 12.2.0(supports-color@10.2.2)
+      require-package-name: 2.0.1
+      resolve: 2.0.0-next.5
+      semver: 7.7.3
+      tmp-promise: 3.0.3
+      toml: 3.0.0
+      unixify: 1.0.0
+      urlpattern-polyfill: 8.0.2
+      yargs: 17.7.2
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - encoding
+      - react-native-b4a
+      - rollup
+      - supports-color
+
+  '@netlify/zip-it-and-ship-it@14.3.1(encoding@0.1.13)(rollup@4.55.1)(supports-color@10.2.2)':
+    dependencies:
+      '@babel/parser': 7.28.6
+      '@babel/types': 7.28.6
+      '@netlify/binary-info': 1.0.0
+      '@netlify/serverless-functions-api': 2.8.3
+      '@vercel/nft': 0.29.4(encoding@0.1.13)(rollup@4.55.1)(supports-color@10.2.2)
       archiver: 7.0.1
       common-path-prefix: 3.0.0
       copy-file: 11.1.0
@@ -11865,6 +12210,14 @@ snapshots:
       picomatch: 4.0.3
     optionalDependencies:
       rollup: 2.79.2
+
+  '@rollup/pluginutils@5.3.0(rollup@4.55.1)':
+    dependencies:
+      '@types/estree': 1.0.8
+      estree-walker: 2.0.2
+      picomatch: 4.0.3
+    optionalDependencies:
+      rollup: 4.55.1
 
   '@rollup/rollup-android-arm-eabi@4.55.1':
     optional: true
@@ -12340,6 +12693,44 @@ snapshots:
     dependencies:
       '@mapbox/node-pre-gyp': 2.0.3(encoding@0.1.13)(supports-color@10.2.2)
       '@rollup/pluginutils': 5.3.0(rollup@2.79.2)
+      acorn: 8.15.0
+      acorn-import-attributes: 1.9.5(acorn@8.15.0)
+      async-sema: 3.1.1
+      bindings: 1.5.0
+      estree-walker: 2.0.2
+      glob: 10.5.0
+      graceful-fs: 4.2.11
+      node-gyp-build: 4.8.4
+      picomatch: 4.0.3
+      resolve-from: 5.0.0
+    transitivePeerDependencies:
+      - encoding
+      - rollup
+      - supports-color
+
+  '@vercel/nft@0.29.4(encoding@0.1.13)(rollup@4.55.1)':
+    dependencies:
+      '@mapbox/node-pre-gyp': 2.0.3(encoding@0.1.13)
+      '@rollup/pluginutils': 5.3.0(rollup@4.55.1)
+      acorn: 8.15.0
+      acorn-import-attributes: 1.9.5(acorn@8.15.0)
+      async-sema: 3.1.1
+      bindings: 1.5.0
+      estree-walker: 2.0.2
+      glob: 10.5.0
+      graceful-fs: 4.2.11
+      node-gyp-build: 4.8.4
+      picomatch: 4.0.3
+      resolve-from: 5.0.0
+    transitivePeerDependencies:
+      - encoding
+      - rollup
+      - supports-color
+
+  '@vercel/nft@0.29.4(encoding@0.1.13)(rollup@4.55.1)(supports-color@10.2.2)':
+    dependencies:
+      '@mapbox/node-pre-gyp': 2.0.3(encoding@0.1.13)(supports-color@10.2.2)
+      '@rollup/pluginutils': 5.3.0(rollup@4.55.1)
       acorn: 8.15.0
       acorn-import-attributes: 1.9.5(acorn@8.15.0)
       async-sema: 3.1.1
@@ -16447,6 +16838,136 @@ snapshots:
       '@netlify/local-functions-proxy': 2.0.3
       '@netlify/redirect-parser': 15.0.3
       '@netlify/zip-it-and-ship-it': 14.2.0(encoding@0.1.13)(rollup@2.79.2)
+      '@octokit/rest': 22.0.0
+      '@opentelemetry/api': 1.8.0
+      '@pnpm/tabtab': 0.5.4
+      ansi-escapes: 7.1.1
+      ansi-to-html: 0.7.2
+      ascii-table: 0.0.9
+      backoff: 2.5.0
+      boxen: 8.0.1
+      chalk: 5.6.2
+      chokidar: 4.0.3
+      ci-info: 4.3.0
+      clean-deep: 3.4.0
+      commander: 12.1.0
+      comment-json: 4.3.0
+      content-type: 1.0.5
+      cookie: 1.0.2
+      cron-parser: 4.9.0
+      debug: 4.4.3
+      decache: 4.6.2
+      dot-prop: 9.0.0
+      dotenv: 17.2.3
+      env-paths: 3.0.0
+      envinfo: 7.15.0
+      etag: 1.8.1
+      execa: 5.1.1
+      express: 4.22.1
+      express-logging: 1.1.1
+      extract-zip: 2.0.1
+      fastest-levenshtein: 1.0.16
+      fastify: 4.29.1
+      find-up: 7.0.0
+      folder-walker: 3.2.0
+      fuzzy: 0.1.3
+      get-port: 5.1.1
+      gh-release-fetch: 4.0.3
+      git-repo-info: 2.1.1
+      gitconfiglocal: 2.1.0
+      http-proxy: 1.18.1(debug@4.4.3)
+      http-proxy-middleware: 2.0.9(debug@4.4.3)
+      https-proxy-agent: 7.0.6
+      inquirer: 8.2.7(@types/node@25.0.9)
+      inquirer-autocomplete-prompt: 1.4.0(inquirer@8.2.7(@types/node@25.0.9))
+      ipx: 3.1.1(@netlify/blobs@10.1.0)
+      is-docker: 3.0.0
+      is-stream: 4.0.1
+      is-wsl: 3.1.0
+      isexe: 3.1.1
+      jsonwebtoken: 9.0.3
+      jwt-decode: 4.0.0
+      lambda-local: 2.2.0
+      locate-path: 7.2.0
+      lodash: 4.17.21
+      log-update: 6.1.0
+      maxstache: 1.0.7
+      maxstache-stream: 1.0.4
+      multiparty: 4.2.3
+      nanospinner: 1.2.2
+      netlify-redirector: 0.5.0
+      node-fetch: 3.3.2
+      normalize-package-data: 7.0.1
+      open: 10.2.0
+      p-filter: 4.1.0
+      p-map: 7.0.3
+      p-wait-for: 5.0.2
+      parallel-transform: 1.2.0
+      parse-github-url: 1.0.3
+      prettyjson: 1.2.5
+      raw-body: 3.0.1
+      read-package-up: 11.0.0
+      readdirp: 4.1.2
+      semver: 7.7.2
+      source-map-support: 0.5.21
+      terminal-link: 4.0.0
+      toml: 3.0.0
+      tomlify-j0.4: 3.0.0
+      ulid: 3.0.1
+      update-notifier: 7.3.1
+      uuid: 11.1.0
+      write-file-atomic: 5.0.1
+      ws: 8.18.3
+    transitivePeerDependencies:
+      - '@azure/app-configuration'
+      - '@azure/cosmos'
+      - '@azure/data-tables'
+      - '@azure/identity'
+      - '@azure/keyvault-secrets'
+      - '@azure/storage-blob'
+      - '@capacitor/preferences'
+      - '@deno/kv'
+      - '@netlify/opentelemetry-sdk-setup'
+      - '@planetscale/database'
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/express'
+      - '@types/node'
+      - '@upstash/redis'
+      - '@vercel/blob'
+      - '@vercel/functions'
+      - '@vercel/kv'
+      - aws4fetch
+      - bare-abort-controller
+      - bufferutil
+      - db0
+      - encoding
+      - idb-keyval
+      - ioredis
+      - picomatch
+      - react-native-b4a
+      - rollup
+      - supports-color
+      - uploadthing
+      - utf-8-validate
+
+  netlify-cli@23.13.5(@types/node@25.0.9)(encoding@0.1.13)(picomatch@4.0.3)(rollup@4.55.1):
+    dependencies:
+      '@fastify/static': 7.0.4
+      '@netlify/ai': 0.3.4(@netlify/api@14.0.12)
+      '@netlify/api': 14.0.12
+      '@netlify/blobs': 10.1.0
+      '@netlify/build': 35.5.10(@opentelemetry/api@1.8.0)(@types/node@25.0.9)(encoding@0.1.13)(picomatch@4.0.3)(rollup@4.55.1)
+      '@netlify/build-info': 10.3.0
+      '@netlify/config': 24.2.0
+      '@netlify/dev-utils': 4.3.2
+      '@netlify/edge-bundler': 14.9.3
+      '@netlify/edge-functions': 3.0.2
+      '@netlify/edge-functions-bootstrap': 2.17.1
+      '@netlify/headers-parser': 9.0.2
+      '@netlify/local-functions-proxy': 2.0.3
+      '@netlify/redirect-parser': 15.0.3
+      '@netlify/zip-it-and-ship-it': 14.2.0(encoding@0.1.13)(rollup@4.55.1)
       '@octokit/rest': 22.0.0
       '@opentelemetry/api': 1.8.0
       '@pnpm/tabtab': 0.5.4
