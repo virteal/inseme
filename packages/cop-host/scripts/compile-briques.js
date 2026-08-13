@@ -629,13 +629,17 @@ export const config = {
 
   for (const appName of hostApps) {
     const appPath = join(APPS_PATH, appName);
-    if (!BRIQUE_PROFILE) {
-      const appSrc = join(appPath, "src");
-      if (existsSync(appSrc)) {
-        const registryPath = generateFrontendRegistry(appSrc, briques);
-        if (registryPath) generatedFiles.add(registryPath);
-      }
+    // App.jsx imports this registry regardless of deployment profile. When a
+    // profile is selected, `briques` already contains that profile's selected
+    // briques, so emit the matching registry rather than leaving Vite with a
+    // missing generated module.
+    const appSrc = join(appPath, "src");
+    if (existsSync(appSrc)) {
+      const registryPath = generateFrontendRegistry(appSrc, briques);
+      if (registryPath) generatedFiles.add(registryPath);
+    }
 
+    if (!BRIQUE_PROFILE) {
       // --- NEW: GENERATE TEST REGISTRY ---
       const appTests = join(appPath, "tests/integration");
       if (existsSync(appTests)) {
