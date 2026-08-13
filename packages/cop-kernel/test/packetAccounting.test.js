@@ -6,7 +6,15 @@ import {
   appendPacketHop,
   appendPacketSpending,
   calculatePacketTotalSpending,
+  calculatePacketOwnSpending,
+  calculatePacketConsolidatedSpending,
+  spawnDownstreamPacket,
+  auditPacketSpendNoDoubleCount,
+  summarizePacketSpending,
+  listOwnSpendKeys,
   calculateProvisionalCost,
+  DEFAULT_MONETARY_UNIT,
+  PACKET_LINEAGE_VOCABULARY,
   projectFractaBlogPost,
   projectFractaBlogFeed,
   projectPacketTraceView,
@@ -216,5 +224,111 @@ test("Strict Packet Accounting & FractaBlog Projections", async (t) => {
     assert.ok(textTrace.includes("node:workstation:win"));
     assert.ok(textTrace.includes("openai/gpt-4o"));
     assert.ok(textTrace.includes("Provisional Spending Log"));
+  });
+
+  await t.test("7. Own vs consolidated cascade (upstream/downstream) — no double-count", () => {
+    assert.equal(DEFAULT_MONETARY_UNIT, "USD");
+    assert.equal(PACKET_LINEAGE_VOCABULARY.preferred.upstream, "upstream_packet_id");
+
+    const root = createCognitivePacket({
+      packet_id: "urn:cop:packet:root-cascade",
+      mandate_id: "mandate:jhn:governance-2026",
+      treatment_id: "treatment:cascade:demo",
+      account_id: "https://jhn.baronsmariani.org/",
+    });
+    assert.equal(root.monetary_unit_default, "USD");
+
+    // Root own spend (hop 0)
+    appendPacketSpending(root, {
+      provider: "openai",
+      model: "gpt-4o-mini",
+      prompt_tokens: 1_000_000,
+      completion_tokens: 0,
+      evidence_hash: "ev:root-1",
+    });
+    // 1M input @ 0.15 / M = $0.15
+    const rootOwn = calculatePacketOwnSpending(root);
+    assert.equal(rootOwn.coefficient, "15000000"); // 0.15000000
+
+    const mid = spawnDownstreamPacket(root, {
+      packet_id: "urn:cop:packet:mid-cascade",
+      spawn_reason: "subagent_delegate",
+    });
+    assert.equal(mid.lineage.upstream_packet_id, root.packet_id);
+    assert.ok(root.lineage.downstream_packet_ids.includes(mid.packet_id));
+
+    appendPacketSpending(mid, {
+      provider: "openai",
+      model: "gpt-4o-mini",
+      prompt_tokens: 0,
+      completion_tokens: 500_000,
+      evidence_hash: "ev:mid-1",
+    });
+    // 0.5M out @ 0.60 / M = $0.30
+
+    const leaf = spawnDownstreamPacket(mid, {
+      packet_id: "urn:cop:packet:leaf-cascade",
+      spawn_reason: "tool_subtask",
+    });
+    appendPacketSpending(leaf, {
+      provider: "openai",
+      model: "gpt-4o-mini",
+      prompt_tokens: 100_000,
+      completion_tokens: 0,
+      evidence_hash: "ev:leaf-1",
+    });
+    // 0.1M in @ 0.15 / M = $0.015
+
+    const store = {
+      [root.packet_id]: root,
+      [mid.packet_id]: mid,
+      [leaf.packet_id]: leaf,
+    };
+    const resolve = (id) => store[id];
+
+    const roll = calculatePacketConsolidatedSpending(root, resolve);
+    // own root 0.15 + mid 0.30 + leaf 0.015 = 0.465
+    assert.equal(roll.own.coefficient, "15000000");
+    assert.equal(roll.consolidated.coefficient, "46500000");
+    assert.equal(roll.downstream_count, 1); // direct downstream only (mid)
+    assert.equal(roll.spend_keys.length, 3);
+
+    // own(root) + own(mid) + own(leaf) == consolidated(root); no double-count
+    const sumOwn = ["15000000", "30000000", "1500000"].reduce((a, b) => a + BigInt(b), 0n);
+    assert.equal(BigInt(roll.consolidated.coefficient), sumOwn);
+
+    const audit = auditPacketSpendNoDoubleCount([root, mid, leaf]);
+    assert.equal(audit.ok, true);
+    assert.equal(audit.duplicate_keys.length, 0);
+
+    // calculatePacketTotalSpending remains own-only (compat)
+    assert.equal(calculatePacketTotalSpending(root).coefficient, rootOwn.coefficient);
+
+    const summary = summarizePacketSpending(root, resolve);
+    assert.equal(summary.own_spend, "0.15000000");
+    assert.equal(summary.consolidated_spend, "0.46500000");
+    assert.equal(summary.downstream_count, 1);
+
+    // Anti double-count: same evidence_hash twice on one packet
+    assert.throws(() => {
+      appendPacketSpending(root, {
+        provider: "openai",
+        model: "gpt-4o-mini",
+        prompt_tokens: 10,
+        completion_tokens: 0,
+        evidence_hash: "ev:root-1",
+      });
+    }, /double-count|evidence_hash/);
+
+    // Anti double-count: same spend_id twice
+    assert.throws(() => {
+      appendPacketSpending(leaf, {
+        spend_id: listOwnSpendKeys(leaf)[0].split("::")[1],
+        provider: "openai",
+        model: "gpt-4o-mini",
+        prompt_tokens: 10,
+        completion_tokens: 0,
+      });
+    }, /duplicate spend_id/);
   });
 });

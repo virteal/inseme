@@ -6,11 +6,50 @@
  *
  * All amounts use ExactQuantity decimal arithmetic (no binary floating-point rounding errors).
  *
+ * Cascade (spawn) vocabulary — preferred (non-anthropocentric):
+ *   upstream_packet_id / downstream_packet_ids
+ * Colloquial aliases: parent ≈ upstream, child ≈ downstream.
+ *
+ * Strict rules:
+ *   - own_spend(P)        = Σ P.spending[] only
+ *   - consolidated(P)     = own_spend(P) + Σ consolidated(downstream_i)
+ *   - Never copy downstream spending lines into P.spending[] (anti double-count)
+ *   - Each spend line has exactly one owning packet_id
+ *   - Default provisional monetary unit: USD (provider billing convention)
+ *
  * @module accounting/packetAccounting
  */
 
 import { addQuantities, fromDecimal, toDecimal } from "./quantity.js";
 import { getModelRateCard } from "@inseme/cop-core";
+
+/** Default fiat unit for provisional LLM/provider cost (providers bill in USD). */
+export const DEFAULT_MONETARY_UNIT = "USD";
+
+/**
+ * Preferred lineage terms (schema) vs colloquial aliases.
+ * @type {Readonly<{ preferred: object, aliases: object, also_considered: string[] }>}
+ */
+export const PACKET_LINEAGE_VOCABULARY = Object.freeze({
+  preferred: {
+    upstream: "upstream_packet_id",
+    downstream: "downstream_packet_ids",
+    spawn: "spawn_reason",
+  },
+  aliases: {
+    parent: "upstream",
+    child: "downstream",
+    children: "downstream",
+    root: "cascade root (no upstream)",
+    leaf: "no downstream",
+  },
+  also_considered: [
+    "source / derived",
+    "origin / spawned",
+    "superordinate / subordinate",
+    "envelope / member (rejected — conflicts with envelope/payload)",
+  ],
+});
 
 /**
  * Calculate exact provisional cost in USD decimal format.
@@ -35,7 +74,8 @@ export function calculateProvisionalCost({
   const totalCost = inputCost + outputCost;
 
   const decimalStr = totalCost.toFixed(card.scale || 8);
-  const costQuantity = fromDecimal(decimalStr, "USD");
+  // Provider rate cards are denominated in USD by default.
+  const costQuantity = fromDecimal(decimalStr, DEFAULT_MONETARY_UNIT);
   return { cost: costQuantity, rate_basis: card.rate_basis };
 }
 
@@ -68,12 +108,26 @@ export function createCognitivePacket(params) {
     route_reason: "treatment_ingress",
   };
 
+  const lineage = {
+    upstream_packet_id: params.upstream_packet_id || params.parent_packet_id || undefined,
+    downstream_packet_ids: Array.isArray(params.downstream_packet_ids)
+      ? [...params.downstream_packet_ids]
+      : Array.isArray(params.child_packet_ids)
+        ? [...params.child_packet_ids]
+        : [],
+    spawn_reason: params.spawn_reason || undefined,
+  };
+  if (!lineage.upstream_packet_id) delete lineage.upstream_packet_id;
+  if (!lineage.spawn_reason) delete lineage.spawn_reason;
+
   return {
     packet_id,
     mandate_id: params.mandate_id,
     treatment_id: params.treatment_id,
     account_id: params.account_id,
     budget_reservation_id: params.budget_reservation_id,
+    monetary_unit_default: params.monetary_unit_default || DEFAULT_MONETARY_UNIT,
+    lineage,
     hops: [initialHop],
     spending: [],
     governance: params.governance || {
@@ -85,6 +139,59 @@ export function createCognitivePacket(params) {
     created_at: timestamp,
     payload: params.payload || {},
   };
+}
+
+/**
+ * Spawn a downstream packet under an upstream packet (cascade).
+ * Does not copy spending lines. Links ids only.
+ *
+ * @param {import("@inseme/cop-core").CognitivePacket} upstream
+ * @param {object} params — same as createCognitivePacket, minus required account/mandate if inherited
+ * @returns {import("@inseme/cop-core").CognitivePacket} downstream packet
+ */
+export function spawnDownstreamPacket(upstream, params = {}) {
+  if (!upstream?.packet_id) {
+    throw new Error("spawnDownstreamPacket: upstream packet_id required");
+  }
+  const downstream = createCognitivePacket({
+    mandate_id: params.mandate_id || upstream.mandate_id,
+    treatment_id: params.treatment_id || upstream.treatment_id,
+    account_id: params.account_id || upstream.account_id,
+    budget_reservation_id:
+      params.budget_reservation_id !== undefined
+        ? params.budget_reservation_id
+        : upstream.budget_reservation_id,
+    monetary_unit_default:
+      params.monetary_unit_default || upstream.monetary_unit_default || DEFAULT_MONETARY_UNIT,
+    initial_node_id: params.initial_node_id,
+    initial_instance_id: params.initial_instance_id,
+    governance: params.governance || {
+      ...(upstream.governance || {}),
+      mandate_id: params.mandate_id || upstream.mandate_id,
+    },
+    disclosure_class: params.disclosure_class || upstream.disclosure_class || "public",
+    payload: params.payload || {},
+    packet_id: params.packet_id,
+    upstream_packet_id: upstream.packet_id,
+    spawn_reason: params.spawn_reason || "spawn_downstream",
+  });
+
+  if (!upstream.lineage) {
+    upstream.lineage = { downstream_packet_ids: [] };
+  }
+  if (!Array.isArray(upstream.lineage.downstream_packet_ids)) {
+    upstream.lineage.downstream_packet_ids = [];
+  }
+  if (!upstream.lineage.downstream_packet_ids.includes(downstream.packet_id)) {
+    upstream.lineage.downstream_packet_ids.push(downstream.packet_id);
+  }
+
+  return downstream;
+}
+
+/** @deprecated Prefer spawnDownstreamPacket (upstream/downstream vocabulary). */
+export function spawnChildPacket(parent, params = {}) {
+  return spawnDownstreamPacket(parent, params);
 }
 
 /**
@@ -140,7 +247,24 @@ export function appendPacketSpending(packet, spendingDetails) {
     completion_tokens: spendingDetails.completion_tokens || 0,
   });
 
+  const spend_id = spendingDetails.spend_id || `spend:${packet.spending.length}`;
+  // Anti double-count: refuse duplicate spend_id on the same packet
+  if (packet.spending.some((s) => s.spend_id === spend_id)) {
+    throw new Error(`appendPacketSpending: duplicate spend_id ${spend_id} on ${packet.packet_id}`);
+  }
+  if (
+    spendingDetails.evidence_hash &&
+    packet.spending.some(
+      (s) => s.evidence_hash && s.evidence_hash === spendingDetails.evidence_hash
+    )
+  ) {
+    throw new Error(
+      `appendPacketSpending: duplicate evidence_hash on ${packet.packet_id} (would double-count)`
+    );
+  }
+
   const spendingEntry = {
+    spend_id,
     hop_index: currentHopIndex,
     node_id: currentHop ? currentHop.node_id : "node:fracta:main",
     capability: spendingDetails.capability || "ai/chat-completion",
@@ -196,19 +320,148 @@ export function appendPacketSpending(packet, spendingDetails) {
 }
 
 /**
- * Calculate the total provisional spending across all hops for a Cognitive Packet.
+ * Own provisional spending for a packet: Σ spending[] on *this* packet only.
+ * Does not include downstream packets. Default unit USD.
  *
  * @param {import("@inseme/cop-core").CognitivePacket} packet
- * @returns {import("@inseme/cop-core").ExactQuantity} Total cost in USD
+ * @returns {import("@inseme/cop-core").ExactQuantity}
  */
-export function calculatePacketTotalSpending(packet) {
-  let total = fromDecimal("0.00000000", "USD");
-  for (const s of packet.spending || []) {
+export function calculatePacketOwnSpending(packet) {
+  const unit = packet?.monetary_unit_default || DEFAULT_MONETARY_UNIT;
+  let total = fromDecimal("0.00000000", unit);
+  for (const s of packet?.spending || []) {
     if (s.provisional_cost) {
       total = addQuantities(total, s.provisional_cost);
     }
   }
   return total;
+}
+
+/**
+ * @deprecated Name kept for callers; equals own spend only (not consolidated cascade).
+ * Prefer calculatePacketOwnSpending or calculatePacketConsolidatedSpending.
+ */
+export function calculatePacketTotalSpending(packet) {
+  return calculatePacketOwnSpending(packet);
+}
+
+/**
+ * List of spend keys owned by this packet (for anti double-count audits).
+ * Key = `${packet_id}::${spend_id}`.
+ *
+ * @param {import("@inseme/cop-core").CognitivePacket} packet
+ * @returns {string[]}
+ */
+export function listOwnSpendKeys(packet) {
+  const pid = packet?.packet_id || "unknown";
+  return (packet?.spending || []).map((s, i) => `${pid}::${s.spend_id || `spend:${i}`}`);
+}
+
+/**
+ * Consolidated provisional spending for a cascade root:
+ * own_spend(P) + Σ consolidated(downstream_i).
+ *
+ * Downstream spending lines must NOT appear in P.spending[] — only via rollup.
+ *
+ * @param {import("@inseme/cop-core").CognitivePacket} packet
+ * @param {(id: string) => (import("@inseme/cop-core").CognitivePacket|null|undefined)} resolvePacket
+ * @param {object} [opts]
+ * @param {Set<string>} [opts._visited] cycle guard
+ * @returns {{ own: import("@inseme/cop-core").ExactQuantity, consolidated: import("@inseme/cop-core").ExactQuantity, spend_keys: string[], downstream_count: number }}
+ */
+export function calculatePacketConsolidatedSpending(packet, resolvePacket, opts = {}) {
+  const unit = packet?.monetary_unit_default || DEFAULT_MONETARY_UNIT;
+  const visited = opts._visited || new Set();
+  if (!packet?.packet_id) {
+    const zero = fromDecimal("0.00000000", unit);
+    return { own: zero, consolidated: zero, spend_keys: [], downstream_count: 0 };
+  }
+  if (visited.has(packet.packet_id)) {
+    throw new Error(`calculatePacketConsolidatedSpending: cycle detected at ${packet.packet_id}`);
+  }
+  visited.add(packet.packet_id);
+
+  const own = calculatePacketOwnSpending(packet);
+  let consolidated = own;
+  const spend_keys = listOwnSpendKeys(packet);
+  const downstreamIds = packet.lineage?.downstream_packet_ids || packet.child_packet_ids || [];
+  let downstream_count = 0;
+
+  for (const id of downstreamIds) {
+    if (!id || !resolvePacket) continue;
+    const down = resolvePacket(id);
+    if (!down) continue;
+    downstream_count += 1;
+    const sub = calculatePacketConsolidatedSpending(down, resolvePacket, { _visited: visited });
+    consolidated = addQuantities(consolidated, sub.consolidated);
+    for (const k of sub.spend_keys) {
+      if (spend_keys.includes(k)) {
+        throw new Error(
+          `calculatePacketConsolidatedSpending: double-count key ${k} (line appears in more than one own_spend)`
+        );
+      }
+      spend_keys.push(k);
+    }
+  }
+
+  return { own, consolidated, spend_keys, downstream_count };
+}
+
+/**
+ * Audit: ensure no spend_id appears in more than one packet's own spending.
+ *
+ * @param {import("@inseme/cop-core").CognitivePacket[]} packets
+ * @returns {{ ok: boolean, duplicate_keys: string[], own_by_packet: Record<string, string> }}
+ */
+export function auditPacketSpendNoDoubleCount(packets) {
+  const seen = new Map();
+  const duplicate_keys = [];
+  const own_by_packet = {};
+  for (const p of packets || []) {
+    const keys = listOwnSpendKeys(p);
+    own_by_packet[p.packet_id] = toDecimal(calculatePacketOwnSpending(p));
+    for (const k of keys) {
+      if (seen.has(k)) {
+        duplicate_keys.push(k);
+      } else {
+        seen.set(k, p.packet_id);
+      }
+    }
+  }
+  return { ok: duplicate_keys.length === 0, duplicate_keys, own_by_packet };
+}
+
+/**
+ * Summarize own vs consolidated for reporting / FractaBlog-style views.
+ *
+ * @param {import("@inseme/cop-core").CognitivePacket} packet
+ * @param {(id: string) => any} [resolvePacket]
+ */
+export function summarizePacketSpending(packet, resolvePacket) {
+  const ownQ = calculatePacketOwnSpending(packet);
+  let consolidatedQ = ownQ;
+  let downstream_count = 0;
+  let spend_keys = listOwnSpendKeys(packet);
+  if (typeof resolvePacket === "function") {
+    const roll = calculatePacketConsolidatedSpending(packet, resolvePacket);
+    consolidatedQ = roll.consolidated;
+    downstream_count = roll.downstream_count;
+    spend_keys = roll.spend_keys;
+  }
+  return {
+    packet_id: packet.packet_id,
+    monetary_unit_default: packet.monetary_unit_default || DEFAULT_MONETARY_UNIT,
+    own_spend: toDecimal(ownQ),
+    consolidated_spend: toDecimal(consolidatedQ),
+    own_spend_lines: (packet.spending || []).length,
+    hop_count: (packet.hops || []).length,
+    downstream_count,
+    spend_key_count: spend_keys.length,
+    lineage: {
+      upstream_packet_id: packet.lineage?.upstream_packet_id || null,
+      downstream_packet_ids: packet.lineage?.downstream_packet_ids || [],
+    },
+  };
 }
 
 /**

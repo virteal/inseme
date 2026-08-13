@@ -37,6 +37,11 @@ export interface PacketHop {
  * Provisional spending record for a single execution step/hop.
  */
 export interface ProvisionalSpending {
+  /**
+   * Stable id of this spend line, unique within the owning packet
+   * (e.g. "spend:0", "spend:1"). Owning packet_id + spend_id is globally unique.
+   */
+  spend_id?: string;
   /** Hop index to which this spending applies. */
   hop_index: number;
   /** Fractanet node identifier where spending occurred. */
@@ -51,7 +56,7 @@ export interface ProvisionalSpending {
   prompt_tokens: number;
   /** Number of completion/output tokens generated. */
   completion_tokens: number;
-  /** Exact decimal provisional cost estimate. */
+  /** Exact decimal provisional cost estimate (default unit USD). */
   provisional_cost: ExactQuantity;
   /** Rate card reference used for estimation (e.g. "rate:openai:gpt-4o-mini:2026-08"). */
   rate_basis: string;
@@ -59,6 +64,28 @@ export interface ProvisionalSpending {
   timestamp: string;
   /** Optional hash of request/response payload for evidence correlation. */
   evidence_hash?: string;
+}
+
+/**
+ * Lineage relation for cascade accounting (spawn / split / delegate).
+ *
+ * Preferred vocabulary (network / packet, less anthropocentric than parent/child):
+ *   - upstream_packet_id  — packet that authorized or spawned this work
+ *   - downstream_packet_ids — packets spawned from this one
+ *
+ * Accepted aliases in prose (not preferred in schema):
+ *   parent ≈ upstream, child ≈ downstream, root ≈ top of cascade, leaf ≈ no downstream.
+ *
+ * Other candidates considered: source/derived, origin/spawned, superordinate/subordinate.
+ * "Upstream/downstream" fits Fractanet routing and avoids family metaphors.
+ */
+export interface PacketLineage {
+  /** Packet that spawned or authorized this packet (none for cascade root). */
+  upstream_packet_id?: string;
+  /** Packets spawned from this packet (ids only — never copy their spending lines here). */
+  downstream_packet_ids?: string[];
+  /** Why this packet was spawned (split, subagent, hop_delegate, continuation, …). */
+  spawn_reason?: string;
 }
 
 /**
@@ -75,9 +102,19 @@ export interface CognitivePacket {
   account_id: AccountIdentifier;
   /** Budget reservation ID linked to this packet. */
   budget_reservation_id?: string;
+  /**
+   * Default monetary unit for provisional valuation (providers bill in USD today).
+   * Non-USD resources use their own unit on ExactQuantity; fiat default remains USD.
+   */
+  monetary_unit_default?: string;
+  /** Cascade lineage (upstream/downstream). */
+  lineage?: PacketLineage;
   /** Ordered list of routing hops travelled across Fractanet nodes. */
   hops: PacketHop[];
-  /** Ordered list of provisional spending traces incurred at each hop. */
+  /**
+   * Ordered list of provisional spending traces incurred on *this* packet only (own spend).
+   * Never duplicate downstream packets' spending lines here (anti double-count).
+   */
   spending: ProvisionalSpending[];
   /** Governance context governing this packet's treatment. */
   governance: GovernanceContext;
