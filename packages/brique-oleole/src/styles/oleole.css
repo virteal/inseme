@@ -109,13 +109,6 @@ select {
 .oleole-brand__mark {
   width: 2rem;
   height: 2rem;
-  border: var(--oleole-border);
-  background: linear-gradient(
-    90deg,
-    var(--oleole-red) 0 33%,
-    var(--oleole-yellow) 33% 66%,
-    var(--oleole-blue) 66% 100%
-  );
   flex-shrink: 0;
 }
 
@@ -225,6 +218,28 @@ select {
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
+}
+
+.oleole-progress {
+  border: var(--oleole-border);
+  background: var(--oleole-blue);
+  color: #fff;
+  padding: 0.7rem 0.85rem;
+}
+
+.oleole-progress p,
+.oleole-progress small {
+  display: block;
+  margin: 0.2rem 0 0;
+}
+
+.oleole-progress small {
+  color: #fff;
+  opacity: 0.88;
+}
+
+.oleole-info p {
+  margin: 0;
 }
 
 .oleole-panel__title {

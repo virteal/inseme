@@ -15,6 +15,7 @@ import {
   localRevokeAll,
 } from "../lib/local-presence.js";
 import { classifyOleoleHost } from "../lib/facade-host.js";
+import janaLogo from "../assets/jana.svg";
 import "../styles/oleole.css";
 
 const API = "/api/oleole";
@@ -50,6 +51,35 @@ function mergeAggregates(serverAgg, localAgg) {
     }
   }
   return [...byPlace.values()].sort((a, b) => b.count - a.count);
+}
+
+function ProgressPanel({ aggregates, windowKey }) {
+  const { t } = useI18n();
+  const count = aggregates.reduce((total, item) => total + (item.count || 0), 0);
+  const places = aggregates.filter((item) => item.count > 0).length;
+  return (
+    <section className="oleole-progress" aria-live="polite">
+      <strong>{t("progress.title")}</strong>
+      <p>
+        {count
+          ? t("progress.summary", { count, places, window: t(`time.${windowKey}`) })
+          : t("progress.empty", { window: t(`time.${windowKey}`) })}
+      </p>
+      <small>{t("progress.note")}</small>
+    </section>
+  );
+}
+
+function InfoPanel() {
+  const { t } = useI18n();
+  return (
+    <section className="oleole-panel oleole-info">
+      <h2 className="oleole-panel__title">{t("info.title")}</h2>
+      <p>{t("info.intro")}</p>
+      <p>{t("info.privacy")}</p>
+      <p>{t("info.status")}</p>
+    </section>
+  );
 }
 
 function OleoleHomeInner() {
@@ -170,7 +200,7 @@ function OleoleHomeInner() {
     <div className="oleole-app" lang={locale}>
       <header className="oleole-header">
         <div className="oleole-brand">
-          <span className="oleole-brand__mark" aria-hidden />
+          <img className="oleole-brand__mark" src={janaLogo} alt="" />
           <div>
             <h1 className="oleole-brand__title">{t("meta.title")}</h1>
             <p className="oleole-brand__sub">{t("brand.subtitle")}</p>
@@ -181,14 +211,6 @@ function OleoleHomeInner() {
           <TimeSelector value={windowKey} onChange={setWindowKey} />
         </div>
       </header>
-
-      <div className="oleole-banner oleole-banner--proto" role="status">
-        {t("proto.banner")}
-        {apiOnline === false ? ` · ${t("proto.localMode")}` : ""}
-      </div>
-      <div className="oleole-banner" role="note">
-        {t("disclaimer.banner")}
-      </div>
 
       <main className="oleole-main">
         <section className="oleole-map-wrap" aria-label={t("map.aria")}>
@@ -206,6 +228,7 @@ function OleoleHomeInner() {
               ["contribute", "nav.contribute"],
               ["mode", "nav.mode"],
               ["john", "nav.john"],
+              ["info", "nav.info"],
             ].map(([id, key]) => (
               <button
                 key={id}
@@ -219,13 +242,16 @@ function OleoleHomeInner() {
           </nav>
 
           {panel === "contribute" && (
-            <PresencePanel
-              places={places}
-              selectedPlace={selectedPlace}
-              onDeclare={declare}
-              onRevokeAll={revokeAll}
-              busy={busy}
-            />
+            <>
+              <ProgressPanel aggregates={aggregates} windowKey={windowKey} />
+              <PresencePanel
+                places={places}
+                selectedPlace={selectedPlace}
+                onDeclare={declare}
+                onRevokeAll={revokeAll}
+                busy={busy}
+              />
+            </>
           )}
           {panel === "mode" && (
             <PresenceModeControl
@@ -248,6 +274,7 @@ function OleoleHomeInner() {
           {panel === "john" && (
             <JohnChat subjectRef={subjectRef} windowKey={windowKey} onMapContext={onMapContext} />
           )}
+          {panel === "info" && <InfoPanel />}
 
           {flash ? (
             <p className="oleole-status" role="status">
@@ -256,6 +283,7 @@ function OleoleHomeInner() {
           ) : null}
 
           <footer className="oleole-footer">
+            {apiOnline === false ? <p>{t("proto.localMode")}</p> : null}
             <p>{t("footer.blurb")}</p>
             <p className="oleole-footer__publisher">
               {classifyOleoleHost(

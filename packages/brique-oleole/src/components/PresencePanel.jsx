@@ -3,6 +3,14 @@ import { useI18n } from "../i18n/I18nContext.jsx";
 
 const INTENT_KEYS = ["discovery", "social", "oleole"];
 
+function nextEveningLocal() {
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  date.setHours(18, 0, 0, 0);
+  const offset = date.getTimezoneOffset() * 60_000;
+  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+}
+
 export default function PresencePanel({
   places = [],
   selectedPlace = null,
@@ -26,6 +34,10 @@ export default function PresencePanel({
   useEffect(() => {
     if (selectedPlace?.id) setPlaceId(selectedPlace.id);
   }, [selectedPlace?.id]);
+
+  useEffect(() => {
+    if (modality === "intended" && !untilLocal) setUntilLocal(nextEveningLocal());
+  }, [modality, untilLocal]);
 
   function toggleIntent(key) {
     setIntents((prev) => ({ ...prev, [key]: !prev[key] }));

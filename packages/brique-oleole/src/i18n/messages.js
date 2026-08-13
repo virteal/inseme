@@ -19,6 +19,7 @@ export const messages = {
     "nav.contribute": "Contribuer",
     "nav.mode": "Auto",
     "nav.john": "John",
+    "nav.info": "À propos",
     "nav.panelsAria": "Panneaux",
     "map.aria": "Carte des présences",
     "map.presenceCount": "{count} présence(s) déclarée(s)",
@@ -29,6 +30,11 @@ export const messages = {
     "map.intent.oleole": "olé olé",
     "map.noPresence": "Aucune présence contribuée sur cette fenêtre",
     "map.sources": "Sources: {list}",
+    "progress.title": "Registre collectif",
+    "progress.summary": "{count} présence(s) déclarée(s) sur {places} lieu(x) · {window}",
+    "progress.empty": "Pas encore de présence déclarée · {window}",
+    "progress.note":
+      "Ce compteur décrit des déclarations agrégées, pas un nombre de personnes identifiées.",
     "class.municipality": "commune",
     "class.poi": "point d'intérêt",
     "class.area": "zone",
@@ -69,6 +75,13 @@ export const messages = {
       "« Olé olé » n'est pas un consentement à un contact. Aucun profil individuel n'est exposé.",
     "panel.publish": "Publier",
     "panel.revoke": "Révoquer mes présences",
+    "info.title": "À propos d'Olé Olé",
+    "info.intro":
+      "Olé Olé est une carte de présences volontaires en Corse, produite par C.O.R.S.I.C.A. avec John.",
+    "info.privacy":
+      "Les présences sont publiques uniquement sous forme agrégée. Aucune position individuelle précise ni profil de rencontre n'est exposé.",
+    "info.status":
+      "Version exploratoire : les contributions sont utiles, mais ne constituent pas une mesure représentative de la population.",
     "mode.title": "Mode de contribution",
     "mode.manual": "Manuel",
     "mode.auto": "Automatique",
@@ -132,6 +145,7 @@ export const messages = {
     "nav.contribute": "Contribute",
     "nav.mode": "Auto",
     "nav.john": "John",
+    "nav.info": "About",
     "nav.panelsAria": "Panels",
     "map.aria": "Presence map",
     "map.presenceCount": "{count} declared presence(s)",
@@ -142,6 +156,10 @@ export const messages = {
     "map.intent.oleole": "olé olé",
     "map.noPresence": "No contributed presence in this window",
     "map.sources": "Sources: {list}",
+    "progress.title": "Community register",
+    "progress.summary": "{count} declared presence(s) across {places} place(s) · {window}",
+    "progress.empty": "No declared presence yet · {window}",
+    "progress.note": "This counts aggregate declarations, not identified people.",
     "class.municipality": "municipality",
     "class.poi": "point of interest",
     "class.area": "area",
@@ -180,6 +198,13 @@ export const messages = {
     "panel.oleoleNote": "“Olé olé” is not consent to contact. No individual profile is exposed.",
     "panel.publish": "Publish",
     "panel.revoke": "Revoke my presences",
+    "info.title": "About Olé Olé",
+    "info.intro":
+      "Olé Olé is a voluntary-presence map for Corsica, produced by C.O.R.S.I.C.A. with John.",
+    "info.privacy":
+      "Presences are public only as aggregates. No precise individual location or dating profile is exposed.",
+    "info.status":
+      "Exploratory build: contributions are useful, but not a representative population measure.",
     "mode.title": "Contribution mode",
     "mode.manual": "Manual",
     "mode.auto": "Automatic",
