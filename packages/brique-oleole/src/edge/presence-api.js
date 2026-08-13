@@ -7,7 +7,6 @@
  * Routes under /api/oleole/*
  */
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { createPresenceStore } from "../lib/presence-store.js";
 import { parsePresenceUtterance, resolveTimeWindow } from "../lib/presence-core.js";
 import { PLACES_SEED } from "../lib/places-seed.js";
@@ -26,7 +25,7 @@ function json(data, status = 200) {
   });
 }
 
-function getSupabase() {
+async function getSupabase() {
   const url =
     globalThis.Deno?.env.get("SUPABASE_URL") || globalThis.Deno?.env.get("VITE_SUPABASE_URL");
   // This edge function owns all access to individual claims. Never fall back
@@ -34,6 +33,10 @@ function getSupabase() {
   const key = globalThis.Deno?.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (!url || !key) return null;
   try {
+    // Keep remote Deno dependencies out of the static graph Netlify bundles.
+    // The function itself is generated from a workspace brique; static traversal
+    // of esm.sh from that generated entry makes Netlify abort before deployment.
+    const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
     return createClient(url, key);
   } catch {
     return null;
@@ -181,14 +184,14 @@ export default async (req, _context) => {
   if (req.method === "OPTIONS") return json({ ok: true });
 
   const url = new URL(req.url);
-  const supabase = getSupabase();
+  const supabase = await getSupabase();
   const store = createPresenceStore(supabase);
   const tail = pathTail(url);
   const head = tail[0] || "";
   const sub = tail[1] || "";
 
   try {
-    if (req.method === "GET" && (head === "places" || head === "")) {
+    if (req.method === "GET" && (head === "places" || head === "" || head === "health")) {
       if (head === "" || head === "health") {
         return json({
           ok: true,

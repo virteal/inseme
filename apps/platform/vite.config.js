@@ -47,10 +47,13 @@ export default defineConfig(({ mode }) => ({
     include: ["react-router-dom"],
   },
   build: {
-    sourcemap: true,
+    // JHN production deploys are intentional and source maps are not served to
+    // users. Avoid the costly source-map pass on the large legacy bundle under
+    // Windows/Node 24; non-JHN builds keep their existing diagnostics.
+    sourcemap: !isJhnProfileBuild,
     // Vite/esbuild minification currently hangs or terminates with STATUS_STACK_BUFFER_OVERRUN
-    // on the JHN profile's large legacy frontend bundle under Windows/Node 24. Keep source maps
-    // and preserve production minification for every other profile until frontend minimization
+    // on the JHN profile's large legacy frontend bundle under Windows/Node 24. Preserve production
+    // minification and source maps for every other profile until frontend minimization
     // makes this workaround unnecessary.
     minify: isJhnProfileBuild ? false : mode === "production" ? "esbuild" : false,
   },
