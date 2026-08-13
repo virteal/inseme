@@ -281,7 +281,10 @@ export function appendPacketSpending(packet, spendingDetails) {
   packet.spending.push(spendingEntry);
 
   // Generate balanced COP transaction event for provisional expense
+  // Operational account id (provider SKU) + semantic chart account for statements.
   const expenseAccount = `urn:account:expense:${spendingDetails.provider}:${spendingDetails.model}`;
+  const semanticExpense = spendingDetails.semantic_account_id || "COG:EXPENSE.AI.INFERENCE";
+  const liabilityAccount = spendingDetails.liability_account_id || "COG:LIABILITY.PROVIDER.PAYABLE";
   const transactionEvent = {
     eventType: "accounting/transaction",
     schemaVersion: "1.0",
@@ -294,25 +297,32 @@ export function appendPacketSpending(packet, spendingDetails) {
         quantity: cost,
         posting_type: "debit",
         description: `Provisional expense: ${spendingDetails.provider}/${spendingDetails.model} (${spendingDetails.prompt_tokens}+${spendingDetails.completion_tokens} tokens)`,
+        semantic_account_id: semanticExpense,
       },
       {
-        account: packet.account_id,
+        // Credit: either principal cash/account or provider payable (accrual of provisional liability)
+        account: liabilityAccount,
         quantity: cost,
         posting_type: "credit",
-        description: `Treatment payment debit: packet ${packet.packet_id}`,
+        description: `Provisional provider payable for packet ${packet.packet_id}`,
+        semantic_account_id: liabilityAccount,
       },
     ],
     governance: packet.governance,
     disclosure_class: packet.disclosure_class,
-    idempotency_key: `idemp:${packet.packet_id}:spend:${packet.spending.length}`,
+    idempotency_key: `idemp:${packet.packet_id}:spend:${spend_id}`,
     timestamp,
     metadata: {
       packet_id: packet.packet_id,
       treatment_id: packet.treatment_id,
+      mandate_id: packet.mandate_id,
       hop_index: currentHopIndex,
       provider: spendingDetails.provider,
       model: spendingDetails.model,
       rate_basis,
+      semantic_account_id: semanticExpense,
+      valuation_status: "provisional",
+      principal_account_id: packet.account_id,
     },
   };
 

@@ -1,0 +1,91 @@
+# Cogentia semantic chart of accounts (jurisdiction-neutral)
+# Maps later to national charts (e.g. French PCG) via versioned adapters.
+# See: research/cogentia_accounting_architecture.md, inseme#39
+
+version: "0.1.0"
+unit_default_fiat: USD
+updated_at: "2026-08-13"
+
+families:
+  ASSET:
+    description: Resources controlled
+  LIABILITY:
+    description: Obligations
+  NET:
+    description: Residual interest / equity-like
+  INCOME:
+    description: Inflows of economic benefit
+  EXPENSE:
+    description: Outflows / consumption
+  CLEARING:
+    description: Temporary settlement / suspense
+  OFFBALANCE:
+    description: Memorandum commitments not on balance sheet
+  MEMO:
+    description: Non-posting analytical notes
+
+accounts:
+  - id: COG:ASSET.CASH.PROVIDER_PREPAY
+    family: ASSET
+    label: Provider prepayment / credit balance
+  - id: COG:ASSET.RECEIVABLE.CLIENT
+    family: ASSET
+    label: Client receivable
+  - id: COG:EXPENSE.AI.INFERENCE
+    family: EXPENSE
+    label: AI inference (LLM chat/completions)
+    analytical_default: true
+  - id: COG:EXPENSE.AI.EMBEDDING
+    family: EXPENSE
+    label: AI embeddings
+  - id: COG:EXPENSE.AI.STORAGE
+    family: EXPENSE
+    label: Vector / object storage
+  - id: COG:EXPENSE.COMPUTE.GPU
+    family: EXPENSE
+    label: GPU compute time
+  - id: COG:EXPENSE.NETWORK.BANDWIDTH
+    family: EXPENSE
+    label: Network bandwidth
+  - id: COG:EXPENSE.OPS.HOSTING
+    family: EXPENSE
+    label: Hosting / VPS
+  - id: COG:LIABILITY.PROVIDER.PAYABLE
+    family: LIABILITY
+    label: Amounts payable to AI/cloud providers
+  - id: COG:CLEARING.PROVISIONAL.SPEND
+    family: CLEARING
+    label: Provisional spend awaiting invoice reconciliation
+  - id: COG:INCOME.SERVICE.TWIN
+    family: INCOME
+    label: Twin / Guide service revenue (when billed)
+  - id: COG:OFFBALANCE.BUDGET.RESERVED
+    family: OFFBALANCE
+    label: Budget capacity reserved (authorization, not expense)
+  - id: COG:MEMO.PACKET.IMPUTATION
+    family: MEMO
+    label: Packet/treatment analytical imputation
+
+# Minimal mapping hooks (not French PCG — only placeholders for adapters)
+mapping_profiles:
+  fr_pcg_sketch:
+    note: Illustrative only — not a certified PCG mapping
+    COG:EXPENSE.AI.INFERENCE: "604 / 618" # services externes (à valider expert-comptable)
+    COG:LIABILITY.PROVIDER.PAYABLE: "401"
+    COG:ASSET.CASH.PROVIDER_PREPAY: "512 / 409"
+
+analytical_dimensions:
+  - legal_host_id
+  - twin_id
+  - principal_subject_id
+  - actor_subject_id
+  - mandate_id
+  - packet_id
+  - treatment_id
+  - project_id
+  - provider
+  - model
+  - capability
+  - surface
+  - valuation_status
+  - disclosure_class

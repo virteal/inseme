@@ -129,8 +129,10 @@ test("Strict Packet Accounting & FractaBlog Projections", async (t) => {
     assert.equal(txn1.postings.length, 2);
     assert.equal(txn1.postings[0].posting_type, "debit");
     assert.equal(txn1.postings[0].account, "urn:account:expense:openai:gpt-4o-mini");
+    assert.equal(txn1.postings[0].semantic_account_id, "COG:EXPENSE.AI.INFERENCE");
     assert.equal(txn1.postings[1].posting_type, "credit");
-    assert.equal(txn1.postings[1].account, "https://jhn.baronsmariani.org/");
+    // Accrual: provisional provider payable (not cash movement yet)
+    assert.equal(txn1.postings[1].account, "COG:LIABILITY.PROVIDER.PAYABLE");
     assert.deepEqual(txn1.postings[0].quantity, txn1.postings[1].quantity);
 
     // Hop to workstation and add second spending

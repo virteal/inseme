@@ -49,6 +49,9 @@ export const ENV_KEY_MAPPING = {
   supabase_url: ["SUPABASE_URL", "VITE_SUPABASE_URL"],
   supabase_service_role_key: ["SUPABASE_SERVICE_ROLE_KEY"],
   supabase_anon_key: ["SUPABASE_ANON_KEY", "VITE_SUPABASE_ANON_KEY"],
+  // Olé Olé participant-cookie HMAC key. It is generated and stored in the
+  // Agent JHN vault; Netlify retains only the Supabase bootstrap pair.
+  oleole_session_secret: ["OLEOLE_SESSION_SECRET"],
   postgres_url: ["POSTGRES_URL"],
   database_url: ["DATABASE_URL"],
 

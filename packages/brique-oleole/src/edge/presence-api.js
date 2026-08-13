@@ -40,6 +40,26 @@ function getSupabase() {
   }
 }
 
+async function loadVaultConfig() {
+  const config = await import("@inseme/cop-host/config/instanceConfig.edge.js");
+  return config.loadInstanceConfig();
+}
+
+function vaultValue(table, name) {
+  const row = table[String(name).trim().toLowerCase()];
+  const value = row?.value_json ?? row?.value;
+  return typeof value === "string" ? value.trim() : "";
+}
+
+async function oleoleSessionSecret() {
+  try {
+    return vaultValue(await loadVaultConfig(), "oleole_session_secret");
+  } catch (error) {
+    console.error("Olé Olé vault configuration failed", { message: error?.message });
+    return "";
+  }
+}
+
 async function resolveActor(req, supabase) {
   const authorization = req.headers.get("Authorization") || "";
   if (authorization.startsWith("Bearer ")) {
@@ -49,7 +69,9 @@ async function resolveActor(req, supabase) {
     return { subject_ref: `subject:auth:${data.user.id}`, kind: "authenticated", headers: {} };
   }
 
-  const secret = globalThis.Deno?.env.get("OLEOLE_SESSION_SECRET");
+  // Netlify holds only the Supabase bootstrap pair. The participant-cookie
+  // HMAC key belongs to the Agent JHN instance vault, like other edge secrets.
+  const secret = await oleoleSessionSecret();
   if (!secret) return { error: "identity_service_unavailable", status: 503 };
 
   const cookieName = "oleole_participant";
