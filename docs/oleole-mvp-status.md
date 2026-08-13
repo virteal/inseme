@@ -81,12 +81,11 @@ supabase db push
 Without migration, edge API falls back to **in-memory** store (works for single-isolate demo; not
 multi-instance durable).
 
-Required Netlify bootstrap environment: `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
-The high-entropy `oleole_session_secret` is stored in the Agent JHN `instance_config` vault and
-loaded by the edge function; it is not a Netlify variable. The service-role key is edge-only.
-Browser clients never supply
-`subject_ref`; the edge derives it from a verified Supabase bearer session or an HttpOnly,
-HMAC-signed participant cookie. Public API responses contain Places or aggregates only.
+Required Netlify bootstrap environment: `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. The
+high-entropy `oleole_session_secret` is stored in the Agent JHN `instance_config` vault and loaded
+by the edge function; it is not a Netlify variable. The service-role key is edge-only. Browser
+clients never supply `subject_ref`; the edge derives it from a verified Supabase bearer session or
+an HttpOnly, HMAC-signed participant cookie. Public API responses contain Places or aggregates only.
 
 ### B. DNS + Netlify custom domain — `oleole.acorsica.org`
 

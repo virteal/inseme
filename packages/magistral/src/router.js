@@ -326,11 +326,16 @@ export function createRouter({
         delete nodePayload.max_tokens;
       }
 
-      // GPT-5 Chat Completions uses max_completion_tokens rather than the
-      // legacy max_tokens field that older OpenAI-compatible callers send.
-      if (/^gpt-5(?:[.-]|$)/.test(node.model) && nodePayload.max_tokens !== undefined) {
-        nodePayload.max_completion_tokens = nodePayload.max_tokens;
-        delete nodePayload.max_tokens;
+      // GPT-5 Chat Completions: legacy max_tokens → max_completion_tokens.
+      // Several gpt-5.6-* SKUs only accept default temperature (1); drop other values.
+      if (/^gpt-5(?:[.-]|$)/.test(String(node.model || ""))) {
+        if (nodePayload.max_tokens !== undefined) {
+          nodePayload.max_completion_tokens = nodePayload.max_tokens;
+          delete nodePayload.max_tokens;
+        }
+        if (nodePayload.temperature !== undefined && Number(nodePayload.temperature) !== 1) {
+          delete nodePayload.temperature;
+        }
       }
 
       // Base log entry
