@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import QRCode from "qrcode";
 import OleoleMap from "../components/OleoleMap.jsx";
 import TimeSelector from "../components/TimeSelector.jsx";
 import PresencePanel from "../components/PresencePanel.jsx";
@@ -70,15 +71,159 @@ function ProgressPanel({ aggregates, windowKey }) {
   );
 }
 
+const CANONICAL_URL = "https://oleole.acorsica.org/";
+
+function InvitePanel() {
+  const { t, locale } = useI18n();
+  const [status, setStatus] = useState("");
+  const [qr, setQr] = useState("");
+  const inviteUrl = `${CANONICAL_URL}?lang=${locale}`;
+
+  useEffect(() => {
+    QRCode.toDataURL(inviteUrl, { margin: 1, width: 240, color: { dark: "#1a1a1a" } })
+      .then(setQr)
+      .catch(() => setQr(""));
+  }, [inviteUrl]);
+
+  async function invite() {
+    const text = t("invite.text");
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: t("meta.title"), text, url: inviteUrl });
+        return;
+      } catch (error) {
+        if (error?.name === "AbortError") return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(inviteUrl);
+      setStatus(t("invite.copied"));
+    } catch {
+      setStatus(t("invite.copyFailed"));
+    }
+  }
+
+  return (
+    <section className="oleole-panel oleole-invite">
+      <h2 className="oleole-panel__title">{t("invite.title")}</h2>
+      <p>{t("invite.intro")}</p>
+      <div className="oleole-actions">
+        <button type="button" className="oleole-btn oleole-btn--primary" onClick={invite}>
+          {t("invite.action")}
+        </button>
+      </div>
+      {qr ? <img className="oleole-invite__qr" src={qr} alt={t("invite.qrAlt")} /> : null}
+      <small className="oleole-muted">{t("invite.note")}</small>
+      {status ? (
+        <p className="oleole-status" role="status">
+          {status}
+        </p>
+      ) : null}
+    </section>
+  );
+}
+
+function InstallPanel() {
+  const { t } = useI18n();
+  const promptRef = useRef(null);
+  const [canInstall, setCanInstall] = useState(false);
+  const [installed, setInstalled] = useState(false);
+  const [status, setStatus] = useState("");
+
+  useEffect(() => {
+    const standalone =
+      window.matchMedia?.("(display-mode: standalone)").matches || window.navigator.standalone;
+    setInstalled(Boolean(standalone));
+    const capture = (event) => {
+      event.preventDefault();
+      promptRef.current = event;
+      setCanInstall(true);
+    };
+    const done = () => {
+      promptRef.current = null;
+      setCanInstall(false);
+      setInstalled(true);
+    };
+    window.addEventListener("beforeinstallprompt", capture);
+    window.addEventListener("appinstalled", done);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", capture);
+      window.removeEventListener("appinstalled", done);
+    };
+  }, []);
+
+  async function install() {
+    const prompt = promptRef.current;
+    if (!prompt) {
+      setStatus(t("install.help"));
+      return;
+    }
+    await prompt.prompt();
+    const choice = await prompt.userChoice;
+    if (choice.outcome === "accepted") setStatus(t("install.accepted"));
+    promptRef.current = null;
+    setCanInstall(false);
+  }
+
+  return (
+    <section className="oleole-panel oleole-install">
+      <h2 className="oleole-panel__title">{t("install.title")}</h2>
+      <p>{installed ? t("install.installed") : t("install.intro")}</p>
+      {!installed ? (
+        <button type="button" className="oleole-btn" onClick={install}>
+          {canInstall ? t("install.action") : t("install.helpAction")}
+        </button>
+      ) : null}
+      {status ? <small className="oleole-muted">{status}</small> : null}
+    </section>
+  );
+}
+
+function LegalPanel() {
+  const { t } = useI18n();
+  return (
+    <section className="oleole-panel oleole-legal">
+      <h2 className="oleole-panel__title">{t("legal.title")}</h2>
+      <p>{t("legal.editor")}</p>
+      <p>{t("legal.data")}</p>
+      <p>{t("legal.host")}</p>
+      <p>{t("legal.terms")}</p>
+      <p>{t("legal.privacy")}</p>
+      <ul className="oleole-links">
+        <li>
+          <a href="/legal/legal">{t("legal.legalTitle")}</a>
+        </li>
+        <li>
+          <a href="/legal/terms">{t("legal.termsTitle")}</a>
+        </li>
+        <li>
+          <a href="/legal/privacy">{t("legal.privacyTitle")}</a>
+        </li>
+        <li>
+          <a href="https://acorsica.org/">{t("legal.association")}</a>
+        </li>
+        <li>
+          <a href="https://github.com/acorsica/gouvernance">{t("legal.governance")}</a>
+        </li>
+      </ul>
+    </section>
+  );
+}
+
 function InfoPanel() {
   const { t } = useI18n();
   return (
-    <section className="oleole-panel oleole-info">
-      <h2 className="oleole-panel__title">{t("info.title")}</h2>
-      <p>{t("info.intro")}</p>
-      <p>{t("info.privacy")}</p>
-      <p>{t("info.status")}</p>
-    </section>
+    <>
+      <section className="oleole-panel oleole-info">
+        <h2 className="oleole-panel__title">{t("info.title")}</h2>
+        <p>{t("info.intro")}</p>
+        <p>{t("info.privacy")}</p>
+        <p>{t("info.status")}</p>
+      </section>
+      <InvitePanel />
+      <InstallPanel />
+      <LegalPanel />
+    </>
   );
 }
 

@@ -2,6 +2,7 @@ import process from "node:process";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import { VitePWA } from "vite-plugin-pwa";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -9,7 +10,45 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isJhnProfileBuild = process.env.INSEME_DEPLOYMENT_PROFILE === "jhn";
 
 export default defineConfig(({ mode }) => ({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    // Olé Olé is mounted as a façade on its own HTTPS host. Restrict the PWA
+    // artefacts to the JHN production profile so other platform builds keep
+    // their present behaviour.
+    ...(isJhnProfileBuild
+      ? [
+          VitePWA({
+            registerType: "autoUpdate",
+            includeAssets: ["oleole-jana.svg"],
+            // The shared JHN bundle is currently ~5.8 MiB. Keep it in the
+            // installable façade cache rather than advertising an offline app
+            // whose primary JavaScript cannot load.
+            workbox: {
+              maximumFileSizeToCacheInBytes: 7 * 1024 * 1024,
+            },
+            manifest: {
+              name: "Olé Olé — C.O.R.S.I.C.A.",
+              short_name: "Olé Olé",
+              description: "Présences volontaires agrégées en Corse.",
+              theme_color: "#1a1a1a",
+              background_color: "#fbf7f0",
+              display: "standalone",
+              start_url: "/?facade=oleole",
+              lang: "fr",
+              icons: [
+                {
+                  src: "oleole-jana.svg",
+                  sizes: "any",
+                  type: "image/svg+xml",
+                  purpose: "any maskable",
+                },
+              ],
+            },
+          }),
+        ]
+      : []),
+  ],
   resolve: {
     // Keep React single-instance across aliased workspace packages.
     // Do NOT dedupe react-router here: under pnpm, react-router lives next to

@@ -79,6 +79,7 @@ import NasaPage from "./pages/NasaPage";
 import { isOleoleFacade } from "@inseme/brique-oleole/src/lib/facade-host.js";
 
 const OleoleHome = lazy(() => import("@inseme/brique-oleole/src/pages/OleoleHome.jsx"));
+const OleoleLegal = lazy(() => import("@inseme/brique-oleole/src/pages/OleoleLegal.jsx"));
 
 // Suspense wrapper for lazy-loaded routes
 const LazyRoute = ({ children }) => (
@@ -96,6 +97,42 @@ export function App() {
       {!oleoleFacade ? <GlobalStatusIndicator /> : null}
       <Routes>
         <Route path="/" element={<HomeRoute />} />
+        <Route
+          path="/legal/legal"
+          element={
+            oleoleFacade ? (
+              <LazyRoute>
+                <OleoleLegal />
+              </LazyRoute>
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+        <Route
+          path="/legal/terms"
+          element={
+            oleoleFacade ? (
+              <LazyRoute>
+                <OleoleLegal />
+              </LazyRoute>
+            ) : (
+              <LegalPage type="terms" />
+            )
+          }
+        />
+        <Route
+          path="/legal/privacy"
+          element={
+            oleoleFacade ? (
+              <LazyRoute>
+                <OleoleLegal />
+              </LazyRoute>
+            ) : (
+              <LegalPage type="privacy" />
+            )
+          }
+        />
         {/* Explicit path also works on jhn.* for testing: /oleole or /?facade=oleole */}
         <Route
           path="/oleole"
@@ -165,8 +202,6 @@ export function App() {
           ))
         )}
 
-        <Route path="/legal/terms" element={<LegalPage type="terms" />} />
-        <Route path="/legal/privacy" element={<LegalPage type="privacy" />} />
         <Route path="/privacy" element={<LegalPage type="privacy" />} />
         <Route path="/terms" element={<LegalPage type="terms" />} />
         <Route path="/survey" element={<Survey />} />

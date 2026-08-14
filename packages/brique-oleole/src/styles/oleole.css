@@ -242,6 +242,43 @@ select {
   margin: 0;
 }
 
+.oleole-invite__qr {
+  align-self: flex-start;
+  width: 9rem;
+  height: 9rem;
+  border: var(--oleole-border);
+  background: var(--oleole-surface);
+}
+
+.oleole-links {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.oleole-links a {
+  color: var(--oleole-blue);
+  font-weight: 600;
+}
+
+.oleole-legal-page {
+  min-height: 100%;
+  background: var(--oleole-bg);
+}
+
+.oleole-legal-page .oleole-brand {
+  color: inherit;
+  text-decoration: none;
+}
+
+.oleole-legal-page__content {
+  max-width: 48rem;
+  margin: 2rem auto;
+}
+
+.oleole-legal-page__content p {
+  margin: 0;
+}
+
 .oleole-panel__title {
   margin: 0;
   font-size: 1rem;

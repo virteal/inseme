@@ -19,8 +19,8 @@ describe("oleole dual host façade", () => {
     assert.equal(OLEOLE_PUBLISHER.short_name, "C.O.R.S.I.C.A.");
   });
 
-  it("treats oleole.jhn.baronsmariani.org as same façade (jhn facet)", () => {
-    const f = classifyOleoleHost("oleole.jhn.baronsmariani.org", "");
+  it("treats oleole.baronsmariani.org as same façade (jhn facet)", () => {
+    const f = classifyOleoleHost("oleole.baronsmariani.org", "");
     assert.equal(f.isOleole, true);
     assert.equal(f.role, "jhn_facet");
     assert.equal(isOleoleFacadeHost(OLEOLE_JHN_FACET_HOST, ""), true);

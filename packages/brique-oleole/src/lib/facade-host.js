@@ -4,7 +4,7 @@
  * Hosts that mount this façade (same Netlify site / same artefact):
  *   - oleole.acorsica.org              → CANONICAL public site
  *     (éditeur / publisher au sens légal : association C.O.R.S.I.C.A.)
- *   - oleole.jhn.baronsmariani.org     → Twin facet (same service, under jhn.*)
+ *   - oleole.baronsmariani.org         → Twin facet (same service, under JHN)
  *   - oleole-acorsica.netlify.app, etc. → preview / transitional
  *   - ?facade=oleole on any host       → dev / smoke
  *
@@ -16,7 +16,7 @@
 export const OLEOLE_CANONICAL_HOST = "oleole.acorsica.org";
 
 /** Same façade under the JHN / Twin DNS tree. */
-export const OLEOLE_JHN_FACET_HOST = "oleole.jhn.baronsmariani.org";
+export const OLEOLE_JHN_FACET_HOST = "oleole.baronsmariani.org";
 
 export const OLEOLE_PUBLISHER = {
   legal_name: "Association C.O.R.S.I.C.A.",

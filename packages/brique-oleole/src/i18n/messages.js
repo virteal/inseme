@@ -82,6 +82,44 @@ export const messages = {
       "Les présences sont publiques uniquement sous forme agrégée. Aucune position individuelle précise ni profil de rencontre n'est exposé.",
     "info.status":
       "Version exploratoire : les contributions sont utiles, mais ne constituent pas une mesure représentative de la population.",
+    "invite.title": "Inviter sans traçage",
+    "invite.intro":
+      "Partagez Olé Olé avec des personnes qui pourraient contribuer à la carte. Aucun compte, carnet d’adresses ou suivi d’invitation n’est utilisé.",
+    "invite.action": "Inviter / partager",
+    "invite.text": "Rejoins la carte de présences volontaires Olé Olé en Corse.",
+    "invite.qrAlt": "QR code vers Olé Olé",
+    "invite.note": "Le QR code et le lien pointent vers le site public C.O.R.S.I.C.A.",
+    "invite.copied": "Lien d’invitation copié.",
+    "invite.copyFailed": "Copie impossible : utilisez le QR code ou l’adresse du site.",
+    "install.title": "Sur votre téléphone",
+    "install.intro":
+      "Olé Olé peut s’installer comme application web, sans compte ni boutique d’applications.",
+    "install.action": "Installer Olé Olé",
+    "install.helpAction": "Comment installer",
+    "install.help":
+      "Dans le menu de votre navigateur, choisissez « Ajouter à l’écran d’accueil » ou « Installer l’application ».",
+    "install.accepted":
+      "Installation demandée. Vous pourrez ouvrir Olé Olé depuis votre écran d’accueil.",
+    "install.installed": "Olé Olé est installé sur cet appareil.",
+    "legal.title": "Éditeur, données et documents",
+    "legal.legalTitle": "Mentions légales",
+    "legal.termsTitle": "Conditions d’utilisation",
+    "legal.privacyTitle": "Politique de confidentialité",
+    "legal.back": "Retour à Olé Olé",
+    "legal.editor":
+      "Éditeur du service : Association C.O.R.S.I.C.A. (Corse Organisant la Réunion Sur Internet de Compétences Autonomes), association de droit français — SIREN 840 998 520. Adresse publiée : 1 cours Paoli, 20250 Corte. Direction de la publication : Jean Hugues Noël Robert.",
+    "legal.data":
+      "Les présences publiques sont limitées à des agrégats. Les données de présence peuvent être révoquées depuis ce service. Pour toute question sur vos données : jean_hugues_robert@yahoo.com.",
+    "legal.host":
+      "Hébergement : Netlify. Le code et les documents de gouvernance publics restent consultables dans les liens ci-dessous.",
+    "legal.terms":
+      "Conditions d’utilisation : le service est expérimental ; les indicateurs décrivent des contributions volontaires et ne constituent ni une estimation démographique ni une promesse de contact.",
+    "legal.termsDetail":
+      "Vous vous engagez à ne pas utiliser le service pour identifier, suivre, harceler ou contacter une personne à partir d’une présence agrégée.",
+    "legal.privacy":
+      "Confidentialité : pas de publicité comportementale, pas de profils individuels exposés, pas de traçage des invitations.",
+    "legal.association": "Site public de l’association C.O.R.S.I.C.A.",
+    "legal.governance": "Documents de gouvernance et de référence",
     "mode.title": "Mode de contribution",
     "mode.manual": "Manuel",
     "mode.auto": "Automatique",
@@ -205,6 +243,41 @@ export const messages = {
       "Presences are public only as aggregates. No precise individual location or dating profile is exposed.",
     "info.status":
       "Exploratory build: contributions are useful, but not a representative population measure.",
+    "invite.title": "Invite without tracking",
+    "invite.intro":
+      "Share Olé Olé with people who may contribute to the map. No account, address book, or invitation tracking is used.",
+    "invite.action": "Invite / share",
+    "invite.text": "Join Olé Olé, the voluntary presence map for Corsica.",
+    "invite.qrAlt": "QR code for Olé Olé",
+    "invite.note": "The QR code and link lead to the public C.O.R.S.I.C.A. site.",
+    "invite.copied": "Invitation link copied.",
+    "invite.copyFailed": "Could not copy the link: use the QR code or the site address.",
+    "install.title": "On your phone",
+    "install.intro": "Olé Olé can be installed as a web app, without an account or app store.",
+    "install.action": "Install Olé Olé",
+    "install.helpAction": "How to install",
+    "install.help": "In your browser menu, choose “Add to Home Screen” or “Install app”.",
+    "install.accepted": "Installation requested. You can open Olé Olé from your home screen.",
+    "install.installed": "Olé Olé is installed on this device.",
+    "legal.title": "Publisher, data, and documents",
+    "legal.legalTitle": "Legal notice",
+    "legal.termsTitle": "Terms of use",
+    "legal.privacyTitle": "Privacy policy",
+    "legal.back": "Back to Olé Olé",
+    "legal.editor":
+      "Service publisher: Association C.O.R.S.I.C.A. (Corse Organisant la Réunion Sur Internet de Compétences Autonomes), an association under French law — SIREN 840 998 520. Published address: 1 cours Paoli, 20250 Corte. Publication director: Jean Hugues Noël Robert.",
+    "legal.data":
+      "Public presences are limited to aggregates. Presence data can be revoked from this service. For questions about your data: jean_hugues_robert@yahoo.com.",
+    "legal.host":
+      "Hosting: Netlify. The source code and public governance documents remain available through the links below.",
+    "legal.terms":
+      "Terms of use: the service is experimental; indicators describe voluntary contributions and are neither a population estimate nor a promise of contact.",
+    "legal.termsDetail":
+      "You agree not to use the service to identify, track, harass, or contact someone from an aggregate presence.",
+    "legal.privacy":
+      "Privacy: no behavioural advertising, no exposed individual profiles, and no invitation tracking.",
+    "legal.association": "C.O.R.S.I.C.A. public website",
+    "legal.governance": "Governance and reference documents",
     "mode.title": "Contribution mode",
     "mode.manual": "Manual",
     "mode.auto": "Automatic",
