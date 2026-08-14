@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
+import { registerSW } from "virtual:pwa-register";
 import OleoleMap from "../components/OleoleMap.jsx";
 import TimeSelector from "../components/TimeSelector.jsx";
 import PresencePanel from "../components/PresencePanel.jsx";
@@ -9,6 +10,7 @@ import LangSwitch from "../components/LangSwitch.jsx";
 import { I18nProvider, useI18n } from "../i18n/I18nContext.jsx";
 import { getOrCreateSubjectRef } from "../lib/auto-presence.js";
 import { PLACES_SEED } from "../lib/places-seed.js";
+import { foregroundContextLocation, placeContextLocation } from "../lib/context-location.js";
 import {
   localDeclareClaim,
   localGetAggregates,
@@ -20,6 +22,7 @@ import janaLogo from "../assets/jana.svg";
 import "../styles/oleole.css";
 
 const API = "/api/oleole";
+const CONTEXT_API = "/api/corsica/context";
 
 async function api(path, options = {}) {
   const res = await fetch(`${API}${path}`, {
@@ -67,6 +70,104 @@ function ProgressPanel({ aggregates, windowKey }) {
           : t("progress.empty", { window: t(`time.${windowKey}`) })}
       </p>
       <small>{t("progress.note")}</small>
+    </section>
+  );
+}
+
+function ContextPanel({ places, selectedPlace, onChoosePlace, onUseLocation }) {
+  const { t } = useI18n();
+  const [context, setContext] = useState(null);
+  const [status, setStatus] = useState("");
+  const location = selectedPlace?.contextLocation;
+
+  useEffect(() => {
+    if (!location) {
+      setContext(null);
+      return;
+    }
+    const controller = new AbortController();
+    setStatus(t("context.loading"));
+    fetch(
+      `${CONTEXT_API}?lat=${location.lat}&lng=${location.lng}&precision=${encodeURIComponent(location.precision)}`,
+      {
+        signal: controller.signal,
+      }
+    )
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || "context_unavailable");
+        setContext(data.context);
+        setStatus("");
+      })
+      .catch((error) => {
+        if (error.name !== "AbortError") setStatus(t("context.unavailable"));
+      });
+    return () => controller.abort();
+  }, [location?.lat, location?.lng, location?.precision, t]);
+
+  const atmosphere = context?.atmosphere;
+  return (
+    <section className="oleole-context" aria-live="polite">
+      <div className="oleole-context__head">
+        <div>
+          <strong>{t("context.title")}</strong>
+          <p>{selectedPlace?.label || t("context.chooseHint")}</p>
+        </div>
+        <button type="button" className="oleole-btn oleole-btn--ghost" onClick={onUseLocation}>
+          {t("context.useLocation")}
+        </button>
+      </div>
+      <label className="oleole-context__chooser">
+        <span>{t("context.choosePlace")}</span>
+        <select
+          value={selectedPlace?.placeRef || ""}
+          onChange={(event) => onChoosePlace(event.target.value)}
+        >
+          <option value="">{t("context.choosePlaceholder")}</option>
+          {places
+            .filter((place) => place.classification === "municipality")
+            .map((place) => (
+              <option key={place.id} value={place.id}>
+                {place.name}
+              </option>
+            ))}
+        </select>
+      </label>
+      <p className="oleole-context__privacy">{t("context.privacy")}</p>
+      {atmosphere ? (
+        <div className="oleole-context__grid">
+          <article className="oleole-context__card oleole-context__card--atmosphere">
+            <span>{t("context.atmosphere")}</span>
+            <strong>
+              {Math.round(atmosphere.values.temperature_c)}°C · {atmosphere.values.condition}
+            </strong>
+            <small>
+              {t("context.feelsLike", {
+                temp: Math.round(atmosphere.values.apparent_temperature_c),
+                wind: Math.round(atmosphere.values.wind_kmh),
+              })}
+            </small>
+            <small>
+              <a href={atmosphere.source.url} target="_blank" rel="noreferrer">
+                {atmosphere.source.provider} · {atmosphere.freshness}
+              </a>
+            </small>
+          </article>
+          {[
+            ["mobility", context.mobility],
+            ["energy", context.energy],
+            ["charging", context.charging],
+            ["events", context.events],
+          ].map(([key, item]) => (
+            <article key={key} className="oleole-context__card">
+              <span>{t(`context.${key}`)}</span>
+              <strong>{t("context.unknown")}</strong>
+              <small>{t(`context.reason.${item.reason}`)}</small>
+            </article>
+          ))}
+        </div>
+      ) : null}
+      {status ? <p className="oleole-muted">{status}</p> : null}
     </section>
   );
 }
@@ -175,6 +276,44 @@ function InstallPanel() {
         </button>
       ) : null}
       {status ? <small className="oleole-muted">{status}</small> : null}
+    </section>
+  );
+}
+
+function UpdateNotice() {
+  const { t } = useI18n();
+  const [applyUpdate, setApplyUpdate] = useState(null);
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    const updateServiceWorker = registerSW({
+      onNeedRefresh() {
+        setApplyUpdate(() => updateServiceWorker);
+      },
+    });
+  }, []);
+
+  if (!applyUpdate || dismissed) return null;
+  return (
+    <section className="oleole-update" role="status" aria-live="polite">
+      <strong>{t("update.title")}</strong>
+      <p>{t("update.intro")}</p>
+      <div className="oleole-actions">
+        <button
+          type="button"
+          className="oleole-btn oleole-btn--primary"
+          onClick={() => applyUpdate(true)}
+        >
+          {t("update.apply")}
+        </button>
+        <button
+          type="button"
+          className="oleole-btn oleole-btn--ghost"
+          onClick={() => setDismissed(true)}
+        >
+          {t("update.later")}
+        </button>
+      </div>
     </section>
   );
 }
@@ -324,9 +463,43 @@ function OleoleHomeInner() {
   }
 
   function onSelectPlace(place) {
-    setSelectedPlace(place);
+    setSelectedPlace({
+      ...place,
+      contextLocation: placeContextLocation(place),
+      placeRef: place.id,
+      label: place.name,
+    });
     setFocus({ lat: place.lat, lng: place.lng, zoom: 12 });
     setPanel("contribute");
+  }
+
+  function chooseContextPlace(placeRef) {
+    const place = places.find((item) => item.id === placeRef);
+    if (!place) return setSelectedPlace(null);
+    setSelectedPlace({
+      ...place,
+      contextLocation: placeContextLocation(place),
+      placeRef: place.id,
+      label: place.name,
+    });
+    setFocus({ lat: place.lat, lng: place.lng, zoom: 12 });
+  }
+
+  function useForegroundLocation() {
+    if (!navigator.geolocation) {
+      setFlash(t("context.geoUnavailable"));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const location = foregroundContextLocation(position.coords);
+        if (!location) return setFlash(t("context.outsideCorsica"));
+        setSelectedPlace({ contextLocation: location, label: t("context.nearYou") });
+        setFocus({ lat: location.lat, lng: location.lng, zoom: 12 });
+      },
+      () => setFlash(t("context.geoDenied")),
+      { enableHighAccuracy: false, timeout: 10_000, maximumAge: 60_000 }
+    );
   }
 
   function onMapContext(ctx) {
@@ -334,7 +507,12 @@ function OleoleHomeInner() {
     if (ctx?.focus_place) {
       const p = places.find((x) => x.id === ctx.focus_place);
       if (p) {
-        setSelectedPlace(p);
+        setSelectedPlace({
+          ...p,
+          contextLocation: placeContextLocation(p),
+          placeRef: p.id,
+          label: p.name,
+        });
         setFocus({ lat: p.lat, lng: p.lng, zoom: 11 });
       }
     }
@@ -368,6 +546,13 @@ function OleoleHomeInner() {
         </section>
 
         <aside className="oleole-side">
+          <UpdateNotice />
+          <ContextPanel
+            places={places}
+            selectedPlace={selectedPlace}
+            onChoosePlace={chooseContextPlace}
+            onUseLocation={useForegroundLocation}
+          />
           <nav className="oleole-tabs" aria-label={t("nav.panelsAria")}>
             {[
               ["contribute", "nav.contribute"],

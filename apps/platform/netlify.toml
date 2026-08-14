@@ -41,6 +41,10 @@
   function = "gen-oleole-presence-api"
   path = "/api/oleole/*"
 
+[[edge_functions]]
+  function = "gen-corsica-context-api"
+  path = "/api/corsica/context"
+
 # SPA fallback — must remain last so /api/* rules win first
 [[redirects]]
   from = "/*"

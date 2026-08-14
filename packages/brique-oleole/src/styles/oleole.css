@@ -227,6 +227,16 @@ select {
   padding: 0.7rem 0.85rem;
 }
 
+.oleole-update {
+  border: var(--oleole-border);
+  background: var(--oleole-yellow);
+  padding: 0.7rem 0.85rem;
+}
+
+.oleole-update p {
+  margin: 0.2rem 0 0.6rem;
+}
+
 .oleole-progress p,
 .oleole-progress small {
   display: block;
@@ -383,6 +393,71 @@ select {
   margin-top: 0.4rem !important;
   font-size: 0.7rem;
   line-height: 1.4;
+}
+
+.oleole-context {
+  border: var(--oleole-border);
+  background: var(--oleole-bg-alt);
+  padding: 0.7rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.oleole-context__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 0.5rem;
+}
+
+.oleole-context__head p,
+.oleole-context__privacy {
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+  color: var(--oleole-ink-soft);
+}
+
+.oleole-context__chooser {
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.oleole-context__chooser select {
+  min-height: 2.2rem;
+  border: var(--oleole-border-thin);
+  background: var(--oleole-surface);
+  padding: 0.3rem;
+}
+
+.oleole-context__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+.oleole-context__card {
+  border: var(--oleole-border-thin);
+  background: var(--oleole-surface);
+  padding: 0.45rem;
+  display: grid;
+  gap: 0.15rem;
+  min-height: 4.8rem;
+}
+.oleole-context__card span {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--oleole-ink-soft);
+}
+.oleole-context__card strong {
+  font-size: 0.85rem;
+}
+.oleole-context__card small {
+  font-size: 0.7rem;
+  color: var(--oleole-ink-soft);
+}
+.oleole-context__card--atmosphere {
+  border-left: 4px solid var(--oleole-blue);
 }
 
 /* Chat */

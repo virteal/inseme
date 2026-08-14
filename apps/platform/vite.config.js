@@ -16,38 +16,38 @@ export default defineConfig(({ mode }) => ({
     // Olé Olé is mounted as a façade on its own HTTPS host. Restrict the PWA
     // artefacts to the JHN production profile so other platform builds keep
     // their present behaviour.
-    ...(isJhnProfileBuild
-      ? [
-          VitePWA({
-            registerType: "autoUpdate",
-            includeAssets: ["oleole-jana.svg"],
-            // The shared JHN bundle is currently ~5.8 MiB. Keep it in the
-            // installable façade cache rather than advertising an offline app
-            // whose primary JavaScript cannot load.
-            workbox: {
-              maximumFileSizeToCacheInBytes: 7 * 1024 * 1024,
-            },
-            manifest: {
-              name: "Olé Olé — C.O.R.S.I.C.A.",
-              short_name: "Olé Olé",
-              description: "Présences volontaires agrégées en Corse.",
-              theme_color: "#1a1a1a",
-              background_color: "#fbf7f0",
-              display: "standalone",
-              start_url: "/?facade=oleole",
-              lang: "fr",
-              icons: [
-                {
-                  src: "oleole-jana.svg",
-                  sizes: "any",
-                  type: "image/svg+xml",
-                  purpose: "any maskable",
-                },
-              ],
-            },
-          }),
-        ]
-      : []),
+    VitePWA({
+      disable: !isJhnProfileBuild,
+      // A downloaded release waits for an informed user choice in the
+      // Olé Olé façade before the new service worker takes control.
+      registerType: "prompt",
+      injectRegister: false,
+      includeAssets: ["oleole-jana.svg"],
+      // The shared JHN bundle is currently ~5.8 MiB. Keep it in the
+      // installable façade cache rather than advertising an offline app
+      // whose primary JavaScript cannot load.
+      workbox: {
+        maximumFileSizeToCacheInBytes: 7 * 1024 * 1024,
+      },
+      manifest: {
+        name: "Olé Olé — C.O.R.S.I.C.A.",
+        short_name: "Olé Olé",
+        description: "Présences volontaires agrégées en Corse.",
+        theme_color: "#1a1a1a",
+        background_color: "#fbf7f0",
+        display: "standalone",
+        start_url: "/?facade=oleole",
+        lang: "fr",
+        icons: [
+          {
+            src: "oleole-jana.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+            purpose: "any maskable",
+          },
+        ],
+      },
+    }),
   ],
   resolve: {
     // Keep React single-instance across aliased workspace packages.
