@@ -34,8 +34,8 @@ Principal → Mandate → LogicalAgent → HandlerProfile → HandlerInstance
 ```
 
 Each relation is explicit when it matters to authorization, replay, accountability, or audit.
-An implementation MUST NOT infer authority solely from technical reachability, capability, or
-successful execution.
+An implementation MUST NOT infer authority solely from technical reachability, capability, successful
+execution, or the protocol used to communicate with an executor.
 
 ## 2. Terms
 
@@ -46,10 +46,14 @@ successful execution.
 | **Actor** | Any entity that may cause, participate in, attest to, or be attributed an Act. This is the generic term. |
 | **Mandate** | A durable, reviewable authorization relation specifying who may do what, for whom, under which scope, limits, delegation rules, trace regime, and revocation conditions. |
 | **LogicalAgent** | A durable mandate-bearing identity that may receive, hold, or delegate authority. It is a role of an Actor or Subject, not a process and not necessarily the concrete executor. |
+| **AuthorityRelation** | The authority relation applicable between participants for a bounded context. At minimum COP distinguishes hierarchical/delegated execution from peer cooperation. The interaction protocol does not determine this relation. |
+| **InteractionMode** | The communicative form used between participants, such as request/response, conversation, negotiation, event stream, call/result, or asynchronous task exchange. Interaction mode does not create or imply authority. |
+| **ExecutionSurface** | The concrete technical interface through which a capability is accessed, such as HTTP, OpenAI-compatible API, ACP, A2A, MCP, CLI, stdio, shell, Inox, or a human interface. An execution surface is not an authority source. |
 | **HandlerProfile** | A stable declaration of how work may be handled: accepted packet classes, required or offered capabilities, policy constraints, and result contract. |
 | **Handler** | A competent executor of a Cognitive Packet. A Handler may be human, model, script, tool, repository, review queue, publication process, runtime, or governance process. It is not presumed to hold authority. |
 | **HandlerInstance** | A concrete, identifiable incarnation of a Handler Profile executing work in a bounded context. It may be durable, suspended, restarted, substituted, or ephemeral. |
 | **Capability** | A declared ability to perform a bounded transformation or effect. Capability proves neither authority nor entitlement to use it. |
+| **CapabilityRequirement** | A transport- and provider-neutral description of work that requires one or more capabilities, together with relevant constraints such as locality, cost, latency, trust, quality, deadline, or execution class. |
 | **CapabilityInvocation** | One recorded attempt or execution of a Capability by a HandlerInstance. |
 | **Act** | A meaningful operation or effect asserted by COP. An Act MAY be proposed, authorized, attempted, completed, refused, compensated, or observed; these states MUST NOT be conflated. |
 | **Trace** | Durable, causally linkable evidence about authority, handling, inputs, outputs, effects, custody, or review. FractaLog is a governed trace projection, not merely runtime telemetry. |
@@ -85,8 +89,10 @@ For consequential effects, the record MUST be capable of distinguishing, where a
 Principal / authorizing Subject
 Mandate / authority reference
 LogicalAgent / mandated continuity
+AuthorityRelation
 HandlerProfile and HandlerInstance / concrete execution
-CapabilityInvocation
+CapabilityRequirement and CapabilityInvocation
+InteractionMode and ExecutionSurface
 Act and effect receipt
 Trace and Imputation
 ```
@@ -94,17 +100,57 @@ Trace and Imputation
 A successful capability invocation does not itself prove a valid mandate. A delivered message does
 not itself prove representation or authorization.
 
-## 6. Lifecycle and substitution
+The following invariants apply:
+
+> **Capability is not authority.**
+>
+> **Communication is not authority.**
+>
+> **Execution is not identity.**
+
+A conversational request/response exchange MAY occur under a hierarchical mandate, between peers,
+or with a service-like capability. Conversely, peer cooperation MAY use a task protocol, event
+stream, conversation, or other interaction mode. Protocol semantics MUST NOT silently manufacture
+an authority relation that is absent from the applicable Mandate or peer agreement.
+
+## 6. Lifecycle, substitution, and anti-capture
 
 A HandlerInstance can be created, paused, resumed, replaced, or terminated without changing the
 identity of a LogicalAgent or the causal history of the work. Correct continuation state MUST NOT
 exist solely in inaccessible HandlerInstance memory.
 
+A vendor session MAY accelerate continuation, but it MUST NOT be the only representation from which
+useful continuation can be recovered when portability is required. Durable work state SHOULD be
+externalized through Events, Artifacts, Continuations, or other reconstructible COP state so that a
+compatible HandlerInstance can resume the work on another runtime, machine, or provider.
+
 A Supervisor may manage many ephemeral HandlerInstances, including homogeneous instances created on
 demand. Their lifecycle events and relevant outcomes remain traceable even after their runtime
 processes cease to exist.
 
-## 7. Migration status
+## 7. Capability resolution boundary
+
+COP specifies what work requires and what must remain causally reconstructible; it does not require
+COP Core itself to discover providers or bind directly to vendor runtimes.
+
+A runtime MAY submit a `CapabilityRequirement` to an external capability-resolution layer. Such a
+layer may select among local or remote services, coding agents, models, human handlers, Inox
+runtimes, or other available capabilities according to policy and constraints.
+
+For the Fractanet implementation family, **Magistral is the intended capability-resolution and access
+boundary** between COP orchestration and concrete work capabilities. ACP, A2A, MCP, OpenAI-compatible
+HTTP, CLI/stdio, Inox, and future protocols are candidate execution surfaces or adapters below that
+boundary; none is normative for COP Core.
+
+Compact formulation:
+
+```text
+COP orchestrates work.
+Magistral resolves and presents capabilities.
+Fractanet makes capabilities present.
+```
+
+## 8. Migration status
 
 This terminology is a **pre-operational clean break**. COP has no compatibility obligation to early
 prototypes. Existing terms and identifiers are to be removed rather than preserved through aliases,
