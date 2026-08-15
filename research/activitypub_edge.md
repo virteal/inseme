@@ -76,6 +76,19 @@ alone does not make it the corpus’s reference truth.
    initial schema; the first tenant is not an architectural exception.
 7. **Reversibility.** The edge can be disabled or replaced without losing sources, mandates, acts, or
    COP memory.
+8. **Trust-domain proportionality.** Security controls strengthen when an interaction crosses a trust
+   boundary or when STAKE, irreversibility, exposure, or fraud potential increase. A controlled
+   internal trust domain (for example a Tailscale VPN) may use substantially lighter transport
+   controls than an Internet-facing edge when mandates, budgets, traceability, and reversibility
+   already bound the consequences.
+9. **Identity and causality survive trust.** A trusted network path is not an identity or authority
+   proof. Even inside a trusted transport domain, consequential events must remain attributable to
+   the relevant Actor / LogicalAgent and linked to enough prior events, mandates, and execution
+   context to reconstruct the causal chain.
+10. **Optimism for reversible acts.** Security mechanisms must not systematically destroy optimistic
+    execution. For low-STAKE, readily reversible acts, detectability, attribution, traceability and
+    inexpensive recovery may be preferable to expensive preventive locking. Stronger preventive
+    guarantees are justified as the plausible recovery cost rises.
 
 ## 4. Processing paths
 
@@ -91,6 +104,21 @@ High-stakes effects — publication on behalf of an organisation, sensitive mode
 financial commitments, or civic consequences — are not inferred from a federated message alone.
 They require the mandate, evidence, and control level matching their **STAKE**, with a verifiable
 **GAGE**: bounded promise, evidence, duration, revocation, and recourse.
+
+Where an interaction is routed through a trusted internal domain, reduced transport friction does not
+remove the need for attribution. The system should still preserve a reconstructible chain such as:
+
+```text
+Actor / LogicalAgent
+→ applicable mandate or authority source
+→ Handler / HandlerInstance
+→ prior causal event(s)
+→ emitted COP Event / Act
+→ external projection or delivery
+```
+
+Transport trust answers “through which protected path did this arrive?”; it does not answer “who caused
+this act, under which authority, and from what prior state?”.
 
 ## 5. Minimal model
 
@@ -131,9 +159,13 @@ its product model on the core.
 - limit outbound requests and remote-object fetching, including SSRF protection;
 - apply quotas, idempotence, retries, and failure queues;
 - separate moderation, publication rights, reply mandates, and civic eligibility;
-- retain compact provenance: source, derived product, version, tenant, and applied policy;
+- retain compact provenance: source, derived product, version, tenant, applied policy, actor or
+  LogicalAgent, and relevant causal predecessors;
 - provide suspension, blocking, review, and authorisation expiry;
-- keep a human in the loop when an act becomes consequential or irreversible.
+- keep a human in the loop when an act becomes consequential or irreversible;
+- adapt controls to the applicable trust domain instead of assuming one global security level;
+- never treat VPN membership, network location, or possession of a transport credential as a
+  substitute for mandate or causal attribution.
 
 ## 8. Initial path
 
