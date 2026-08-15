@@ -116,10 +116,39 @@ COP is defined by a small number of **non-negotiable invariants**:
 4. Durability
 5. Stateless handlers
 6. Isolation via events
+7. Reconstructible causal attribution
+
+The seventh invariant means that transport trust never replaces identity. Whether an event travels
+inside a local process, a controlled Tailscale VPN, a private Fractanet segment, or across the public
+Internet, a durable consequential event should retain enough identity and lineage to reconstruct who
+or what caused it: the relevant Actor / LogicalAgent, execution HandlerInstance when material,
+applicable mandate or authority source, and causal predecessor events.
 
 These invariants are normative and MUST be preserved by all implementations.
 
 See **`invariants.md`** for the formal definition.
+
+---
+
+## Trust Domains and Proportionate Security
+
+COP does not require one globally maximal security regime. Concrete implementations MAY define
+**trust domains** in which transport and endpoint membership are already controlled. A Tailscale VPN
+is a practical example: inside such a domain, additional transport authentication or encryption
+layers may add little value for low-STAKE, reversible operations because mandates, budgets,
+traceability, and recovery already constrain the damage.
+
+This is not a relaxation of identity or causal provenance. Trust-domain membership answers a network
+question; it does not establish the LogicalAgent, mandate, intent, or causal origin of a COP Act.
+
+Implementations SHOULD therefore strengthen controls progressively when crossing trust boundaries or
+when STAKE, irreversibility, exposure, fraud potential, or recovery cost increase. Low-STAKE,
+easily reversible acts SHOULD remain compatible with optimistic execution rather than being burdened
+by preventive controls whose cost exceeds plausible detection and recovery costs.
+
+A useful implementation principle is:
+
+> **Keep transport friction proportional to consequence; keep identity and causal lineage durable.**
 
 ---
 
