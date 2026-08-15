@@ -13,6 +13,32 @@
  * - RAIX: support for redundant paths and federated delivery.
  * - Genericity: usable at kernel, brique, platform, and future Inox edge levels without reinvention.
  *
+ * Routing direction:
+ * - Filter as close to the source as practical. Avoid transporting events that the receiver has no
+ *   reason to receive when the source or an intermediate trusted node can determine this cheaply.
+ * - `declareInterest()` / `propagateInterest()` are intentionally only the minimal current form of
+ *   this idea. They SHOULD evolve toward a transport-neutral Interest / Subscription predicate.
+ * - Declarative filters are one implementation. The longer-term Fractanet target is programmable
+ *   source-side routing, including predicates executed by constrained/versioned Inox code close to
+ *   the source. Such code may filter, transform, aggregate, defer, or route events, subject to its
+ *   mandate, budget, version, trace and local policy.
+ * - Source-side filtering is primarily an efficiency optimisation. It MUST NOT become a hidden
+ *   authority mechanism or destroy the ability to reconstruct relevant causal chains.
+ *
+ * Trust and security direction:
+ * - Security is proportional, not maximal everywhere. A trust domain (for example a Tailscale VPN
+ *   whose membership and endpoints are already controlled) may legitimately use low-friction local
+ *   transport when mandates, budgets, traceability and reversibility already bound the consequences.
+ * - Crossing a trust boundary MAY require stronger integrity, authentication, anti-replay or
+ *   signature guarantees according to STAKE, irreversibility, exposure and local policy.
+ * - Optimistic operation remains the preferred default for low-stake, easily reversible acts; the
+ *   cost of prevention SHOULD NOT exceed the plausible cost of detection and recovery.
+ * - Even inside a trusted transport domain, durable identity and causal attribution remain primary:
+ *   it SHOULD remain possible to determine which Actor / LogicalAgent caused an event, through which
+ *   HandlerInstance or delegated chain, and from which prior events / mandates it derives.
+ * - Transport authentication ("this came through a trusted VPN") is therefore not a substitute for
+ *   event attribution, mandate reconstruction, or causal provenance.
+ *
  * New capabilities (this enhancement):
  * - Sub-buses: hierarchical/namespaced views (e.g. per Topic, per instance, per brique).
  * - Federation: explicit support for connecting multiple buses into a "Fractanet" mesh
@@ -152,6 +178,10 @@ export class COPBus {
   /**
    * Declare interest in certain event types or topic prefixes.
    * When federated, this helps peers know what to forward (basic interest propagation).
+   *
+   * This is deliberately a minimal declarative API. A future COP/Fractanet implementation MAY
+   * compile richer Interest predicates to the source-side execution environment (including Inox),
+   * while preserving deterministic attribution and auditable policy/version references.
    */
   declareInterest(pattern) {
     this.interests.add(pattern);
