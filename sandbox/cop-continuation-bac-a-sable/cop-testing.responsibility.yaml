@@ -1,0 +1,19 @@
+schema: cogentia.responsibility-claims.v1
+claims:
+  - subject: cop-behavioral-testing
+    relation: experiments
+    repo: inseme
+    path: sandbox/cop-continuation-bac-a-sable
+    scope: public
+    confidence: high
+    evidence:
+      - sandbox/cop-continuation-bac-a-sable/README.md
+    note: Canonical CLI-first experimental surface for COP/Cogentia convergence; experiments should harden real cop-kernel behavior rather than create throwaway simulations.
+  - subject: cop-continuations
+    relation: experiments
+    repo: inseme
+    path: sandbox/cop-continuation-bac-a-sable
+    scope: public
+    confidence: high
+    evidence:
+      - sandbox/cop-continuation-bac-a-sable/README.md
