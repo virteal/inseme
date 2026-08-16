@@ -80,7 +80,7 @@ contributions.
 
 Exception importante : les adresses e-mail des utilisateurs ne sont pas affichées publiquement.
 Lorsque l'utilisateur ne fournit pas de nom d'affichage, le site affichera un identifiant masqué
-(ex. jean****@exemple.com) afin de permettre une reconnaissance limitée sans divulguer l'adresse
+(ex. jean\*\*\*\*@exemple.com) afin de permettre une reconnaissance limitée sans divulguer l'adresse
 complète.
 
 Droit de modification : Conformément à la loi, toute personne peut demander la modification ou
