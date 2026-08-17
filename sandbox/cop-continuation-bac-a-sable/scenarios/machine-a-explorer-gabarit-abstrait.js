@@ -23,6 +23,22 @@
  * - un système de stabilisation (anti-Ubik, anti-capture, maintien de la mémoire et de la cohérence)
  * - un nœud dans un réseau plus large de machines similaires (interconnexion et coopération)
  *
+ * Politique Explorer / Conservator — "Artificial Genius by Disinhibition" :
+ * - Le gabarit peut être spécialisé par une séparation explicite entre un **Explorer**, chargé
+ *   d'ouvrir et bifurquer des pistes avec une inhibition volontairement réduite, et un
+ *   **Conservator**, chargé de la preuve, de la cohérence, de la sélection et de la réintégration.
+ * - Cette séparation est une politique cognitive, pas une nouvelle couche normative de COP.
+ * - Dans une réalisation COP, une Continuation peut matérialiser le point de retour d'une excursion :
+ *   état minimal de reprise + conditions de réveil + lignée causale + capacité de routage.
+ * - "Return to Ithaca" désigne le motif de retour/réintégration vers cette continuation d'origine
+ *   (ou sa lignée), et non une primitive supplémentaire.
+ * - Le backtracking est de même une politique sur les continuations (fork/suspend/resume/obsolete/
+ *   cross-pollinate), laissant COP Core neutre quant à la stratégie d'exploration.
+ * - Le scénario `solo-creative-researcher-workflow` est le laboratoire concret déjà existant pour
+ *   les bifurcations, continuations dormantes, réveils associatifs et continuations hybrides.
+ * - L'hypothèse "Artificial Genius by Disinhibition" doit être testée par la fécondité mesurable
+ *   des descendants produits ; elle n'est pas présumée vraie par le gabarit.
+ *
  * -----------------------------------------------------------------------------
  * INVARIANTS STRUCTURAUX D'UNE MACHINE À EXPLORER (version 0.1 du gabarit)
  * -----------------------------------------------------------------------------
