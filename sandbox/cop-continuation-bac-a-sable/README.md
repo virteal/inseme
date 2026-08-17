@@ -154,6 +154,36 @@ neutraliser les "Machines à empêcher".
 - `machine-a-explorer-gabarit-abstrait` — Gabarit abstrait de la Machine à explorer (niveau
   méthodologique). Il doit permettre de dériver des instances dans les différents niveaux ci-dessus.
 
+### Politique Explorer / Conservator — hypothèse « Artificial Genius by Disinhibition »
+
+Le couple **Explorer / Conservator** est une politique cognitive de niveau supérieur qui peut se
+projeter sur le gabarit de la Machine à explorer sans modifier COP Core :
+
+- **Explorer** ouvre et bifurque volontairement des pistes, accepte provisoirement anomalies,
+  contradictions et hypothèses faibles, et conserve un point de retour explicite ainsi que la
+  lignée causale de chaque excursion.
+- **Conservator** réévalue les retours avec des critères de preuve, cohérence, coût et fécondité ; il
+  peut stabiliser, fusionner, différer ou rendre obsolète une branche.
+- Une **Continuation COP** peut servir de substrat opérationnel au point de retour : elle porte
+  l'état minimal de reprise, les conditions de réveil et le routage vers un Handler compatible.
+  Cette utilisation reste une politique au-dessus du protocole, pas une nouvelle primitive COP.
+- Le motif informel **« Return to Ithaca »** désigne donc le retour/réintégration vers une
+  continuation d'origine ou sa lignée ; il ne doit pas devenir un type normatif supplémentaire.
+- De même, le **backtracking** est traité comme une politique sur des continuations : fork, suspend,
+  resume, obsolete, cross-pollinate. COP n'impose pas une pile cachée ni une stratégie de recherche
+  particulière.
+
+Cette hypothèse cherche à obtenir une forme d'**Artificial Genius by Disinhibition** : augmenter la
+capacité de découverte en séparant délibérément la phase expansive de la phase conservatrice, tout
+en gardant mémoire, causalité, budgets et possibilité de retour. Elle doit rester réfutable et
+mesurable par ses descendants utiles, et non être promue comme propriété acquise du système.
+
+Le scénario existant `solo-creative-researcher-workflow` constitue déjà le principal laboratoire
+comportemental de cette politique : il exerce des continuations dormantes, des bifurcations, des
+réveils associatifs de plusieurs branches et la création de continuations hybrides par
+cross-pollination. `machine-a-explorer-gabarit-abstrait` reste le gabarit méthodologique générique ;
+Explorer / Conservator en est une politique d'exploration possible, non une architecture parallèle.
+
 **Première grande spécialisation en cours de creusement en profondeur :**
 
 - `autorite-regulation-suivi-conformite-workflow` — Spécialisation sur la fonction de régulation
