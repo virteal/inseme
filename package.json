@@ -3,6 +3,7 @@
   "private": false,
   "version": "1.0.0",
   "description": "Monorepo for Inseme and Platform Citoyenne",
+  "license": "MIT",
   "type": "module",
   "packageManager": "pnpm@10.28.2",
   "engines": {
