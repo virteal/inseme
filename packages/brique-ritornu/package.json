@@ -1,7 +1,7 @@
 {
   "name": "@inseme/brique-ritornu",
   "version": "0.3.0",
-  "private": true,
+  "private": false,
   "description": "Ritornu retrofit + federated Inseme MCP hub (Cogentia.js surface + Ritornu tools)",
   "type": "module",
   "main": "./src/index.js",
