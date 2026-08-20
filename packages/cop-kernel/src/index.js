@@ -63,3 +63,6 @@ export * from "./accounting/index.js";
 
 // FractaBlog projections derived from Cognitive Packet Ground Truth
 export * from "./projections/fractaBlog.js";
+
+// Cognitive Packet Composition combinators (copFork, copAll, copRace, copSequence, copCascadeCancel)
+export * from "./copComposition.js";
