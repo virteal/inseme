@@ -31,6 +31,7 @@
 //     });
 
 import { defaultCapabilityRegistry } from "./capabilityRegistry.js";
+import { recordPacketHop } from "./Cop-kerneltasks.js";
 
 /**
  * Core reusable router policy function.
@@ -134,7 +135,145 @@ export function createCogentiaRouterAgent({
   };
 }
 
+/**
+ * Resilient Multi-Regime Packet Router.
+ *
+ * Implements:
+ * 1. Direct Next-Hop Optimization (uses envelope.routeTo or preferred provider when healthy).
+ * 2. Automatic Fallback to alternative registered capability providers if direct hop fails/unreachable.
+ * 3. Fallback to Attractor Pool (cop.packet.attractor_search) if no direct provider is available.
+ * 4. Store & Forward Spooling if completely partitioned/offline.
+ *
+ * @param {Object} pkt - The Cognitive Packet
+ * @param {Object} [opts]
+ * @param {Object} [opts.registry] - CapabilityRegistry instance
+ * @param {Object} [opts.forwardToBus] - Bus to emit routing events to
+ * @param {Function} [opts.probeNode] - async (nodeId) => boolean
+ * @param {Array} [opts.spoolQueue] - Array to collect spooled packets if offline
+ * @param {string} [opts.source='cogentia-resilient-router']
+ * @returns {Promise<Object>} routingResult
+ */
+export async function routePacketResiliently(
+  pkt,
+  {
+    registry = defaultCapabilityRegistry,
+    forwardToBus = null,
+    probeNode = null,
+    spoolQueue = null,
+    source = "cogentia-resilient-router",
+  } = {}
+) {
+  if (!pkt || !pkt.envelope) {
+    throw new Error("routePacketResiliently: invalid packet");
+  }
+
+  const { envelope } = pkt;
+  const { routeTo, requiredCapability } = envelope;
+
+  // 1. Direct Next-Hop Optimization
+  if (routeTo) {
+    const isPreferredReachable = probeNode ? await probeNode(routeTo) : true;
+    if (isPreferredReachable) {
+      recordPacketHop(pkt, {
+        node_id: routeTo,
+        route_reason: `direct-hop-optimization:${routeTo}`,
+      });
+      if (forwardToBus && typeof forwardToBus.publish === "function") {
+        await forwardToBus.publish({
+          type: "cop.packet.routed",
+          source,
+          data: { packet: pkt, method: "direct_hop", targetNode: routeTo },
+        });
+      }
+      return {
+        status: "routed_direct",
+        targetNode: routeTo,
+        capabilitySatisfied: true,
+      };
+    }
+
+    // Direct preferred hop failed / unreachable -> Record fallback hop
+    recordPacketHop(pkt, {
+      node_id: "router",
+      route_reason: `fallback:preferred-node-unreachable:${routeTo}`,
+    });
+  }
+
+  // 2. Alternative Provider Fallback
+  if (requiredCapability && registry) {
+    const providers = registry.getProviders(requiredCapability);
+    for (const altNode of providers) {
+      if (altNode !== routeTo) {
+        const isAltReachable = probeNode ? await probeNode(altNode) : true;
+        if (isAltReachable) {
+          recordPacketHop(pkt, {
+            node_id: altNode,
+            route_reason: `fallback-provider-matched:${requiredCapability}->${altNode}`,
+          });
+          if (forwardToBus && typeof forwardToBus.publish === "function") {
+            await forwardToBus.publish({
+              type: "cop.packet.routed",
+              source,
+              data: { packet: pkt, method: "fallback_provider", targetNode: altNode },
+            });
+          }
+          return {
+            status: "routed_fallback",
+            targetNode: altNode,
+            capabilitySatisfied: true,
+            chosenCapability: requiredCapability,
+          };
+        }
+      }
+    }
+  }
+
+  // 3. Attractor Pool Broadcast
+  if (forwardToBus && typeof forwardToBus.publish === "function") {
+    recordPacketHop(pkt, {
+      node_id: "attractor-pool",
+      route_reason: `broadcast-to-attractor-pool:${requiredCapability || "general"}`,
+    });
+    await forwardToBus.publish({
+      type: "cop.packet.attractor_search",
+      source,
+      data: {
+        packetId: envelope.id,
+        packet: pkt,
+        requiredCapability,
+        riskLevel: envelope.riskLevel || "read_only",
+        intent: envelope.intent,
+      },
+    });
+    return {
+      status: "attractor_pool_broadcast",
+      capabilitySatisfied: registry ? registry.canSatisfy(requiredCapability) : true,
+    };
+  }
+
+  // 4. Store & Forward Spooling (Offline / Network Partition)
+  if (Array.isArray(spoolQueue)) {
+    recordPacketHop(pkt, {
+      node_id: "local-spool",
+      route_reason: "store-and-forward-spooled:no-active-attractor",
+    });
+    spoolQueue.push(pkt);
+    return {
+      status: "spooled_store_and_forward",
+      capabilitySatisfied: false,
+      spooledAt: new Date().toISOString(),
+    };
+  }
+
+  return {
+    status: "unroutable",
+    capabilitySatisfied: false,
+    reason: "no-reachable-provider-or-attractor",
+  };
+}
+
 export default {
   cogentiaRoutePacket,
   createCogentiaRouterAgent,
+  routePacketResiliently,
 };
