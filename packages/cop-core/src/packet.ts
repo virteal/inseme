@@ -127,6 +127,7 @@ export interface PacketYield {
  * - returned: yield reached the identifiable Ithaca / caller.
  * - assimilated: Ithaca incorporated the yield into durable cognitive state (corpus, memory).
  * - failed: handler or routing failed.
+ * - cancelled: execution cancelled by caller/parent or cascade abort.
  * - superseded: replaced by a newer or better packet.
  */
 export type CognitivePacketLifecycleStatus =
@@ -136,6 +137,7 @@ export type CognitivePacketLifecycleStatus =
   | "returned"
   | "assimilated"
   | "failed"
+  | "cancelled"
   | "superseded";
 
 /**

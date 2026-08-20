@@ -685,6 +685,116 @@ export async function markPacketAssimilated(
 }
 
 /**
+ * Mark a packet as 'cancelled' (execution aborted by caller/parent or cascade cancel).
+ *
+ * @param {Object} packet
+ * @param {Object} params
+ * @param {string} [params.reason="aborted"] - cancellation reason
+ * @param {string} [params.nodeId]
+ * @param {string} [params.instanceId]
+ * @param {Object} [params.bus]
+ * @param {boolean} [params.emit=true]
+ * @returns {Promise<Object>} updated packet
+ */
+export async function markPacketCancelled(
+  packet,
+  { reason = "aborted", nodeId, instanceId, bus = null, emit = true } = {}
+) {
+  if (!packet || !packet.envelope) {
+    throw new Error("markPacketCancelled: invalid packet");
+  }
+
+  const now = nowIso();
+  recordPacketHop(packet, {
+    node_id: nodeId || "control-node",
+    instance_id: instanceId || "caller",
+    route_reason: `packet-cancelled:${reason}`,
+    timestamp: now,
+  });
+
+  packet.envelope.status = "cancelled";
+  packet.cancellation = {
+    reason,
+    timestamp: now,
+  };
+
+  if (emit) {
+    const targetBus = bus || defaultBus || (await loadDefaultBus());
+    if (targetBus && typeof targetBus.publish === "function") {
+      await targetBus.publish({
+        type: "cop.packet.cancelled",
+        source: "cop-kernel/tasks",
+        data: {
+          packetId: packet.envelope.id,
+          packet,
+          reason,
+          status: "cancelled",
+        },
+        timestamp: now,
+      });
+    }
+  }
+
+  return packet;
+}
+
+/**
+ * Mark a packet as 'failed' (handler error, timeout, or route failure).
+ *
+ * @param {Object} packet
+ * @param {Object} params
+ * @param {string|Error} params.error - error details or message
+ * @param {string} [params.nodeId]
+ * @param {string} [params.instanceId]
+ * @param {Object} [params.bus]
+ * @param {boolean} [params.emit=true]
+ * @returns {Promise<Object>} updated packet
+ */
+export async function markPacketFailed(
+  packet,
+  { error, nodeId, instanceId, bus = null, emit = true } = {}
+) {
+  if (!packet || !packet.envelope) {
+    throw new Error("markPacketFailed: invalid packet");
+  }
+
+  const now = nowIso();
+  const errorMessage = error instanceof Error ? error.message : String(error || "unknown failure");
+
+  recordPacketHop(packet, {
+    node_id: nodeId || "handler-node",
+    instance_id: instanceId || "handler",
+    route_reason: `packet-failed:${errorMessage}`,
+    timestamp: now,
+  });
+
+  packet.envelope.status = "failed";
+  packet.failure = {
+    error: errorMessage,
+    timestamp: now,
+  };
+
+  if (emit) {
+    const targetBus = bus || defaultBus || (await loadDefaultBus());
+    if (targetBus && typeof targetBus.publish === "function") {
+      await targetBus.publish({
+        type: "cop.packet.failed",
+        source: "cop-kernel/tasks",
+        data: {
+          packetId: packet.envelope.id,
+          packet,
+          error: errorMessage,
+          status: "failed",
+        },
+        timestamp: now,
+      });
+    }
+  }
+
+  return packet;
+}
+
+/**
  * Reconstruct the Odyssey (complete journey trace) of a Cognitive Packet.
  *
  * @param {Object} packet - The Cognitive Packet
@@ -713,6 +823,8 @@ export function reconstructOdyssey(packet, { events = [] } = {}) {
       isSolved: status === "solved" || status === "returned" || status === "assimilated",
       isReturned: status === "returned" || status === "assimilated",
       isAssimilated: status === "assimilated",
+      isCancelled: status === "cancelled",
+      isFailed: status === "failed",
     },
     journey: {
       departureTimestamp: departure.timestamp,
@@ -730,6 +842,8 @@ export function reconstructOdyssey(packet, { events = [] } = {}) {
     },
     yield: packet.yield || null,
     assimilation: packet.assimilation || null,
+    cancellation: packet.cancellation || null,
+    failure: packet.failure || null,
     residue: env.residue || [],
     eventsCount: Array.isArray(events) ? events.length : 0,
   };
