@@ -7,6 +7,11 @@ const WRITABLE_TABLES = new Set([
   "cop_artifacts",
 ]);
 
+import {
+  createCopEventEnvelope,
+  validateCopEventEnvelope,
+} from "../../../../packages/cop-core/src/cop-event-envelope.js";
+
 function requireDatabase(database) {
   if (!database || typeof database.prepare !== "function") {
     throw new TypeError("a DatabaseSync-compatible database is required");
@@ -29,6 +34,140 @@ function parsePermissions(value) {
   }
 }
 
+function parseStoredEnvelope(row) {
+  try {
+    const envelope = JSON.parse(row.metadata).cop_event_envelope;
+    const validation = validateCopEventEnvelope(envelope, { requirePositiveSeq: true });
+    return validation.ok ? envelope : null;
+  } catch {
+    return null;
+  }
+}
+
+function rollbackQuietly(database) {
+  try {
+    database.exec("ROLLBACK");
+  } catch {
+    // No active transaction; preserve the original error.
+  }
+}
+
+/**
+ * Durable local COP event store backed by the existing portable `cop_events`
+ * table. It stores a full signed/hashed envelope inside metadata so legacy
+ * runtime events remain readable but are never rewritten. BEGIN IMMEDIATE
+ * serializes each topic-sequence decision in SQLite.
+ */
+export function createSqliteCopEventStore(database) {
+  requireDatabase(database);
+
+  function topicEvents(topicId) {
+    return database
+      .prepare(
+        "SELECT id, metadata FROM cop_events WHERE topic_id = ? ORDER BY recorded_at ASC, id ASC"
+      )
+      .all(topicId)
+      .map(parseStoredEnvelope)
+      .filter(Boolean)
+      .sort((left, right) => left.topic.seq - right.topic.seq);
+  }
+
+  function allEnvelopes() {
+    return database
+      .prepare("SELECT id, metadata FROM cop_events ORDER BY recorded_at ASC, id ASC")
+      .all()
+      .map(parseStoredEnvelope)
+      .filter(Boolean)
+      .sort(
+        (left, right) =>
+          left.topic.id.localeCompare(right.topic.id) || left.topic.seq - right.topic.seq
+      );
+  }
+
+  return {
+    kind: "sqlite",
+
+    append(partial) {
+      const prepared = createCopEventEnvelope(partial);
+      const validation = validateCopEventEnvelope(prepared, { requirePositiveSeq: false });
+      if (!validation.ok)
+        return { ok: false, error: "invalid_envelope", errors: validation.errors };
+
+      database.exec("BEGIN IMMEDIATE");
+      try {
+        const existing = allEnvelopes();
+        if (prepared.idempotency_key) {
+          const duplicate = existing.find(
+            (event) => event.idempotency_key === prepared.idempotency_key
+          );
+          if (duplicate) {
+            database.exec("COMMIT");
+            return { ok: true, duplicate: true, event: duplicate };
+          }
+        }
+        if (database.prepare("SELECT id FROM cop_events WHERE id = ?").get(prepared.event_id)) {
+          database.exec("COMMIT");
+          return { ok: false, error: "event_id_conflict" };
+        }
+        const events = topicEvents(prepared.topic.id);
+        const nextSeq = events.length + 1;
+        if (prepared.topic.seq > 0 && prepared.topic.seq !== nextSeq) {
+          database.exec("COMMIT");
+          return {
+            ok: false,
+            error: "topic_seq_conflict",
+            errors: [`expected_seq_${nextSeq}`, `got_seq_${prepared.topic.seq}`],
+          };
+        }
+        prepared.topic.seq = nextSeq;
+        const finalValidation = validateCopEventEnvelope(prepared, { requirePositiveSeq: true });
+        if (!finalValidation.ok) {
+          database.exec("COMMIT");
+          return { ok: false, error: "invalid_envelope", errors: finalValidation.errors };
+        }
+        database
+          .prepare(
+            "INSERT INTO cop_events (id, topic_id, task_id, type, payload, metadata, occurred_at, recorded_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+          )
+          .run(
+            prepared.event_id,
+            prepared.topic.id,
+            null,
+            prepared.event_type,
+            JSON.stringify(prepared.payload),
+            JSON.stringify({ cop_event_envelope: prepared }),
+            prepared.time.occurred_at ?? prepared.time.recorded_at,
+            prepared.time.recorded_at
+          );
+        database.exec("COMMIT");
+        return { ok: true, duplicate: false, event: structuredClone(prepared) };
+      } catch (error) {
+        rollbackQuietly(database);
+        throw error;
+      }
+    },
+
+    listTopic(topicId) {
+      return topicEvents(topicId);
+    },
+
+    replay({ after_event_id } = {}) {
+      const events = allEnvelopes();
+      if (!after_event_id) return events;
+      const index = events.findIndex((event) => event.event_id === after_event_id);
+      return index < 0 ? events : events.slice(index + 1);
+    },
+
+    update() {
+      throw new Error("COP Event Log is strictly append-only. UPDATE forbidden.");
+    },
+
+    delete() {
+      throw new Error("COP Event Log is strictly append-only. DELETE forbidden.");
+    },
+  };
+}
+
 /**
  * A local SQLite adapter for the portable COP runtime.
  *
@@ -41,6 +180,7 @@ export function createSqliteCopRuntimeStore(database) {
   requireDatabase(database);
 
   return {
+    eventStore: createSqliteCopEventStore(database),
     executor: {
       insert(table, row) {
         if (!WRITABLE_TABLES.has(table)) throw new TypeError(`COP table is not writable: ${table}`);

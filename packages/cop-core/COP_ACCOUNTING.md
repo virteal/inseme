@@ -16,7 +16,11 @@ update_policy: "UP-DECISION-REVIEW"
 human_validation_required: false
 canonical_path: "inseme/packages/cop-core/COP_ACCOUNTING.md"
 canonical_url: "https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop-core/COP_ACCOUNTING.md"
-revision_note: "v1.0 is the first human-validated public source. It consolidates the v0.4 arbitration on account URLs, proportional real-time traces, privacy and consent, cellular community boundaries, democratic safeguards, express mandates, experimental profiles, consolidation, and exploratory confederated Kudos work."
+revision_note:
+  "v1.0 is the first human-validated public source. It consolidates the v0.4 arbitration on account
+  URLs, proportional real-time traces, privacy and consent, cellular community boundaries,
+  democratic safeguards, express mandates, experimental profiles, consolidation, and exploratory
+  confederated Kudos work."
 ai_assisted_by:
   - name: "OpenAI Codex"
     role: "AI-assisted co-drafting, corpus retrieval, structuring, and consistency review"
@@ -74,8 +78,8 @@ Good intentions, transient agent memory, and application logs are not accounting
 
 This profile uses ordinary accounting vocabulary without redefining every generally known term. Any
 Corpus-specific concept, however, MUST be linked to the document that defines it. A concept for
-which no such document exists MUST be marked as unstabilized and MUST NOT silently acquire
-normative force through this profile alone.
+which no such document exists MUST be marked as unstabilized and MUST NOT silently acquire normative
+force through this profile alone.
 
 The dependency status used below is:
 
@@ -85,30 +89,29 @@ The dependency status used below is:
 
 ### 1.2 Corpus concept anchors
 
-| Concept used here | Defining or closest source | Status in this profile |
-|---|---|---|
-| COP durable primitives and Views | [COP Store — Minimal Persistence Model](COP_STORE_AND_PERSISTENCE.md) | working source |
-| COP invariants | [COP Protocol Invariants](Invariants.md) | canonical within COP |
-| Identity, subject, actor, principal, and mandate fields | [COP/Identity](COP_IDENTITY.md) | working source |
-| Act, mandate, responsibility, and imputability | [Traçabilité des actes](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/traceabilite_des_actes.md) and [Act, mandate and responsibility](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/act_mandate_responsibility.md) | working sources |
-| Fractanet | [Fractanet — Generalized Control Planes for Heterogeneous Packet Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/fractanet.md) | working source |
-| Cognitive packet | [Cognitive Packets](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md) | working source |
-| Cognitive-packet routing | [Cognitive Packet Switching](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packet_switching.md) | working source |
-| Packet Attractor | [Packet Attractor — Fractanet Distributed Demand and Capability Routing](../../research/packet_attractor_fractanet.md) | working source |
-| Kudos | [Kudos source paper](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/kudos.md), [Kudos repository status](https://github.com/acorsica/Kudos/blob/main/STATUT.md), and [Kudos repository introduction](https://github.com/acorsica/Kudos/blob/main/README.md) | working sources; see §8 for unresolved differences |
-| Community rules and equality of users | [Constitution minimale des communs](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/constitution_minimale_des_communs.md) | working source |
-| Kudocracy | [Kudocracy](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/kudocracy.md) and [COP/Kudocracy](COP_KUDOCRACY.md) | working sources |
-| Stigmergy | [Stigmergie sans limite haute](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/stigmergie_sans_limite_haute.md) | working source |
-| Traceability of consequential acts | [Traçabilité des actes](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/traceabilite_des_actes.md) | working source |
-| Informational gravity (`gravité informationnelle`) | [Informational Gravity — Contextual Attraction for Cognitive-Packet Routing](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/informational_gravity.md) | local working-source draft; human validation and publication pending |
-| Confederated circulation of Kudos | No defining document found that captures the bilateral agreements and upward-subsidiarity model | **missing source; §8 records requirements but does not define the political model** |
+| Concept used here                                       | Defining or closest source                                                                                                                                                                                                                                                         | Status in this profile                                                              |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| COP durable primitives and Views                        | [COP Store — Minimal Persistence Model](COP_STORE_AND_PERSISTENCE.md)                                                                                                                                                                                                              | working source                                                                      |
+| COP invariants                                          | [COP Protocol Invariants](Invariants.md)                                                                                                                                                                                                                                           | canonical within COP                                                                |
+| Identity, subject, actor, principal, and mandate fields | [COP/Identity](COP_IDENTITY.md)                                                                                                                                                                                                                                                    | working source                                                                      |
+| Act, mandate, responsibility, and imputability          | [Traçabilité des actes](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/traceabilite_des_actes.md) and [Act, mandate and responsibility](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/act_mandate_responsibility.md)                      | working sources                                                                     |
+| Fractanet                                               | [Fractanet — Generalized Control Planes for Heterogeneous Packet Networks](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/fractanet.md)                                                                                                                        | working source                                                                      |
+| Cognitive packet                                        | [Cognitive Packets](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md)                                                                                                                                                                          | working source                                                                      |
+| Cognitive-packet routing                                | [Cognitive Packet Switching](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packet_switching.md)                                                                                                                                                        | working source                                                                      |
+| Packet Attractor                                        | [Packet Attractor — Fractanet Distributed Demand and Capability Routing](../../research/packet_attractor_fractanet.md)                                                                                                                                                             | working source                                                                      |
+| Kudos                                                   | [Kudos source paper](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/kudos.md), [Kudos repository status](https://github.com/acorsica/Kudos/blob/main/STATUT.md), and [Kudos repository introduction](https://github.com/acorsica/Kudos/blob/main/README.md) | working sources; see §8 for unresolved differences                                  |
+| Community rules and equality of users                   | [Constitution minimale des communs](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/constitution_minimale_des_communs.md)                                                                                                                                    | working source                                                                      |
+| Kudocracy                                               | [Kudocracy](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/kudocracy.md) and [COP/Kudocracy](COP_KUDOCRACY.md)                                                                                                                                              | working sources                                                                     |
+| Stigmergy                                               | [Stigmergie sans limite haute](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/stigmergie_sans_limite_haute.md)                                                                                                                                              | working source                                                                      |
+| Traceability of consequential acts                      | [Traçabilité des actes](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/traceabilite_des_actes.md)                                                                                                                                                           | working source                                                                      |
+| Informational gravity (`gravité informationnelle`)      | [Informational Gravity — Contextual Attraction for Cognitive-Packet Routing](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/informational_gravity.md)                                                                                                             | local working-source draft; human validation and publication pending                |
+| Confederated circulation of Kudos                       | No defining document found that captures the bilateral agreements and upward-subsidiarity model                                                                                                                                                                                    | **missing source; §8 records requirements but does not define the political model** |
 
 ## 2. Scope
 
-COP/Accounting is a multidimensional resource-accounting profile for COP-supervised systems such
-as [Fractanet](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/fractanet.md). It
-covers monetary and
-non-monetary resources, including:
+COP/Accounting is a multidimensional resource-accounting profile for COP-supervised systems such as
+[Fractanet](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/fractanet.md). It
+covers monetary and non-monetary resources, including:
 
 - legal tender and bank balances;
 - complementary units such as Kudos;
@@ -145,21 +148,81 @@ requirements.
 
 ### 4.1 Core concepts
 
-| Concept | Meaning |
-|---|---|
-| Subject | Identified natural person, legal person, informal collective, agent, node, packet, community, or other accountable entity. |
-| Resource type | Kind of resource being accounted for, independently of its unit. |
-| Unit | Exact measurement unit used by a posting. |
-| Account | Stable analytical address associating a subject, a resource type, a capacity, and a scope. |
-| Transaction | One atomic, causally coherent set of postings. |
-| Posting | Signed quantity applied to one account in one transaction. |
-| Budget | Bounded authorization to use specified resources for a specified purpose. |
-| Reservation | Temporary exclusion of an amount from the budget available to competing acts. |
-| Commitment | Resource obligation that has been accepted but may not yet be settled. |
-| Settlement | Event establishing that the expected transfer or consumption occurred. |
-| Mandate | Bounded authority through which an actor acts for a principal. |
-| Evidence | Artifact or external reference supporting an assertion or reconciliation. |
-| Valuation | Time- and source-bounded interpretation of one resource in another unit. |
+| Concept       | Meaning                                                                                                                    |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Subject       | Identified natural person, legal person, informal collective, agent, node, packet, community, or other accountable entity. |
+| Resource type | Kind of resource being accounted for, independently of its unit.                                                           |
+| Unit          | Exact measurement unit used by a posting.                                                                                  |
+| Account       | Stable analytical address associating a subject, a resource type, a capacity, and a scope.                                 |
+| Transaction   | One atomic, causally coherent set of postings.                                                                             |
+| Posting       | Signed quantity applied to one account in one transaction.                                                                 |
+| Budget        | Bounded authorization to use specified resources for a specified purpose.                                                  |
+| Reservation   | Temporary exclusion of an amount from the budget available to competing acts.                                              |
+| Commitment    | Resource obligation that has been accepted but may not yet be settled.                                                     |
+| Settlement    | Event establishing that the expected transfer or consumption occurred.                                                     |
+| Mandate       | Bounded authority through which an actor acts for a principal.                                                             |
+| Evidence      | Artifact or external reference supporting an assertion or reconciliation.                                                  |
+| Valuation     | Time- and source-bounded interpretation of one resource in another unit.                                                   |
+
+### 4.2 Measurement uncertainty and subscription-backed capabilities
+
+A CapabilityInvocation MAY consume a resource that cannot be reliably priced in fiat. Flat-rate or
+quota-backed subscriptions, including a provider plan whose remaining allowance or marginal price is
+not exposed, are common examples.
+
+Such an invocation MUST NOT fabricate a dollar amount merely to fill an accounting field. Record one
+of the following native assessments instead:
+
+```text
+measured      — an exact quantity is evidenced in its native unit
+estimated     — a numerical estimate is available with interval, confidence,
+                method and evidence; it remains distinct from a measurement
+not_estimated  — the resource type is known but no reliable numerical quantity
+                 can be supported; preserve the reason and available evidence
+```
+
+Human attention is a legitimate separate resource dimension when it is measured or consciously
+budgeted (for example `human.attention` in `minute`). It MUST NOT be implicitly converted to
+currency, tokens, provider quota or reputation.
+
+Any valuation between dimensions is a distinct, source- and time-bounded event. It preserves the
+original measurement and may be absent. Analytical projections MUST distinguish `not_estimated` from
+zero consumption and from missing data. They MUST also distinguish an `estimated` quantity from a
+measured one, and preserve the estimate's interval and confidence basis.
+
+### 4.3 Execution budgets as bounded native resources
+
+An agent loop MUST carry bounded native execution dimensions even when a monetary valuation is
+absent. At minimum a profile may bound steps, tool calls, sub-agents, elapsed time and external
+effects. A consequential invocation MUST reserve every enforceable dimension before handler
+execution, then settle its observed use or release unused capacity. An unestimable provider price
+does not permit an unbounded loop.
+
+Reservations apply only to enforceable limits. An estimate is a forecast, not a capacity claim: it
+MUST retain its confidence and MAY trigger a smaller bounded slice or review, but MUST NOT by itself
+lock all available capacity. Reservation, settlement and release use an expected budget version; a
+version conflict returns the current snapshot for a caller to re-read and recalculate.
+
+Where a COP event store is available, these operations MUST be represented by append-only
+`ExecutionBudgetReservation`, `ExecutionBudgetSettlement`, and `ExecutionBudgetRelease` events under
+one budget topic. The topic sequence is the budget version and is the atomic precondition of each
+write. The ledger is then a replayable projection, not a second mutable accounting store.
+
+### 4.4 Local working trace and Corpus consolidation
+
+An instance MAY retain a detailed local working trace (for example in SQLite) for recovery, incident
+investigation and bounded handoff. That trace is not, by default, the long-term Corpus of the
+Digital Twin. A Corpus publication SHOULD instead be a consolidated receipt: the meaningful outcome,
+relevant artifacts, consequential effects, resource assessments, and a verifiable reference to a
+bounded local trace window. It MUST record the local retention deadline and integrity references,
+but MUST NOT export raw prompts, deltas or every loop step merely because they exist locally.
+
+Consolidation is an explicit, traceable COP act. It never rewrites the local journal; it may be
+repeated at a different detail level under its own mandate, exposure and retention policy. A
+retained local trace MAY be inspected later by an authorised process when the consolidated receipt
+identifies an incident or other justified need. The Corpus-facing event type is
+`LocalTraceConsolidated`; its payload carries the consolidated receipt, not the raw local event
+payloads.
 
 An `Account` is a projection address, not necessarily a bank account and not a new durable COP
 primitive.
@@ -185,8 +248,8 @@ explicit.
 
 ### 5.2 Balanced transactions
 
-Within every conserved `(resourceType, unit, accountingDomain)` dimension, the signed postings of
-a settled transaction MUST sum to exactly zero.
+Within every conserved `(resourceType, unit, accountingDomain)` dimension, the signed postings of a
+settled transaction MUST sum to exactly zero.
 
 Creation, destruction, demurrage, loss, or transformation MUST use an explicit source, sink, or
 transformation account and MUST cite the rule and authority that permit it. Nothing is created or
@@ -203,13 +266,12 @@ A valuation is a derived interpretation. It MUST NOT rewrite the original quanti
 ### 5.4 Exact quantities
 
 Authoritative quantities MUST use decimal integers with an explicit scale, or another exact
-canonical representation. Binary floating-point numbers MUST NOT be used for authoritative
-postings.
+canonical representation. Binary floating-point numbers MUST NOT be used for authoritative postings.
 
 ### 5.5 Budget and reservation safety
 
-A budget MUST define its owner or principal, permitted resource dimensions, purpose, scope,
-validity period, limits, and applicable mandate.
+A budget MUST define its owner or principal, permitted resource dimensions, purpose, scope, validity
+period, limits, and applicable mandate.
 
 At every accepted transition:
 
@@ -227,8 +289,8 @@ An act performed by a human, software agent,
 [cognitive packet](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md),
 or node on behalf of another subject MUST reference a valid mandate, in the sense developed by
 [Act, mandate and responsibility](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/act_mandate_responsibility.md).
-The verifier MUST reject an act outside the mandate's resource,
-amount, purpose, recipient class, time, or delegation bounds.
+The verifier MUST reject an act outside the mandate's resource, amount, purpose, recipient class,
+time, or delegation bounds.
 
 No mandate may infer unbounded authority from silence.
 
@@ -281,8 +343,7 @@ availability, statements, and accounting-derived routing inputs MUST replay iden
 ### 5.12 Reputation and routing are derived signals
 
 Reputation, market signals, and provisionally named information-gravity weights are contextual
-`View`s. They are not
-assets, balances, or authoritative facts about a subject.
+`View`s. They are not assets, balances, or authoritative facts about a subject.
 
 The expression **informational gravity** (`gravité informationnelle`) is defined by
 [Informational Gravity — Contextual Attraction for Cognitive-Packet Routing](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/informational_gravity.md),
@@ -304,26 +365,26 @@ The COP routing layer:
 - SHOULD limit feedback loops in which past attraction mechanically creates permanent dominance;
 - MUST preserve alternative routing factors and the ability to audit or contest the result.
 
-The accounting trace therefore supplies evidence to routing. It never delegates the routing
-decision to a balance alone.
+The accounting trace therefore supplies evidence to routing. It never delegates the routing decision
+to a balance alone.
 
 ## 6. Minimal event families
 
 An implementation MAY choose different names, but MUST preserve equivalent semantics.
 
-| Event family | Purpose |
-|---|---|
-| `accounting.budget.granted` | Establish a bounded resource authorization. |
-| `accounting.budget.amended` | Add, reduce, extend, revoke, or replace authority explicitly. |
-| `accounting.resource.reserved` | Exclude capacity before concurrent/asynchronous execution. |
-| `accounting.resource.released` | Release an unused or rejected reservation. |
-| `accounting.transaction.committed` | Record accepted reciprocal obligations. |
-| `accounting.transaction.settled` | Record balanced final postings. |
-| `accounting.transaction.reversed` | Neutralize a prior transaction without deleting it. |
-| `accounting.observation.recorded` | Preserve an external resource observation. |
-| `accounting.reconciliation.asserted` | Link internal and external traces. |
-| `accounting.dispute.opened` | Contest a posting, mandate, observation, or settlement. |
-| `accounting.dispute.resolved` | Record the governed outcome and any compensating acts. |
+| Event family                         | Purpose                                                       |
+| ------------------------------------ | ------------------------------------------------------------- |
+| `accounting.budget.granted`          | Establish a bounded resource authorization.                   |
+| `accounting.budget.amended`          | Add, reduce, extend, revoke, or replace authority explicitly. |
+| `accounting.resource.reserved`       | Exclude capacity before concurrent/asynchronous execution.    |
+| `accounting.resource.released`       | Release an unused or rejected reservation.                    |
+| `accounting.transaction.committed`   | Record accepted reciprocal obligations.                       |
+| `accounting.transaction.settled`     | Record balanced final postings.                               |
+| `accounting.transaction.reversed`    | Neutralize a prior transaction without deleting it.           |
+| `accounting.observation.recorded`    | Preserve an external resource observation.                    |
+| `accounting.reconciliation.asserted` | Link internal and external traces.                            |
+| `accounting.dispute.opened`          | Contest a posting, mandate, observation, or settlement.       |
+| `accounting.dispute.resolved`        | Record the governed outcome and any compensating acts.        |
 
 ## 7. Minimum settled-transaction payload
 
@@ -372,20 +433,21 @@ community regime.
 
 Kudos is not introduced here as an arbitrary example. It is a Corpus concept with its own sources:
 
-- the [Kudos source paper](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/kudos.md)
+- the
+  [Kudos source paper](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/kudos.md)
   defines a Maussian complementary currency superposed on a real euro-denominated transaction;
-- the [Kudos repository status](https://github.com/acorsica/Kudos/blob/main/STATUT.md) identifies the
-  dedicated repository as doctrinal, editorial, and pre-operational;
+- the [Kudos repository status](https://github.com/acorsica/Kudos/blob/main/STATUT.md) identifies
+  the dedicated repository as doctrinal, editorial, and pre-operational;
 - the [Kudos repository introduction](https://github.com/acorsica/Kudos/blob/main/README.md) states
   that the gift/counter-gift layer is public, voluntary, nominative, transparent, and traceable;
-- the [Kudos concept note](https://github.com/acorsica/Kudos/blob/main/concept.md) develops recognition,
-  social memory, circulation, community autonomy, and non-accumulation;
+- the [Kudos concept note](https://github.com/acorsica/Kudos/blob/main/concept.md) develops
+  recognition, social memory, circulation, community autonomy, and non-accumulation;
 - the [Kudos glossary](https://github.com/acorsica/Kudos/blob/main/annexes/glossaire.md) defines the
   dedicated vocabulary, including complementary currency, recognition, demurrage, community,
   circulation, and velocity.
 
-The source paper presently describes euro backing and at least partial convertibility as part of
-the proposed design. Later design clarification has established that convertibility and fixed euro
+The source paper presently describes euro backing and at least partial convertibility as part of the
+proposed design. Later design clarification has established that convertibility and fixed euro
 parity may need to remain inactive until a lawful implementation path is available. Because that
 clarification is not yet consolidated in a dedicated Kudos source document, this profile MUST NOT
 pretend that the documentary discrepancy is resolved. The three modes below are an accounting
@@ -399,8 +461,8 @@ Kudos sources:
 
 - it is voluntary, nominative, and publicly attributable;
 - it is a trace of recognition or counter-gift, not a hidden purchase record;
-- its connection to a genuine euro-denominated exchange can be auditable without publishing what
-  was purchased, private banking data, or unrelated transactions;
+- its connection to a genuine euro-denominated exchange can be auditable without publishing what was
+  purchased, private banking data, or unrelated transactions;
 - its giver, recipient, community, governing policy, quantity, time, and delegation chain are
   explicit;
 - when an agent, node, or cognitive packet gives Kudos for a principal, the public trace MUST
@@ -425,14 +487,14 @@ The ledger MUST make the active community regime explicit. At minimum, it MUST d
 3. `regulated_convertible` — conversion or redemption is enabled under an identified lawful
    operator, agreement, and compliance regime.
 
-Changing mode MUST be a governed, prospective, versioned event. It MUST NOT retroactively change
-the rights attached to prior Kudos.
+Changing mode MUST be a governed, prospective, versioned event. It MUST NOT retroactively change the
+rights attached to prior Kudos.
 
 Consistently with the democratic community framework of the
 [Constitution minimale des communs](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/constitution_minimale_des_communs.md),
 community-specific demurrage, common-pool distribution, weekly redistribution, eligibility, and
-cross-community compensation MUST be explicit policies referenced by the relevant transactions.
-They are not universal COP invariants.
+cross-community compensation MUST be explicit policies referenced by the relevant transactions. They
+are not universal COP invariants.
 
 The confederal model—bilateral agreements, upward subsidiarity, and cross-community clearing—does
 not yet have a defining source identified by this audit. Implementations MUST therefore keep these
@@ -447,8 +509,10 @@ prove that unauthorized issuance cannot create apparent coverage.
 
 This section specializes the
 [Fractanet source architecture](https://github.com/JeanHuguesRobert/FractaVolta/blob/main/research/fractanet.md),
-the [Cognitive Packet](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md)
-format, and [Cognitive Packet Switching](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packet_switching.md).
+the
+[Cognitive Packet](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packets.md)
+format, and
+[Cognitive Packet Switching](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/cognitive_packet_switching.md).
 
 Before a cognitive packet can consume a consequential resource or influence accounting-derived
 routing, the reference implementation MUST provide:
@@ -490,8 +554,8 @@ convertibility whenever those features are activated.
 
 ### 11.1 Canonical account address
 
-The initial canonical account address is a URL. For example,
-`https://jhn.baronsmariani.org/` is intended to be Jean Hugues Noël Robert's address.
+The initial canonical account address is a URL. For example, `https://jhn.baronsmariani.org/` is
+intended to be Jean Hugues Noël Robert's address.
 
 The address is an identity and discovery root, not merely the location of an HTML page. The exact
 resources exposed there require a separate design study. Expected possibilities include:
@@ -512,7 +576,8 @@ lifecycle may be no longer than the execution of an interrupt request (IRQ).
 
 This does not require a durable Event for every interrupt. In accordance with
 [Constitution minimale des communs](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/constitution_minimale_des_communs.md)
-and [Traçabilité des actes](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/traceabilite_des_actes.md),
+and
+[Traçabilité des actes](https://github.com/JeanHuguesRobert/barons-Mariani/blob/main/research/traceabilite_des_actes.md),
 trace depth is proportional to consequence. For an interrupt stream, meaningful durable traces may
 be limited to transitions such as:
 
@@ -545,10 +610,10 @@ A community is modeled as a cell with a frontier: what is inside, what is outsid
 interact must be distinguishable. The frontier may depend on personal intentions, community rules,
 mandates, and external circumstances.
 
-This applies to territorial and thematic communities and also to a personal **Society of Mind**:
-the community formed by a person and their assistants or cognitive prostheses. Membership,
-residency, visiting status, delegation, data flow, resource custody, and external settlement MUST
-not be inferred from one another.
+This applies to territorial and thematic communities and also to a personal **Society of Mind**: the
+community formed by a person and their assistants or cognitive prostheses. Membership, residency,
+visiting status, delegation, data flow, resource custody, and external settlement MUST not be
+inferred from one another.
 
 The frontier is governed and permeable, not an assertion of isolation. Cross-frontier acts require
 explicit interfaces, policies, traces, and—where resources move—accounting-domain semantics.
@@ -586,9 +651,9 @@ conformance rules. It does not mean a personal ideological profile and does not 
 regime on everyone.
 
 The deployments chosen by Jean Hugues Noël Robert, C.O.R.S.I.C.A., or an initial community are
-experiments and, hopefully, reproducible examples. Other entities remain free to duplicate,
-improve, reject, or adapt them to local needs, subject to the interoperability claims they choose to
-make. A system MUST NOT claim conformity to a named profile while violating that profile's stated
+experiments and, hopefully, reproducible examples. Other entities remain free to duplicate, improve,
+reject, or adapt them to local needs, subject to the interoperability claims they choose to make. A
+system MUST NOT claim conformity to a named profile while violating that profile's stated
 invariants, but nobody is required to adopt the profile.
 
 This distinction is anti-totalitarian: interoperability is offered; political uniformity is not.
@@ -596,9 +661,9 @@ This distinction is anti-totalitarian: interoperability is offered; political un
 ### 11.8 Validation and authorship trace
 
 Jean Hugues Noël Robert performed the human validation and retains authority over later revisions.
-OpenAI Codex contributed corpus retrieval, drafting, structuring, consistency checks,
-and objections under his mandate. This contribution is disclosed in the frontmatter without
-transferring human responsibility to software.
+OpenAI Codex contributed corpus retrieval, drafting, structuring, consistency checks, and objections
+under his mandate. This contribution is disclosed in the frontmatter without transferring human
+responsibility to software.
 
 ### 11.9 Consolidation required
 

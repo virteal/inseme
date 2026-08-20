@@ -8,6 +8,7 @@
 
 import { randomUUID } from "node:crypto";
 import { createCopEventEnvelope } from "./cop-event-envelope.js";
+import { normalizeResourceAssessments } from "./resource-assessment.js";
 
 /**
  * @typedef {object} GovernedActInput
@@ -18,6 +19,7 @@ import { createCopEventEnvelope } from "./cop-event-envelope.js";
  * @property {string} capability  e.g. coding.reply or repo.read
  * @property {object} [invocation_input]
  * @property {object} [effect] result/evidence after handler runs
+ * @property {object[]} [resource_assessments] exact native measurements or explicit non-estimation records
  * @property {string} [topic_id]
  * @property {'ok'|'failed'|'refused'} [outcome]
  */
@@ -64,6 +66,7 @@ export function recordGovernedAct(store, input) {
       handler_instance_ref: input.handler_instance_ref,
       capability: input.capability,
       input: input.invocation_input || {},
+      resource_assessments: normalizeResourceAssessments(input.resource_assessments || []),
     },
     idempotency_key: `${correlation}:invocation`,
   });
@@ -100,6 +103,7 @@ export function recordGovernedAct(store, input) {
       act_id: actId,
       effect: input.effect || null,
       outcome,
+      resource_assessments: normalizeResourceAssessments(input.resource_assessments || []),
     },
     idempotency_key: `${correlation}:trace`,
   });
@@ -123,6 +127,7 @@ export function recordGovernedAct(store, input) {
       material_executor: input.handler_instance_ref,
       packet_id: input.packet_id || input.packet?.packet_id || null,
       provisional_cost: input.provisional_cost || null,
+      resource_assessments: normalizeResourceAssessments(input.resource_assessments || []),
     },
     idempotency_key: `${correlation}:imputation`,
   });
@@ -176,20 +181,15 @@ export async function jhnDelegateToHandler(options) {
     effect = { error: String(err.message || err) };
   }
 
-  let provisional_cost = options.provisional_cost || null;
+  // Token usage alone does not prove a monetary cost. This matters for
+  // subscription- and quota-backed providers, whose marginal price may be
+  // unknowable. Callers may provide an explicit, source-bounded valuation;
+  // otherwise retain native measurements or a not_estimated assessment.
+  const provisional_cost = options.provisional_cost || null;
+  const resource_assessments = normalizeResourceAssessments(
+    options.resource_assessments || effect?.resource_assessments || []
+  );
   const packet_id = options.packet_id || options.packet?.packet_id || null;
-
-  if (effect && effect.usage && !provisional_cost) {
-    try {
-      const { getModelRateCard } = await import("./modelPricing.js");
-      const card = getModelRateCard(effect.provider || "openai", effect.model || "gpt-5.4-nano");
-      const inputCost = ((effect.usage.prompt_tokens || 0) / 1_000_000) * card.input_per_m;
-      const outputCost = ((effect.usage.completion_tokens || 0) / 1_000_000) * card.output_per_m;
-      const totalCost = (inputCost + outputCost).toFixed(card.scale || 8);
-      const coeff = Math.round(Number(totalCost) * 1e8).toString();
-      provisional_cost = { coefficient: coeff, scale: 8, unit: "USD" };
-    } catch {}
-  }
 
   return recordGovernedAct(store, {
     principal_ref: identity.principal_ref,
@@ -203,6 +203,7 @@ export async function jhnDelegateToHandler(options) {
     topic_id: identity.topic_id,
     packet_id,
     provisional_cost,
+    resource_assessments,
   });
 }
 

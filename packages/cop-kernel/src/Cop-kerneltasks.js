@@ -431,9 +431,15 @@ export function asCognitivePacket({
   const now = nowIso();
   const id =
     envelope.id ||
+    envelope.packet_id ||
     (typeof crypto !== "undefined" && crypto.randomUUID
       ? crypto.randomUUID()
       : "pkt-" + Date.now() + "-" + Math.random().toString(16).slice(2));
+
+  const ithaca = envelope.ithaca || payload.ithaca || null;
+  const status = envelope.status || "draft";
+  const hops = envelope.hops ? [...envelope.hops] : [];
+  const residue = envelope.residue ? [...envelope.residue] : [];
 
   const packet = {
     packetKind: kind,
@@ -442,6 +448,10 @@ export function asCognitivePacket({
       packetKind: kind,
       id,
       createdAt: envelope.createdAt || now,
+      status,
+      ithaca,
+      hops,
+      residue,
       ...envelope,
       trace: envelope.trace || {
         correlationId: payload.correlationId || payload.continuationId || payload.id,
@@ -449,6 +459,10 @@ export function asCognitivePacket({
     },
     payload,
   };
+
+  if (envelope.yield || payload.yield) {
+    packet.yield = envelope.yield || payload.yield;
+  }
 
   // Optional emission for uniform router subscription point.
   // Callers (or the bac-à-sable ctx wrapper) can pass a bus (e.g. topic-scoped).
@@ -475,6 +489,250 @@ export function asCognitivePacket({
   }
 
   return packet;
+}
+
+/**
+ * Record a hop traversed by a Cognitive Packet.
+ *
+ * @param {Object} packet
+ * @param {Object} hopData
+ * @param {string} [hopData.node_id]
+ * @param {string} [hopData.instance_id]
+ * @param {string} [hopData.route_reason]
+ * @param {string} [hopData.interface]
+ * @returns {Object} recorded hop
+ */
+export function recordPacketHop(packet, hopData = {}) {
+  if (!packet || !packet.envelope) {
+    throw new Error("recordPacketHop: invalid packet");
+  }
+  if (!Array.isArray(packet.envelope.hops)) {
+    packet.envelope.hops = [];
+  }
+  const hopIndex = packet.envelope.hops.length;
+  const hop = {
+    hop_index: hopIndex,
+    node_id: hopData.node_id || "local-node",
+    instance_id: hopData.instance_id || "local-instance",
+    interface: hopData.interface || "local",
+    timestamp: hopData.timestamp || nowIso(),
+    route_reason: hopData.route_reason || undefined,
+    duration_ms: hopData.duration_ms || undefined,
+    spending: hopData.spending || undefined,
+  };
+  packet.envelope.hops.push(hop);
+  return hop;
+}
+
+/**
+ * Mark a packet as 'solved' (local handler completed work and produced yield).
+ *
+ * @param {Object} packet
+ * @param {Object} params
+ * @param {Object} params.yieldData - { semantic_yield, operational_yield }
+ * @param {string} [params.handlerId]
+ * @param {string} [params.nodeId]
+ * @param {number} [params.durationMs]
+ * @param {string[]} [params.residue]
+ * @param {Object} [params.bus]
+ * @param {boolean} [params.emit=true]
+ * @returns {Promise<Object>} updated packet
+ */
+export async function markPacketSolved(
+  packet,
+  { yieldData, handlerId, nodeId, durationMs, spending, residue, bus = null, emit = true } = {}
+) {
+  if (!packet || !packet.envelope) {
+    throw new Error("markPacketSolved: invalid packet");
+  }
+
+  const now = nowIso();
+  recordPacketHop(packet, {
+    node_id: nodeId || "handler-node",
+    instance_id: handlerId || "handler-instance",
+    route_reason: "packet-solved",
+    timestamp: now,
+    duration_ms: durationMs,
+    spending,
+  });
+
+  packet.envelope.status = "solved";
+  packet.yield = yieldData || { semantic_yield: null, operational_yield: {} };
+
+  if (Array.isArray(residue) && residue.length > 0) {
+    if (!Array.isArray(packet.envelope.residue)) {
+      packet.envelope.residue = [];
+    }
+    packet.envelope.residue.push(...residue);
+  }
+
+  if (emit) {
+    const targetBus = bus || defaultBus || (await loadDefaultBus());
+    if (targetBus && typeof targetBus.publish === "function") {
+      await targetBus.publish({
+        type: "cop.packet.solved",
+        source: "cop-kernel/tasks",
+        data: {
+          packetId: packet.envelope.id,
+          packet,
+          yield: packet.yield,
+          status: "solved",
+        },
+        timestamp: now,
+      });
+    }
+  }
+
+  return packet;
+}
+
+/**
+ * Mark a packet as 'returned' (yield reached its identifiable Ithaca).
+ *
+ * @param {Object} packet
+ * @param {Object} params
+ * @param {string} [params.returnTarget]
+ * @param {Object} [params.bus]
+ * @param {boolean} [params.emit=true]
+ * @returns {Promise<Object>} updated packet
+ */
+export async function markPacketReturned(packet, { returnTarget, bus = null, emit = true } = {}) {
+  if (!packet || !packet.envelope) {
+    throw new Error("markPacketReturned: invalid packet");
+  }
+
+  const now = nowIso();
+  packet.envelope.status = "returned";
+  if (returnTarget && packet.envelope.ithaca) {
+    packet.envelope.ithaca.return_target = returnTarget;
+  }
+
+  recordPacketHop(packet, {
+    node_id: "ithaca-node",
+    instance_id: returnTarget || packet.envelope.ithaca?.return_target || "ithaca",
+    route_reason: "yield-returned-to-ithaca",
+    timestamp: now,
+  });
+
+  if (emit) {
+    const targetBus = bus || defaultBus || (await loadDefaultBus());
+    if (targetBus && typeof targetBus.publish === "function") {
+      await targetBus.publish({
+        type: "cop.packet.returned",
+        source: "cop-kernel/tasks",
+        data: {
+          packetId: packet.envelope.id,
+          packet,
+          ithaca: packet.envelope.ithaca,
+          yield: packet.yield,
+          status: "returned",
+        },
+        timestamp: now,
+      });
+    }
+  }
+
+  return packet;
+}
+
+/**
+ * Mark a packet as 'assimilated' (Ithaca incorporated yield into durable cognitive state).
+ *
+ * @param {Object} packet
+ * @param {Object} params
+ * @param {string} [params.substrate] - corpus name / durable memory identifier
+ * @param {Object} [params.changes] - summary of durable changes
+ * @param {Object} [params.bus]
+ * @param {boolean} [params.emit=true]
+ * @returns {Promise<Object>} updated packet
+ */
+export async function markPacketAssimilated(
+  packet,
+  { substrate = "corpus", changes = {}, bus = null, emit = true } = {}
+) {
+  if (!packet || !packet.envelope) {
+    throw new Error("markPacketAssimilated: invalid packet");
+  }
+
+  const now = nowIso();
+  packet.envelope.status = "assimilated";
+  packet.assimilated_at = now;
+  packet.assimilation = {
+    substrate,
+    changes,
+    timestamp: now,
+  };
+
+  if (emit) {
+    const targetBus = bus || defaultBus || (await loadDefaultBus());
+    if (targetBus && typeof targetBus.publish === "function") {
+      await targetBus.publish({
+        type: "cop.packet.assimilated",
+        source: "cop-kernel/tasks",
+        data: {
+          packetId: packet.envelope.id,
+          packet,
+          substrate,
+          changes,
+          status: "assimilated",
+        },
+        timestamp: now,
+      });
+    }
+  }
+
+  return packet;
+}
+
+/**
+ * Reconstruct the Odyssey (complete journey trace) of a Cognitive Packet.
+ *
+ * @param {Object} packet - The Cognitive Packet
+ * @param {Object} [opts]
+ * @param {Array} [opts.events=[]] - Optional raw events recorded during the journey
+ * @returns {Object} Structured Odyssey report
+ */
+export function reconstructOdyssey(packet, { events = [] } = {}) {
+  if (!packet || !packet.envelope) {
+    throw new Error("reconstructOdyssey: invalid packet");
+  }
+
+  const env = packet.envelope;
+  const hops = env.hops || [];
+  const status = env.status || "unknown";
+
+  const departure = hops.length > 0 ? hops[0] : { timestamp: env.createdAt };
+  const lastHop = hops.length > 0 ? hops[hops.length - 1] : null;
+
+  return {
+    packetId: env.id,
+    intent: env.intent || packet.payload?.intent || packet.payload?.resumeIntent || "unspecified",
+    ithaca: env.ithaca || null,
+    lifecycle: {
+      status,
+      isSolved: status === "solved" || status === "returned" || status === "assimilated",
+      isReturned: status === "returned" || status === "assimilated",
+      isAssimilated: status === "assimilated",
+    },
+    journey: {
+      departureTimestamp: departure.timestamp,
+      returnTimestamp:
+        status === "returned" || status === "assimilated" ? lastHop?.timestamp : null,
+      assimilatedTimestamp: packet.assimilated_at || null,
+      hopsCount: hops.length,
+      hopsChain: hops.map((h) => ({
+        hopIndex: h.hop_index,
+        node: h.node_id,
+        instance: h.instance_id,
+        reason: h.route_reason,
+        timestamp: h.timestamp,
+      })),
+    },
+    yield: packet.yield || null,
+    assimilation: packet.assimilation || null,
+    residue: env.residue || [],
+    eventsCount: Array.isArray(events) ? events.length : 0,
+  };
 }
 
 // --- Ergonomic aliases for higher handlers adopting COP (e.g. Ophelia "from now on") ---

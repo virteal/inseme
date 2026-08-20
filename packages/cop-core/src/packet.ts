@@ -89,17 +89,115 @@ export interface PacketLineage {
 }
 
 /**
+ * Semantic home and return target (Ithaca) for a Cognitive Packet.
+ * Ithaca is the durable semantic locus to which the packet's yield returns.
+ */
+export interface IthacaTarget {
+  /** Description or identity of the semantic home (corpus, mandant, room, conversation, etc.). */
+  description?: string;
+  /** Return target identifier, address, or handler name. */
+  return_target?: string;
+  /** Optional response channel or bus event topic. */
+  response_channel?: string;
+  /** Conditions under which return is triggered or expected. */
+  return_conditions?: string[];
+}
+
+/**
+ * Yield produced by one or more hops during a Cognitive Packet journey.
+ * Separates the semantic output from operational meta-learning.
+ */
+export interface PacketYield {
+  /** The semantic result / answer / patch / findings produced. */
+  semantic_yield?: unknown;
+  /** Operational learnings, performance, metrics, meta-observations. */
+  operational_yield?: Record<string, unknown>;
+  /** Timestamp when yield was produced. */
+  produced_at?: string;
+  /** Handler or agent identity that produced the yield. */
+  produced_by?: string;
+}
+
+/**
+ * Lifecycle states keeping solved, returned, and assimilated semantically distinct.
+ *
+ * - draft: initialized but not yet dispatched.
+ * - dispatched: currently travelling across hops / handlers.
+ * - solved: local handler completed work and produced a yield.
+ * - returned: yield reached the identifiable Ithaca / caller.
+ * - assimilated: Ithaca incorporated the yield into durable cognitive state (corpus, memory).
+ * - failed: handler or routing failed.
+ * - superseded: replaced by a newer or better packet.
+ */
+export type CognitivePacketLifecycleStatus =
+  | "draft"
+  | "dispatched"
+  | "solved"
+  | "returned"
+  | "assimilated"
+  | "failed"
+  | "superseded";
+
+/**
+ * Human and machine accounting metrics for a Cognitive Packet journey or Case study.
+ */
+export interface CaseMetrics {
+  /** Human time spent packetizing, supervising, intervening, correcting (minutes). */
+  human_minutes?: number;
+  /** Machine / API cost (USD or unit). */
+  machine_cost?: number;
+  /** Total number of handler hops traversed. */
+  hops?: number;
+  /** Number of child packets spawned. */
+  child_packets?: number;
+}
+
+/**
+ * Minimal shared Case Record for Reality testing (Case 001 Incident / Case 002 Guide).
+ * Experimental observation format per cogentia#113 and inseme#54.
+ */
+export interface CaseRecord {
+  /** Case identifier (e.g. "case-001-incident-20260820"). */
+  case_id: string;
+  /** Case pattern ("incident" | "guide" | string). */
+  pattern: "incident" | "guide" | string;
+  /** Originating context, URL, or trigger. */
+  origin?: string;
+  /** ISO-8601 start timestamp. */
+  started_at: string;
+  /** Cognitive intent of the case. */
+  intent: string;
+  /** Initial state before departure. */
+  initial_state?: Record<string, unknown> | string;
+  /** Target Ithaca where the case yield must return. */
+  ithaca: IthacaTarget;
+  /** Associated packet(s). */
+  packets: (CognitivePacket | string)[];
+  /** Case outcome and distinct return/assimilation state. */
+  result?: {
+    status: CognitivePacketLifecycleStatus;
+    returned: boolean;
+    assimilated: boolean;
+    yield?: PacketYield;
+  };
+  /** Scarce resources consumed (Skin in the Game). */
+  metrics?: CaseMetrics;
+  /** Residue: explicit observations of what the current packet model failed to capture. */
+  residue?: string[];
+}
+
+/**
  * Authoritative Cognitive Packet Structure.
  */
 export interface CognitivePacket {
-  /** Unique URN for this packet (e.g. "urn:cop:packet:12345678-1234-..."). */
+  /** Unique URN or ID for this packet (e.g. "urn:cop:packet:1234..." or "pkt-..."). */
   packet_id: string;
   /** Mandate authorizing this packet's processing. */
-  mandate_id: string;
+  mandate_id?: string;
   /** Governed treatment ID scope. */
-  treatment_id: string;
+  treatment_id?: string;
   /** Primary debtor account paying for execution. */
-  account_id: AccountIdentifier;
+  account_id?: AccountIdentifier;
   /** Budget reservation ID linked to this packet. */
   budget_reservation_id?: string;
   /**
@@ -107,6 +205,14 @@ export interface CognitivePacket {
    * Non-USD resources use their own unit on ExactQuantity; fiat default remains USD.
    */
   monetary_unit_default?: string;
+  /** Cognitive intent / goal of this packet. */
+  intent?: string;
+  /** Semantic home and return target (Ithaca). */
+  ithaca?: IthacaTarget;
+  /** Current lifecycle status (draft | dispatched | solved | returned | assimilated). */
+  status?: CognitivePacketLifecycleStatus;
+  /** Yield produced by the journey. */
+  yield?: PacketYield;
   /** Cascade lineage (upstream/downstream). */
   lineage?: PacketLineage;
   /** Ordered list of routing hops travelled across Fractanet nodes. */
@@ -115,15 +221,19 @@ export interface CognitivePacket {
    * Ordered list of provisional spending traces incurred on *this* packet only (own spend).
    * Never duplicate downstream packets' spending lines here (anti double-count).
    */
-  spending: ProvisionalSpending[];
+  spending?: ProvisionalSpending[];
   /** Governance context governing this packet's treatment. */
-  governance: GovernanceContext;
+  governance?: GovernanceContext;
   /** Visibility disclosure class for projections ("public" | "restricted" | "private"). */
-  disclosure_class: DisclosureClass;
+  disclosure_class?: DisclosureClass;
   /** Creation timestamp (ISO-8601 UTC). */
   created_at: string;
+  /** Envelope metadata for routing and switching. */
+  envelope?: Record<string, unknown>;
   /** Packet payload content or reference. */
   payload: Record<string, unknown>;
+  /** Residue: unrepresented observations during packet execution. */
+  residue?: string[];
 }
 
 /**

@@ -25,6 +25,58 @@
         }
       }
     },
+    "ResourceAssessment": {
+      "type": "object",
+      "description": "Native-resource observation for an invocation. A missing reliable quantity is represented explicitly, never as an invented fiat valuation.",
+      "oneOf": [
+        {
+          "required": ["status", "resource_type", "quantity"],
+          "properties": {
+            "status": { "const": "measured" },
+            "resource_type": { "$ref": "#/definitions/ResourceType" },
+            "quantity": { "$ref": "#/definitions/ExactQuantity" },
+            "evidence_ref": { "type": ["string", "null"] },
+            "method": { "type": ["string", "null"] }
+          }
+        },
+        {
+          "required": ["status", "resource_type", "reason"],
+          "properties": {
+            "status": { "const": "not_estimated" },
+            "resource_type": { "$ref": "#/definitions/ResourceType" },
+            "reason": { "type": "string", "minLength": 1 },
+            "evidence_ref": { "type": ["string", "null"] },
+            "method": { "type": ["string", "null"] }
+          }
+        },
+        {
+          "required": ["status", "resource_type", "estimate", "interval", "confidence", "method"],
+          "properties": {
+            "status": { "const": "estimated" },
+            "resource_type": { "$ref": "#/definitions/ResourceType" },
+            "estimate": { "$ref": "#/definitions/ExactQuantity" },
+            "interval": {
+              "type": "object",
+              "required": ["lower", "upper"],
+              "properties": {
+                "lower": { "$ref": "#/definitions/ExactQuantity" },
+                "upper": { "$ref": "#/definitions/ExactQuantity" }
+              }
+            },
+            "confidence": {
+              "type": "object",
+              "required": ["level", "basis"],
+              "properties": {
+                "level": { "type": "number", "minimum": 0, "maximum": 1 },
+                "basis": { "type": "string", "minLength": 1 }
+              }
+            },
+            "method": { "type": "string", "minLength": 1 },
+            "evidence_refs": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      ]
+    },
     "AccountIdentifier": {
       "type": "string",
       "description": "Canonical account identifier. MUST accept HTTPS URLs including identity URLs like https://jhn.baronsmariani.org/. Format: one of (1) canonical HTTPS URL, (2) URN, (3) local account reference in form 'local:{type}:{id}'.",

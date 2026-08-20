@@ -25,6 +25,11 @@ import {
   COPJobScheduler,
   defaultJobScheduler,
   asCognitivePacket,
+  recordPacketHop,
+  markPacketSolved,
+  markPacketReturned,
+  markPacketAssimilated,
+  reconstructOdyssey,
   CapabilityRegistry,
   defaultCapabilityRegistry,
   cogentiaRoutePacket,
@@ -36,7 +41,14 @@ export { defaultScheduler, defaultJobScheduler };
 
 // Re-export for scenarios that import directly from pipeline
 export { createFractanetBus } from "./cop-kernel-adapter.js";
-export { asCognitivePacket } from "./cop-kernel-adapter.js";
+export {
+  asCognitivePacket,
+  recordPacketHop,
+  markPacketSolved,
+  markPacketReturned,
+  markPacketAssimilated,
+  reconstructOdyssey,
+} from "./cop-kernel-adapter.js";
 export { CapabilityRegistry, defaultCapabilityRegistry } from "./cop-kernel-adapter.js";
 export { cogentiaRoutePacket, createCogentiaRouterAgent } from "./cop-kernel-adapter.js";
 
@@ -91,6 +103,27 @@ export async function runScenario(scenarioName, { scenariosDir }) {
     asCognitivePacket: (opts = {}) => {
       const b = context.busForCurrentTopic ? context.busForCurrentTopic() : null;
       return asCognitivePacket({ ...opts, bus: opts.bus || b });
+    },
+
+    recordPacketHop: (packet, hopData) => recordPacketHop(packet, hopData),
+
+    markPacketSolved: (packet, params = {}) => {
+      const b = params.bus || (context.busForCurrentTopic ? context.busForCurrentTopic() : null);
+      return markPacketSolved(packet, { ...params, bus: b });
+    },
+
+    markPacketReturned: (packet, params = {}) => {
+      const b = params.bus || (context.busForCurrentTopic ? context.busForCurrentTopic() : null);
+      return markPacketReturned(packet, { ...params, bus: b });
+    },
+
+    markPacketAssimilated: (packet, params = {}) => {
+      const b = params.bus || (context.busForCurrentTopic ? context.busForCurrentTopic() : null);
+      return markPacketAssimilated(packet, { ...params, bus: b });
+    },
+
+    reconstructOdyssey: (packet, opts = {}) => {
+      return reconstructOdyssey(packet, { events: context.trace, ...opts });
     },
 
     scheduler: defaultScheduler,

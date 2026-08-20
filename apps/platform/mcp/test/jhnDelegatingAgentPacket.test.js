@@ -40,6 +40,23 @@ test("JHN Delegating Agent Governed Delegation & Packet Tracing (#33, #31)", asy
           logical_agent_ref: "agent:jhn",
         },
         shouldDelegate: () => true,
+        execution_budget: {
+          budget_id: "budget:jhn:test",
+          limits: {
+            max_steps: 2,
+            max_tool_calls: 0,
+            max_subagents: 0,
+            max_elapsed_ms: 1_000,
+            max_external_effects: 0,
+          },
+          demand: {
+            max_steps: 1,
+            max_tool_calls: 0,
+            max_subagents: 0,
+            max_elapsed_ms: 1_000,
+            max_external_effects: 0,
+          },
+        },
       });
 
       const result = await agent.turn({
@@ -61,11 +78,95 @@ test("JHN Delegating Agent Governed Delegation & Packet Tracing (#33, #31)", asy
       assert.equal(imputationEvent.payload.logical_agent_ref, "agent:jhn");
       assert.equal(imputationEvent.payload.material_executor, "handler:openai-reasoner@local");
 
-      // Verify provisional_cost object calculated via gpt-5.4-nano rate card
-      assert.ok(imputationEvent.payload.provisional_cost);
-      assert.equal(imputationEvent.payload.provisional_cost.unit, "USD");
-      assert.equal(imputationEvent.payload.provisional_cost.scale, 8);
-      assert.ok(BigInt(imputationEvent.payload.provisional_cost.coefficient) > 0n);
+      // Token usage alone is not a reliable price for subscription-backed
+      // handlers; no USD amount is fabricated without an explicit valuation.
+      assert.equal(imputationEvent.payload.provisional_cost, null);
+      assert.deepEqual(imputationEvent.payload.resource_assessments, []);
+      assert.deepEqual(
+        store.listTopic("execution-budget:budget:jhn:test").map((event) => event.event_type),
+        ["ExecutionBudgetReservation", "ExecutionBudgetSettlement"]
+      );
     }
+  );
+});
+
+test("JHN delegation fails closed without a bounded execution budget", async () => {
+  const store = createMemoryCopEventStore();
+  let invoked = false;
+  const agent = createJhnDelegatingAgent({
+    store,
+    handler: {
+      id: "handler:test",
+      async invoke() {
+        invoked = true;
+        return { text: "must not run" };
+      },
+    },
+    reasoner: {
+      async respond() {
+        return { text: "John response" };
+      },
+    },
+    identity: {
+      principal_ref: "principal:jhn",
+      mandate_ref: "mandate:jhn:active-001",
+      logical_agent_ref: "agent:jhn",
+    },
+    shouldDelegate: () => true,
+  });
+
+  await agent.turn({ message: "delegate", conversationId: "budget-gate", turnId: "turn-1" });
+  assert.equal(invoked, false);
+  assert.equal(
+    store.replay().find((event) => event.payload?.kind === "conversation.delegation_refused")
+      ?.payload.reason,
+    "execution_budget_required"
+  );
+});
+
+test("JHN delegation releases its reservation when the handler fails", async () => {
+  const store = createMemoryCopEventStore();
+  const agent = createJhnDelegatingAgent({
+    store,
+    handler: {
+      id: "handler:failing-test",
+      async invoke() {
+        throw new Error("handler unavailable");
+      },
+    },
+    reasoner: {
+      async respond() {
+        return { text: "John response" };
+      },
+    },
+    identity: {
+      principal_ref: "principal:jhn",
+      mandate_ref: "mandate:jhn:active-001",
+      logical_agent_ref: "agent:jhn",
+    },
+    shouldDelegate: () => true,
+    execution_budget: {
+      budget_id: "budget:jhn:failure",
+      limits: {
+        max_steps: 1,
+        max_tool_calls: 0,
+        max_subagents: 0,
+        max_elapsed_ms: 1_000,
+        max_external_effects: 0,
+      },
+      demand: {
+        max_steps: 1,
+        max_tool_calls: 0,
+        max_subagents: 0,
+        max_elapsed_ms: 1_000,
+        max_external_effects: 0,
+      },
+    },
+  });
+
+  await agent.turn({ message: "delegate", conversationId: "budget-failure", turnId: "turn-1" });
+  assert.deepEqual(
+    store.listTopic("execution-budget:budget:jhn:failure").map((event) => event.event_type),
+    ["ExecutionBudgetReservation", "ExecutionBudgetRelease"]
   );
 });

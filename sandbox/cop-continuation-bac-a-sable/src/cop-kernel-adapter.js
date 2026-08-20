@@ -113,11 +113,17 @@ export async function resumeContinuationInSandbox(params) {
   return { ok: true };
 }
 
-// Re-export the cognitive packet envelope+payload helper for bac-à-sable scenarios
-// to experiment with "Cogentia as cognitive continuation packet router" patterns
-// (see cogentia/research/cognitive_packet_switching.md and _continuation_packet_routing.md).
-// The actual routing uses the COPBus (sub-buses + federation) + Scheduler.
-export { asCognitivePacket } from "../../../packages/cop-kernel/src/Cop-kerneltasks.js";
+// Re-export the cognitive packet envelope+payload helper and lifecycle functions for bac-à-sable scenarios
+// to experiment with "Cognitive Packet Switching" / Reality test round trips
+// (see cogentia/research/cognitive_packet_switching.md and inseme#54).
+export {
+  asCognitivePacket,
+  recordPacketHop,
+  markPacketSolved,
+  markPacketReturned,
+  markPacketAssimilated,
+  reconstructOdyssey,
+} from "../../../packages/cop-kernel/src/Cop-kerneltasks.js";
 
 // Lightweight capability registry stub (for router policy decisions based on
 // envelope.requiredCapability). In-memory by default; resettable.

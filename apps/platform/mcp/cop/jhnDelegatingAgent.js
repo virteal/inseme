@@ -8,6 +8,42 @@
 
 import { conversationTopic } from "./jhnConversationState.js";
 import { loadCogentiaMcpClientFromEnv } from "./cogentiaMcpClient.js";
+import {
+  createEventSourcedExecutionBudgetLedger,
+  DIMENSIONS,
+} from "../../../../packages/cop-core/src/execution-budget.js";
+
+function zeroUsage() {
+  return Object.fromEntries(DIMENSIONS.map((dimension) => [dimension, 0]));
+}
+
+function normalizeExecutionBudget(store, value) {
+  if (!value || typeof value !== "object") return null;
+  const ledger =
+    value.ledger ||
+    createEventSourcedExecutionBudgetLedger({
+      store,
+      budget_id: value.budget_id,
+      limits: value.limits,
+      event_context: value.event_context,
+    });
+  for (const method of ["reserve", "settle", "release", "snapshot"]) {
+    if (typeof ledger[method] !== "function") {
+      throw new TypeError(`execution_budget.ledger.${method} is required`);
+    }
+  }
+  if (!value.demand || typeof value.demand !== "object") {
+    throw new TypeError("execution_budget.demand is required");
+  }
+  return { ledger, demand: value.demand, forecasts: value.forecasts || [] };
+}
+
+function delegationUsage(receipt, elapsedMs) {
+  const trace = receipt?.events?.find((event) => event.payload?.kind === "Trace");
+  const reported = trace?.payload?.effect?.execution_usage;
+  if (reported && typeof reported === "object") return reported;
+  return { ...zeroUsage(), max_steps: 1, max_elapsed_ms: elapsedMs };
+}
 
 function requireText(value, name) {
   if (typeof value !== "string" || value.length === 0) throw new TypeError(`${name} is required`);
@@ -34,6 +70,7 @@ export function createJhnDelegatingAgent(options = {}) {
   requireText(identity?.principal_ref, "identity.principal_ref");
   requireText(identity?.mandate_ref, "identity.mandate_ref");
   requireText(identity?.logical_agent_ref, "identity.logical_agent_ref");
+  const executionBudget = normalizeExecutionBudget(store, options.execution_budget);
 
   const cogentia =
     options.cogentia ||
@@ -58,7 +95,7 @@ export function createJhnDelegatingAgent(options = {}) {
     /**
      * Principal → John turn. Optional handler delegation under mandate.
      */
-    async turn({ message, conversationId = "john", history = [] } = {}) {
+    async turn({ message, conversationId = "john", history = [], turnId } = {}) {
       requireText(message, "message");
       const topicId = conversationTopic(conversationId);
 
@@ -84,7 +121,20 @@ export function createJhnDelegatingAgent(options = {}) {
           ? shouldDelegate({ message, history })
           : Boolean(handler && /code|implement|fix|review/i.test(message));
 
-      if (wantsDelegate && handler) {
+      if (wantsDelegate && !handler) {
+        store.append({
+          topic_id: topicId,
+          epistemic_status: "observed",
+          actor_ref: identity.logical_agent_ref,
+          visibility: "restricted",
+          payload: {
+            kind: "conversation.delegation_refused",
+            reason: "required_capability_unavailable",
+            mandate_ref: identity.mandate_ref,
+          },
+          idempotency_key: `conv:${conversationId}:capability-unavailable:${turnId || Date.now()}`,
+        });
+      } else if (wantsDelegate && handler) {
         const { jhnDelegateToHandler, isMandateActive } =
           await import("../../../../packages/cop-core/src/governed-act.js");
         if (!isMandateActive(store, identity.mandate_ref)) {
@@ -100,20 +150,70 @@ export function createJhnDelegatingAgent(options = {}) {
             },
             idempotency_key: `conv:${conversationId}:refused:${Date.now()}`,
           });
-        } else {
-          handlerReceipt = await jhnDelegateToHandler({
-            store,
-            handler,
-            identity: { ...identity, topic_id: topicId },
-            capability: handler.capability || "reasoning.assist",
-            input: { message, history },
+        } else if (!executionBudget) {
+          store.append({
+            topic_id: topicId,
+            epistemic_status: "observed",
+            actor_ref: identity.logical_agent_ref,
+            visibility: "restricted",
+            payload: {
+              kind: "conversation.delegation_refused",
+              reason: "execution_budget_required",
+              mandate_ref: identity.mandate_ref,
+              capability: handler.capability || "reasoning.assist",
+            },
+            idempotency_key: `conv:${conversationId}:budget-required:${turnId || Date.now()}`,
           });
-          handlerText =
-            handlerReceipt.events?.find((e) => e.payload?.kind === "Trace")?.payload?.effect
-              ?.text ||
-            handlerReceipt.events?.find((e) => e.payload?.kind === "Trace")?.payload?.effect
-              ?.summary ||
-            null;
+        } else {
+          const reservationKey = `jhn-delegation:${conversationId}:${turnId || Date.now()}`;
+          const reservation = executionBudget.ledger.reserve({
+            idempotency_key: reservationKey,
+            expected_version: executionBudget.ledger.snapshot().version,
+            demand: executionBudget.demand,
+            forecasts: executionBudget.forecasts,
+          });
+          if (!reservation.ok) {
+            store.append({
+              topic_id: topicId,
+              epistemic_status: "observed",
+              actor_ref: identity.logical_agent_ref,
+              visibility: "restricted",
+              payload: {
+                kind: "conversation.delegation_refused",
+                reason: reservation.error,
+                mandate_ref: identity.mandate_ref,
+                capability: handler.capability || "reasoning.assist",
+                budget: reservation.snapshot,
+              },
+              idempotency_key: `conv:${conversationId}:budget-refused:${turnId || Date.now()}`,
+            });
+          } else {
+            const startedAt = Date.now();
+            handlerReceipt = await jhnDelegateToHandler({
+              store,
+              handler,
+              identity: { ...identity, topic_id: topicId },
+              capability: handler.capability || "reasoning.assist",
+              input: { message, history },
+            });
+            const trace = handlerReceipt.events?.find((event) => event.payload?.kind === "Trace");
+            const outcome = trace?.payload?.outcome;
+            const settlement =
+              outcome === "failed" || outcome === "refused"
+                ? executionBudget.ledger.release({
+                    reservation_id: reservation.reservation.reservation_id,
+                    expected_version: reservation.snapshot.version,
+                    idempotency_key: `${reservationKey}:release`,
+                  })
+                : executionBudget.ledger.settle({
+                    reservation_id: reservation.reservation.reservation_id,
+                    expected_version: reservation.snapshot.version,
+                    usage: delegationUsage(handlerReceipt, Date.now() - startedAt),
+                    idempotency_key: `${reservationKey}:settle`,
+                  });
+            if (!settlement.ok) throw new Error(`execution_budget_${settlement.error}`);
+            handlerText = trace?.payload?.effect?.text || trace?.payload?.effect?.summary || null;
+          }
         }
       }
 

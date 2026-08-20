@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inseme.local/schemas/cop.local-trace-consolidation.receipt.v1.json",
+  "title": "COP local trace consolidation receipt v1",
+  "type": "object",
+  "required": ["schema", "consolidation_id", "created_at", "local_trace", "summary"],
+  "properties": {
+    "schema": { "const": "cop.local-trace-consolidation.receipt.v1" },
+    "consolidation_id": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "local_trace": {
+      "type": "object",
+      "required": ["store_ref", "retained_until", "event_count", "first_event_ref", "last_event_ref", "integrity_hash"],
+      "properties": {
+        "store_ref": { "type": "string", "minLength": 1 },
+        "retained_until": { "type": "string", "format": "date-time" },
+        "event_count": { "type": "integer", "minimum": 1 },
+        "integrity_hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+      }
+    },
+    "summary": { "type": "object" },
+    "artifact_refs": { "type": "array" },
+    "resource_assessments": { "type": "array" }
+  },
+  "additionalProperties": false
+}
