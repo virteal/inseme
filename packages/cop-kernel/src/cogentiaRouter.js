@@ -170,9 +170,18 @@ export async function routePacketResiliently(
   const { envelope } = pkt;
   const { routeTo, requiredCapability } = envelope;
 
+  async function safeProbe(nodeId) {
+    if (!probeNode) return true;
+    try {
+      return Boolean(await probeNode(nodeId));
+    } catch {
+      return false;
+    }
+  }
+
   // 1. Direct Next-Hop Optimization
   if (routeTo) {
-    const isPreferredReachable = probeNode ? await probeNode(routeTo) : true;
+    const isPreferredReachable = await safeProbe(routeTo);
     if (isPreferredReachable) {
       recordPacketHop(pkt, {
         node_id: routeTo,
@@ -204,7 +213,7 @@ export async function routePacketResiliently(
     const providers = registry.getProviders(requiredCapability);
     for (const altNode of providers) {
       if (altNode !== routeTo) {
-        const isAltReachable = probeNode ? await probeNode(altNode) : true;
+        const isAltReachable = await safeProbe(altNode);
         if (isAltReachable) {
           recordPacketHop(pkt, {
             node_id: altNode,

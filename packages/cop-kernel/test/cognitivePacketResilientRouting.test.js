@@ -155,3 +155,47 @@ test("Resilient Routing 4: Store and Forward Spooling under total network partit
   assert.equal(spoolQueue[0].envelope.id, "pkt-spool-004");
   assert.equal(packet.envelope.hops[1].node_id, "local-spool");
 });
+
+test("Resilient Routing 5: Exception handling when network probe throws (e.g. ECONNREFUSED)", async () => {
+  const bus = new COPBus({ name: "exception-bus" });
+  const registry = new CapabilityRegistry();
+  registry.register("backup-capability", {
+    providers: ["node:working-backup"],
+  });
+
+  const packet = asCognitivePacket({
+    kind: "fault-tolerant-work",
+    envelope: {
+      id: "pkt-exception-005",
+      intent: "Test router survival under socket crash",
+      routeTo: "node:crashing-node",
+      requiredCapability: "backup-capability",
+      status: "dispatched",
+      ithaca: { return_target: "client" },
+    },
+    bus,
+  });
+
+  // Probe throws unhandled socket crash on crashing node, succeeds on backup
+  const probeNode = async (nodeId) => {
+    if (nodeId === "node:crashing-node") {
+      throw new Error("ECONNREFUSED: Connection forcibly refused by target machine");
+    }
+    if (nodeId === "node:working-backup") {
+      return true;
+    }
+    return false;
+  };
+
+  const result = await routePacketResiliently(packet, {
+    registry,
+    forwardToBus: bus,
+    probeNode,
+  });
+
+  assert.equal(result.status, "routed_fallback");
+  assert.equal(result.targetNode, "node:working-backup");
+  assert.equal(packet.envelope.hops.length, 2);
+  assert.ok(packet.envelope.hops[0].route_reason.includes("node:crashing-node"));
+  assert.equal(packet.envelope.hops[1].node_id, "node:working-backup");
+});
