@@ -795,6 +795,147 @@ export async function markPacketFailed(
 }
 
 /**
+ * Mark a packet as 'paused_for_judgment' (waiting at human judgment boundary #80).
+ *
+ * @param {Object} packet
+ * @param {Object} params
+ * @param {string} [params.continuationId] - ID of the continuation ticket
+ * @param {string} [params.reason="human_judgment_required"] - pause reason
+ * @param {string} [params.barrier="code_modification"] - boundary barrier type
+ * @param {Object} [params.pendingAction] - metadata about proposed action (e.g. diff, mandate)
+ * @param {string} [params.nodeId]
+ * @param {string} [params.instanceId]
+ * @param {Object} [params.bus]
+ * @param {boolean} [params.emit=true]
+ * @returns {Promise<Object>} updated packet
+ */
+export async function markPacketPausedForJudgment(
+  packet,
+  {
+    continuationId = genId(),
+    reason = "human_judgment_required",
+    barrier = "judgment_boundary",
+    pendingAction = null,
+    nodeId = "boundary-node",
+    instanceId = "continuation-manager",
+    bus = null,
+    emit = true,
+  } = {}
+) {
+  if (!packet || !packet.envelope) {
+    throw new Error("markPacketPausedForJudgment: invalid packet");
+  }
+
+  const now = nowIso();
+  recordPacketHop(packet, {
+    node_id: nodeId,
+    instance_id: instanceId,
+    route_reason: `paused-at-judgment-barrier:${barrier}`,
+    timestamp: now,
+  });
+
+  packet.envelope.status = "paused_for_judgment";
+  packet.continuation = {
+    continuationId,
+    reason,
+    barrier,
+    pendingAction,
+    paused_at: now,
+  };
+
+  if (emit) {
+    const targetBus = bus || defaultBus || (await loadDefaultBus());
+    if (targetBus && typeof targetBus.publish === "function") {
+      await targetBus.publish({
+        type: "cop.packet.paused",
+        source: "cop-kernel/tasks",
+        data: {
+          packetId: packet.envelope.id,
+          packet,
+          continuationId,
+          barrier,
+          reason,
+          status: "paused_for_judgment",
+        },
+        timestamp: now,
+      });
+    }
+  }
+
+  return packet;
+}
+
+/**
+ * Resume a paused Cognitive Packet after continuation / human judgment resolution.
+ *
+ * @param {Object} packet
+ * @param {Object} params
+ * @param {string} [params.continuationId]
+ * @param {string} [params.action="approve"] - "approve" | "reject" | "amend"
+ * @param {string} [params.reviewer="human:reviewer"]
+ * @param {string} [params.nodeId]
+ * @param {string} [params.instanceId]
+ * @param {Object} [params.bus]
+ * @param {boolean} [params.emit=true]
+ * @returns {Promise<Object>} updated packet
+ */
+export async function resumePacketFromContinuation(
+  packet,
+  {
+    continuationId,
+    action = "approve",
+    reviewer = "human:reviewer",
+    nodeId = "boundary-node",
+    instanceId = "continuation-manager",
+    bus = null,
+    emit = true,
+  } = {}
+) {
+  if (!packet || !packet.envelope) {
+    throw new Error("resumePacketFromContinuation: invalid packet");
+  }
+
+  const now = nowIso();
+  recordPacketHop(packet, {
+    node_id: nodeId,
+    instance_id: instanceId,
+    route_reason: `continuation-resolved:${action}-by-${reviewer}`,
+    timestamp: now,
+  });
+
+  packet.envelope.status = action === "reject" ? "cancelled" : "dispatched";
+  if (!packet.continuation) {
+    packet.continuation = {};
+  }
+  packet.continuation.resolution = {
+    continuationId: continuationId || packet.continuation.continuationId,
+    action,
+    reviewer,
+    resolved_at: now,
+  };
+
+  if (emit) {
+    const targetBus = bus || defaultBus || (await loadDefaultBus());
+    if (targetBus && typeof targetBus.publish === "function") {
+      await targetBus.publish({
+        type: "cop.packet.resumed",
+        source: "cop-kernel/tasks",
+        data: {
+          packetId: packet.envelope.id,
+          packet,
+          action,
+          reviewer,
+          status: packet.envelope.status,
+        },
+        timestamp: now,
+      });
+    }
+  }
+
+  return packet;
+}
+
+/**
  * Reconstruct the Odyssey (complete journey trace) of a Cognitive Packet.
  *
  * @param {Object} packet - The Cognitive Packet
@@ -823,6 +964,7 @@ export function reconstructOdyssey(packet, { events = [] } = {}) {
       isSolved: status === "solved" || status === "returned" || status === "assimilated",
       isReturned: status === "returned" || status === "assimilated",
       isAssimilated: status === "assimilated",
+      isPaused: status === "paused_for_judgment" || status === "paused",
       isCancelled: status === "cancelled",
       isFailed: status === "failed",
     },
