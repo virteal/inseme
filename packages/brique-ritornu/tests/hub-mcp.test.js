@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { MemoryStore } from "../src/storage.js";
-import { COGENTIA_TOOLS } from "../src/mcp/cogentia-proxy.js";
+import { COGENTIA_TOOLS, createCogentiaProxy } from "../src/mcp/cogentia-proxy.js";
 import { HUB_SERVER_NAME, createHubMcp } from "../src/mcp/hub.js";
 import { TOOLS as RITORNU_TOOLS } from "../src/mcp/core.js";
 
@@ -58,6 +58,10 @@ test("federated catalog includes hub + cogentia + ritornu tools", () => {
   assert.ok(names.has("cogentia_context_pack_batch"));
   assert.ok(names.has("cogentia_get_doc"));
   assert.ok(names.has("cogentia_grep"));
+  assert.ok(
+    names.has("cogentia_pattern_list") ||
+      COGENTIA_TOOLS.some((t) => t.name === "cogentia_pattern_list")
+  );
   assert.ok(names.has("cogentia_continuation_list"));
   assert.ok(names.has("ritornu_prepare_substack"));
   assert.ok(names.has("ritornu_health"));
@@ -150,5 +154,80 @@ test("write ops are hidden unless allowOps", () => {
   const hub = makeHub();
   const names = new Set(hub.listTools().map((t) => t.name));
   assert.ok(!names.has("cogentia_index_rebuild"));
-  assert.ok(!names.has("cogentia_emit_static"));
+  assert.ok(!names.has("cogentia_continuation_emit"));
+  assert.ok(!names.has("cogentia_continuation_resolve"));
+});
+
+test("live Cogentia proxy uses Cogentia core catalog (no parallel table)", () => {
+  const proxy = createCogentiaProxy({
+    COGENTIA_DAEMON_URL: "http://127.0.0.1:8790",
+    COGENTIA_MCP_VIEW: "public",
+  });
+  const names = new Set(proxy.listTools().map((t) => t.name));
+  assert.equal(proxy.catalog, "cogentia-mcp-core");
+  assert.ok(names.has("cogentia_search"));
+  assert.ok(names.has("cogentia_skill_list"));
+  assert.ok(names.has("cogentia_pattern_list"));
+  assert.ok(names.has("cogentia_cli_catalog"));
+  assert.ok(names.has("cogentia_grep"));
+  assert.ok(!names.has("cogentia_continuation_emit"));
+  assert.ok(
+    proxy.hasTool("cogentia_continuation_emit"),
+    "mutate tools remain addressable for gated calls"
+  );
+});
+
+test("hub forwards Cogentia resources and SEP-2640 skills", async () => {
+  const hub = createHubMcp(
+    {
+      ...process.env,
+      SUPABASE_URL: "",
+      INSEME_MCP_SURFACE: "full",
+      COGENTIA_DAEMON_URL: "http://127.0.0.1:8790",
+      COGENTIA_MCP_VIEW: "public",
+    },
+    { store: new MemoryStore() }
+  );
+  const names = new Set(hub.listTools().map((t) => t.name));
+  assert.ok(names.has("inseme_cockpit"));
+  assert.ok(names.has("cogentia_pattern_list"));
+  assert.ok(names.has("ritornu_health"));
+
+  const resources = await hub.handleJsonRpc({
+    jsonrpc: "2.0",
+    id: 10,
+    method: "resources/list",
+    params: {},
+  });
+  assert.ok(Array.isArray(resources.result.resources));
+  assert.ok(resources.result.resources.some((r) => String(r.uri).startsWith("skill://")));
+  assert.ok(resources.result.resources.some((r) => String(r.uri).includes("pattern/")));
+
+  const skills = await hub.handleJsonRpc({
+    jsonrpc: "2.0",
+    id: 11,
+    method: "skills/list",
+    params: {},
+  });
+  assert.ok(skills.result.skills.length >= 1);
+
+  const discover = await hub.handleJsonRpc({
+    jsonrpc: "2.0",
+    id: 12,
+    method: "server/discover",
+    params: {},
+  });
+  assert.ok(discover.result.capabilities?.resources);
+  assert.ok(discover.result.capabilities?.extensions?.["io.modelcontextprotocol/skills"]);
+  assert.match(discover.result.instructions, /inseme/i);
+
+  const pattern = await hub.handleJsonRpc({
+    jsonrpc: "2.0",
+    id: 13,
+    method: "tools/call",
+    params: { name: "cogentia_pattern_list", arguments: {} },
+  });
+  const body = JSON.parse(pattern.result.content[0].text);
+  assert.equal(body.ok, true);
+  assert.ok(body.count >= 1);
 });

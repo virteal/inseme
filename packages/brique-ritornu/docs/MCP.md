@@ -3,11 +3,11 @@
 One MCP server that **maximizes the visible and actionable tool surface** for ChatGPT, Claude, Grok,
 Cursor, Codex, and other hosts:
 
-| Surface      | Source of truth               | Examples                                                       |
-| ------------ | ----------------------------- | -------------------------------------------------------------- |
-| **Cogentia** | `cogentia.js` daemon HTTP API | search, context pack, lines, issues, CLI, index, continuations |
-| **Ritornu**  | this package                  | prepare Substack, normalize copy, handoff (no Git)             |
-| **Hub**      | federation meta               | `inseme_cockpit`, `inseme_list_surfaces`                       |
+| Surface      | Source of truth                                                             | Examples                                                        |
+| ------------ | --------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| **Cogentia** | Cogentia MCP core (`cogentia-mcp-core.js`) — same catalog as `cogentia-mcp` | search, packs, skills, patterns, CLI catalog, resources/prompts |
+| **Ritornu**  | this package                                                                | prepare Substack, normalize copy, handoff (no Git)              |
+| **Hub**      | federation meta                                                             | `inseme_cockpit`, `inseme_list_surfaces`                        |
 
 Issue memory: [inseme#26](https://github.com/JeanHuguesRobert/inseme/issues/26) (Ritornu) + corpus
 tooling.
@@ -45,38 +45,40 @@ Ritornu-only remains available: `node bin/ritornu-mcp.js`.
 
 ### Environment
 
-| Variable                 | Role                                                                   |
-| ------------------------ | ---------------------------------------------------------------------- |
-| `COGENTIA_DAEMON_URL`    | Default `http://127.0.0.1:8790` — run `cogentia.js` daemon             |
-| `COGENTIA_MCP_VIEW`      | `public` (default) or `full` (needs admin token)                       |
-| `COGENTIA_ADMIN_TOKEN`   | Full-view bearer to daemon                                             |
-| `COGENTIA_MCP_ALLOW_OPS` | `1` to expose side-effect tools (index rebuild, emit-static, registry) |
-| `INSEME_MCP_SURFACE`     | `full` \| `cogentia` \| `ritornu`                                      |
-| `SUPABASE_*`             | Ritornu private captures (else session memory)                         |
-| `INSEME_MCP_TOKEN`       | Optional bearer for HTTP transport                                     |
+| Variable                    | Role                                                                                         |
+| --------------------------- | -------------------------------------------------------------------------------------------- |
+| `COGENTIA_DAEMON_URL`       | Default `http://127.0.0.1:8790` — run `cogentia.js` daemon                                   |
+| `COGENTIA_MCP_VIEW`         | `public` (default) or `full` (needs admin token)                                             |
+| `COGENTIA_ADMIN_TOKEN`      | Full-view bearer to daemon                                                                   |
+| `COGENTIA_MCP_ALLOW_OPS`    | Alias for `COGENTIA_MCP_ALLOW_MUTATE` (Cogentia mutate tools; still needs full view + admin) |
+| `COGENTIA_MCP_ALLOW_MUTATE` | `1` to expose Cogentia mutate tools when view is `full`                                      |
+| `COGENTIA_REPO_ROOT`        | Cogentia checkout (default: sibling `../cogentia` from this workspace)                       |
+| `INSEME_MCP_SURFACE`        | `full` \| `cogentia` \| `ritornu`                                                            |
+| `SUPABASE_*`                | Ritornu private captures (else session memory)                                               |
+| `INSEME_MCP_TOKEN`          | Optional bearer for HTTP transport                                                           |
 
 ## Agent workflow (recommended)
 
 1. **`inseme_cockpit`** — situational picture (both surfaces)
 2. **Corpus** — `cogentia_search` → `cogentia_context_pack` → `cogentia_get_lines` (cite)
 3. **Navigation** — `cogentia_guide_resolve`, `cogentia_issue_graph`, `cogentia_continuation_list`
-4. **CLI mirrors** — `cogentia_grep`, `cogentia_docs_*`, `cogentia_concepts_*`
-5. **Retrofit** (mandate) — `ritornu_prepare_substack` / `ritornu_normalize_provided` → human review
+4. **Maximum set** — `resources/list`, `skills/list`, `cogentia_pattern_list`,
+   `cogentia_cli_catalog` (not `tools/list` alone)
+5. **CLI mirrors** — `cogentia_grep`, `cogentia_docs_*`, `cogentia_concepts_*`
+6. **Retrofit** (mandate) — `ritornu_prepare_substack` / `ritornu_normalize_provided` → human review
    → `ritornu_create_handoff` (patch only)
 
 ## Cogentia tools (high level)
 
-**Always listed when surface includes cogentia (read):**  
-status, state, repos, plugins, agent*health, views_snapshot, health, search, context_pack,
-context_pack_batch, get_doc, get_lines, explain, guide_resolve, index_status, index_search,
-issue_graph, issues_list, continuation_list/inspect, cli_status/state, grep, docs*_, concepts\__,
-git_verify.
+The Inseme hub **does not keep a parallel Cogentia tool table**. `tools/list` is the live Cogentia
+MCP public catalog (plus hub + Ritornu tools). Skills, patterns, prompts, and gated verbs are also
+visible via `resources/list`, `skills/list`, and `cogentia_cli_catalog`.
 
-**Only with `COGENTIA_MCP_ALLOW_OPS=1`:**  
-index_rebuild, index_update, emit_static, publish_registry, nav_benchmark.
+Mutate tools (`continuation_emit` / `resolve`, `issues_sync`, `concepts_init`) stay off the
+anonymous list unless Cogentia lockers allow them.
 
-If the daemon is down, tools remain **visible** in `tools/list`; calls return a clear error with
-start hints.
+If the daemon is down, the catalog remains **visible**; daemon-backed calls return a clear error
+with start hints. Local Cogentia methods (skills, patterns, catalog) still work.
 
 ## HTTP
 

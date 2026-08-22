@@ -2,11 +2,9 @@
  * Inseme federated MCP hub — maximize visible / actionable tool surface.
  *
  * Surfaces:
- *   - Cogentia.js daemon (corpus search, packs, issues, CLI, index, ops…)
+ *   - Cogentia MCP core (catalog owner: tools, resources, prompts, skills)
  *   - Ritornu (personal publication retrofit under mandate)
  *   - Hub meta tools (cockpit, catalog)
- *
- * Single entry for ChatGPT / Claude / Grok / Cursor hosts.
  */
 
 import {
@@ -18,17 +16,26 @@ import {
 import {
   PROTOCOL_VERSION,
   SERVER_VERSION as RITORNU_MCP_VERSION,
-  SUPPORTED_PROTOCOLS,
   TOOLS as RITORNU_TOOLS,
   createMcpCore as createRitornuCore,
   jsonRpcError,
   jsonRpcResult,
   mcpToolResult,
 } from "./core.js";
-import { COGENTIA_TOOLS, createCogentiaProxy } from "./cogentia-proxy.js";
+import {
+  COGENTIA_TOOLS,
+  COGENTIA_FORWARDED_METHODS,
+  createCogentiaProxy,
+} from "./cogentia-proxy.js";
 
 export const HUB_SERVER_NAME = "inseme-mcp";
-export const HUB_SERVER_VERSION = "0.3.0";
+export const HUB_SERVER_VERSION = "0.4.0";
+export const HUB_SUPPORTED_PROTOCOLS = new Set([
+  "2026-07-28",
+  PROTOCOL_VERSION,
+  "2025-06-18",
+  "2024-11-05",
+]);
 
 /**
  * @param {NodeJS.ProcessEnv} [env]
@@ -36,7 +43,6 @@ export const HUB_SERVER_VERSION = "0.3.0";
  */
 export function createHubMcp(env = process.env, options = {}) {
   const surface = String(env.INSEME_MCP_SURFACE || "full").toLowerCase();
-  // full | cogentia | ritornu
   const includeCogentia = surface === "full" || surface === "cogentia";
   const includeRitornu = surface === "full" || surface === "ritornu";
 
@@ -102,19 +108,32 @@ export function createHubMcp(env = process.env, options = {}) {
     return tools;
   }
 
+  function hubCapabilities(cogentiaInit) {
+    const fromCogentia = cogentiaInit?.capabilities;
+    if (fromCogentia && typeof fromCogentia === "object") {
+      return {
+        ...fromCogentia,
+        tools: { listChanged: false, ...(fromCogentia.tools || {}) },
+      };
+    }
+    return { tools: { listChanged: false } };
+  }
+
   function initialize(params = {}) {
     const requested = String(params.protocolVersion || "");
     const toolCount = listTools().length;
+    const cogentiaInit = cogentia?.initialize ? cogentia.initialize(params) : null;
     return {
-      protocolVersion: SUPPORTED_PROTOCOLS.has(requested) ? requested : PROTOCOL_VERSION,
-      capabilities: { tools: { listChanged: false } },
+      protocolVersion: HUB_SUPPORTED_PROTOCOLS.has(requested) ? requested : PROTOCOL_VERSION,
+      capabilities: hubCapabilities(cogentiaInit),
       serverInfo: { name: HUB_SERVER_NAME, version: HUB_SERVER_VERSION },
       instructions:
         `Inseme federated MCP (${toolCount} tools). ` +
-        "Start with inseme_cockpit or cogentia_views_snapshot for situational awareness. " +
+        "Start with inseme_cockpit or cogentia_views_snapshot. " +
+        "Cogentia owns the corpus catalog: tools/list is a subset; use resources/list, skills/list, cogentia_cli_catalog, and cogentia_pattern_list for the maximum set. " +
         "Use cogentia_search / cogentia_context_pack for corpus work; cogentia_get_lines to cite. " +
         "Use ritornu_* only under human mandate for personal publication retrofit (never auto-Git). " +
-        "Side-effecting Cogentia ops require COGENTIA_MCP_ALLOW_OPS=1. " +
+        "Cogentia mutate tools require full view + COGENTIA_MCP_ALLOW_MUTATE=1 (COGENTIA_MCP_ALLOW_OPS is accepted as an alias). " +
         "Daemon: COGENTIA_DAEMON_URL (default http://127.0.0.1:8790).",
     };
   }
@@ -133,9 +152,10 @@ export function createHubMcp(env = process.env, options = {}) {
           hub: { tools: hubMetaTools.map((t) => t.name) },
           cogentia: {
             enabled: Boolean(cogentia),
+            catalog: cogentia?.catalog || "cogentia-mcp-core",
             tool_count: cogentia ? cogentia.toolCount() : 0,
             catalog_size: COGENTIA_TOOLS.length,
-            daemon: cogentia?.daemonUrl?.origin || null,
+            daemon: cogentia?.daemonUrl?.origin || cogentia?.daemonUrl || null,
             allow_ops: cogentia?.allowOps ?? false,
           },
           ritornu: {
@@ -199,6 +219,9 @@ export function createHubMcp(env = process.env, options = {}) {
         out.next_steps.push(
           "For corpus work: cogentia_search → cogentia_context_pack → cogentia_get_lines (cite source_id / ref)."
         );
+        out.next_steps.push(
+          "For the full Cogentia set: resources/list, skills/list, cogentia_pattern_list, cogentia_cli_catalog."
+        );
       } catch (error) {
         out.cogentia = {
           ok: false,
@@ -215,7 +238,35 @@ export function createHubMcp(env = process.env, options = {}) {
     return out;
   }
 
-  async function handleJsonRpc(message) {
+  async function forwardCogentia(message, transport) {
+    if (!cogentia?.handleJsonRpc) {
+      if (message.method === "resources/list") return jsonRpcResult(message.id, { resources: [] });
+      if (message.method === "prompts/list") return jsonRpcResult(message.id, { prompts: [] });
+      if (message.method === "skills/list") return jsonRpcResult(message.id, { skills: [] });
+      return jsonRpcError(message.id, -32601, "Method not found");
+    }
+    const response = await cogentia.handleJsonRpc(message, transport);
+    if (message.method === "server/discover" && response?.result) {
+      const init = initialize(message.params || {});
+      response.result.instructions = init.instructions;
+      response.result._meta = {
+        ...(response.result._meta || {}),
+        "io.modelcontextprotocol/serverInfo": {
+          name: HUB_SERVER_NAME,
+          version: HUB_SERVER_VERSION,
+        },
+        inseme: {
+          hub: HUB_SERVER_NAME,
+          surfaces: ["hub", cogentia ? "cogentia" : null, ritornu ? "ritornu" : null].filter(
+            Boolean
+          ),
+        },
+      };
+    }
+    return response;
+  }
+
+  async function handleJsonRpc(message, transport = {}) {
     if (!message || message.jsonrpc !== "2.0" || typeof message.method !== "string") {
       return jsonRpcError(message?.id ?? null, -32600, "Invalid Request");
     }
@@ -238,11 +289,8 @@ export function createHubMcp(env = process.env, options = {}) {
         const data = await callTool(name, args);
         return jsonRpcResult(message.id, mcpToolResult(data));
       }
-      if (message.method === "resources/list") {
-        return jsonRpcResult(message.id, { resources: [] });
-      }
-      if (message.method === "prompts/list") {
-        return jsonRpcResult(message.id, { prompts: [] });
+      if (COGENTIA_FORWARDED_METHODS.has(message.method)) {
+        return forwardCogentia(message, transport);
       }
       return jsonRpcError(message.id, -32601, "Method not found");
     } catch (error) {
@@ -266,11 +314,13 @@ export function createHubMcp(env = process.env, options = {}) {
 }
 
 function createBrokenCogentiaProxy(message) {
+  const readable = COGENTIA_TOOLS.filter((t) => t.risk === "read");
   return {
     daemonUrl: { origin: "invalid" },
     allowOps: false,
+    catalog: "unavailable",
     listTools: () =>
-      COGENTIA_TOOLS.filter((t) => t.risk === "read").map((t) => ({
+      readable.map((t) => ({
         name: t.name,
         description: `${t.description} [daemon config error: ${message}]`,
         inputSchema: t.inputSchema,
@@ -280,6 +330,6 @@ function createBrokenCogentiaProxy(message) {
     },
     hasTool: (name) => COGENTIA_TOOLS.some((t) => t.name === name),
     healthProbe: async () => ({ ok: false, error: message }),
-    toolCount: () => COGENTIA_TOOLS.filter((t) => t.risk === "read").length,
+    toolCount: () => readable.length,
   };
 }
