@@ -1,0 +1,69 @@
+schema: cogentia.registry.v0.2
+registry:
+  id: registry:interactions
+  name: Interactions Registry
+  registry_class: domain-governance
+
+  records:
+    kinds:
+      - interaction-packet
+      - follow-up
+
+  facets:
+    function:
+      - source-memory
+      - audit
+      - operational-state
+    authority: subject-owned-source
+    topology: distributed
+    temporality:
+      - append-only
+      - versioned
+    visibility: mixed
+    substrate:
+      - git-yaml
+      - git-markdown
+      - packet
+    granularity:
+      - person/twin
+      - interaction
+    mutation:
+      - append-with-correction
+      - agent-maintained-under-mandate
+
+  definition_source:
+    repo: JeanHuguesRobert/cogentia
+    path: interaction_packets/
+
+  architecture_source:
+    repo: JeanHuguesRobert/inseme
+    path: research/interactions_registry_and_multichannel_messaging.md
+
+  record_authority:
+    mode: subject-owned
+    description: Method lives in Cogentia; traces live with the subject. Public and private stores remain distinct projections or overlays.
+
+  record_sources:
+    - repo: JeanHuguesRobert/JeanHuguesRobert
+      path: interaction_packets/
+      visibility: public-or-redacted
+    - repo: JeanHuguesRobert/registre-mariani
+      path: interaction_packets/
+      visibility: private
+
+  relations:
+    - predicate: governed_by
+      object: cogentia:interaction-packet-method
+    - predicate: projects
+      object: view:interaction-dashboard
+    - predicate: depends_on
+      object: policy:personal-twin-access
+    - predicate: references
+      object: cop:event
+
+  freshness:
+    mode: per-record
+    fields:
+      - dates
+      - status
+      - follow-ups
