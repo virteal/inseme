@@ -26,14 +26,14 @@ export const SOVEREIGN_MODELS = {
 
 export const REMOTE_MODELS = {
   fast: {
-    openai: "gpt-4o-mini",
-    anthropic: "claude-3-haiku-20240307",
+    openai: "gpt-5.6-terra",
+    anthropic: "claude-haiku-4-5-20251001",
     groq: "llama-3.1-8b-instant",
     mistral: "mistral-small-latest",
   },
   advanced: {
-    openai: "gpt-4o",
-    anthropic: "claude-3-5-sonnet-latest",
+    openai: "gpt-5.6-sol",
+    anthropic: "claude-sonnet-5",
     groq: "llama-3.3-70b-versatile",
     mistral: "mistral-large-latest",
   },
