@@ -1,0 +1,51 @@
+schema: cogentia.registry.v0.2
+registry:
+  id: registry:cop-capabilities
+  name: COP Capability Registry
+  registry_class: runtime
+
+  records:
+    kinds:
+      - capability
+      - capability-provider-reference
+
+  facets:
+    function:
+      - runtime-dispatch
+      - routing
+    authority: runtime-local-state
+    topology: runtime-local
+    temporality:
+      - ephemeral
+      - high-volatility
+    visibility: runtime-internal
+    substrate:
+      - runtime-memory
+      - source-code-definition
+    granularity:
+      - component
+      - capability
+    mutation:
+      - runtime-managed
+      - resettable
+
+  definition_source:
+    repo: JeanHuguesRobert/inseme
+    path: packages/cop-kernel/src/capabilityRegistry.js
+
+  record_authority:
+    mode: runtime-local
+    description: In-memory registrations describe what the current COP runtime knows how to route; they are resettable and do not establish durable capacity, mandate or semantic authority.
+
+  relations:
+    - predicate: references
+      object: cop:handlers
+    - predicate: must_not_duplicate
+      object: registry:federated-capacity
+    - predicate: depends_on
+      object: cop:routing-policy
+
+  freshness:
+    mode: runtime-instance
+    fields:
+      - registeredAt
