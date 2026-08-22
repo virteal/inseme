@@ -6,8 +6,10 @@
  * handler invokes it under an active mandate and an execution budget.
  */
 import { spawn as nodeSpawn } from "node:child_process";
+import process from "node:process";
 
 const MAX_CAPTURE_BYTES = 128_000;
+const ACP_PROTOCOL_VERSION = 1;
 
 export function createHostRuntimeClient({ runtimes = [], spawnImpl = nodeSpawn } = {}) {
   const catalog = new Map(runtimes.map(normalizeRuntime).map((runtime) => [runtime.id, runtime]));
@@ -60,10 +62,22 @@ export function createHostRuntimeClient({ runtimes = [], spawnImpl = nodeSpawn }
       const runtime = requireRuntime(catalog, runtime_id);
       if (!runtime.enabled) throw new Error(`runtime_disabled:${runtime_id}`);
       if (!prompt) throw new TypeError("prompt is required");
+      if (!working_directory) throw new TypeError("working_directory is required");
+      if (runtime.adapter === "acp_stdio") {
+        const result = await runAcpSession(spawnImpl, runtime, { prompt, working_directory });
+        return {
+          text: result.text,
+          handler_profile_ref: runtime.handler_profile_ref,
+          handler_instance_ref: runtime.handler_instance_ref,
+          execution_surface: "acp",
+          context_inheritance: runtime.context_inheritance,
+          runtime_id: runtime.id,
+          execution_usage: { max_steps: 1, max_elapsed_ms: result.elapsed_ms },
+        };
+      }
       if (runtime.adapter !== "codex_exec_jsonl") {
         throw new Error(`unsupported_runtime_adapter:${runtime.adapter}`);
       }
-      if (!working_directory) throw new TypeError("working_directory is required");
 
       const result = await runProcess(
         spawnImpl,
@@ -90,10 +104,49 @@ export function createHostRuntimeClient({ runtimes = [], spawnImpl = nodeSpawn }
         handler_profile_ref: runtime.handler_profile_ref,
         handler_instance_ref: runtime.handler_instance_ref,
         execution_surface: runtime.execution_surface,
+        context_inheritance: runtime.context_inheritance,
         runtime_id: runtime.id,
         execution_usage: { max_steps: 1, max_elapsed_ms: result.elapsed_ms },
       };
     },
+  };
+}
+
+/**
+ * Generic ACP-over-stdio runtime. ACP describes technical execution only;
+ * it never supplies COP identity, mandate, or budget authority.
+ */
+export function acpStdioRuntime({
+  id,
+  command,
+  args = [],
+  handler_instance_ref,
+  handler_profile_ref = "handler-profile:coding-agent-acp",
+  capabilities = ["coding.assist.read"],
+  probe_args = ["--version"],
+  env = {},
+  mcp_servers = [],
+  context_inheritance = "none",
+  invoke_timeout_ms = 240_000,
+} = {}) {
+  if (!id || !command || !handler_instance_ref) {
+    throw new TypeError("id, command and handler_instance_ref are required");
+  }
+  return {
+    id,
+    command,
+    args,
+    env,
+    handler_instance_ref,
+    handler_profile_ref,
+    execution_surface: "acp",
+    adapter: "acp_stdio",
+    capabilities,
+    probe_args,
+    mcp_servers,
+    context_inheritance,
+    invoke_timeout_ms,
+    enabled: true,
   };
 }
 
@@ -108,6 +161,7 @@ export function fractaCodexRuntime({
     handler_profile_ref: "handler-profile:coding-agent-cli",
     execution_surface: "cli",
     adapter: "codex_exec_jsonl",
+    context_inheritance: "ambient-host",
     command,
     capabilities: ["coding.assist.read"],
     sandbox: "read-only",
@@ -124,6 +178,10 @@ function normalizeRuntime(value) {
   return {
     ...value,
     capabilities: [...new Set(value.capabilities || [])],
+    args: value.args || [],
+    env: value.env || {},
+    mcp_servers: value.mcp_servers || [],
+    context_inheritance: normalizeContextInheritance(value.context_inheritance),
     execution_surface: value.execution_surface || "cli",
     sandbox: value.sandbox || "read-only",
     probe_args: value.probe_args || ["--version"],
@@ -134,7 +192,9 @@ function normalizeRuntime(value) {
 }
 
 function publicRuntime(runtime) {
-  const { command, ...safe } = runtime;
+  const safe = { ...runtime };
+  delete safe.command;
+  delete safe.env;
   return safe;
 }
 
@@ -142,6 +202,14 @@ function requireRuntime(catalog, id) {
   const runtime = catalog.get(id);
   if (!runtime) throw new Error(`unknown_runtime:${id}`);
   return runtime;
+}
+
+function normalizeContextInheritance(value) {
+  const normalized = value || "none";
+  if (!new Set(["none", "ambient-host", "cop-artifact"]).has(normalized)) {
+    throw new TypeError("context_inheritance must be none, ambient-host, or cop-artifact");
+  }
+  return normalized;
 }
 
 function compactText(value) {
@@ -184,4 +252,113 @@ function runProcess(spawnImpl, command, args, { timeout_ms }) {
       });
     });
   });
+}
+
+function runAcpSession(spawnImpl, runtime, { prompt, working_directory }) {
+  return new Promise((resolve, reject) => {
+    const started = Date.now();
+    const child = spawnImpl(runtime.command, runtime.args, {
+      stdio: ["pipe", "pipe", "pipe"],
+      env: { ...process.env, ...runtime.env },
+    });
+    let stderr = "";
+    let stdoutBuffer = "";
+    let text = "";
+    let nextId = 1;
+    let settled = false;
+    const pending = new Map();
+    const finish = (error, value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      for (const { reject: rejectRequest } of pending.values()) {
+        rejectRequest(error || new Error("acp_session_closed"));
+      }
+      pending.clear();
+      if (!child.killed) child.kill("SIGTERM");
+      if (error) reject(error);
+      else resolve(value);
+    };
+    const timer = setTimeout(
+      () => finish(new Error(`runtime_invocation_timeout:${runtime.id}`)),
+      runtime.invoke_timeout_ms
+    );
+    const request = (method, params) =>
+      new Promise((resolveRequest, rejectRequest) => {
+        const id = nextId++;
+        pending.set(id, { resolve: resolveRequest, reject: rejectRequest });
+        child.stdin.write(`${JSON.stringify({ jsonrpc: "2.0", id, method, params })}\n`);
+      });
+    const handleMessage = (message) => {
+      if (message.id !== undefined && pending.has(message.id)) {
+        const requestState = pending.get(message.id);
+        pending.delete(message.id);
+        if (message.error) requestState.reject(new Error(`acp_error:${message.error.message || "unknown"}`));
+        else requestState.resolve(message.result || {});
+        return;
+      }
+      if (message.method === "session/update") {
+        text = appendCapture(text, acpText(message.params));
+      }
+    };
+    child.stdout?.on("data", (chunk) => {
+      stdoutBuffer = `${stdoutBuffer}${chunk}`;
+      let lineEnd;
+      while ((lineEnd = stdoutBuffer.indexOf("\n")) !== -1) {
+        const line = stdoutBuffer.slice(0, lineEnd).trim();
+        stdoutBuffer = stdoutBuffer.slice(lineEnd + 1);
+        if (!line) continue;
+        try {
+          handleMessage(JSON.parse(line));
+        } catch {
+          // ACP requires JSON-RPC lines. Non-protocol diagnostics are not evidence text.
+        }
+      }
+    });
+    child.stderr?.on("data", (chunk) => {
+      stderr = appendCapture(stderr, chunk);
+    });
+    child.once("error", (error) => finish(error));
+    child.once("close", (code) => {
+      if (!settled) finish(new Error(`runtime_invocation_failed:${runtime.id}:${compactText(stderr) || code}`));
+    });
+
+    (async () => {
+      try {
+        await request("initialize", {
+          protocolVersion: ACP_PROTOCOL_VERSION,
+          clientCapabilities: {},
+          clientInfo: { name: "cop-host-runtime", version: "0.1" },
+        });
+        const session = await request("session/new", {
+          cwd: working_directory,
+          mcpServers: runtime.mcp_servers,
+        });
+        if (!session.sessionId) throw new Error("acp_session_id_missing");
+        const result = await request("session/prompt", {
+          sessionId: session.sessionId,
+          prompt: [{ type: "text", text: prompt }],
+        });
+        text = appendCapture(text, acpText(result));
+        finish(null, { text: compactText(text), elapsed_ms: Date.now() - started });
+      } catch (error) {
+        finish(error);
+      }
+    })();
+  });
+}
+
+function appendCapture(target, value) {
+  return `${target}${String(value || "")}`.slice(0, MAX_CAPTURE_BYTES);
+}
+
+function acpText(value) {
+  if (typeof value === "string") return value;
+  if (!value || typeof value !== "object") return "";
+  if (typeof value.text === "string") return value.text;
+  if (typeof value.content === "string") return value.content;
+  if (Array.isArray(value.content)) return value.content.map(acpText).join("");
+  if (value.update) return acpText(value.update);
+  if (value.message) return acpText(value.message);
+  return "";
 }
