@@ -22,6 +22,7 @@ test("JHN Delegating Agent Governed Delegation & Packet Tracing (#33, #31)", asy
               prompt_tokens: 1_000,
               completion_tokens: 500,
             },
+            context_inheritance: "ambient-host",
           };
         },
       };
@@ -77,6 +78,9 @@ test("JHN Delegating Agent Governed Delegation & Packet Tracing (#33, #31)", asy
       assert.equal(imputationEvent.payload.principal_ref, "principal:jhn");
       assert.equal(imputationEvent.payload.logical_agent_ref, "agent:jhn");
       assert.equal(imputationEvent.payload.material_executor, "handler:openai-reasoner@local");
+
+      const traceEvent = events.find((e) => e.payload?.kind === "Trace");
+      assert.equal(traceEvent.payload.effect.context_inheritance, "ambient-host");
 
       // Token usage alone is not a reliable price for subscription-backed
       // handlers; no USD amount is fabricated without an explicit valuation.
