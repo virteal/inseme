@@ -2,7 +2,7 @@
 title: Magistral Capability Resolution Boundary
 subtitle: Generic interface between COP orchestration and heterogeneous work capabilities
 author: Jean Hugues Noël Robert, baron Mariani
-date: "2026-08-15"
+date: "2026-08-23"
 document_role: source
 document_kind: architecture-decision
 visibility: public
@@ -29,7 +29,8 @@ Magistral is not conceptually limited to Large Language Model routing.
 
 Its stable architectural role is:
 
-> **Magistral is the capability-resolution and access boundary between orchestration and concrete work capabilities.**
+> **Magistral is the capability-resolution and access boundary between orchestration and concrete
+> work capabilities.**
 
 The existing OpenAI-compatible model router remains a valid and useful first implementation slice.
 It MUST NOT be mistaken for the full abstraction.
@@ -44,14 +45,14 @@ Fractanet makes capabilities present.
 
 ## 2. Separation of concerns
 
-COP may express that a continuation or task requires a capability without naming a concrete provider,
-machine, protocol, model, or process.
+COP may express that a continuation or task requires a capability without naming a concrete
+provider, machine, protocol, model, or process.
 
 Magistral resolves that requirement against capabilities currently reachable in Fractanet and
 selects an admissible access path according to constraints and policy.
 
-Fractanet is the distributed field in which those capabilities are present: local processes,
-remote services, machines, humans, agents, models, databases, sensors, actuators, or future forms of
+Fractanet is the distributed field in which those capabilities are present: local processes, remote
+services, machines, humans, agents, models, databases, sensors, actuators, or future forms of
 compute.
 
 ```text
@@ -229,6 +230,28 @@ Their roles are not identical:
 
 The execution surface MUST NOT determine the authority relation.
 
+ACP is directional for a particular session, but Magistral may legitimately occupy both roles in
+different sessions:
+
+```text
+Magistral as ACP client
+  -> mobilizes a situated coding agent, such as Codex on a Principal's machine
+
+Magistral as ACP provider
+  -> presents a governed Magistral agent to an external ACP client
+  -> resolves the requested work to explicitly admissible capabilities
+```
+
+The provider role is not an OpenAI-compatible projection and should not require an additional
+compatibility gateway. Its initial surface should support ACP initialization, session creation,
+prompt delivery, streaming updates, cancellation, and session closure. An outer ACP session may
+resolve work to an inner ACP session, but the outer session MUST retain its own authority,
+capability binding, and receipt references.
+
+Magistral as an ACP provider MUST expose only the capabilities admitted by its current configuration
+and governing Mandate. It MUST NOT silently grant a remote ACP client the account authority, local
+filesystem access, or private agent memory associated with a selected inner capability.
+
 ## 7. Coding agents as high-value capabilities
 
 Coding agents are not merely language models. They can combine reasoning, repository navigation,
@@ -250,10 +273,20 @@ rich coding-agent capability
 A compatibility projection MAY lose semantics. It MUST NOT become the canonical representation of
 portable work state.
 
+Direct ACP integration is the preferred path for rich coding-agent sessions. The Agent CLI Gateway
+remains an optional compatibility projection for clients that only understand OpenAI-style HTTP; it
+is not a prerequisite for either the ACP-client or ACP-provider role of Magistral.
+
 ## 8. Anti-capture and continuation portability
 
 Vendor sessions MAY be used as execution accelerators but SHOULD NOT own the canonical state of a
 portable task.
+
+This does not require Magistral to reject situated dependencies. An agent bound to a Principal
+account, a particular workstation, a repository checkout, or a locally accumulated working context
+may be substantially more capable than a portable substitute. The Pilot should make the value,
+criticality, substitutability, recovery cost, and declared backup posture of that interdependence
+visible when selecting an offer.
 
 Where portability is required, the durable state needed to continue work must be externalized into
 COP Events, Artifacts, Continuations, repository state, or other reconstructible Fractanet memory.
@@ -272,8 +305,13 @@ COP continuation + artifacts
 Grok / node C
 ```
 
-Changing HandlerInstance MUST NOT silently change the LogicalAgent, Mandate, budget bearer, or causal
-lineage of the work.
+Changing HandlerInstance MUST NOT silently change the LogicalAgent, Mandate, budget bearer, or
+causal lineage of the work.
+
+The required property is therefore reconfigurable continuity, not an unrealistic claim that every
+capability or every useful memory fragment is exportable at all times. A lost situated advantage and
+its recovery cost are facts to preserve in the trace, not reasons to erase the advantage from
+routing.
 
 ## 9. Relationship to current Magistral implementation
 
@@ -316,3 +354,21 @@ Target experiment:
 
 Success is not merely task completion. Success is **portable continuation under preserved authority,
 identity, budget and causal lineage**.
+
+## 11. ACP provider vertical slice
+
+After the ACP-client Codex slice is reliable, Magistral SHOULD expose one bounded ACP-provider
+slice:
+
+1. an external ACP client initializes a Magistral session;
+2. the session is bound to a constrained `CapabilityRequirement` and Mandate;
+3. Magistral selects an admissible offer, optionally an inner ACP coding-agent session;
+4. Magistral streams normalized progress while retaining provider-specific details only according to
+   the applicable trace and exposure policy;
+5. cancellation, closure, failure, and resulting artifacts produce explicit receipts or
+   Continuations;
+6. a test verifies that the client cannot obtain implicit access to the inner agent's account,
+   filesystem, private memory, or ungoverned tools.
+
+This slice establishes a symmetric ACP boundary without claiming that Magistral has become a
+sovereign substitute for every situated agent it can mobilize.
