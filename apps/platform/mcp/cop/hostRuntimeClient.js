@@ -6,11 +6,9 @@
  * handler invokes it under an active mandate and an execution budget.
  */
 import { spawn as nodeSpawn } from "node:child_process";
-import process from "node:process";
+import { connectAcpStdio } from "@inseme/magistral/acp";
 
 const MAX_CAPTURE_BYTES = 128_000;
-const ACP_PROTOCOL_VERSION = 1;
-
 export function createHostRuntimeClient({ runtimes = [], spawnImpl = nodeSpawn } = {}) {
   const catalog = new Map(runtimes.map(normalizeRuntime).map((runtime) => [runtime.id, runtime]));
 
@@ -255,97 +253,37 @@ function runProcess(spawnImpl, command, args, { timeout_ms }) {
 }
 
 function runAcpSession(spawnImpl, runtime, { prompt, working_directory }) {
-  return new Promise((resolve, reject) => {
+  return (async () => {
     const started = Date.now();
-    const child = spawnImpl(runtime.command, runtime.args, {
-      stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, ...runtime.env },
-    });
-    let stderr = "";
-    let stdoutBuffer = "";
     let text = "";
-    let nextId = 1;
-    let settled = false;
-    const pending = new Map();
-    const finish = (error, value) => {
-      if (settled) return;
-      settled = true;
-      clearTimeout(timer);
-      for (const { reject: rejectRequest } of pending.values()) {
-        rejectRequest(error || new Error("acp_session_closed"));
-      }
-      pending.clear();
-      if (!child.killed) child.kill("SIGTERM");
-      if (error) reject(error);
-      else resolve(value);
-    };
-    const timer = setTimeout(
-      () => finish(new Error(`runtime_invocation_timeout:${runtime.id}`)),
-      runtime.invoke_timeout_ms
-    );
-    const request = (method, params) =>
-      new Promise((resolveRequest, rejectRequest) => {
-        const id = nextId++;
-        pending.set(id, { resolve: resolveRequest, reject: rejectRequest });
-        child.stdin.write(`${JSON.stringify({ jsonrpc: "2.0", id, method, params })}\n`);
+    const client = await connectAcpStdio({
+      command: runtime.command,
+      args: runtime.args,
+      cwd: working_directory,
+      env: runtime.env,
+      spawnImpl,
+      clientInfo: { name: "cop-host-runtime", version: "0.1" },
+      promptTimeoutMs: runtime.invoke_timeout_ms,
+      onSessionUpdate: (params) => {
+        text = appendCapture(text, acpText(params?.update));
+      },
+    });
+    try {
+      const session = await client.newSession({
+        cwd: working_directory,
+        mcpServers: runtime.mcp_servers,
+        allowMcpServer: runtime.allow_mcp_server,
       });
-    const handleMessage = (message) => {
-      if (message.id !== undefined && pending.has(message.id)) {
-        const requestState = pending.get(message.id);
-        pending.delete(message.id);
-        if (message.error) requestState.reject(new Error(`acp_error:${message.error.message || "unknown"}`));
-        else requestState.resolve(message.result || {});
-        return;
-      }
-      if (message.method === "session/update") {
-        text = appendCapture(text, acpText(message.params));
-      }
-    };
-    child.stdout?.on("data", (chunk) => {
-      stdoutBuffer = `${stdoutBuffer}${chunk}`;
-      let lineEnd;
-      while ((lineEnd = stdoutBuffer.indexOf("\n")) !== -1) {
-        const line = stdoutBuffer.slice(0, lineEnd).trim();
-        stdoutBuffer = stdoutBuffer.slice(lineEnd + 1);
-        if (!line) continue;
-        try {
-          handleMessage(JSON.parse(line));
-        } catch {
-          // ACP requires JSON-RPC lines. Non-protocol diagnostics are not evidence text.
-        }
-      }
-    });
-    child.stderr?.on("data", (chunk) => {
-      stderr = appendCapture(stderr, chunk);
-    });
-    child.once("error", (error) => finish(error));
-    child.once("close", (code) => {
-      if (!settled) finish(new Error(`runtime_invocation_failed:${runtime.id}:${compactText(stderr) || code}`));
-    });
-
-    (async () => {
-      try {
-        await request("initialize", {
-          protocolVersion: ACP_PROTOCOL_VERSION,
-          clientCapabilities: {},
-          clientInfo: { name: "cop-host-runtime", version: "0.1" },
-        });
-        const session = await request("session/new", {
-          cwd: working_directory,
-          mcpServers: runtime.mcp_servers,
-        });
-        if (!session.sessionId) throw new Error("acp_session_id_missing");
-        const result = await request("session/prompt", {
-          sessionId: session.sessionId,
-          prompt: [{ type: "text", text: prompt }],
-        });
-        text = appendCapture(text, acpText(result));
-        finish(null, { text: compactText(text), elapsed_ms: Date.now() - started });
-      } catch (error) {
-        finish(error);
-      }
-    })();
-  });
+      const result = await client.prompt({
+        sessionId: session.sessionId,
+        prompt: [{ type: "text", text: prompt }],
+      });
+      text = appendCapture(text, acpText(result));
+      return { text: compactText(text), elapsed_ms: Date.now() - started };
+    } finally {
+      client.terminate();
+    }
+  })();
 }
 
 function appendCapture(target, value) {

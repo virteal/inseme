@@ -277,6 +277,13 @@ Direct ACP integration is the preferred path for rich coding-agent sessions. The
 remains an optional compatibility projection for clients that only understand OpenAI-style HTTP; it
 is not a prerequisite for either the ACP-client or ACP-provider role of Magistral.
 
+The first implementation slice is `src/acp.js`: an ACP v1 stdio client with a version-negotiated
+handshake, session creation, prompt streaming, explicit permission handling, cancellation, and
+capability-gated session closure. It announces no filesystem or terminal capability by default. MCP
+servers are absent by default and require an explicit per-server admission predicate before a
+session may receive them; this prevents an accidental inner ACP session from reintroducing an
+unguarded Cogentia-to-Magistral loop.
+
 ## 8. Anti-capture and continuation portability
 
 Vendor sessions MAY be used as execution accelerators but SHOULD NOT own the canonical state of a

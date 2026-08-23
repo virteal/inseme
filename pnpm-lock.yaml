@@ -543,6 +543,9 @@ importers:
       '@inseme/kudocracy':
         specifier: '*'
         version: link:../../packages/kudocracy
+      '@inseme/magistral':
+        specifier: workspace:*
+        version: link:../../packages/magistral
       '@inseme/room':
         specifier: '*'
         version: link:../../packages/room

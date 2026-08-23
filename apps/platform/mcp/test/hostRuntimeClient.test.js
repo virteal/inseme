@@ -78,9 +78,16 @@ function fakeAcpSpawn() {
           child.stdout.write(
             `${JSON.stringify({ jsonrpc: "2.0", method: "session/update", params: { update: { content: "ACP answer" } } })}\n`
           );
-          child.stdout.write(`${JSON.stringify({ jsonrpc: "2.0", id: request.id, result: { stopReason: "end_turn" } })}\n`);
+          child.stdout.write(
+            `${JSON.stringify({ jsonrpc: "2.0", id: request.id, result: { stopReason: "end_turn" } })}\n`
+          );
         } else {
-          const result = request.method === "session/new" ? { sessionId: "session-1" } : {};
+          const result =
+            request.method === "initialize"
+              ? { protocolVersion: 1, agentCapabilities: {}, authMethods: [] }
+              : request.method === "session/new"
+                ? { sessionId: "session-1" }
+                : {};
           child.stdout.write(`${JSON.stringify({ jsonrpc: "2.0", id: request.id, result })}\n`);
         }
       }

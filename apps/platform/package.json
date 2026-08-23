@@ -71,6 +71,7 @@
     "@inseme/cop-core": "workspace:*",
     "@inseme/cop-host": "workspace:*",
     "@inseme/cop-kernel": "workspace:*",
+    "@inseme/magistral": "workspace:*",
     "@inseme/kudocracy": "*",
     "@inseme/room": "*",
     "@inseme/ui": "workspace:*",
