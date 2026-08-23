@@ -4,6 +4,7 @@ import { EventEmitter } from "node:events";
 import { PassThrough } from "node:stream";
 import {
   acpStdioRuntime,
+  codexAcpRuntime,
   createHostRuntimeClient,
   fractaCodexRuntime,
 } from "../cop/hostRuntimeClient.js";
@@ -76,7 +77,7 @@ function fakeAcpSpawn() {
         const request = JSON.parse(line);
         if (request.method === "session/prompt") {
           child.stdout.write(
-            `${JSON.stringify({ jsonrpc: "2.0", method: "session/update", params: { update: { content: "ACP answer" } } })}\n`
+            `${JSON.stringify({ jsonrpc: "2.0", method: "session/update", params: { update: { content: { type: "text", text: "ACP answer" } } } })}\n`
           );
           child.stdout.write(
             `${JSON.stringify({ jsonrpc: "2.0", id: request.id, result: { stopReason: "end_turn" } })}\n`
@@ -121,4 +122,16 @@ test("ACP stdio runtime is a generic governed handler without exposing its comma
   assert.equal(effect.text, "ACP answer");
   assert.deepEqual(fake.calls[0].args, ["--stdio"]);
   assert.equal(fake.calls[0].options.env.ACP_LOCAL_ONLY, "true");
+});
+
+test("local Codex ACP runtime declares situated host context without exposing its executable", () => {
+  const runtime = codexAcpRuntime({ command: "codex-acp.cmd", host_ref: "host:thinkpad-jhr" });
+  const client = createHostRuntimeClient({ runtimes: [runtime] });
+  const [listed] = client.resolve({ capability: "coding.assist.read", execution_surface: "acp" });
+  assert.equal(listed.id, "runtime:local:codex-acp");
+  assert.equal(listed.host_ref, "host:thinkpad-jhr");
+  assert.equal(listed.context_inheritance, "ambient-host");
+  assert.equal(listed.command, undefined);
+  assert.equal(listed.env, undefined);
+  assert.equal(runtime.env.INITIAL_AGENT_MODE, "read-only");
 });

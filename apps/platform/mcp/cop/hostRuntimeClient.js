@@ -6,6 +6,7 @@
  * handler invokes it under an active mandate and an execution budget.
  */
 import { spawn as nodeSpawn } from "node:child_process";
+import { platform } from "node:process";
 import { connectAcpStdio } from "@inseme/magistral/acp";
 
 const MAX_CAPTURE_BYTES = 128_000;
@@ -121,6 +122,7 @@ export function acpStdioRuntime({
   handler_instance_ref,
   handler_profile_ref = "handler-profile:coding-agent-acp",
   capabilities = ["coding.assist.read"],
+  host_ref = "host:local",
   probe_args = ["--version"],
   env = {},
   mcp_servers = [],
@@ -137,6 +139,7 @@ export function acpStdioRuntime({
     env,
     handler_instance_ref,
     handler_profile_ref,
+    host_ref,
     execution_surface: "acp",
     adapter: "acp_stdio",
     capabilities,
@@ -146,6 +149,34 @@ export function acpStdioRuntime({
     invoke_timeout_ms,
     enabled: true,
   };
+}
+
+/**
+ * The host-local Codex ACP descriptor. Its account-bound working context is
+ * useful but declared as situated; COP artifacts remain the durable fallback.
+ */
+export function codexAcpRuntime({
+  command = platform === "win32" ? "codex-acp.cmd" : "codex-acp",
+  id = "runtime:local:codex-acp",
+  host_ref = "host:local",
+  handler_instance_ref = "handler:local:codex-acp",
+  capabilities = ["coding.assist.read"],
+  env = {},
+} = {}) {
+  return acpStdioRuntime({
+    id,
+    command,
+    // Codex ACP may be authenticated to a powerful personal account. This
+    // integration starts from the least-privileged available mode; callers
+    // needing broader effects must introduce a separate, governed profile.
+    env: { INITIAL_AGENT_MODE: "read-only", ...env },
+    handler_instance_ref,
+    handler_profile_ref: "handler-profile:coding-agent-acp-codex",
+    capabilities,
+    context_inheritance: "ambient-host",
+    probe_args: ["--version"],
+    host_ref,
+  });
 }
 
 export function fractaCodexRuntime({
@@ -293,9 +324,10 @@ function appendCapture(target, value) {
 function acpText(value) {
   if (typeof value === "string") return value;
   if (!value || typeof value !== "object") return "";
+  if (Array.isArray(value)) return value.map(acpText).join("");
   if (typeof value.text === "string") return value.text;
   if (typeof value.content === "string") return value.content;
-  if (Array.isArray(value.content)) return value.content.map(acpText).join("");
+  if (value.content !== undefined) return acpText(value.content);
   if (value.update) return acpText(value.update);
   if (value.message) return acpText(value.message);
   return "";

@@ -7,13 +7,14 @@
   "exports": {
     ".": "./src/router.js",
     "./router": "./src/router.js",
-    "./acp": "./src/acp.js"
+    "./acp": "./src/acp.js",
+    "./capabilities": "./src/capabilities.js"
   },
   "bin": {
     "magistral": "./bin/magistral.js"
   },
   "scripts": {
-    "check": "node --check src/router.js && node --check src/acp.js && node --check bin/magistral.js && node --check scripts/launcher.js",
+    "check": "node --check src/router.js && node --check src/acp.js && node --check src/capabilities.js && node --check bin/magistral.js && node --check scripts/launcher.js",
     "test": "node --test tests/*.test.js",
 
     "// Production-ish commands (via bin)": "",

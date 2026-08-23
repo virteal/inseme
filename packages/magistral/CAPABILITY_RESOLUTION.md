@@ -284,6 +284,20 @@ servers are absent by default and require an explicit per-server admission predi
 session may receive them; this prevents an accidental inner ACP session from reintroducing an
 unguarded Cogentia-to-Magistral loop.
 
+`src/capabilities.js` is the first operational catalog for this richer surface. Its local Codex ACP
+offer declares the host relation, handler instance, situated-context posture, dependencies, and
+portable recovery path, while excluding commands and credentials from its public representation. An
+offer can be selected for a normal `coding.assist.read` requirement or excluded when the requirement
+disallows situated context. The Codex end-to-end test is intentionally opt-in through
+`RUN_CODEX_ACP_INTEGRATION=1`; it opens one read-only session with no MCP servers.
+
+The Platform bridge keeps this as a COP boundary: a deterministic step emits a continuation
+addressed to `magistral:capability-resolution`, whose state carries an explicit capability
+requirement, prompt and absolute working directory. The scheduler resolves the declared offer,
+checks that its public host/runtime binding still matches, then invokes the host runtime. This is
+not a back door for arbitrary direct agent calls, nor does the bridge confer mandate or budget
+authority; its caller remains responsible for both and for recording the resulting receipt.
+
 ## 8. Anti-capture and continuation portability
 
 Vendor sessions MAY be used as execution accelerators but SHOULD NOT own the canonical state of a
