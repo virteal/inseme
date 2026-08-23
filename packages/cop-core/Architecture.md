@@ -3,12 +3,12 @@ canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop
 author: "Jean Hugues Noël Robert, baron Mariani"
 affiliation: "Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica"
 license: "CC BY-SA 4.0"
-last_stamped_at: 2026-06-01
+last_stamped_at: 2026-08-23
 ---
 
 # Cognitive Orchestration Protocol (COP)
 
-# Architecture and Specification – Version 1.0
+# Architecture and Specification – Version 1.1
 
 ## 0. Introduction
 
@@ -2804,6 +2804,9 @@ An implementation that claims COP compliance MUST clearly state:
 - **COP Version**: the version of this specification (e.g. `1.0`).
 - **Conformance Level**: a set of mandatory capabilities defined below.
 - **Capability**: an optional, well-defined extension to the core protocol.
+- **Data Pact**: an external or implementation-defined policy binding a Data
+  Pack or other identified input to permitted, prohibited, and evidence-bound
+  uses. COP does not define its legal semantics.
 
 ## 11.2 Mandatory Conformance: COP/Core
 
@@ -2854,7 +2857,7 @@ A HITL-capable implementation MUST:
 Example declaration:
 
 ```
-COP 1.0 — Core + HITL
+COP 1.1 — Core + HITL
 ```
 
 ## 11.4 Optional Capability: AI-Capable
@@ -2877,7 +2880,7 @@ Private reasoning MAY be redacted or summarized without violating compliance.
 Example declaration:
 
 ```
-COP 1.0 — Core + AI
+COP 1.1 — Core + AI
 ```
 
 ## 11.5 Optional Capability: Ledger-Capable
@@ -2898,7 +2901,7 @@ A Ledger-capable implementation MUST:
 Example declaration:
 
 ```
-COP 1.0 — Core + Ledger
+COP 1.1 — Core + Ledger
 ```
 
 ## 11.6 Capability Composition
@@ -2908,12 +2911,40 @@ Capabilities MAY be composed.
 Examples:
 
 ```
-COP 1.0 — Core + HITL + AI
-COP 1.0 — Core + AI + Ledger
-COP 1.0 — Core + HITL + AI + Ledger
+COP 1.1 — Core + HITL + AI
+COP 1.1 — Core + AI + Ledger
+COP 1.1 — Core + HITL + AI + Ledger
 ```
 
 Each claimed capability MUST meet its normative requirements.
+
+## 11.6.1 Optional Capability: Data-Pact-Capable
+
+An implementation MAY claim **Data-Pact-Capable** compliance when it can make
+the processing of an identified Data Pack or input verifiable against an
+identified Data Pact.
+
+A Data-Pact-Capable implementation MUST:
+
+1. bind the invocation to an immutable Data Pact reference and version;
+2. preserve the relevant input and output references, or their verifiable
+   integrity references where disclosure would be excessive;
+3. preserve the applicable authority or Mandate reference;
+4. emit a proportionate receipt identifying the relevant Handler or
+   HandlerInstance, capability, action, policy result, and evidence reference;
+5. declare the receipt retention, access, and redaction conditions.
+
+The receipt MUST contain only the evidence necessary for the stated
+verification purpose. An implementation MUST NOT claim that Data-Pact-Capable
+compliance establishes the material truth, completeness, or currency of an
+input, its general legal compliance, or the absence of actions outside the
+observable COP boundary.
+
+Example declaration:
+
+```
+COP 1.1 — Core + AI + Data-Pact-Capable
+```
 
 ## 11.7 Versioning and Backward Compatibility
 
@@ -2947,7 +2978,7 @@ Implementations SHOULD publish a compliance statement including:
 
 Example:
 
-> “This system implements COP 1.0 Core, HITL-capable, AI-capable, Ledger-capable. JSON-LD semantic
+> “This system implements COP 1.1 Core, HITL-capable, AI-capable, Ledger-capable. JSON-LD semantic
 > layer is supported for Events and Artifacts.”
 
 ## 11.9 Testability and Verification (Informative)
