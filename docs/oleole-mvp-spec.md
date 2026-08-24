@@ -1,3 +1,47 @@
+---
+title: "Olé Olé — MVP specification"
+description: "Implementation-ready specification for Olé Olé, C.O.R.S.I.C.A.'s territorial Presence/discovery service, including the FractaTerritorialContext boundary."
+author: "Jean Hugues Noël Robert, baron Mariani"
+affiliation: "Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica"
+date: "2026-08-11"
+last_modified_at: "2026-08-24"
+license: "CC BY-SA 4.0"
+language: "en"
+status: "working-paper — implementation-ready working specification"
+canonical_url: "https://github.com/JeanHuguesRobert/inseme/blob/main/docs/oleole-mvp-spec.md"
+document_role: "operational"
+document_kind: "specification"
+visibility: "public"
+lifecycle_state: "working"
+target_audience:
+  - "coding agents"
+  - "C.O.R.S.I.C.A. maintainers"
+target_scene: "technical"
+document_function: "specification"
+tags:
+  - "Olé Olé"
+  - "Presence"
+  - "Presencology"
+  - "FractaTerritorialContext"
+  - "Corsica Digital Twin"
+  - "Autonomy of Capacity"
+  - "Cogentia"
+related_projects:
+  - "Olé Olé"
+  - "C.O.R.S.I.C.A."
+  - "Cogentia"
+  - "Corsica Digital Twin"
+provenance:
+  origin_type: "repository"
+  origin_repository: "JeanHuguesRobert/inseme"
+  origin_ref: "e873783ec6964d15318c855d3adf01387d29c9b5"
+  origin_date: "2026-08-11"
+  derived_from: []
+review:
+  status: "unreviewed"
+  reviewed_by: []
+update_policy: "UP-DEFAULT-REVIEWED"
+---
 # Olé Olé — MVP specification
 
 Status: implementation-ready working specification  
