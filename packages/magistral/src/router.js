@@ -5,7 +5,14 @@
  * Works in both Deno and Node.js with standard ESM imports.
  */
 
-import { createCognitivePacket, appendPacketHop, appendPacketSpending } from "@inseme/cop-kernel";
+// The router is shared by Node and the Deno reference pilot.  Depend only on
+// the pure accounting primitives rather than the complete COP kernel, whose
+// host/storage adapters are intentionally Node-specific.
+import {
+  createCognitivePacket,
+  appendPacketHop,
+  appendPacketSpending,
+} from "@inseme/cop-kernel/accounting/packetAccounting";
 
 export const MAGISTRAL_PROTOCOL = "MAGISTRAL-v1";
 export const DEFAULT_EXHAUSTION_TTL_MS = 24 * 60 * 60 * 1000;
@@ -284,8 +291,8 @@ function normalizeNodeForMap(node) {
     tier: normalizeTier(node.tier),
     weight: Number.isFinite(Number(node.weight)) ? Number(node.weight) : 1,
   };
-  if (!normalized.id || !normalized.url || !normalized.model) {
-    throw new Error("Invalid node definition: id, url and model are required");
+  if (!normalized.id || !normalized.model || (!normalized.url && !normalized.adapter)) {
+    throw new Error("Invalid node definition: id, model, and url or adapter are required");
   }
   return normalized;
 }
@@ -296,6 +303,7 @@ export function createRouter({
   apiKeys = {},
   log = console.warn,
   registry = new NodeRegistry(),
+  invokeNode = null,
 }) {
   const trafficLog = new TrafficLog();
 
@@ -322,7 +330,7 @@ export function createRouter({
       if (apiKey) headers["Authorization"] = `Bearer ${apiKey}`;
 
       const nodePayload = { ...payload, model: node.model };
-      if (node.url.includes("googleapis.com") || node.url.includes("google.com")) {
+      if (node.url?.includes("googleapis.com") || node.url?.includes("google.com")) {
         delete nodePayload.max_tokens;
       }
 
@@ -354,11 +362,13 @@ export function createRouter({
       };
 
       try {
-        const res = await fetch(node.url, {
-          method: "POST",
-          headers,
-          body: JSON.stringify(nodePayload),
-        });
+        const res = invokeNode
+          ? await invokeNode({ node, payload: nodePayload, headers })
+          : await fetch(node.url, {
+              method: "POST",
+              headers,
+              body: JSON.stringify(nodePayload),
+            });
 
         if (res.status === 429 || res.status === 402 || res.status === 403) {
           registry.markExhausted(node.id, `HTTP ${res.status}`);
@@ -397,13 +407,16 @@ export function createRouter({
 
           // Strict Cognitive Packet Accounting Trace
           try {
-            const providerName = node.url.includes("openai.com")
-              ? "openai"
-              : node.url.includes("groq.com")
-                ? "groq"
-                : node.url.includes("mistral.ai")
-                  ? "mistral"
-                  : "provider";
+            const providerName =
+              node.adapter === "acp_stdio"
+                ? "codex-acp"
+                : node.url?.includes("openai.com")
+                  ? "openai"
+                  : node.url.includes("groq.com")
+                    ? "groq"
+                    : node.url.includes("mistral.ai")
+                      ? "mistral"
+                      : "provider";
             const packet =
               payload._packet ||
               createCognitivePacket({
@@ -498,13 +511,16 @@ export function createRouter({
 
               // Strict Cognitive Packet Accounting Trace for Stream
               try {
-                const providerName = node.url.includes("openai.com")
-                  ? "openai"
-                  : node.url.includes("groq.com")
-                    ? "groq"
-                    : node.url.includes("mistral.ai")
-                      ? "mistral"
-                      : "provider";
+                const providerName =
+                  node.adapter === "acp_stdio"
+                    ? "codex-acp"
+                    : node.url?.includes("openai.com")
+                      ? "openai"
+                      : node.url.includes("groq.com")
+                        ? "groq"
+                        : node.url.includes("mistral.ai")
+                          ? "mistral"
+                          : "provider";
                 const packet =
                   payload._packet ||
                   createCognitivePacket({

@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { spawn } from "child_process";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,7 +37,7 @@ const loadMap = async (name) => {
   const jsonPath = path.join(rootDir, "registry", "maps", `${name}.json`);
 
   if (fs.existsSync(jsPath)) {
-    const module = await import(fileURLToPath(new URL(`file://${jsPath}`)));
+    const module = await import(pathToFileURL(jsPath).href);
     return module.default;
   } else if (fs.existsSync(jsonPath)) {
     return JSON.parse(fs.readFileSync(jsonPath, "utf-8"));
@@ -58,13 +58,19 @@ const config = {
     map: await loadMap(mapName),
   },
   secrets: {
+    MAGISTRAL_API_KEY: process.env.MAGISTRAL_API_KEY || "",
     API_KEYS: {
       GROQ_API_KEY: process.env.GROQ_API_KEY || process.env.groq_api_key || "",
       TOGETHER_API_KEY: process.env.TOGETHER_API_KEY || process.env.together_api_key || "",
       OPENAI_API_KEY: process.env.OPENAI_API_KEY || process.env.openai_api_key || "",
+      MAGISTRAL_API_KEY: process.env.MAGISTRAL_API_KEY || "",
     },
   },
 };
+
+if (mapName === "local-codex-acp" && config.input.map.length === 0) {
+  throw new Error("local-codex-acp requires CODEX_ACP_COMMAND and MAGISTRAL_CODEX_ACP_WORKSPACE");
+}
 
 if (!config.input.map || config.input.map.length === 0) {
   console.warn(
@@ -78,7 +84,10 @@ if (!config.input.map || config.input.map.length === 0) {
 const pilotExt = path.extname(pilotPath);
 const isJs = pilotExt === ".js" || pilotExt === ".mjs" || pilotExt === ".ts";
 const spawnCommand = isJs ? "deno" : pilotPath;
-const spawnArgs = isJs ? ["run", "-A", pilotPath] : [];
+// ACP and pilot dependencies intentionally follow their installed versions;
+// do not create or update a Deno lock file as a side-effect of starting a
+// local service.
+const spawnArgs = isJs ? ["run", "-A", "--no-lock", pilotPath] : [];
 
 const pilotProcess = spawn(spawnCommand, spawnArgs, {
   stdio: ["pipe", "pipe", "inherit"], // Pipe stdin, stdout, inherit stderr

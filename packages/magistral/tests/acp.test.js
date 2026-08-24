@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { connectAcpStdio, AcpProtocolError } from "../src/acp.js";
+import { connectAcpStdio, AcpProtocolError, createReadOnlyPermissionPolicy } from "../src/acp.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fixture = resolve(here, "fixtures", "fake-acp-agent.js");
@@ -66,6 +66,51 @@ test("ACP client cancels a turn and handles an explicit permission response", as
       assert.equal((await prompt).stopReason, "cancelled");
       assert.equal(permission.sessionId, sessionId);
     }
+  );
+});
+
+test("read-only ACP policy admits only one-shot local inspection commands", () => {
+  const decisions = [];
+  const policy = createReadOnlyPermissionPolicy({
+    root: process.cwd(),
+    onDecision: (entry) => decisions.push(entry),
+  });
+  const allowed = policy({
+    sessionId: "session-1",
+    toolCall: { kind: "execute", rawInput: { command: "git status --short", cwd: process.cwd() } },
+    options: [{ optionId: "once", kind: "allow_once" }],
+  });
+  assert.deepEqual(allowed, { outcome: "selected", optionId: "once" });
+  assert.equal(decisions.at(-1).reason, "one_shot_local_read_command");
+
+  assert.deepEqual(
+    policy({
+      toolCall: { kind: "edit", rawInput: { path: "README.md" } },
+      options: [{ optionId: "once", kind: "allow_once" }],
+    }),
+    { outcome: "cancelled" }
+  );
+  assert.equal(decisions.at(-1).reason, "file_write_not_admitted");
+  assert.deepEqual(
+    policy({
+      toolCall: {
+        kind: "execute",
+        rawInput: { command: "curl https://example.test", cwd: process.cwd() },
+      },
+      options: [{ optionId: "once", kind: "allow_once" }],
+    }),
+    { outcome: "cancelled" }
+  );
+  assert.equal(decisions.at(-1).reason, "command_not_a_scoped_read_operation");
+  assert.deepEqual(
+    policy({
+      toolCall: {
+        kind: "execute",
+        rawInput: { command: "rg --pre helper secret", cwd: process.cwd() },
+      },
+      options: [{ optionId: "once", kind: "allow_once" }],
+    }),
+    { outcome: "cancelled" }
   );
 });
 

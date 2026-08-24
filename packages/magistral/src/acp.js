@@ -6,13 +6,62 @@
  * Magistral/COP concerns that must be decided before an ACP session is opened.
  */
 import { spawn as nodeSpawn } from "node:child_process";
-import { isAbsolute } from "node:path";
+import { isAbsolute, relative, resolve } from "node:path";
 import { env as processEnv, platform } from "node:process";
 
 export const ACP_PROTOCOL_VERSION = 1;
 
 const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
 const DEFAULT_PROMPT_TIMEOUT_MS = 5 * 60_000;
+
+/**
+ * A deliberately narrow ACP permission policy for a public or otherwise
+ * read-only workspace.  It does not remove an agent's native inspection
+ * tools; it only decides permission prompts the agent raises.  Unknown
+ * requests fail closed, while a small set of one-shot, local read commands
+ * can proceed without turning a conversational turn into an effects channel.
+ */
+export function createReadOnlyPermissionPolicy({ root, onDecision = () => {} } = {}) {
+  assertAbsolutePath(root, "root");
+  if (typeof onDecision !== "function") throw new TypeError("onDecision must be a function");
+  const allowedRoot = resolve(root);
+
+  return (params = {}) => {
+    const toolCall = params.toolCall || {};
+    const request = {
+      session_id: params.sessionId || null,
+      kind: toolCall.kind || "unknown",
+      title: toolCall.title || null,
+    };
+    const option = oneShotAllowOption(params.options);
+    let decision = { outcome: "cancelled" };
+    let reason = "permission_request_not_admitted";
+
+    if (toolCall.kind === "execute") {
+      const input = toolCall.rawInput || {};
+      request.command = typeof input.command === "string" ? input.command : null;
+      request.cwd = typeof input.cwd === "string" ? input.cwd : null;
+      if (option && isSafeReadCommand(input.command, input.cwd, allowedRoot)) {
+        decision = { outcome: "selected", optionId: option.optionId };
+        reason = "one_shot_local_read_command";
+      } else {
+        reason = "command_not_a_scoped_read_operation";
+      }
+    } else if (toolCall.kind === "edit") {
+      reason = "file_write_not_admitted";
+    } else if (toolCall.kind === "other") {
+      reason = "permission_escalation_not_admitted";
+    }
+
+    onDecision({
+      ...request,
+      decision: decision.outcome,
+      option_id: decision.optionId || null,
+      reason,
+    });
+    return decision;
+  };
+}
 
 export class AcpProtocolError extends Error {
   constructor(message, { code, data } = {}) {
@@ -287,4 +336,41 @@ function assertMcpServers(mcpServers, allowMcpServer) {
   for (const server of mcpServers) {
     if (!allowMcpServer?.(server)) throw new AcpProtocolError("acp_mcp_server_not_admitted");
   }
+}
+
+function oneShotAllowOption(options) {
+  if (!Array.isArray(options)) return null;
+  return options.find((option) => option?.kind === "allow_once" && option.optionId) || null;
+}
+
+function isSafeReadCommand(command, cwd, allowedRoot) {
+  if (typeof command !== "string" || typeof cwd !== "string" || !isInside(cwd, allowedRoot))
+    return false;
+  const trimmed = command.trim();
+  // Shell composition, redirection and interpolation are effects surfaces,
+  // even where the leading word happens to look like an inspection command.
+  if (!trimmed || /[|&;><`]|\$\(|\r|\n/.test(trimmed)) return false;
+  const tokens = trimmed.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g) || [];
+  const executable = tokens[0]?.replace(/^['"]|['"]$/g, "").toLowerCase();
+  const subcommand = tokens[1]?.toLowerCase();
+  if (
+    ["rg", "ls", "dir", "pwd", "type", "head", "tail", "get-childitem", "get-content"].includes(
+      executable
+    )
+  ) {
+    if (executable === "rg" && tokens.some((token) => /^--pre(?:=|$)/.test(token))) return false;
+    return true;
+  }
+  return (
+    executable === "git" &&
+    ["status", "diff", "log", "show", "branch", "ls-files", "grep"].includes(subcommand) &&
+    !tokens.some((token) => /^(--ext-diff|--textconv)$/.test(token))
+  );
+}
+
+function isInside(candidate, root) {
+  if (!isAbsolute(candidate)) return false;
+  const path = resolve(candidate);
+  const pathRelative = relative(root, path);
+  return pathRelative === "" || (!pathRelative.startsWith("..") && !isAbsolute(pathRelative));
 }

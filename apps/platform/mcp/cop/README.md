@@ -2,6 +2,7 @@
 title: mcp/cop
 author: unknown
 date: "2025-12-24"
+last_modified_at: "2026-08-23"
 document_role: source
 document_kind: documentation
 visibility: public
@@ -24,24 +25,31 @@ COP router and Supabase adapters for the MCP (COP core).
 
 ## ACP host runtimes
 
-`hostRuntimeClient.js` provides the experimental host-side adapter for installed coding agents.
-The generic path is `acpStdioRuntime()`: it starts an ACP-compatible runtime over stdio, creates a
-fresh session with only explicitly supplied MCP servers, and returns its bounded output through the
+`hostRuntimeClient.js` provides the experimental host-side adapter for installed coding agents. The
+generic path is `acpStdioRuntime()`: it starts an ACP-compatible runtime over stdio, creates a fresh
+session with only explicitly supplied MCP servers, and returns its bounded output through the
 existing COP handler contract. ACP is an `ExecutionSurface`, never an identity or authority source:
 the surrounding delegating agent remains responsible for mandate checks, budget
 reservation/settlement, traces, and imputation.
+
+`codexAcpRuntime()` preserves Codex's native inspection tools in its isolated working directory. Its
+default `read-only` permission policy can admit only one-shot, local inspection commands; file
+edits, network/elevation requests, persistent grants and unknown permission requests are refused and
+recorded in the invocation's `permission_trace`. Additional MCP servers remain explicitly admitted
+per runtime: they must be public/read-only and separately policy-reviewed, so the Cogentia MCP is
+never injected as an ambient re-entry path.
 
 Runtime descriptors are host-local configuration. They may contain the executable path and the
 environment required by a vendor adapter, but `list()` and `resolve()` deliberately exclude both.
 The direct `codex_exec_jsonl` path remains an explicit emergency fallback for a host without an ACP
 adapter; it is not the generic integration model.
 
-An installed runtime can declare `context_inheritance` as `none`, `ambient-host`, or
-`cop-artifact`. `ambient-host` is deliberate: a locally authenticated client such as Codex may
-bring useful account- or session-associated context, and a future LogicalAgent may be a useful
-delta from John rather than a blank instance. This remains an optimisation, not its durable
-identity or memory. Any consequential work must remain reconstructible from portable COP events,
-artifacts, and continuations when the account, provider, host, or inherited context is absent.
+An installed runtime can declare `context_inheritance` as `none`, `ambient-host`, or `cop-artifact`.
+`ambient-host` is deliberate: a locally authenticated client such as Codex may bring useful account-
+or session-associated context, and a future LogicalAgent may be a useful delta from John rather than
+a blank instance. This remains an optimisation, not its durable identity or memory. Any
+consequential work must remain reconstructible from portable COP events, artifacts, and
+continuations when the account, provider, host, or inherited context is absent.
 
 Usage:
 

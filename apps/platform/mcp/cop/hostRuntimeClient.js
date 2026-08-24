@@ -7,7 +7,7 @@
  */
 import { spawn as nodeSpawn } from "node:child_process";
 import { platform } from "node:process";
-import { connectAcpStdio } from "@inseme/magistral/acp";
+import { connectAcpStdio, createReadOnlyPermissionPolicy } from "@inseme/magistral/acp";
 
 const MAX_CAPTURE_BYTES = 128_000;
 export function createHostRuntimeClient({ runtimes = [], spawnImpl = nodeSpawn } = {}) {
@@ -72,6 +72,7 @@ export function createHostRuntimeClient({ runtimes = [], spawnImpl = nodeSpawn }
           context_inheritance: runtime.context_inheritance,
           runtime_id: runtime.id,
           execution_usage: { max_steps: 1, max_elapsed_ms: result.elapsed_ms },
+          permission_trace: result.permission_trace,
         };
       }
       if (runtime.adapter !== "codex_exec_jsonl") {
@@ -126,6 +127,8 @@ export function acpStdioRuntime({
   probe_args = ["--version"],
   env = {},
   mcp_servers = [],
+  allow_mcp_server,
+  permission_policy = "read-only",
   context_inheritance = "none",
   invoke_timeout_ms = 240_000,
 } = {}) {
@@ -145,6 +148,8 @@ export function acpStdioRuntime({
     capabilities,
     probe_args,
     mcp_servers,
+    allow_mcp_server,
+    permission_policy,
     context_inheritance,
     invoke_timeout_ms,
     enabled: true,
@@ -162,6 +167,8 @@ export function codexAcpRuntime({
   handler_instance_ref = "handler:local:codex-acp",
   capabilities = ["coding.assist.read"],
   env = {},
+  mcp_servers = [],
+  allow_mcp_server,
 } = {}) {
   return acpStdioRuntime({
     id,
@@ -176,6 +183,9 @@ export function codexAcpRuntime({
     context_inheritance: "ambient-host",
     probe_args: ["--version"],
     host_ref,
+    mcp_servers,
+    allow_mcp_server,
+    permission_policy: "read-only",
   });
 }
 
@@ -210,6 +220,7 @@ function normalizeRuntime(value) {
     args: value.args || [],
     env: value.env || {},
     mcp_servers: value.mcp_servers || [],
+    permission_policy: value.permission_policy || "deny",
     context_inheritance: normalizeContextInheritance(value.context_inheritance),
     execution_surface: value.execution_surface || "cli",
     sandbox: value.sandbox || "read-only",
@@ -287,6 +298,14 @@ function runAcpSession(spawnImpl, runtime, { prompt, working_directory }) {
   return (async () => {
     const started = Date.now();
     let text = "";
+    const permission_trace = [];
+    const requestPermission =
+      runtime.permission_policy === "read-only"
+        ? createReadOnlyPermissionPolicy({
+            root: working_directory,
+            onDecision: (entry) => permission_trace.push(entry),
+          })
+        : () => ({ outcome: "cancelled" });
     const client = await connectAcpStdio({
       command: runtime.command,
       args: runtime.args,
@@ -295,6 +314,7 @@ function runAcpSession(spawnImpl, runtime, { prompt, working_directory }) {
       spawnImpl,
       clientInfo: { name: "cop-host-runtime", version: "0.1" },
       promptTimeoutMs: runtime.invoke_timeout_ms,
+      requestPermission,
       onSessionUpdate: (params) => {
         text = appendCapture(text, acpText(params?.update));
       },
@@ -310,7 +330,7 @@ function runAcpSession(spawnImpl, runtime, { prompt, working_directory }) {
         prompt: [{ type: "text", text: prompt }],
       });
       text = appendCapture(text, acpText(result));
-      return { text: compactText(text), elapsed_ms: Date.now() - started };
+      return { text: compactText(text), elapsed_ms: Date.now() - started, permission_trace };
     } finally {
       client.terminate();
     }

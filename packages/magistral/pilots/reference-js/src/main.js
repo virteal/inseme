@@ -10,6 +10,7 @@ import {
   probeProviderModels,
   sanitizeNodeForPersistence,
 } from "../../../src/router.js";
+import { invokeAcpStdio } from "./acp-executor.js";
 
 const METRICS_FILE = ".metrics-cache.json";
 const LOG_FILE = ".magistral-traffic.log";
@@ -101,6 +102,12 @@ async function boot() {
   const port = config.runtime?.port || 8082;
   const mapNodes = config.input?.map || [];
   const apiKeys = config.secrets?.API_KEYS || {};
+  // This guards the loopback OpenAI-compatible surface.  It is not a provider
+  // key and must remain deployment-local; the historical value preserves the
+  // developer pilot until a real deployment secret is supplied.
+  const apiToken = String(
+    config.secrets?.MAGISTRAL_API_KEY || apiKeys.MAGISTRAL_API_KEY || "sesame"
+  );
 
   if (!mapNodes || mapNodes.length === 0) {
     console.warn(
@@ -113,6 +120,10 @@ async function boot() {
     map: mapNodes,
     apiKeys,
     log: console.warn,
+    invokeNode: ({ node, payload, headers }) =>
+      node.adapter === "acp_stdio"
+        ? invokeAcpStdio({ node, payload })
+        : fetch(node.url, { method: "POST", headers, body: JSON.stringify(payload) }),
   });
 
   // Hook up persistence
@@ -145,6 +156,8 @@ async function boot() {
     const url = new URL(req.url);
 
     const corsHeaders = new Headers({
+      Server: "Magistral",
+      Link: '</service-info>; rel="describedby"; type="application/json"',
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
@@ -152,6 +165,30 @@ async function boot() {
 
     if (req.method === "OPTIONS") {
       return new Response(null, { headers: corsHeaders });
+    }
+
+    if (url.pathname === "/service-info" && (req.method === "GET" || req.method === "HEAD")) {
+      const body = {
+        protocol: "cogentia.service-identity/v1",
+        service: { id: "magistral", role: "capability-router" },
+        instance: {
+          id: config.runtime?.instance_id || "local:magistral",
+          environment: config.runtime?.environment || "development",
+        },
+        interfaces: [
+          { href: "/v1/models", protocol: "openai-compatible" },
+          { href: "/v1/chat/completions", protocol: "openai-compatible" },
+          { href: "/v1/magistral/metrics", protocol: "magistral/v1" },
+        ],
+        capabilities: mapNodes.map((node) => ({
+          id: node.id,
+          adapter: node.adapter || "http",
+          tier: node.tier,
+        })),
+      };
+      return new Response(req.method === "HEAD" ? null : JSON.stringify(body), {
+        headers: corsHeaders,
+      });
     }
 
     // Helper for serving static files from UI directory
@@ -365,7 +402,7 @@ async function boot() {
     // POST /v1/chat/completions
     if (url.pathname === "/v1/chat/completions" && req.method === "POST") {
       const authHeader = req.headers.get("authorization") || "";
-      if (authHeader !== "Bearer sesame") {
+      if (authHeader !== `Bearer ${apiToken}`) {
         corsHeaders.set("Content-Type", "application/json");
         return new Response(JSON.stringify({ error: "Unauthorized Magistral Access" }), {
           status: 401,

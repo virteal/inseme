@@ -12,7 +12,8 @@
   "type": "module",
   "main": "./src/index.js",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.js",
+    "./accounting/packetAccounting": "./src/accounting/packetAccounting.js"
   },
   "scripts": {
     "test": "node --test test/*.test.js"

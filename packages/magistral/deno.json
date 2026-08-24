@@ -1,0 +1,7 @@
+{
+  "nodeModulesDir": "auto",
+  "imports": {
+    "@inseme/cop-kernel/accounting/packetAccounting": "../cop-kernel/src/accounting/packetAccounting.js",
+    "@inseme/cop-core": "../cop-core/dist/index.js"
+  }
+}

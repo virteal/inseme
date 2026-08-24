@@ -537,6 +537,8 @@ function startServer() {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Server", "Magistral");
+    res.setHeader("Link", '</service-info>; rel="describedby"; type="application/json"');
 
     if (req.method === "OPTIONS") {
       res.writeHead(200);
@@ -546,6 +548,16 @@ function startServer() {
 
     const parsedUrl = new URL(req.url, `http://${req.headers.host || "localhost"}`);
     const pathname = parsedUrl.pathname || "/";
+
+    if ((req.method === "GET" || req.method === "HEAD") && pathname === "/service-info") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      if (req.method === "HEAD") {
+        res.end();
+        return;
+      }
+      res.end(JSON.stringify(magistralServiceInfo()));
+      return;
+    }
 
     if (
       req.method === "GET" &&
@@ -1102,7 +1114,10 @@ function startServer() {
             : [{ role: "user", content: prompt }];
 
         // --- Embedded Magistral routing ---
-        if (isMagistralEnabled() && (ROUTER_ONLY || body.model === "magistral" || body.model === "fractavolta-guide")) {
+        if (
+          isMagistralEnabled() &&
+          (ROUTER_ONLY || body.model === "magistral" || body.model === "fractavolta-guide")
+        ) {
           try {
             const upstreamRes = await routeMagistral({ ...body, messages, stream });
             if (stream) {
@@ -1604,6 +1619,22 @@ function startServer() {
     // Register online
     await registerAiService(AI_PORT, "online");
   });
+}
+
+function magistralServiceInfo() {
+  return {
+    protocol: "cogentia.service-identity/v1",
+    service: { id: "magistral", role: "capability-router" },
+    instance: {
+      id: process.env.COGENTIA_SERVICE_INSTANCE_ID || "local:magistral",
+      environment: process.env.NODE_ENV || "development",
+    },
+    interfaces: [
+      { href: "/health", protocol: "magistral/v1" },
+      { href: "/v1/models", protocol: "openai-compatible" },
+      { href: "/v1/chat/completions", protocol: "openai-compatible" },
+    ],
+  };
 }
 
 async function handleStatus() {

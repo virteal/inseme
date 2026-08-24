@@ -2,6 +2,7 @@
 title: 🌀 MAGISTRAL Protocol
 author: unknown
 date: "2026-06-12"
+last_modified_at: "2026-08-23"
 document_role: source
 document_kind: documentation
 visibility: public
@@ -69,6 +70,31 @@ Defines _how_ to choose the best path (Algorithm).
 ---
 
 ## 🔌 3. Interface Contract (Protocol v1.0)
+
+### Public Guide via ACP (experimental)
+
+The public Guide can use Magistral as its OpenAI-compatible synthesis boundary by setting
+`COGENTIA_GUIDE_MAGISTRAL_URL` and `COGENTIA_GUIDE_MAGISTRAL_API_KEY`. A selected `acp_stdio` node
+then starts a host-local ACP provider in its isolated read-only directory. The Guide does not need
+an Agent CLI Gateway and does not receive the provider's MCP servers implicitly.
+
+Set the matching deployment-local `MAGISTRAL_API_KEY` when starting the pilot. Never commit either
+key or a host-specific ACP command/path; those are runtime configuration, not a portable map.
+
+For a local ThinkPad instance, use the environment-backed `local-codex-acp` map. It launches the
+locally authenticated Codex ACP provider only in a deliberately isolated public working directory:
+
+```powershell
+$env:CODEX_ACP_COMMAND = (Get-Command codex-acp.cmd).Source
+$env:MAGISTRAL_CODEX_ACP_WORKSPACE = "C:\path\to\public-guide-workspace"
+$env:MAGISTRAL_CODEX_ACP_TIER = "fractavolta-guide"
+$env:MAGISTRAL_API_KEY = "<local-loopback-secret>"
+node scripts/launcher.js --pilot pilots/reference-js/src/main.js --blueprint coding --map local-codex-acp
+```
+
+Point the local Guide at `http://127.0.0.1:8082` through `COGENTIA_GUIDE_MAGISTRAL_URL`, and provide
+the same value via `COGENTIA_GUIDE_MAGISTRAL_API_KEY`. The map accepts no ambient MCP servers and
+the ACP executor admits only one-shot read operations under its configured workspace.
 
 ### 3.1. Initialization (Control Plane)
 

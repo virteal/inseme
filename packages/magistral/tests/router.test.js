@@ -152,3 +152,26 @@ test("serializes metrics with map metadata", () => {
   assert.equal(snapshot.nodes[0].successes, 1);
   assert.equal(snapshot.nodes[0].tier, "fast");
 });
+
+test("routes a declared local adapter without requiring an HTTP URL", async () => {
+  const router = createRouter({
+    map: [{ id: "codex-acp", adapter: "acp_stdio", model: "codex", tier: "fast" }],
+    log: () => {},
+    invokeNode: async ({ node, payload }) => {
+      assert.equal(node.adapter, "acp_stdio");
+      assert.equal(payload.model, "codex");
+      return new Response(
+        JSON.stringify({ choices: [{ message: { content: "ACP synthesis" } }] }),
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    },
+  });
+  const response = await router.route({
+    model: "magistral",
+    messages: [{ role: "user", content: "public packet" }],
+  });
+  const body = await response.json();
+  assert.equal(body.choices[0].message.content, "ACP synthesis");
+});
