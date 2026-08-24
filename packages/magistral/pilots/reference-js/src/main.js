@@ -12,6 +12,7 @@ import {
 } from "../../../src/router.js";
 import { invokeAcpStdio } from "./acp-executor.js";
 import { createEmbeddingServiceConfig, handleEmbeddingRequest, publicEmbeddingStatus } from "./embedding-service.js";
+import { createServiceHost } from "../../../../cop-host/src/http/service-host.js";
 
 const METRICS_FILE = ".metrics-cache.json";
 const LOG_FILE = ".magistral-traffic.log";
@@ -109,6 +110,7 @@ async function boot() {
   const apiToken = String(
     config.secrets?.MAGISTRAL_API_KEY || apiKeys.MAGISTRAL_API_KEY || "sesame"
   );
+  const serviceHost = await loadOptionalHttpServices(config.runtime?.http_services || []);
   const embeddingService = createEmbeddingServiceConfig(Deno.env.toObject());
 
   if (!mapNodes || mapNodes.length === 0) {
@@ -155,6 +157,8 @@ async function boot() {
   console.log(`MAGISTRAL_READY: http://${host}:${port}`);
 
   Deno.serve({ port, hostname: host }, async (req) => {
+    const serviceResponse = await serviceHost.handle(req);
+    if (serviceResponse) return serviceResponse;
     const url = new URL(req.url);
 
     const corsHeaders = new Headers({
@@ -465,6 +469,19 @@ async function boot() {
       headers: corsHeaders,
     });
   });
+}
+
+async function loadOptionalHttpServices(serviceIds) {
+  const services = [];
+  for (const serviceId of serviceIds) {
+    if (serviceId === "oleole") {
+      const module = await import("../../../../../apps/oleole/fracta/oleole-server.ts");
+      services.push(module.oleoleHttpService);
+      continue;
+    }
+    throw new Error(`Unknown optional HTTP service: ${serviceId}`);
+  }
+  return createServiceHost(services);
 }
 
 if (import.meta.main) {

@@ -2,15 +2,25 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 import path from "path";
+import process from "node:process";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig(({ mode }) => ({
+function normalizedBasePath(value = "/") {
+  const path = String(value || "/").trim();
+  return `/${path.replace(/^\/+|\/+$/g, "")}${path === "/" ? "" : "/"}`;
+}
+
+export default defineConfig(({ mode }) => {
+  const base = normalizedBasePath(process.env.VITE_BASE_PATH);
+  return {
+  base,
   plugins: [
     react(),
     VitePWA({
       registerType: "autoUpdate",
+      scope: base,
       includeAssets: ["favicon.svg"],
       manifest: {
         name: "Olé Olé",
@@ -19,7 +29,7 @@ export default defineConfig(({ mode }) => ({
         theme_color: "#1a1a1a",
         background_color: "#fbf7f0",
         display: "standalone",
-        start_url: "/",
+        start_url: base,
         lang: "fr",
         icons: [
           {
@@ -46,7 +56,9 @@ export default defineConfig(({ mode }) => ({
     "process.env": {},
   },
   build: {
+    outDir: process.env.VITE_OUT_DIR || "dist",
     sourcemap: true,
     minify: mode === "production" ? "esbuild" : false,
   },
-}));
+};
+});

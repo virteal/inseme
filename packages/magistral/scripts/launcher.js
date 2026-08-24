@@ -52,6 +52,10 @@ const config = {
     port: parseInt(process.env.PORT || "8082", 10),
     host: process.env.HOST || "127.0.0.1",
     log_level: "info",
+    http_services: String(process.env.FRACTA_HTTP_SERVICES || "")
+      .split(",")
+      .map((service) => service.trim())
+      .filter(Boolean),
   },
   input: {
     blueprint: loadJson(blueprintFile),

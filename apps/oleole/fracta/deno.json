@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "@inseme/cop-host/": "../../../packages/cop-host/src/"
+  }
+}
