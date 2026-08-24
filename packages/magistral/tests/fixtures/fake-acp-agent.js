@@ -55,6 +55,17 @@ input.on("line", (line) => {
       params: {
         sessionId: message.params.sessionId,
         update: {
+          sessionUpdate: "session_info_update",
+          title: "private fake system prompt",
+        },
+      },
+    });
+    send({
+      jsonrpc: "2.0",
+      method: "session/update",
+      params: {
+        sessionId: message.params.sessionId,
+        update: {
           sessionUpdate: "agent_thought_chunk",
           content: { type: "text", text: "private fake thought" },
         },

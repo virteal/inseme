@@ -223,7 +223,10 @@ function publicAcpTrace(params = {}) {
     kind,
     tool_call_id: update.toolCallId || null,
     status: update.status || null,
-    title: update.title || update.toolCall?.title || null,
+    // A session-info title can contain the assembled system prompt and public
+    // context. Titles are useful only for a concrete operational tool call.
+    title:
+      update.toolCallId || update.toolCall ? update.title || update.toolCall?.title || null : null,
   };
 }
 
