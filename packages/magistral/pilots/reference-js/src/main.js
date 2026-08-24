@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Magistral Pilot - Native Deno Implementation
  * Imports routing logic from the shared @magistral/core router module.
  */
@@ -11,6 +11,7 @@ import {
   sanitizeNodeForPersistence,
 } from "../../../src/router.js";
 import { invokeAcpStdio } from "./acp-executor.js";
+import { createEmbeddingServiceConfig, handleEmbeddingRequest, publicEmbeddingStatus } from "./embedding-service.js";
 
 const METRICS_FILE = ".metrics-cache.json";
 const LOG_FILE = ".magistral-traffic.log";
@@ -108,6 +109,7 @@ async function boot() {
   const apiToken = String(
     config.secrets?.MAGISTRAL_API_KEY || apiKeys.MAGISTRAL_API_KEY || "sesame"
   );
+  const embeddingService = createEmbeddingServiceConfig(Deno.env.toObject());
 
   if (!mapNodes || mapNodes.length === 0) {
     console.warn(
@@ -178,13 +180,14 @@ async function boot() {
         interfaces: [
           { href: "/v1/models", protocol: "openai-compatible" },
           { href: "/v1/chat/completions", protocol: "openai-compatible" },
+          ...(embeddingService.enabled ? [{ href: "/v1/embeddings", protocol: "openai-compatible" }] : []),
           { href: "/v1/magistral/metrics", protocol: "magistral/v1" },
         ],
         capabilities: mapNodes.map((node) => ({
           id: node.id,
           adapter: node.adapter || "http",
           tier: node.tier,
-        })),
+        })).concat(embeddingService.enabled ? [{ id: "embeddings", adapter: embeddingService.provider, tier: "embedding", ...publicEmbeddingStatus(embeddingService) }] : []),
       };
       return new Response(req.method === "HEAD" ? null : JSON.stringify(body), {
         headers: corsHeaders,
@@ -266,6 +269,23 @@ async function boot() {
       return new Response(JSON.stringify(createMetricsSnapshot(mapNodes, registry, config)), {
         headers: corsHeaders,
       });
+    }
+
+    if (url.pathname === "/v1/magistral/embeddings/status" && req.method === "GET") {
+      corsHeaders.set("Content-Type", "application/json");
+      return new Response(JSON.stringify(publicEmbeddingStatus(embeddingService)), { headers: corsHeaders });
+    }
+
+    if (url.pathname === "/v1/embeddings" && req.method === "POST") {
+      let payload;
+      try {
+        payload = await req.json();
+      } catch {
+        payload = null;
+      }
+      const result = await handleEmbeddingRequest(payload, embeddingService);
+      corsHeaders.set("Content-Type", "application/json");
+      return new Response(JSON.stringify(result.body), { status: result.status, headers: corsHeaders });
     }
 
     // POST /v1/magistral/nodes/:id/disable
