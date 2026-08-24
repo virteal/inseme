@@ -23,7 +23,10 @@ function invokeAcpStdioStream({ node, payload }) {
         payload,
         onSessionUpdate: (params) => {
           const update = params?.update || {};
-          const fragment = extractText(update);
+          // ACP agents can emit private thinking beside user-visible message
+          // chunks.  The public Guide may show that progress exists, but never
+          // its content nor a derived fragment.
+          const fragment = isReasoningUpdate(update) ? "" : extractText(update);
           if (fragment) {
             streamed += fragment;
             emit(null, openAiChunk({ id, model: node.model, content: fragment }));
@@ -130,7 +133,8 @@ async function executeAcpStdio({ node, payload, onSessionUpdate = () => {} }) {
         if (!line) continue;
         const message = JSON.parse(line);
         if (message.method === "session/update") {
-          text += extractText(message.params?.update);
+          const update = message.params?.update;
+          if (!isReasoningUpdate(update)) text += extractText(update);
           onSessionUpdate(message.params);
         } else if (message.method === "session/request_permission") {
           await writer.write(
@@ -205,7 +209,7 @@ function openAiChunk({ id, model, content, finishReason = null }) {
 function publicAcpTrace(params = {}) {
   const update = params.update || {};
   const kind = String(update.sessionUpdate || update.kind || "update");
-  if (/reasoning/i.test(kind)) {
+  if (isReasoningUpdate(update)) {
     return {
       protocol: "magistral.public-trace/v1",
       step: "acp.reasoning",
@@ -221,6 +225,11 @@ function publicAcpTrace(params = {}) {
     status: update.status || null,
     title: update.title || update.toolCall?.title || null,
   };
+}
+
+function isReasoningUpdate(update = {}) {
+  const kind = String(update.sessionUpdate || update.kind || "");
+  return /(?:reasoning|thought)/i.test(kind);
 }
 
 function extractText(value) {

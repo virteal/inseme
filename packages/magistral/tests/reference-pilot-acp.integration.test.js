@@ -106,6 +106,20 @@ test("Deno Magistral pilot routes an authenticated OpenAI request to an ACP stdi
       )
     );
     assert.ok(
+      events.some(
+        (event) =>
+          event.name === "magistral_trace" &&
+          event.data.step === "acp.reasoning" &&
+          event.data.visibility === "withheld"
+      )
+    );
+    assert.equal(
+      events.some((event) =>
+        String(event.data?.choices?.[0]?.delta?.content || "").includes("private fake thought")
+      ),
+      false
+    );
+    assert.ok(
       events.some((event) => event.data?.choices?.[0]?.delta?.content === "fake ACP answer")
     );
     assert.ok(events.some((event) => event.done));
