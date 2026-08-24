@@ -310,6 +310,65 @@ presence/place core           # reuse existing core if present; otherwise small 
 
 Do not create parallel implementations when an existing Inseme core/brique already owns the capability.
 
+### 9.1 FractaTerritorialContext
+
+Olé Olé owns the territorial semantics of a **FractaTerritorialContext**: a bounded, versioned, multi-source projection of the territorially relevant present (and near future) used by maps, conversation, exploration and later by a Corsica Digital Twin.
+
+It is structurally analogous to a Personal Twin's hot context, but it is **not personal-agent memory** and must not be implemented as a generic Cogentia-owned territorial database. Cogentia may provide reusable context/projection primitives; Olé Olé owns the Presence/Place/Presencology meaning, source policies and territorial governance.
+
+Conceptually:
+
+```text
+Presence claims ─────┐
+Places / POI ────────┤
+Presence intents ────┤
+Events ──────────────┤
+Supply / demand ─────┼──► FractaTerritorialContext
+Mobility / flows ────┤          │
+Other territorial ───┘          ├──► map / visual surfaces
+signals                         ├──► John / conversation
+                                ├──► exploration / Revealer
+                                └──► Corsica Digital Twin
+```
+
+Not every source above belongs in the MVP. Presence and Place are the first concrete sources; the others are anticipated extensions.
+
+The context should be a **projection/view over source-owned facts and claims**, not a new god object that becomes the canonical owner of every territorial datum. Source assertions retain provenance, validity interval, precision/confidence and their own lifecycle. Context snapshots select and compose what is relevant for a given spatial, temporal and policy scope.
+
+A useful conceptual snapshot may include:
+
+```yaml
+territorial_context:
+  id: ...
+  version: ...
+  spatial_scope: ...
+  temporal_scope: ...
+  as_of: ...
+  policy_scope: ...
+  sources: ...
+  provenance: ...
+```
+
+This is deliberately not a frozen storage schema. It describes the semantics of a projection.
+
+The first useful implementation can remain implicit: the existing map/time filters plus Presence/Place service queries already form a primitive territorial context. Do not block the MVP on creating a generalized context engine.
+
+The architectural invariant is:
+
+```text
+Cogentia
+  owns reusable context / Twin / capability mechanisms
+
+Olé Olé
+  owns territorial Presence / Place / Presencology semantics
+  and FractaTerritorialContext projections
+
+Corsica Digital Twin
+  consumes territorial projections; it does not redefine their source semantics
+```
+
+This boundary is important for anti-capture and reuse: a future territorial service may reuse Cogentia mechanisms without forcing personal and territorial contexts into one authority or memory domain.
+
 ## 10. Acceptance scenarios
 
 The MVP is implementation-ready when the following scenarios can be automated or manually demonstrated:
@@ -361,6 +420,7 @@ I met someone.
 6. Add intent aggregates and `olé olé` flag without individual exposure.
 7. Harden privacy controls, deletion/revocation, tests and visual identity.
 8. Only then refactor shared packages where demonstrated reuse justifies it.
+9. Treat the resulting map/time/Presence/Place query projection as the first implicit FractaTerritorialContext; generalize only when a second concrete consumer/source requires it.
 
 ## 13. Deferred but anticipated
 
@@ -372,6 +432,7 @@ I met someone.
 - open Presence APIs/MCP tools;
 - federated Place/Presence services;
 - richer territorial-potentiality layers combining Presence, intent, events, supply and demand;
+- explicit/versioned FractaTerritorialContext snapshots when demonstrated consumers require them;
 - contribution of validated local POI corrections back to open commons.
 
 ## 14. Canonical interpretation
@@ -379,3 +440,5 @@ I met someone.
 Olé Olé is a small, concrete demonstrator of Cogentia and Autonomy of Capacity: a territorial service that makes possibilities more perceptible and easier to act upon while leaving human beings in control of their goals, disclosures and choices.
 
 John is not a decorative chatbot attached to the product. The conversation is one surface of the same service capabilities exposed by the map and structured APIs.
+
+The FractaTerritorialContext is the territorial projection layer of this same service: it makes a relevant slice of the territorial present available consistently to human and machine surfaces without confusing the projection with reality, the source data, or personal memory.
