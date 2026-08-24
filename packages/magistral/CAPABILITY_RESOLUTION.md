@@ -4,7 +4,7 @@ subtitle: Generic interface between COP orchestration and heterogeneous work cap
 author: Jean Hugues Noël Robert, baron Mariani
 date: "2026-08-23"
 last_modified_at: "2026-08-24"
-version: "0.2"
+version: "0.3"
 document_role: source
 document_kind: architecture-decision
 visibility: public
@@ -23,6 +23,7 @@ review:
   status: unreviewed
   reviewed_by: []
 changelog:
+  - "v0.3 (2026-08-24) — use-led integration strategy; CapabilityProvider/ExecutionBinding/TransportAdapter layering; Rule of Two; ownership and portable-state versus portable-privilege distinctions."
   - "v0.2 (2026-08-24) — explicit binding to COP Mandated Agent Security; authority-preserving resolution and rebinding requirements."
 ---
 
@@ -204,3 +205,155 @@ A test MUST verify that the client cannot obtain implicit access to the inner ag
 ## 12. Conformance dependency
 
 Any Magistral deployment claiming governed consequential capability resolution SHOULD declare conformance with `cop/mandated-agent-security` and execute the minimum tests defined in `COP_MANDATED_AGENT_SECURITY.md`.
+
+## 13. Use-led integration policy
+
+Magistral MUST NOT accumulate provider integrations merely because implementations appear on the market.
+
+The default sequence is:
+
+```text
+real need
+-> capability already useful in practice
+-> smallest integration that satisfies the need
+-> repeated friction or second real implementation
+-> reusable abstraction
+-> possible promotion toward the stable boundary
+```
+
+Compact rule:
+
+> **Integrate from use; generalize from experience.**
+
+A protocol, framework or vendor is not by itself a reason to enter the core. ACP is an example of the intended direction: a real Codex use preceded the abstraction; the protocol then made that already useful capability more general and replaceable.
+
+The inverse pattern is discouraged:
+
+```text
+new framework
+-> speculative adapter
+-> maintenance burden
+-> search for a use
+```
+
+## 14. Three integration levels
+
+Magistral distinguishes three levels so that portability does not force every rich runtime into the lowest common denominator.
+
+### Level 1 — Capability requirement/provider
+
+COP expresses the capability needed. A `CapabilityProvider` advertises that it can satisfy some class of requirement. Neither side depends on a transport protocol.
+
+### Level 2 — Common execution surface
+
+A common protocol such as ACP, MCP, A2A, HTTP or another negotiated surface MAY bind a provider when it preserves the semantics needed by the actual use.
+
+### Level 3 — Native execution surface
+
+A provider-native API, app server, CLI, SDK or other richer surface MAY be used when a capability that matters in practice cannot be represented adequately at Level 2.
+
+Therefore:
+
+> **Use the most generic surface that preserves the capability actually needed; descend to a vendor-native surface only for demonstrated semantic value.**
+
+This is not vendor avoidance. It is dependency proportionality.
+
+## 15. Provider, binding and adapter
+
+The stable vocabulary SHOULD distinguish the entity providing useful work from the mechanism used to reach it:
+
+```text
+CapabilityRequirement
+        |
+        v
+CapabilityProvider
+        |
+        v
+ExecutionBinding
+        |
+        v
+TransportAdapter
+```
+
+A provider may have several bindings. The same transport adapter may reach several providers. A binding may be replaced without changing the logical requirement or authority chain.
+
+Examples:
+
+```text
+Codex                  = CapabilityProvider
+ACP                    = possible TransportAdapter / execution surface
+Codex native AppServer = possible richer TransportAdapter
+Magistral              = provider + binding resolution
+COP                     = authority / causality / accounting
+```
+
+These examples are informative, not permanent product commitments.
+
+## 16. Rule of Two for core abstractions
+
+A candidate abstraction SHOULD NOT enter the stable core merely because one implementation suggests it.
+
+Default promotion rule:
+
+> **A new abstraction becomes a core candidate when at least two independent real implementations or uses reveal substantially the same need.**
+
+This is a heuristic, not an absolute prohibition. Security invariants, legal constraints or exceptionally costly future incompatibility MAY justify earlier promotion, but the exception SHOULD be documented.
+
+The Rule of Two is intended to resist both premature generalization and accidental vendor-shaped architecture.
+
+## 17. Capability seams and optional semantics
+
+The generic provider seam SHOULD remain deliberately small. Candidate common lifecycle operations include:
+
+```text
+discover
+start
+send / continue
+observe events
+cancel
+dispose
+```
+
+Additional semantics such as checkpoint/resume, fork, structured diffs, rich approvals, artifacts, terminal ownership or provider-specific state SHOULD be represented as negotiated/optional capabilities rather than assumed universal operations until real use proves otherwise.
+
+A common protocol is therefore a projection of a capability, not necessarily its complete representation.
+
+## 18. Ownership is distinct from authority
+
+For every consequential or persistent execution, the architecture SHOULD be able to distinguish at least:
+
+```text
+authority owner   -> source of legitimate authority / Principal and Mandate
+execution owner   -> entity responsible for cancel/dispose lifecycle
+resource owner    -> entity bearing or controlling resource consumption
+runtime owner     -> node/process/provider hosting execution
+artifact owner    -> policy governing durable outputs and retention
+```
+
+These roles MAY coincide but MUST NOT be assumed identical.
+
+In particular, lifecycle ownership MUST NOT imply authority ownership, and provider account ownership MUST NOT silently become Principal authority.
+
+## 19. Continuity state is not authority state
+
+Fork, resume, import and migration MUST preserve a strict distinction:
+
+```text
+portable continuity state != portable privilege
+```
+
+A fork MAY reuse validated conversation or work state. It MUST NOT automatically inherit broader scope, tools, credentials, filesystem rights, budgets or authority merely because those were available to its parent runtime.
+
+Any authority required after migration or fork MUST be re-derived from the governing Mandate and, where local privilege is involved, explicitly rebound.
+
+This extends the anti-capture rule from vendor portability to runtime composition itself.
+
+## 20. Evidence-driven evolution
+
+Magistral SHOULD watch external agent systems primarily as experimental evidence, not as an integration queue.
+
+Useful observations include independently recurring patterns such as durable sessions, event streams, capability discovery, bidirectional approvals, explicit scope, lifecycle ownership, structured cancellation, subagent-provider seams, forks without automatic authority inheritance and protocol capability negotiation.
+
+When a recurring pattern solves a problem already observed in Inseme/COP, it SHOULD be recorded as evidence for an existing or candidate abstraction. When it does not serve an observed need, no implementation obligation follows.
+
+The objective is not to support every agent system. It is to make useful agent systems substitutable where substitution increases the Principal's effective capacity and sovereignty.
