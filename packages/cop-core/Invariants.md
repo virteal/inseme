@@ -3,6 +3,7 @@ canonical_url: https://github.com/JeanHuguesRobert/inseme/blob/main/packages/cop
 author: "Jean Hugues Noël Robert, baron Mariani"
 affiliation: "Institut Mariani / C.O.R.S.I.C.A., 1 cours Paoli, F-20250 Corte, Corsica"
 license: "CC BY-SA 4.0"
+last_modified_at: 2026-08-24
 last_stamped_at: 2026-06-01
 ---
 
@@ -180,6 +181,20 @@ Consequently, for processes that carry real consequences, the presence of explic
 decision Artifacts (see COP/HITL profile) is not optional decoration: it is the necessary anchor
 that preserves imputability, skin in the game, and resistance to diffuse or hidden capture. Without
 such anchors, traceability of the log remains, but accountability dissolves.
+
+---
+
+## 10. Governed Delegation Profiles
+
+COP Core distinguishes protocol invariants from governance profiles. Systems in which an actor exercises consequential capabilities for a principal SHOULD additionally declare conformance with [`COP_MANDATED_AGENT_SECURITY.md`](COP_MANDATED_AGENT_SECURITY.md).
+
+That profile formalizes the Corpus rule:
+
+```text
+operational autonomy != autonomous authority
+```
+
+and specifies mandate-version pinning, non-self-elevation, revocation/recovery semantics and capacity portability. These rules are deliberately profiled first rather than silently promoted to universal COP Core invariants before implementation experience exists.
 
 ---
 
