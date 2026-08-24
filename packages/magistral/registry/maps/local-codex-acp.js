@@ -28,8 +28,27 @@ export function createLocalCodexAcpMap(env = process.env, platform = process.pla
       blueprint_id: "public-guide",
       weight: 1,
       prompt_timeout_ms: boundedTimeout(env.MAGISTRAL_CODEX_ACP_TIMEOUT_MS, 120_000),
+      // The ACP agent is a local subprocess.  Inherited corporate/system
+      // proxies can make its cloud control connection stall even though the
+      // host itself is online.  Keep that dependency explicit: a deployment
+      // that genuinely needs a proxy can opt in with `..._INHERIT_PROXY=1`.
+      env: createAcpEnvironment(env),
     },
   ];
+}
+
+function createAcpEnvironment(env) {
+  if (String(env.MAGISTRAL_CODEX_ACP_INHERIT_PROXY || "") === "1") return {};
+  return {
+    HTTP_PROXY: "",
+    HTTPS_PROXY: "",
+    ALL_PROXY: "",
+    http_proxy: "",
+    https_proxy: "",
+    all_proxy: "",
+    NO_PROXY: "*",
+    no_proxy: "*",
+  };
 }
 
 function resolveLauncher(command, platform) {
