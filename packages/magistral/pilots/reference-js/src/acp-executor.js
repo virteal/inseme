@@ -2,22 +2,43 @@
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
+const providerQueue = createAcpProviderQueue();
 
 export async function invokeAcpStdio({ node, payload }) {
   if (payload.stream) return invokeAcpStdioStream({ node, payload });
-  const { body } = await executeAcpStdio({ node, payload });
-  return new Response(JSON.stringify(body), { headers: { "Content-Type": "application/json" } });
+  const slot = await acquireProviderSlot(node);
+  try {
+    const { body } = await executeAcpStdio({ node, payload });
+    return new Response(JSON.stringify(body), {
+      headers: { "Content-Type": "application/json" },
+    });
+  } finally {
+    slot.release();
+  }
 }
 
 function invokeAcpStdioStream({ node, payload }) {
   const stream = new ReadableStream({
-    start(controller) {
+    async start(controller) {
       const id = `acp-${Date.now().toString(36)}`;
       const emit = (event, data) =>
         controller.enqueue(
-          encoder.encode(`${event ? `event: ${event}\n` : ""}data: ${JSON.stringify(data)}\n\n`)
+          encoder.encode(
+            `${event ? `event: ${event}\n` : ""}data: ${
+              JSON.stringify(data)
+            }\n\n`,
+          ),
         );
       let streamed = "";
+      const slot = await acquireProviderSlot(node);
+      if (slot.queue_position > 0) {
+        emit("magistral_trace", {
+          protocol: "magistral.public-trace/v1",
+          step: "acp.queue",
+          queue_position: slot.queue_position,
+          waited_ms: slot.waited_ms,
+        });
+      }
       executeAcpStdio({
         node,
         payload,
@@ -29,17 +50,26 @@ function invokeAcpStdioStream({ node, payload }) {
           const fragment = isReasoningUpdate(update) ? "" : extractText(update);
           if (fragment) {
             streamed += fragment;
-            emit(null, openAiChunk({ id, model: node.model, content: fragment }));
+            emit(
+              null,
+              openAiChunk({ id, model: node.model, content: fragment }),
+            );
           }
           emit("magistral_trace", publicAcpTrace(params));
         },
       })
         .then(({ body }) => {
           const complete = String(body.choices?.[0]?.message?.content || "");
-          if (complete.startsWith(streamed) && complete.length > streamed.length) {
+          if (
+            complete.startsWith(streamed) && complete.length > streamed.length
+          ) {
             emit(
               null,
-              openAiChunk({ id, model: node.model, content: complete.slice(streamed.length) })
+              openAiChunk({
+                id,
+                model: node.model,
+                content: complete.slice(streamed.length),
+              }),
             );
           }
           emit(
@@ -48,7 +78,7 @@ function invokeAcpStdioStream({ node, payload }) {
               id,
               model: node.model,
               finishReason: body.choices?.[0]?.finish_reason || "stop",
-            })
+            }),
           );
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
           controller.close();
@@ -60,16 +90,68 @@ function invokeAcpStdioStream({ node, payload }) {
             error: String(error?.message || error).slice(0, 240),
           });
           controller.error(error);
+        })
+        .finally(() => {
+          slot.release();
         });
     },
   });
   return new Response(stream, {
-    headers: { "Content-Type": "text/event-stream", "Cache-Control": "no-cache" },
+    headers: {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+    },
   });
 }
 
+/**
+ * ACP coding agents are installed, stateful capabilities.  A provider-level
+ * FIFO queue protects one such installation from competing Guide/HTTP clients;
+ * callers never need to coordinate among themselves.
+ */
+async function acquireProviderSlot(node) {
+  return providerQueue.acquire(node);
+}
+
+export function createAcpProviderQueue() {
+  const providerQueues = new Map();
+  return { acquire };
+
+  async function acquire(node) {
+    const key = String(node.id || `${node.command || "acp"}:${node.cwd || ""}`);
+    let queue = providerQueues.get(key);
+    if (!queue) {
+      queue = { tail: Promise.resolve(), depth: 0 };
+      providerQueues.set(key, queue);
+    }
+    const queuePosition = queue.depth;
+    queue.depth += 1;
+    const startedAt = Date.now();
+    const previous = queue.tail;
+    let releaseGate;
+    const done = new Promise((resolve) => {
+      releaseGate = resolve;
+    });
+    queue.tail = previous.then(() => done);
+    await previous;
+    let released = false;
+    return {
+      queue_position: queuePosition,
+      waited_ms: Date.now() - startedAt,
+      release() {
+        if (released) return;
+        released = true;
+        queue.depth -= 1;
+        releaseGate();
+      },
+    };
+  }
+}
+
 async function executeAcpStdio({ node, payload, onSessionUpdate = () => {} }) {
-  if (!node.command || !node.cwd) throw new Error("acp_stdio_command_and_cwd_required");
+  if (!node.command || !node.cwd) {
+    throw new Error("acp_stdio_command_and_cwd_required");
+  }
   if (!isAbsolutePath(node.command) || !isAbsolutePath(node.cwd)) {
     throw new Error("acp_stdio_requires_absolute_command_and_isolated_cwd");
   }
@@ -113,7 +195,11 @@ async function executeAcpStdio({ node, payload, onSessionUpdate = () => {} }) {
         },
       });
       writer
-        .write(encoder.encode(`${JSON.stringify({ jsonrpc: "2.0", id, method, params })}\n`))
+        .write(
+          encoder.encode(
+            `${JSON.stringify({ jsonrpc: "2.0", id, method, params })}\n`,
+          ),
+        )
         .catch((error) => {
           const entry = pending.get(id);
           pending.delete(id);
@@ -139,14 +225,22 @@ async function executeAcpStdio({ node, payload, onSessionUpdate = () => {} }) {
         } else if (message.method === "session/request_permission") {
           await writer.write(
             encoder.encode(
-              `${JSON.stringify({ jsonrpc: "2.0", id: message.id, result: readOnlyPermission(message.params, node.cwd) })}\n`
-            )
+              `${
+                JSON.stringify({
+                  jsonrpc: "2.0",
+                  id: message.id,
+                  result: readOnlyPermission(message.params, node.cwd),
+                })
+              }\n`,
+            ),
           );
         } else if (message.id !== undefined && pending.has(message.id)) {
           const entry = pending.get(message.id);
           pending.delete(message.id);
           message.error
-            ? entry.reject(new Error(message.error.message || "acp_request_failed"))
+            ? entry.reject(
+              new Error(message.error.message || "acp_request_failed"),
+            )
             : entry.resolve(message.result);
         }
       }
@@ -158,19 +252,29 @@ async function executeAcpStdio({ node, payload, onSessionUpdate = () => {} }) {
       clientCapabilities: {},
       clientInfo: { name: "magistral", version: "1.0.0" },
     });
-    if (init?.protocolVersion !== 1) throw new Error("acp_protocol_version_mismatch");
-    const session = await request("session/new", { cwd: node.cwd, mcpServers: [] });
-    const prompt =
-      payload.messages
-        ?.map((message) => `[${message.role || "user"}] ${String(message.content || "")}`)
-        .join("\n\n") || "";
+    if (init?.protocolVersion !== 1) {
+      throw new Error("acp_protocol_version_mismatch");
+    }
+    const session = await request("session/new", {
+      cwd: node.cwd,
+      mcpServers: [],
+    });
+    const prompt = payload.messages
+      ?.map((message) =>
+        `[${message.role || "user"}] ${String(message.content || "")}`
+      )
+      .join("\n\n") || "";
     const result = await request(
       "session/prompt",
-      { sessionId: session.sessionId, prompt: [{ type: "text", text: prompt }] },
-      promptTimeoutMs
+      {
+        sessionId: session.sessionId,
+        prompt: [{ type: "text", text: prompt }],
+      },
+      promptTimeoutMs,
     );
-    if (init.agentCapabilities?.sessionCapabilities?.close)
+    if (init.agentCapabilities?.sessionCapabilities?.close) {
       await request("session/close", { sessionId: session.sessionId });
+    }
     const body = {
       id: `acp-${Date.now().toString(36)}`,
       object: "chat.completion",
@@ -186,7 +290,9 @@ async function executeAcpStdio({ node, payload, onSessionUpdate = () => {} }) {
     };
     return { body };
   } finally {
-    for (const entry of pending.values()) entry.reject(new Error("acp_connection_closed"));
+    for (const entry of pending.values()) {
+      entry.reject(new Error("acp_connection_closed"));
+    }
     writer.releaseLock();
     child.kill("SIGTERM");
     // npm's Windows .cmd shims may leave their child Node process alive after
@@ -202,7 +308,11 @@ function openAiChunk({ id, model, content, finishReason = null }) {
     object: "chat.completion.chunk",
     created: Math.floor(Date.now() / 1000),
     model,
-    choices: [{ index: 0, delta: content ? { content } : {}, finish_reason: finishReason }],
+    choices: [{
+      index: 0,
+      delta: content ? { content } : {},
+      finish_reason: finishReason,
+    }],
   };
 }
 
@@ -225,8 +335,9 @@ function publicAcpTrace(params = {}) {
     status: update.status || null,
     // A session-info title can contain the assembled system prompt and public
     // context. Titles are useful only for a concrete operational tool call.
-    title:
-      update.toolCallId || update.toolCall ? update.title || update.toolCall?.title || null : null,
+    title: update.toolCallId || update.toolCall
+      ? update.title || update.toolCall?.title || null
+      : null,
   };
 }
 
@@ -245,14 +356,15 @@ function extractText(value) {
 }
 
 function isAbsolutePath(value) {
-  return typeof value === "string" && (/^\//.test(value) || /^[A-Za-z]:[\\/]/.test(value));
+  return typeof value === "string" &&
+    (/^\//.test(value) || /^[A-Za-z]:[\\/]/.test(value));
 }
 
 function readOnlyPermission(params = {}, root) {
   const call = params.toolCall || {};
   const input = call.rawInput || {};
   const option = (params.options || []).find(
-    (item) => item?.kind === "allow_once" && item.optionId
+    (item) => item?.kind === "allow_once" && item.optionId,
   );
   if (
     call.kind !== "execute" ||
@@ -268,34 +380,53 @@ function readOnlyPermission(params = {}, root) {
 function isInsideRoot(candidate, root) {
   if (!isAbsolutePath(candidate) || !isAbsolutePath(root)) return false;
   const normalizedCandidate = candidate.replace(/\\/g, "/").toLowerCase();
-  const normalizedRoot = root.replace(/\\/g, "/").replace(/\/$/, "").toLowerCase();
+  const normalizedRoot = root.replace(/\\/g, "/").replace(/\/$/, "")
+    .toLowerCase();
   return (
-    normalizedCandidate === normalizedRoot || normalizedCandidate.startsWith(`${normalizedRoot}/`)
+    normalizedCandidate === normalizedRoot ||
+    normalizedCandidate.startsWith(`${normalizedRoot}/`)
   );
 }
 
 function isReadCommand(command) {
-  if (typeof command !== "string" || /[|&;><`]|\$\(|\r|\n/.test(command)) return false;
+  if (typeof command !== "string" || /[|&;><`]|\$\(|\r|\n/.test(command)) {
+    return false;
+  }
   const tokens = command.trim().match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g) || [];
   const executable = tokens[0]?.replace(/^['"]|['"]$/g, "").toLowerCase();
   const subcommand = tokens[1]?.toLowerCase();
   if (
-    ["rg", "ls", "dir", "pwd", "type", "head", "tail", "get-childitem", "get-content"].includes(
-      executable
+    [
+      "rg",
+      "ls",
+      "dir",
+      "pwd",
+      "type",
+      "head",
+      "tail",
+      "get-childitem",
+      "get-content",
+    ].includes(
+      executable,
     )
   ) {
-    return executable !== "rg" || !tokens.some((token) => /^--pre(?:=|$)/.test(token));
+    return executable !== "rg" ||
+      !tokens.some((token) => /^--pre(?:=|$)/.test(token));
   }
   return (
     executable === "git" &&
-    ["status", "diff", "log", "show", "branch", "ls-files", "grep"].includes(subcommand) &&
+    ["status", "diff", "log", "show", "branch", "ls-files", "grep"].includes(
+      subcommand,
+    ) &&
     !tokens.some((token) => /^(--ext-diff|--textconv)$/.test(token))
   );
 }
 
 function boundedTimeout(value, fallback) {
   const numeric = Number(value);
-  return Number.isFinite(numeric) ? Math.max(5_000, Math.min(240_000, numeric)) : fallback;
+  return Number.isFinite(numeric)
+    ? Math.max(5_000, Math.min(240_000, numeric))
+    : fallback;
 }
 
 function delay(milliseconds) {
