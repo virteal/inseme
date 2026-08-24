@@ -99,9 +99,10 @@ export async function handleEmbeddingRequest(
       }),
       signal: AbortSignal.timeout(config.timeout_ms),
     });
-  } catch {
+  } catch (error) {
     return failure(503, "embedding_provider_unreachable", config, {
       retryable: true,
+      reason: safeNetworkErrorReason(error),
     });
   }
   if (!response.ok) {
@@ -139,6 +140,14 @@ export async function handleEmbeddingRequest(
       usage: body.usage || null,
     },
   };
+}
+
+function safeNetworkErrorReason(error) {
+  const causeCode = String(error?.cause?.code || "").trim();
+  if (/^[A-Z][A-Z0-9_]{1,63}$/.test(causeCode)) return causeCode;
+  const name = String(error?.name || "").trim();
+  if (/^[A-Za-z][A-Za-z0-9_]{1,63}$/.test(name)) return name;
+  return "network_error";
 }
 
 function failure(status, code, config, extra = {}) {

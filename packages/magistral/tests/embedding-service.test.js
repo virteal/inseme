@@ -54,3 +54,18 @@ test("Deno embedding service exposes safe provider diagnostics", async () => {
     upstream_status: 429,
   });
 });
+
+test("Deno embedding service classifies a safe network failure reason", async () => {
+  const networkError = new TypeError("fetch failed");
+  networkError.cause = { code: "ENETUNREACH" };
+  const result = await handleEmbeddingRequest(
+    { input: "public query" },
+    config,
+    async () => {
+      throw networkError;
+    },
+  );
+  assert.equal(result.status, 503);
+  assert.equal(result.body.error.code, "embedding_provider_unreachable");
+  assert.equal(result.body.error.reason, "ENETUNREACH");
+});
