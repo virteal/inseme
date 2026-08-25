@@ -37,6 +37,20 @@ test("ACP stdio client performs v1 session lifecycle and streams updates", async
       {
         sessionId: session.sessionId,
         update: {
+          sessionUpdate: "session_info_update",
+          title: "private fake system prompt",
+        },
+      },
+      {
+        sessionId: session.sessionId,
+        update: {
+          sessionUpdate: "agent_thought_chunk",
+          content: { type: "text", text: "private fake thought" },
+        },
+      },
+      {
+        sessionId: session.sessionId,
+        update: {
           sessionUpdate: "agent_message_chunk",
           messageId: "message-1",
           content: { type: "text", text: "fake ACP answer" },
