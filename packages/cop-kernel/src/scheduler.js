@@ -17,10 +17,13 @@
  */
 
 import { defaultBus as bus } from "./bus.js";
+import { executeContinuation } from "./continuation.js";
 
 export class COPScheduler {
-  constructor(busInstance = bus) {
+  constructor(busInstance = bus, options = {}) {
     this.bus = busInstance;
+    this.handlerResolver = options.handlerResolver || null;
+    this.readOnlyStore = options.readOnlyStore || null;
     this.pending = new Map(); // continuationId -> { continuation, registeredAt, timeoutId? }
     this.topicBuses = new Map(); // topicId -> SubBus (per-topic isolation for Fractanet)
     this.unsubscribe = null;
@@ -99,6 +102,23 @@ export class COPScheduler {
     this.topicBuses.clear();
 
     console.log("[COPScheduler] Reset for test (timers, pending, topic buses cleared)");
+  }
+
+  /**
+   * Configure the optional execution boundary.  Without a resolver the
+   * scheduler remains a wake-up/publish-only component, as in earlier
+   * profiles.  With one, it executes the designated Step through the handler
+   * supplied by the host (for example Magistral).
+   */
+  setExecutionContext({ handlerResolver = null, readOnlyStore = null } = {}) {
+    this.handlerResolver = handlerResolver;
+    this.readOnlyStore = readOnlyStore;
+    return this;
+  }
+
+  /** Execute a designated continuation immediately and return its local Promise receipt. */
+  async execute(continuation, { triggeringEvent = null, reason = "manual", payload = {} } = {}) {
+    return this._performResumption(continuation, triggeringEvent, reason, payload);
   }
 
   /**
@@ -188,7 +208,7 @@ export class COPScheduler {
     }
   }
 
-  async _performResumption(continuation, triggeringEvent, reason) {
+  async _performResumption(continuation, triggeringEvent, reason, payload = {}) {
     // According to spec §5.5.3, the Scheduler "invokes the designated handler"
     // In this minimal implementation we publish a well-formed resumption message.
     // A real handler runtime would subscribe to this and execute.
@@ -246,7 +266,33 @@ export class COPScheduler {
 
     await effectiveBus.publish(resumeMsg);
 
+    let execution = null;
+    if (this.handlerResolver) {
+      try {
+        execution = await executeContinuation({
+          continuation: finalContinuation,
+          handlerResolver: this.handlerResolver,
+          readOnlyStore: this.readOnlyStore,
+          triggeringEvent,
+          reason: resumeReason,
+          payload,
+        });
+      } catch (error) {
+        await effectiveBus.publish({
+          type: "cop.continuation.execution_failed",
+          source: "cop-scheduler",
+          data: {
+            continuationId: finalContinuation.continuationId,
+            resumeTo: finalContinuation.resumeTo,
+            reason: error?.message || String(error),
+          },
+        });
+        throw error;
+      }
+    }
+
     console.log(`[COPScheduler] Resumed ${finalContinuation.continuationId} (${resumeReason})`);
+    return { continuation: finalContinuation, resumeMessage: resumeMsg, execution };
   }
 
   getPendingContinuations() {

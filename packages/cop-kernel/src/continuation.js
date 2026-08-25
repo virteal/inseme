@@ -389,3 +389,63 @@ export function buildContinuationResumeMessage(params = {}) {
     },
   };
 }
+
+/**
+ * Execute the Step designated by a Continuation.
+ *
+ * This is deliberately a small protocol-level bridge: the continuation stays
+ * immutable, while the selected handler receives its serialized state and may
+ * emit replacement Artifacts (including further continuations) through its
+ * own COP context.  The returned Promise is only a local view of that durable
+ * operation; it is not the continuation's source of truth.
+ */
+export async function executeContinuation(params = {}) {
+  const {
+    continuation,
+    handlerResolver,
+    readOnlyStore = null,
+    triggeringEvent = null,
+    reason = "manual",
+    payload = {},
+  } = params;
+
+  if (!continuation?.continuationId || !continuation?.resumeTo) {
+    throw new Error("executeContinuation: valid continuation with resumeTo is required");
+  }
+  if (typeof handlerResolver !== "function") {
+    throw new TypeError("executeContinuation: handlerResolver is required");
+  }
+
+  const handler = await handlerResolver(continuation.resumeTo, continuation);
+  const invoke =
+    typeof handler === "function"
+      ? handler
+      : typeof handler?.execute === "function"
+        ? handler.execute.bind(handler)
+        : null;
+
+  if (!invoke) {
+    throw new Error(`executeContinuation: no executable handler for ${continuation.resumeTo}`);
+  }
+
+  const resumeMessage = buildContinuationResumeMessage({
+    continuation,
+    triggeringEvent,
+    payload,
+  });
+
+  const result = await invoke({
+    continuation,
+    resumeMessage,
+    triggeringEvent,
+    reason,
+    readOnlyStore,
+  });
+
+  return {
+    continuationId: continuation.continuationId,
+    handler: continuation.resumeTo,
+    resumeMessage,
+    result,
+  };
+}

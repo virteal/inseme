@@ -1,0 +1,59 @@
+{
+  "version": "5",
+  "specifiers": {
+    "npm:node-fetch@3": "3.3.2"
+  },
+  "npm": {
+    "data-uri-to-buffer@4.0.1": {
+      "integrity": "sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A=="
+    },
+    "fetch-blob@3.2.0": {
+      "integrity": "sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==",
+      "dependencies": [
+        "node-domexception",
+        "web-streams-polyfill"
+      ]
+    },
+    "formdata-polyfill@4.0.10": {
+      "integrity": "sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==",
+      "dependencies": [
+        "fetch-blob"
+      ]
+    },
+    "node-domexception@1.0.0": {
+      "integrity": "sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==",
+      "deprecated": true
+    },
+    "node-fetch@3.3.2": {
+      "integrity": "sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==",
+      "dependencies": [
+        "data-uri-to-buffer",
+        "fetch-blob",
+        "formdata-polyfill"
+      ]
+    },
+    "web-streams-polyfill@3.3.3": {
+      "integrity": "sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw=="
+    }
+  },
+  "redirects": {
+    "https://esm.sh/@supabase/supabase-js@2": "https://esm.sh/@supabase/supabase-js@2.84.0"
+  },
+  "remote": {
+    "https://esm.sh/@supabase/auth-js@2.84.0/denonext/auth-js.mjs": "61e3b0ad4ad68e2aa3ce0bb83c1084caecc6899cdc9b9e4b230212f8e0c44615",
+    "https://esm.sh/@supabase/functions-js@2.84.0/denonext/functions-js.mjs": "016355f24757e593e29ae3347332b30049a8f2f6b55bd7e7a2caf7a577696f85",
+    "https://esm.sh/@supabase/postgrest-js@2.84.0/denonext/postgrest-js.mjs": "78de00f3fca3c53f81c5765d0b960e01718a0e1164728e60b835299542fbb0d2",
+    "https://esm.sh/@supabase/realtime-js@2.84.0/denonext/realtime-js.mjs": "dccd1e457b9151c162ad84985eaa76075a59250cdd36c244872d14b80a55ed25",
+    "https://esm.sh/@supabase/storage-js@2.84.0/denonext/storage-js.mjs": "ef21eb110d5b1c9586f6acaa2070706bd7b9f3799a8f14f262a36f85ee7bb13e",
+    "https://esm.sh/@supabase/supabase-js@2.84.0": "4a536f134c4bae61c5ec9d2f849c0bafc40c7ee7e85ca61f075c016fab17a693",
+    "https://esm.sh/@supabase/supabase-js@2.84.0/denonext/supabase-js.mjs": "78718e70577f3505e37b515ca7983ac61689864180b9e2cfb130486252919876",
+    "https://esm.sh/tslib@2.8.1/denonext/tslib.mjs": "ebce3cd5facb654623020337f867b426ba95f71596ba87acc9e6c6f4e55905ca"
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:node-fetch@3"
+      ]
+    }
+  }
+}
