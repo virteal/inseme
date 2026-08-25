@@ -12,15 +12,27 @@ test("ACP provider queue grants one FIFO slot at a time per installed agent", as
     secondGranted = true;
   });
   await new Promise((resolve) => setTimeout(resolve, 20));
-  assert.equal(
-    secondGranted,
-    false,
-    "second client must wait for the provider slot",
-  );
+  assert.equal(secondGranted, false, "second client must wait for the provider slot");
   first.release();
   const second = await secondPromise;
   assert.equal(second.queue_position, 1);
   assert.ok(second.waited_ms >= 15);
+  second.release();
+});
+
+test("ACP provider queue announces a queued client before its slot is granted", async () => {
+  const queue = createAcpProviderQueue();
+  const node = { id: "local-codex-acp" };
+  const first = await queue.acquire(node);
+  let announcement;
+  const secondPromise = queue.acquire(node, {
+    onEnqueued: (event) => {
+      announcement = event;
+    },
+  });
+  assert.deepEqual(announcement, { queue_position: 1 });
+  first.release();
+  const second = await secondPromise;
   second.release();
 });
 
