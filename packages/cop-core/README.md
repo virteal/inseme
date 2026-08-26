@@ -130,25 +130,57 @@ See **`invariants.md`** for the formal definition.
 
 ---
 
-## Trust Domains and Proportionate Security
+## Trust Domains, Measured Risk, and Proportionate Security
 
-COP does not require one globally maximal security regime. Concrete implementations MAY define
-**trust domains** in which transport and endpoint membership are already controlled. A Tailscale VPN
-is a practical example: inside such a domain, additional transport authentication or encryption
-layers may add little value for low-STAKE, reversible operations because mandates, budgets,
-traceability, and recovery already constrain the damage.
+COP does not require one globally maximal security regime and does not treat **minimum risk** as an
+objective in itself. Concrete implementations MAY define **trust domains** in which transport and
+endpoint membership are already controlled. A Tailscale VPN is a practical example: inside such a
+domain, additional transport authentication or encryption layers may add little value for Acts with
+small Exposure, cheap recovery and low uncontrolled propagation because mandates, budgets,
+traceability and recovery already bound the plausible consequences.
 
 This is not a relaxation of identity or causal provenance. Trust-domain membership answers a network
 question; it does not establish the LogicalAgent, mandate, intent, or causal origin of a COP Act.
 
-Implementations SHOULD therefore strengthen controls progressively when crossing trust boundaries or
-when STAKE, irreversibility, exposure, fraud potential, or recovery cost increase. Low-STAKE,
-easily reversible acts SHOULD remain compatible with optimistic execution rather than being burdened
-by preventive controls whose cost exceeds plausible detection and recovery costs.
+Implementations SHOULD apply the Corpus **Measured Risk** doctrine: strengthen controls when the
+consequence profile warrants them, considering materially relevant dimensions such as:
+
+```text
+Exposure / blast radius
+uncertainty and tail risk
+possible propagation
+OptionLoss
+third-party / protected-interest impact
+Reversibility Envelope
+compensation / restitution / repair paths
+recovery cost and possible residue
+```
+
+Reversibility is not Boolean. A locally hard-to-undo Act can be acceptable when Exposure is tiny and
+repair cheap; a technically revertible Act can require strong ex-ante control when it propagates,
+discloses protected information, affects third parties, or closes important options.
+
+Low-Exposure, cheaply recoverable Acts SHOULD remain compatible with optimistic execution rather
+than being burdened by preventive controls whose cost exceeds their plausible benefit. Conversely,
+positive expected value MUST NOT create authority or justify exporting loss across Principal
+boundaries.
 
 A useful implementation principle is:
 
-> **Keep transport friction proportional to consequence; keep identity and causal lineage durable.**
+> **Keep security friction proportional to the measured consequence profile; keep identity, mandate and causal lineage durable.**
+
+And for experimentation:
+
+> **Take the smallest sufficient risk for useful progress, not the smallest attainable risk regardless of usefulness.**
+
+See:
+
+- [`COP_MANDATED_AGENT_SECURITY.md`](COP_MANDATED_AGENT_SECURITY.md) for normative authority,
+  Measured Risk and recovery semantics;
+- [Inseme issue #51](https://github.com/JeanHuguesRobert/inseme/issues/51) for the experimental
+  `Exposure` representation;
+- [Cogentia Measured Risk](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/measured_risk.md)
+  for the source doctrine.
 
 ---
 
