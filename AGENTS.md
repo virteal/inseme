@@ -62,14 +62,36 @@ Principal
 Consequential capabilities additionally require the applicable budget/resource discipline and
 proportional trace regime.
 
-**Irreversibility rule (binding):** the more irreversible or high-effect an intended change is, the
-more strictly the associated Acts must be checked **before** execution against a well-identified
-**Mandate** and **Budget** (resource / effect ceiling), and the stronger the **Trace / Imputation**
-must be. Reversible in-scope micro-acts may proceed under a standing mandate without ceremony;
-irreversible or hard-to-undo acts require ex ante filtering (and human principal validation when
-listed under §9). Skills and agents must not widen mandate, budget, disclosure, or effect ceiling
-(see also `cogentia/docs/agent-skills-contract.md`, digital-twin agile roadmap, barons-Mariani agile
-second method). Twin surface restatement: `research/personal_twin_access_policy.md` §2.2bis.
+**Measured Risk rule (binding):** Inseme does **not** optimize for minimum risk as an end in itself.
+Useful transformation and Reality Tests may deliberately accept uncertainty and bounded loss when
+that risk buys enough value, learning, optionality or capability. Before a consequential Act, judge
+risk against the objective and at least the material parts of:
+
+```text
+Exposure / blast radius
+possible propagation and OptionLoss
+who receives gains and who bears possible losses
+Reversibility Envelope
+compensation / rectification / restitution / repair paths
+recovery cost and possible residue
+Mandate / rights / hard constraints
+```
+
+Reversibility is not Boolean. A locally hard-to-undo Act may be admissible when Exposure is tiny and
+repair cheap; a technically revertible Act may require stronger ex-ante control when it propagates,
+affects third parties, destroys important options, or leaves expensive residue.
+
+Agents SHOULD therefore prefer the **smallest sufficient risk** for useful progress, not the smallest
+attainable risk regardless of usefulness. `Measured` does not require fake numerical precision:
+qualitative bounds, explicit unknowns and scenario classes are legitimate. Positive expected value
+never creates authority, and losses MUST NOT be silently externalized across Principal boundaries.
+
+When actual Exposure exceeds the authorized envelope, a recovery path disappears, or material
+third-party impact appears, stop, reduce scope, escalate, or enter the applicable damage-control
+regime. Skills and agents must not widen mandate, budget, disclosure, Exposure or effect ceiling.
+
+Canonical source: `cogentia/research/measured_risk.md`. COP Exposure integration is tracked in
+[#51](https://github.com/JeanHuguesRobert/inseme/issues/51).
 
 Use Issue #17 as the JHN vertical-slice epic and Issue #31 as the immediate COP semantic integration
 track. The scoped runtime instructions in `apps/platform/mcp/cop/AGENTS.md` define the current
@@ -131,7 +153,7 @@ Current COP implementation priority remains especially:
 
 - `packages/cop-core` — protocol, data model, invariants, interfaces;
 - `packages/cop-kernel` — reference runtime / implementation layer;
-- `packages/cop-host` — hosting and brique integration surface;
+- `packages/cop-host` — platform integration surface;
 - `apps/platform/mcp/cop` — first JHN governed runtime slice;
 - `cop-cli`, `cop-chat`, and future adapters — operational profiles or surfaces.
 
@@ -155,7 +177,8 @@ A good issue should state:
 - target files or packages;
 - problem or opportunity;
 - proposed change;
-- risks;
+- expected value / learning where the work is exploratory;
+- known risks, Exposure and recovery concerns;
 - expected closure condition;
 - agent-resumable next step.
 
@@ -168,14 +191,15 @@ Do not expand the scope silently. If the work reveals a new problem, create or p
 Current solo-corpus rule: write directly to the default branch unless Jean Hugues Robert explicitly
 authorizes a branch or a pull request.
 
-This repository follows **Optimistic Mainline Governance** by reference:
+This repository follows **Optimistic Mainline Governance** and **Measured Risk** by reference:
 
 - [`cogentia/AGENTS.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/AGENTS.md)
 - [`cogentia/research/optimistic_mainline_governance.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/optimistic_mainline_governance.md)
+- [`cogentia/research/measured_risk.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/measured_risk.md)
 
-Direct-main work remains legitimate only when scoped, reversible, inspectable by diff and reported.
-Branches or PRs are exceptions when they materially improve safety, review or external
-collaboration.
+Direct-main work remains legitimate when scoped, inspectable by diff, reported, and inside a
+Measured Risk envelope with a credible correction/recovery path. Branches or PRs are exceptions
+when isolation materially improves the Exposure, recovery, review or collaboration profile.
 
 Avoid mixing protocol changes, runtime changes, UI changes, documentation updates, refactors and
 generated files unless the coupling is necessary and explained.
@@ -243,8 +267,9 @@ At minimum, report:
 - files intentionally not tested;
 - assumptions requiring human review.
 
-If no tests exist, say so and propose the smallest conformance or regression test that would reduce
-risk.
+If no tests exist, say so and propose the smallest **sufficient** conformance or regression test that
+can materially discriminate between the live hypotheses while keeping Exposure proportionate.
+Do not minimize test risk so far that the test ceases to provide useful evidence.
 
 For the JHN vertical slice, prefer integration tests that demonstrate governed real Acts rather than
 only conversational quality.
@@ -261,12 +286,14 @@ When making decisions, state:
 - which issue or document it serves;
 - what evidence supports it;
 - what remains uncertain;
-- what could break.
+- what could break;
+- for material Acts, what was put at stake and what recovery path exists.
 
 For consequential execution, keep material actor / `HandlerInstance`, `LogicalAgent`, Principal,
 Mandate, CapabilityInvocation, Act, evidence/effect and Imputation distinguishable where applicable.
 
-Do not conceal uncertainty behind confident prose.
+Do not conceal uncertainty behind confident prose. Do not manufacture numeric risk estimates when
+only qualitative bounds or explicit unknowns are defensible.
 
 ---
 
@@ -278,14 +305,17 @@ Stop and request human validation when a change affects:
 - public doctrine or institutional positioning;
 - licensing;
 - security model;
-- irreversible data migrations;
+- destructive or hard-to-recover data migrations;
 - naming of major concepts;
 - deletion of documents or package structure;
 - anything likely to affect several repositories.
 
-A valid explicit ongoing mandate may cover ordinary in-scope reversible acts; use judgment rather
-than adding approval ceremony to every micro-action. Human decision artifacts remain part of the
-governance model.
+A valid explicit ongoing mandate may cover ordinary in-scope Acts whose Measured Risk fits the
+standing envelope; use judgment rather than adding approval ceremony to every micro-action. Human
+decision artifacts remain part of the governance model.
+
+Human validation is not a substitute for measuring the consequence profile, and Measured Risk is
+not a substitute for authority.
 
 ---
 
@@ -303,7 +333,9 @@ Also inspect, when present:
 - `ROADMAP-TECH.md`;
 - [`cogentia/AGENTS.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/AGENTS.md);
 - [`cogentia/research/agent_configuration_layer.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/agent_configuration_layer.md);
-- [`cogentia/research/optimistic_mainline_governance.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/optimistic_mainline_governance.md).
+- [`cogentia/research/optimistic_mainline_governance.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/optimistic_mainline_governance.md);
+- [`cogentia/research/measured_risk.md`](https://github.com/JeanHuguesRobert/cogentia/blob/main/research/measured_risk.md);
+- [Inseme #51 — Exposure and Measured Risk](https://github.com/JeanHuguesRobert/inseme/issues/51).
 
 If these files disagree with this document, preserve the conflict and report it. Do not silently
 choose one.
@@ -318,11 +350,13 @@ Every substantial agent contribution should end with:
 Issue:
 Files changed:
 Tests run:
-Known risks:
-Reversibility:
+Expected value / reason:
+Known risks / observed Exposure:
+Recovery / correction path:
+Residue or unresolved risk:
 Next step:
 Human validation needed: yes/no
 ```
 
 This keeps multi-agent work reviewable, resumable, and compatible with the Cogentia / COP
-traceability doctrine.
+traceability and Measured Risk doctrine.
