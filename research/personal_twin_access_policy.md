@@ -108,35 +108,38 @@ Until a dedicated `owner_subject_id` field exists, document transitional rule:
 **Delegates** never get a silent superset of owner; each capability is **mandate-scoped** and
 traceable (COP Event / CapabilityInvocation).
 
-### 2.2bis Irreversibility → pre-act mandate, budget, and proportional trace (general rule)
+### 2.2bis Measured Risk → Exposure, recovery envelopes, and pre-act mandate (general rule)
 
 This is **not** a special “extra confirm for email” product quirk. It is the same regime as COP /
-second-method / skills contracts, restated for the twin surface.
+second-method / skills contracts under the **Measured Risk doctrine**
+(`cogentia/research/measured_risk.md`), restated for the twin surface.
 
 ```text
-The more irreversible (or high-effect / high-cost) an intended change is,
+The greater the external Exposure or the costlier the recovery path,
 the more the associated Acts must be:
-  (1) checked against a well-identified Mandate  BEFORE execution
-  (2) checked against applicable Budget / resource ceiling  BEFORE execution
-  (3) recorded under a proportional Trace / Imputation regime  (stronger when costlier to undo)
+  (1) checked against a well-identified Mandate BEFORE execution
+  (2) checked against applicable Budget / Exposure ceiling BEFORE execution
+  (3) recorded under a proportional Trace / Imputation regime
+  (4) executed with clear recovery paths (reversal, compensation, rectification, repair, residue)
 ```
 
-| Regime                                | When                                                                           | What agents/tools must do                                                                         |
-| ------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
-| **Reversible, in-scope, low effect**  | Local UI, drafts, dry-runs, reversible config                                  | Act under standing mandate; light trace OK; no approval theater for every micro-step              |
-| **Consequential / costly / external** | Send mail, public post, spend quota, external write                            | **Pre-act:** valid mandate + budget/effect ceiling; **then** Act; **then** proportional trace     |
-| **Irreversible or hard to undo**      | Destructive migration, deletion, commitment-like statements, one-way publishes | **Filter before action** (ex ante precaution); human principal when required; full governed chain |
+| Regime                                         | When                                                                | What agents/tools must do                                                                                       |
+| ---------------------------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Bounded Exposure, within recovery envelope** | Local UI, drafts, dry-runs, reversible code, internal tests         | **Act under standing mandate without approval theater**; preserve human attention budget; light trace OK        |
+| **Consequential / external Exposure**          | Send mail, public post, spend quota, external write                 | **Pre-act:** valid mandate + Exposure/budget ceiling; **then** Act; **then** proportional trace + recovery path |
+| **Hard boundary / irreversible externalities** | Destructive deletion, external legal commitments, one-way publishes | **Filter before action** (escalate via Continuation to human principal); full governed chain                    |
 
 Canonical pointers (already in corpus — this subsection only makes them **hard to miss** on the twin
 access path):
 
-| Source                                        | Statement                                                                                                                                        |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `inseme/AGENTS.md`                            | Governed chain Principal→…→Act→Trace→Imputation; consequential caps need budget + proportional trace; irreversible migrations → human validation |
-| `cogentia/docs/digital-twin-agile-roadmap.md` | _When the error is irreversible, filter before action. When the trial is reversible, learn by traceable action._                                 |
-| `barons-Mariani/research/agile.md`            | Irreversible → strong ex ante precaution; reversible → disciplined, traceable experimentation                                                    |
-| `cogentia/docs/agent-skills-contract.md`      | Skills must not widen mandate, budget, disclosure, or effect ceiling (#79)                                                                       |
-| COP `governed-act` / Identity profile         | Mandate explicit; capability ≠ authorization; authorization ≠ execution                                                                          |
+| Source                                        | Statement                                                                                                                               |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `cogentia/research/measured_risk.md`          | Govern for bounded value creation, learning, and recovery rather than risk minimization (#120)                                          |
+| `inseme/AGENTS.md`                            | Governed chain Principal→…→Act→Trace→Imputation; Measured Risk rule; consequential caps need budget + proportional trace                |
+| `cogentia/docs/digital-twin-agile-roadmap.md` | _When exposure crosses hard boundaries, filter before action. When exposure is bounded, learn by traceable action under Measured Risk._ |
+| `barons-Mariani/research/agile.md`            | Measured Risk: bounded exposure, recovery envelopes (compensation/repair), and human attention preservation                             |
+| `cogentia/docs/agent-skills-contract.md`      | Skills must not widen mandate, budget, disclosure, or effect ceiling (#79)                                                              |
+| COP `governed-act` / Identity profile         | Mandate explicit; capability ≠ authorization; authorization ≠ execution                                                                 |
 
 **UI “extra confirm”** (e.g. before external mail) is only an **affordance** when it helps enforce
 pre-act checks — not a substitute for mandate/budget/trace, and not required for every reversible
