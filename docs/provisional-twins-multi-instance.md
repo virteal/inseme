@@ -119,7 +119,53 @@ Provisional Twin (status: 'provisional', principal_id: null)
 
 ---
 
-## 5. Promotion (L0–L4) & Hydration (H0–H3) Dimensions
+## 5. Relational Layer: Cogentigram, Relatogram & Cognitive Interpreter
+
+The multi-twin ecosystem connects individual representations via explicit relational primitives
+defined in Cogentia research:
+
+```text
+┌───────────────────────────┐                     ┌───────────────────────────┐
+│       Twin A (Host)       │                     │    Twin B (Provisional)   │
+│  Cogentigram_A (Internal) │                     │  Cogentigram_B (Internal) │
+└─────────────┬─────────────┘                     └─────────────┬─────────────┘
+              │                                                 │
+              └────────────────► ┌─────────────┐ ◄──────────────┘
+                                 │ Relatogram  │
+                                 │   R_AB(t)   │
+                                 └──────┬──────┘
+                                        │
+                                        ▼
+                           ┌─────────────────────────┐
+                           │   Cognitive Interpreter │
+                           │  (Impedance Matching)   │
+                           └─────────────────────────┘
+```
+
+1. **Cogentigram vs. Relatogram:**
+   - A **Cogentigram** models the intrinsic cognitive structure and beliefs of a single Twin. For a
+     Provisional Twin, this is initially sparse and bounded by ingested `PublicTrace` evidence
+     ($H_1$–$H_2$).
+   - A **Relatogram ($R_{AB}(t)$)** models the **interface and accumulated interaction history
+     between two specific Twins** ($A$ and $B$). It is not a unilateral dossier of $B$ stored by
+     $A$; it records bidirectional communication parameters:
+     - Established shared vocabulary and local definitions.
+     - Asymmetric cognitive impedance ($Z(A \rightarrow B) \neq Z(B \rightarrow A)$).
+     - **Successful repair history:** prior misunderstandings and the exact reformulations that
+       successfully resolved them.
+2. **Cognitive Interpreter across Multi-Instance Nodes:**
+   - The Cognitive Interpreter uses the Relatogram to adapt representations (granularity,
+     vocabulary, intermediate reasoning steps) during agent-to-agent exchanges (e.g. Agent John
+     interacting with a provisional municipal twin in Olé Olé), ensuring semantic fidelity while
+     minimizing communication impedance.
+3. **Identity & Relational Persistence:**
+   - When a Provisional Twin is claimed and promoted ($L_0 \rightarrow L_4$), its accumulated
+     Relatograms with sibling and host twins survive the infrastructure migration, preserving
+     relational continuity.
+
+---
+
+## 6. Promotion (L0–L4) & Hydration (H0–H3) Dimensions
 
 ### Infrastructure Promotion Levels
 

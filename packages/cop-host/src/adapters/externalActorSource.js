@@ -99,6 +99,141 @@ export class MockExternalActorSource extends ExternalActorSource {
 }
 
 /**
+ * Official X/Twitter API v2 Adapter using Bearer Token authentication.
+ */
+export class XApiExternalActorSource extends ExternalActorSource {
+  constructor(options = {}) {
+    super("x");
+    this.bearerToken =
+      options.bearerToken ||
+      (typeof process !== "undefined" &&
+        (process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN)) ||
+      null;
+    this.baseUrl = options.baseUrl || "https://api.twitter.com/2";
+  }
+
+  async _fetch(endpoint, params = {}) {
+    if (!this.bearerToken) {
+      throw new Error(
+        "XApiExternalActorSource requires a Bearer Token (X_BEARER_TOKEN or TWITTER_BEARER_TOKEN)."
+      );
+    }
+    const url = new URL(`${this.baseUrl}${endpoint}`);
+    for (const [k, v] of Object.entries(params)) {
+      if (v !== undefined && v !== null) {
+        url.searchParams.set(k, String(v));
+      }
+    }
+    const res = await fetch(url.toString(), {
+      headers: {
+        Authorization: `Bearer ${this.bearerToken}`,
+        "User-Agent": "Inseme-ProvisionalTwins-Bootstrap/1.0",
+      },
+    });
+
+    if (!res.ok) {
+      const errBody = await res.text();
+      throw new Error(`X API error HTTP ${res.status}: ${errBody}`);
+    }
+    return res.json();
+  }
+
+  async resolveUserByUsername(username) {
+    const cleanUsername = String(username).replace(/^@/, "").trim();
+    const data = await this._fetch(`/users/by/username/${cleanUsername}`, {
+      "user.fields": "description,name,profile_image_url,public_metrics,url,username,verified",
+    });
+    if (!data?.data) {
+      throw new Error(`X user not found: @${cleanUsername}`);
+    }
+    const u = data.data;
+    return {
+      provider: "x",
+      provider_subject_id: u.id,
+      handle: u.username,
+      display_name: u.name,
+      bio: u.description || null,
+      profile_image_url: u.profile_image_url || null,
+      metrics: u.public_metrics || {},
+      raw: u,
+    };
+  }
+
+  async enumerate(seed = "suvranu", cursor = null) {
+    let seedUserId = seed;
+    if (isNaN(Number(seed))) {
+      const seedUser = await this.resolveUserByUsername(seed);
+      seedUserId = seedUser.provider_subject_id;
+    }
+
+    const params = {
+      max_results: 100,
+      "user.fields": "description,name,profile_image_url,public_metrics,url,username,verified",
+    };
+    if (cursor) params.pagination_token = cursor;
+
+    const data = await this._fetch(`/users/${seedUserId}/following`, params);
+    const rawList = data?.data || [];
+    const actors = rawList.map((u) => ({
+      provider: "x",
+      provider_subject_id: u.id,
+      handle: u.username,
+      display_name: u.name,
+      bio: u.description || null,
+      profile_image_url: u.profile_image_url || null,
+      metrics: u.public_metrics || {},
+      raw: u,
+    }));
+
+    const nextCursor = data?.meta?.next_token || null;
+    return { actors, nextCursor };
+  }
+
+  async resolveActor(providerSubjectId) {
+    const data = await this._fetch(`/users/${providerSubjectId}`, {
+      "user.fields": "description,name,profile_image_url,public_metrics,url,username,verified",
+    });
+    if (!data?.data) {
+      throw new Error(`X actor not found for ID: ${providerSubjectId}`);
+    }
+    const u = data.data;
+    return {
+      provider: "x",
+      provider_subject_id: u.id,
+      handle: u.username,
+      display_name: u.name,
+      bio: u.description || null,
+      profile_image_url: u.profile_image_url || null,
+      metrics: u.public_metrics || {},
+      raw: u,
+    };
+  }
+
+  async fetchRecentTraces(providerSubjectId, options = {}) {
+    const params = {
+      max_results: Math.min(options.limit || 50, 100),
+      "tweet.fields": "created_at,public_metrics,text,entities,conversation_id",
+    };
+    if (options.cursor) params.pagination_token = options.cursor;
+    if (options.since) params.start_time = new Date(options.since).toISOString();
+
+    const data = await this._fetch(`/users/${providerSubjectId}/tweets`, params);
+    const rawTweets = data?.data || [];
+    const traces = rawTweets.map((t) => ({
+      trace_id: t.id,
+      provider: "x",
+      provider_subject_id: providerSubjectId,
+      content: t.text,
+      published_at: t.created_at,
+      metrics: t.public_metrics || {},
+      raw: t,
+    }));
+
+    return { traces, nextCursor: data?.meta?.next_token || null };
+  }
+}
+
+/**
  * In-memory Store Helper for Provisional Twins & External Identities.
  * Mimics Postgres/Supabase tables for deterministic, zero-network unit tests.
  */
