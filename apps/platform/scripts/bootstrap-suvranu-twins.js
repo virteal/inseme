@@ -17,6 +17,7 @@ import { resolve } from "path";
 import {
   XApiExternalActorSource,
   MockExternalActorSource,
+  TwitterArchiveExternalActorSource,
   ensureProvisionalTwin,
   hydrateProvisionalTwin,
 } from "../../../packages/cop-host/src/adapters/externalActorSource.js";
@@ -26,6 +27,8 @@ config({ path: resolve(process.cwd(), "apps/platform/.env") });
 
 const args = process.argv.slice(2);
 const isMock = args.includes("--mock");
+const archiveIndex = args.indexOf("--archive");
+const archivePath = archiveIndex !== -1 && args[archiveIndex + 1] ? args[archiveIndex + 1] : null;
 const seedIndex = args.indexOf("--seed");
 const seedHandle = seedIndex !== -1 && args[seedIndex + 1] ? args[seedIndex + 1] : "suvranu";
 const provisionIndex = args.indexOf("--provision");
@@ -39,7 +42,10 @@ const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabase
 
 // Adapter selection
 let adapter;
-if (isMock) {
+if (archivePath) {
+  console.log(`📦 Loading Twitter/X Archive from: ${archivePath}...`);
+  adapter = new TwitterArchiveExternalActorSource({ archivePath });
+} else if (isMock) {
   console.log("🧪 Using MockExternalActorSource with Corsican seed fixtures...");
   adapter = new MockExternalActorSource("x", {
     actors: {

@@ -234,6 +234,127 @@ export class XApiExternalActorSource extends ExternalActorSource {
 }
 
 /**
+ * Twitter / X Archive File Adapter (parses following.js, follower.js from account archive zip/folder).
+ */
+export class TwitterArchiveExternalActorSource extends ExternalActorSource {
+  constructor(options = {}) {
+    super("x");
+    this.archivePath = options.archivePath || null;
+    this.following = new Map();
+    this.followers = new Map();
+    this.mutuals = new Set();
+    this._loaded = false;
+  }
+
+  _parseJsFile(filePath) {
+    try {
+      // Dynamic import of fs/path for isomorphic safety
+      const fs = globalThis.fs || (typeof process !== "undefined" ? require("node:fs") : null);
+      if (!fs || !fs.existsSync(filePath)) return [];
+      const content = fs.readFileSync(filePath, "utf-8");
+      const jsonStr = content
+        .replace(/^window\.YTD\.[a-zA-Z0-9_]+\.part[0-9]+\s*=\s*/, "")
+        .trim()
+        .replace(/;$/, "");
+      return JSON.parse(jsonStr);
+    } catch (_e) {
+      return [];
+    }
+  }
+
+  load() {
+    if (this._loaded) return;
+    if (!this.archivePath) return;
+
+    const path = globalThis.path || (typeof process !== "undefined" ? require("node:path") : null);
+    const fs = globalThis.fs || (typeof process !== "undefined" ? require("node:fs") : null);
+    if (!path || !fs) return;
+
+    let basePath = this.archivePath;
+    if (fs.existsSync(path.join(basePath, "data"))) {
+      basePath = path.join(basePath, "data");
+    }
+
+    const followingRaw = this._parseJsFile(path.join(basePath, "following.js"));
+    const followerRaw = this._parseJsFile(path.join(basePath, "follower.js"));
+
+    for (const item of followingRaw) {
+      const f = item.following || item;
+      const accountId = f.accountId || f.id;
+      if (accountId) {
+        this.following.set(String(accountId), {
+          provider: "x",
+          provider_subject_id: String(accountId),
+          user_url: f.userUrl || `https://x.com/i/user/${accountId}`,
+        });
+      }
+    }
+
+    for (const item of followerRaw) {
+      const f = item.follower || item;
+      const accountId = f.accountId || f.id;
+      if (accountId) {
+        this.followers.set(String(accountId), {
+          provider: "x",
+          provider_subject_id: String(accountId),
+          user_url: f.userUrl || `https://x.com/i/user/${accountId}`,
+        });
+      }
+    }
+
+    for (const accountId of this.following.keys()) {
+      if (this.followers.has(accountId)) {
+        this.mutuals.add(accountId);
+      }
+    }
+
+    this._loaded = true;
+  }
+
+  getStats() {
+    this.load();
+    return {
+      followingCount: this.following.size,
+      followersCount: this.followers.size,
+      mutualCount: this.mutuals.size,
+    };
+  }
+
+  async enumerate(_seed = "suvranu", cursor = null) {
+    this.load();
+    const allIds = Array.from(this.following.keys());
+    const startIndex = cursor ? parseInt(cursor, 10) : 0;
+    const pageSize = 100;
+    const slice = allIds.slice(startIndex, startIndex + pageSize);
+
+    const actors = slice.map((id) => {
+      const entry = this.following.get(id);
+      return {
+        ...entry,
+        is_mutual: this.mutuals.has(id),
+      };
+    });
+
+    const nextCursor = startIndex + pageSize < allIds.length ? String(startIndex + pageSize) : null;
+    return { actors, nextCursor, stats: this.getStats() };
+  }
+
+  async resolveActor(providerSubjectId) {
+    this.load();
+    const entry = this.following.get(providerSubjectId) || this.followers.get(providerSubjectId);
+    if (!entry) throw new Error(`Actor not found in archive: ${providerSubjectId}`);
+    return {
+      ...entry,
+      is_mutual: this.mutuals.has(providerSubjectId),
+    };
+  }
+
+  async fetchRecentTraces(_providerSubjectId, _options = {}) {
+    return { traces: [], nextCursor: null };
+  }
+}
+
+/**
  * In-memory Store Helper for Provisional Twins & External Identities.
  * Mimics Postgres/Supabase tables for deterministic, zero-network unit tests.
  */
