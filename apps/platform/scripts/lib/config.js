@@ -578,9 +578,11 @@ async function uploadToVault(vars) {
       continue;
     }
 
+    const ROOT_INSTANCE_ID = "00000000-0000-0000-0000-000000000001";
     const category = existing?.category ?? "general";
 
     const row = {
+      instance_id: ROOT_INSTANCE_ID,
       key: k,
       category, // TOUJOURS présent (NOT NULL)
       value: incomingValue,
@@ -626,7 +628,7 @@ async function uploadToVault(vars) {
 
   const { error: upsertErr } = await supabase
     .from("instance_config")
-    .upsert(toUpsert, { onConflict: "key" });
+    .upsert(toUpsert, { onConflict: "instance_id, key" });
 
   if (upsertErr) throw upsertErr;
 
@@ -719,9 +721,11 @@ export async function pushEnvSecretsToVault({ clearEmptySecrets = true } = {}) {
 
     const uniqueClear = [...new Set(toClear)];
     if (uniqueClear.length > 0) {
+      const ROOT_INSTANCE_ID = "00000000-0000-0000-0000-000000000001";
       const nowIso = new Date().toISOString();
       await supabase.from("instance_config").upsert(
         uniqueClear.map((key) => ({
+          instance_id: ROOT_INSTANCE_ID,
           key,
           value: null,
           value_json: null,
@@ -729,7 +733,7 @@ export async function pushEnvSecretsToVault({ clearEmptySecrets = true } = {}) {
           is_public: false,
           updated_at: nowIso,
         })),
-        { onConflict: "key" }
+        { onConflict: "instance_id, key" }
       );
       console.log(`[vault] cleared empty/placeholder secrets: ${uniqueClear.join(", ")}`);
     }

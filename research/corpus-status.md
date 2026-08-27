@@ -77,9 +77,9 @@ graph LR
   r_barons_mariani -->|71| r_cogentia
   r_jeanhuguesrobert -->|54| r_cogentia
   r_fractavolta -->|52| r_cogentia
+  r_inseme -->|40| r_cogentia
   r_jeanhuguesrobert -->|39| r_marenostrum
   r_fractavolta -->|37| r_marenostrum
-  r_inseme -->|37| r_cogentia
   r_cogentia -->|29| r_inseme
   r_jeanhuguesrobert -->|26| r_fractavolta
   r_jeanhuguesrobert -->|26| r_inseme

@@ -36,6 +36,7 @@ const IGNORED_SUBDOMAINS = ["www", "app", "api", "admin", "staging", "preview"];
  */
 const KNOWN_SUBDOMAIN_FALLBACKS = {
   jhn: {
+    instanceId: "00000000-0000-0000-0000-000000000001",
     displayName: "JHN",
     deployment_kind: "personal",
     application_profile: "personal-twin",
@@ -44,6 +45,77 @@ const KNOWN_SUBDOMAIN_FALLBACKS = {
     twin_root_ref: "twin:jhn",
     represented_subject_ref: "subject:jhn",
   },
+  john: { aliasOf: "jhn" },
+  jean: { aliasOf: "jhn" },
+  "jean-hugues": { aliasOf: "jhn" },
+  "jean-hugues-noel": { aliasOf: "jhn" },
+  "jean-hugues-noël": { aliasOf: "jhn" },
+  "jean-hugues-noel-robert": { aliasOf: "jhn" },
+  "jean-hugues-noël-robert": { aliasOf: "jhn" },
+  jhr: { aliasOf: "jhn" },
+  "baron-mariani": { aliasOf: "jhn" },
+  "barons-mariani": { aliasOf: "jhn" },
+  mariani: { aliasOf: "jhn" },
+  robert: { aliasOf: "jhn" },
+
+  "frederic-lecourtois": {
+    instanceId: "00000000-0000-0000-0000-000000000002",
+    hostInstanceId: "00000000-0000-0000-0000-000000000001",
+    displayName: "Frédéric Lecourtois",
+    botName: "Aréopage",
+    deployment_kind: "personal",
+    application_profile: "personal-twin",
+    host_domain: "baronsmariani.org",
+    canonical_url: "https://frederic-lecourtois.jhn.baronsmariani.org",
+    twin_root_ref: "twin:frederic-lecourtois",
+    represented_subject_ref: "subject:frederic-lecourtois",
+  },
+  areopage: { aliasOf: "frederic-lecourtois" },
+  aréopage: { aliasOf: "frederic-lecourtois" },
+  frederic: { aliasOf: "frederic-lecourtois" },
+  frédéric: { aliasOf: "frederic-lecourtois" },
+  lecourtois: { aliasOf: "frederic-lecourtois" },
+  "f-lecourtois": { aliasOf: "frederic-lecourtois" },
+
+  "marie-cornelie-lenglet": {
+    instanceId: "00000000-0000-0000-0000-000000000003",
+    hostInstanceId: "00000000-0000-0000-0000-000000000001",
+    displayName: "Marie-Cornélie Lenglet",
+    botName: "Ophélia",
+    deployment_kind: "personal",
+    application_profile: "personal-twin",
+    host_domain: "baronsmariani.org",
+    canonical_url: "https://marie-cornelie-lenglet.jhn.baronsmariani.org",
+    twin_root_ref: "twin:marie-cornelie-lenglet",
+    represented_subject_ref: "subject:marie-cornelie-lenglet",
+  },
+  "marie-cornelie": { aliasOf: "marie-cornelie-lenglet" },
+  "marie-cornélie": { aliasOf: "marie-cornelie-lenglet" },
+  cornelie: { aliasOf: "marie-cornelie-lenglet" },
+  cornélie: { aliasOf: "marie-cornelie-lenglet" },
+  "mc-lenglet": { aliasOf: "marie-cornelie-lenglet" },
+  lenglet: { aliasOf: "marie-cornelie-lenglet" },
+
+  "marie-louise-robert": {
+    instanceId: "00000000-0000-0000-0000-000000000004",
+    hostInstanceId: "00000000-0000-0000-0000-000000000001",
+    displayName: "Marie-Louise Robert",
+    botName: "Marie-Louise",
+    deployment_kind: "personal",
+    subject_kind: "deceased_person",
+    application_profile: "personal-twin",
+    host_domain: "baronsmariani.org",
+    canonical_url: "https://marie-louise.jhn.baronsmariani.org",
+    twin_root_ref: "twin:marie-louise-robert",
+    represented_subject_ref: "subject:marie-louise-robert",
+  },
+  "marie-louise": { aliasOf: "marie-louise-robert" },
+  marie: { aliasOf: "marie-louise-robert" },
+  mary: { aliasOf: "marie-louise-robert" },
+  mlr: { aliasOf: "marie-louise-robert" },
+  "ml-robert": { aliasOf: "marie-louise-robert" },
+  "marie-robert": { aliasOf: "marie-louise-robert" },
+
   oleole: {
     displayName: "Olé Olé",
     deployment_kind: "personal",
@@ -208,9 +280,15 @@ async function lookupInstance(subdomain) {
  * @returns {InstanceConfig|null}
  */
 function getKnownSubdomainFallback(subdomain) {
-  const key = String(subdomain || "").toLowerCase();
-  const meta = KNOWN_SUBDOMAIN_FALLBACKS[key];
+  let key = String(subdomain || "").toLowerCase();
+  let meta = KNOWN_SUBDOMAIN_FALLBACKS[key];
   if (!meta) return null;
+
+  if (meta.aliasOf) {
+    const targetKey = meta.aliasOf;
+    meta = KNOWN_SUBDOMAIN_FALLBACKS[targetKey];
+    if (!meta) return null;
+  }
 
   const env = import.meta.env || {};
   const supabaseUrl = env.VITE_SUPABASE_URL || env.SUPABASE_URL || null;
@@ -225,13 +303,19 @@ function getKnownSubdomainFallback(subdomain) {
 
   return {
     subdomain: key,
+    instanceId: meta.instanceId || null,
+    hostInstanceId: meta.hostInstanceId || null,
     displayName: meta.displayName || key,
+    botName: meta.botName || null,
     supabaseUrl,
     supabaseAnonKey,
     isDefault: false,
     isConfigured: true,
     source: "known-fallback",
     metadata: {
+      instance_id: meta.instanceId || null,
+      host_instance_id: meta.hostInstanceId || null,
+      bot_name: meta.botName || null,
       deployment_kind: meta.deployment_kind,
       application_profile: meta.application_profile,
       host_domain: meta.host_domain,

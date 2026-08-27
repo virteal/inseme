@@ -75,6 +75,11 @@ ALTER TABLE public.cop_accounting_posting ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.cop_accounting_packet_spend ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.cop_accounting_chart_account ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Public read cop_accounting_posting" ON public.cop_accounting_posting;
 CREATE POLICY "Public read cop_accounting_posting" ON public.cop_accounting_posting FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public read cop_accounting_packet_spend" ON public.cop_accounting_packet_spend;
 CREATE POLICY "Public read cop_accounting_packet_spend" ON public.cop_accounting_packet_spend FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public read cop_accounting_chart_account" ON public.cop_accounting_chart_account;
 CREATE POLICY "Public read cop_accounting_chart_account" ON public.cop_accounting_chart_account FOR SELECT USING (true);

@@ -18,7 +18,11 @@ function set_init_done() {
 function getGlobalCache() {
   if (!globalThis[GLOBAL_CACHE_KEY]) {
     globalThis[GLOBAL_CACHE_KEY] = {
-      config: null, // { [key]: row }
+      config: null, // { [key]: row } (racine JHN)
+      instancesConfig: {}, // { [instance_id]: { [key]: row } }
+      aliasesMap: {}, // { [alias]: instance_id }
+      instancesMeta: {}, // { [instance_id]: instanceRow }
+      currentInstanceId: "00000000-0000-0000-0000-000000000001",
       inFlight: null,
       loadedAt: 0,
       supabase: null,
@@ -97,14 +101,60 @@ async function fetchAllRows(supabaseClient) {
     from += pageSize;
   }
 
+  // Load instances & instance_aliases if available
+  let aliases = [];
+  let instances = [];
+  try {
+    const { data: aliasData } = await supabaseClient.from("instance_aliases").select("*");
+    if (aliasData) aliases = aliasData;
+  } catch (_e) {}
+
+  try {
+    const { data: instData } = await supabaseClient.from("instances").select("*");
+    if (instData) instances = instData;
+  } catch (_e) {}
+
+  const rootInstanceId = "00000000-0000-0000-0000-000000000001";
   const map = Object.create(null);
-  for (const row of all) {
-    if (row?.key) {
-      // On trim la clé et on la stocke en minuscule pour faciliter la recherche
-      const k = String(row.key).trim().toLowerCase();
-      map[k] = row;
+  const instancesConfig = Object.create(null);
+  const aliasesMap = Object.create(null);
+  const instancesMeta = Object.create(null);
+
+  for (const inst of instances) {
+    if (inst?.id) {
+      instancesMeta[inst.id] = inst;
+      if (inst.canonical_slug) {
+        aliasesMap[String(inst.canonical_slug).trim().toLowerCase()] = inst.id;
+      }
     }
   }
+
+  for (const a of aliases) {
+    if (a?.alias && a?.instance_id) {
+      aliasesMap[String(a.alias).trim().toLowerCase()] = a.instance_id;
+    }
+  }
+
+  for (const row of all) {
+    if (row?.key) {
+      const k = String(row.key).trim().toLowerCase();
+      const instId = row.instance_id || rootInstanceId;
+      if (!instancesConfig[instId]) {
+        instancesConfig[instId] = Object.create(null);
+      }
+      instancesConfig[instId][k] = row;
+
+      if (instId === rootInstanceId || !row.instance_id) {
+        map[k] = row;
+      }
+    }
+  }
+
+  const cache = getGlobalCache();
+  cache.instancesConfig = instancesConfig;
+  cache.aliasesMap = aliasesMap;
+  cache.instancesMeta = instancesMeta;
+
   return map;
 }
 
@@ -187,24 +237,147 @@ export async function loadConfigTable(force = false, supabase_config = null) {
   return cache.inFlight;
 }
 
+const NON_INHERITABLE_KEYS = new Set([
+  "community_name",
+  "community_code",
+  "bot_name",
+  "app_url",
+  "twin_root_ref",
+  "represented_subject_ref",
+  "canonical_slug",
+  "contact_email",
+  "owner_email",
+  "owner_subject_ref",
+]);
+
+/**
+ * Définit l'identifiant de l'instance courante pour le cache global.
+ * @param {string} identifier (UUID, slug ou alias)
+ */
+export function setCurrentInstance(identifier) {
+  const cache = getGlobalCache();
+  if (identifier) {
+    cache.currentInstanceId = resolveInstanceId(identifier);
+  }
+}
+
+/**
+ * Résout un identifiant (slug, alias, nom de bot ou UUID) vers l'UUID canonique.
+ * @param {string} identifier
+ * @returns {string} UUID
+ */
+export function resolveInstanceId(identifier) {
+  if (!identifier) return "00000000-0000-0000-0000-000000000001";
+  const cache = getGlobalCache();
+  const cleaned = String(identifier).trim().toLowerCase();
+  if (cache.aliasesMap && cache.aliasesMap[cleaned]) {
+    return cache.aliasesMap[cleaned];
+  }
+  if (cache.instancesMeta && cache.instancesMeta[cleaned]) {
+    return cleaned;
+  }
+  return identifier;
+}
+
 /**
  * Get all entries's name in the instance config as a name table.
  * One should then call getConfig( key ) to get the value.
  */
-
-export function getAllConfigKeys() {
+/**
+ * Resolves the ancestor host chain for an instance up to the root, detecting cycles.
+ * @param {string|null} instanceIdentifier (UUID, slug or alias)
+ * @returns {string[]} Array of instance UUIDs starting from the resolved instance up to root.
+ */
+export function resolveHostChain(instanceIdentifier = null) {
+  const rootInstanceId = "00000000-0000-0000-0000-000000000001";
   const cache = getGlobalCache();
-  const t = cache.config;
-  return t ? Object.keys(t) : [];
+  const startId = instanceIdentifier
+    ? resolveInstanceId(instanceIdentifier)
+    : cache.currentInstanceId || rootInstanceId;
+
+  const chain = [];
+  const visited = new Set();
+  let currId = startId;
+
+  while (currId) {
+    if (visited.has(currId)) {
+      // Cycle detected! Break to prevent infinite loop.
+      console.warn(`[instanceConfig] Host cycle detected involving instance: ${currId}`);
+      break;
+    }
+    visited.add(currId);
+    chain.push(currId);
+
+    let nextHostId = null;
+    if (cache.instancesMeta && cache.instancesMeta[currId]) {
+      nextHostId = cache.instancesMeta[currId].host_instance_id;
+    }
+
+    if (!nextHostId && currId !== rootInstanceId) {
+      nextHostId = rootInstanceId;
+    }
+
+    if (!nextHostId || visited.has(nextHostId)) {
+      if (nextHostId && visited.has(nextHostId)) {
+        console.warn(`[instanceConfig] Host cycle detected to host: ${nextHostId}`);
+      }
+      break;
+    }
+
+    currId = nextHostId;
+  }
+
+  return chain;
 }
 
 /**
- * Récupère la valeur d'une clé depuis la table chargée (ou depuis le cache global).
+ * Get all entries's name in the instance config as a name table.
+ * One should then call getConfig( key ) to get the value.
+ */
+export function getAllConfigKeys(instanceIdentifier = null) {
+  const cache = getGlobalCache();
+  const chain = resolveHostChain(instanceIdentifier);
+  const targetId = chain[0] || "00000000-0000-0000-0000-000000000001";
+
+  const keys = new Set();
+
+  // Target instance gets all its keys (inheritable and non-inheritable)
+  if (cache.instancesConfig && cache.instancesConfig[targetId]) {
+    Object.keys(cache.instancesConfig[targetId]).forEach((k) => keys.add(k));
+  }
+
+  // Ancestor instances contribute only inheritable keys
+  for (let i = 1; i < chain.length; i++) {
+    const ancestorId = chain[i];
+    if (cache.instancesConfig && cache.instancesConfig[ancestorId]) {
+      Object.keys(cache.instancesConfig[ancestorId]).forEach((k) => {
+        if (!NON_INHERITABLE_KEYS.has(k)) {
+          keys.add(k);
+        }
+      });
+    }
+  }
+
+  if (cache.config) {
+    Object.keys(cache.config).forEach((k) => {
+      if (!NON_INHERITABLE_KEYS.has(k)) {
+        keys.add(k);
+      }
+    });
+  }
+  return Array.from(keys);
+}
+
+/**
+ * Récupère la valeur d'une clé depuis la table chargée (ou depuis le cache global),
+ * avec repli hiérarchique récursif sur la chaîne d'hôtes (avec détection de cycle).
  *
  * @param {string} key
- * @returns {*} value_json si présent, sinon value, sinon undefined
+ * @param {*} by_default
+ * @param {string|null} instanceIdentifier (UUID, slug ou alias)
+ * @returns {*} value_json si présent, sinon value, sinon by_default
  */
-export function getConfig(key, by_default = undefined) {
+export function getConfig(key, by_default = undefined, instanceIdentifier = null) {
   if (!key) return by_default;
 
   const cache = getGlobalCache();
@@ -215,18 +388,47 @@ export function getConfig(key, by_default = undefined) {
     if (envVal !== undefined && envVal !== null && envVal !== "") return envVal;
   }
 
-  // 2. Recherche dans la config chargée depuis Supabase
-  const t = cache.config;
-  if (t) {
-    const kLower = String(key).trim().toLowerCase();
-    const row = t[kLower];
+  const kLower = String(key).trim().toLowerCase();
+  const chain = resolveHostChain(instanceIdentifier);
+  const targetId = chain[0] || "00000000-0000-0000-0000-000000000001";
 
+  // 2. Recherche dans instancesConfig pour l'instance cible (prioritaire)
+  if (cache.instancesConfig && cache.instancesConfig[targetId]) {
+    const row = cache.instancesConfig[targetId][kLower];
     if (row) {
-      // Priorité à value_json si présent
       const val =
         row.value_json !== null && row.value_json !== undefined ? row.value_json : row.value;
-
       if (val !== null && val !== undefined && val !== "") return val;
+    }
+  }
+
+  // 3. Repli hiérarchique récursif le long de la chaîne d'hôtes (si la clé est héritable)
+  if (!NON_INHERITABLE_KEYS.has(kLower)) {
+    for (let i = 1; i < chain.length; i++) {
+      const hostId = chain[i];
+      if (cache.instancesConfig && cache.instancesConfig[hostId]) {
+        const hostRow = cache.instancesConfig[hostId][kLower];
+        if (hostRow) {
+          const val =
+            hostRow.value_json !== null && hostRow.value_json !== undefined
+              ? hostRow.value_json
+              : hostRow.value;
+          if (val !== null && val !== undefined && val !== "") return val;
+        }
+      }
+    }
+  }
+
+  // 4. Recherche de repli dans la config plate JHN (uniquement si héritable ou si root)
+  if (targetId === "00000000-0000-0000-0000-000000000001" || !NON_INHERITABLE_KEYS.has(kLower)) {
+    const t = cache.config;
+    if (t) {
+      const row = t[kLower];
+      if (row) {
+        const val =
+          row.value_json !== null && row.value_json !== undefined ? row.value_json : row.value;
+        if (val !== null && val !== undefined && val !== "") return val;
+      }
     }
   }
 

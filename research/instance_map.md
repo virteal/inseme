@@ -17,19 +17,46 @@ canonical_path: "research/instance_map.md"
 
 # Instance map — locked names and regimes
 
-**Locked order of founding instances:**
+**Locked order of founding instances & hosted twins:**
 
 1. **`pertitellu-corte`** (Pertitellu / LePP / lepp.fr) — first **collective / civic** instance
-2. **`jhn`** (jhn.baronsmariani.org) — founding **personal** TwinRoot
-3. **`fractavolta-public-guide`** — public **infant** corpus Guide surface (Cogentia, not Inseme
+2. **`jhn`** (`00000000-0000-0000-0000-000000000001`, jhn.baronsmariani.org) — founding **personal**
+   TwinRoot & root host
+3. **`frederic-lecourtois`** (`00000000-0000-0000-0000-000000000002`, bot _Aréopage_) — **hosted
+   provisional** Personal Twin on JHN
+4. **`marie-cornelie-lenglet`** (`00000000-0000-0000-0000-000000000003`) — **hosted provisional**
+   Personal Twin on JHN
+5. **`marie-louise-robert`** (`00000000-0000-0000-0000-000000000004`) — **hosted provisional**
+   Personal Twin (posthume / mémoriel) on JHN
+6. **`fractavolta-public-guide`** — public **infant** corpus Guide surface (Cogentia, not Inseme
    tenant)
 
-| `instance_id`              | Kind            | Domain                   | Codebase              |
-| -------------------------- | --------------- | ------------------------ | --------------------- |
-| `pertitellu-corte`         | civic           | lepp.fr                  | survey → inseme later |
-| `jhn`                      | personal        | jhn.baronsmariani.org    | inseme apps/platform  |
-| `fractavolta-public-guide` | service surface | fractavolta.com / Guide  | cogentia              |
-| `cogentia-public-mcp`      | service         | cogentia.fractavolta.com | cogentia              |
+| `canonical_slug` / `instance_id` | UUID                                   | Kind                  | Host  | Primary URL / Domain                         | Bot / Persona | Codebase             |
+| -------------------------------- | -------------------------------------- | --------------------- | ----- | -------------------------------------------- | ------------- | -------------------- |
+| `pertitellu-corte`               | -                                      | civic                 | -     | lepp.fr                                      | Ophélia       | survey → inseme      |
+| `jhn`                            | `00000000-0000-0000-0000-000000000001` | personal (root host)  | -     | jhn.baronsmariani.org                        | John          | inseme apps/platform |
+| `frederic-lecourtois`            | `00000000-0000-0000-0000-000000000002` | personal (hosted)     | `jhn` | frederic-lecourtois.jhn.baronsmariani.org    | Aréopage      | inseme apps/platform |
+| `marie-cornelie-lenglet`         | `00000000-0000-0000-0000-000000000003` | personal (hosted)     | `jhn` | marie-cornelie-lenglet.jhn.baronsmariani.org | Ophélia       | inseme apps/platform |
+| `marie-louise-robert`            | `00000000-0000-0000-0000-000000000004` | personal (posthumous) | `jhn` | marie-louise.jhn.baronsmariani.org           | Marie-Louise  | inseme apps/platform |
+| `fractavolta-public-guide`       | -                                      | service surface       | -     | fractavolta.com / Guide                      | Guide         | cogentia             |
+| `cogentia-public-mcp`            | -                                      | service               | -     | cogentia.fractavolta.com                     | -             | cogentia             |
+
+**Règle de gestion des collisions :**
+
+- _First come, first served_ (Premier arrivé, premier enregistré dans `instance_aliases` avec
+  timestamp `allocated_at`).
+
+**Table d'alias des instances enregistrées :**
+
+- `jhn` (Root host) $\rightarrow$ `john`, `jean`, `jean-hugues`, `jean-hugues-noel`,
+  `jean-hugues-noël`, `jean-hugues-noel-robert`, `jean-hugues-noël-robert`, `jhr` (ancre historique
+  précoce Twitter/X `@jhr`), `baron-mariani`, `barons-mariani`, `mariani`, `robert`
+- `frederic-lecourtois` $\rightarrow$ `areopage`, `aréopage`, `frederic`, `frédéric`, `lecourtois`,
+  `f-lecourtois`
+- `marie-cornelie-lenglet` $\rightarrow$ `marie-cornelie`, `marie-cornélie`, `cornelie`, `cornélie`,
+  `mc-lenglet`, `lenglet`
+- `marie-louise-robert` $\rightarrow$ `marie-louise`, `marie`, `mary`, `mlr`, `ml-robert`,
+  `marie-robert`
 
 Agents/personas are COP objects **inside** an instance, not new DNS tenants.  
 Rename only by explicit human decision and a new version of this note.
