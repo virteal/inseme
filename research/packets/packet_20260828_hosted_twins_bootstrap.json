@@ -1,0 +1,109 @@
+{
+  "$schema": "https://cogentia.fractavolta.com/schemas/cop.packet.v1.json",
+  "packet_id": "cop-pkt-20260828-inseme-57-hosted-twins",
+  "packet_version": "1.0.0",
+  "packet_kind": "cop.continuation_packet/v1",
+  "topic_id": "topic:twins:hosted-provisioning",
+  "created_at": "2026-08-28T00:31:00.000Z",
+  "producer": {
+    "agent_type": "antigravity",
+    "conversation_id": "cca06077-5f1d-4faa-9137-600373d1adb8",
+    "principal_ref": "subject:jhn"
+  },
+  "epistemic_status": "decided",
+  "causal_refs": [
+    "https://github.com/JeanHuguesRobert/inseme/issues/57",
+    "commit:457561b",
+    "commit:302c19c",
+    "commit:63cd284",
+    "commit:3a9e194"
+  ],
+  "required_capabilities": [
+    "supabase:db:ndiysuhzmztatpxbkezn",
+    "git:branch:main",
+    "x:archive_ingestion"
+  ],
+  "envelope": {
+    "scope": "workspace:inseme",
+    "target_twins": [
+      "00000000-0000-0000-0000-000000000001",
+      "00000000-0000-0000-0000-000000000002",
+      "00000000-0000-0000-0000-000000000003",
+      "00000000-0000-0000-0000-000000000004"
+    ],
+    "purpose_taxonomy": [
+      "autonomy_augmentation",
+      "public_territorial_actor",
+      "hybrid",
+      "posthumous_memorial"
+    ]
+  },
+  "payload": {
+    "summary": "Provisional Digital Twins, monotone alias registry, hierarchical config inheritance, and X/Twitter @suvranu archive bootstrap engine deployed to Supabase production and committed to Git.",
+    "live_database": {
+      "supabase_project": "ndiysuhzmztatpxbkezn",
+      "region": "West EU (Paris)",
+      "status": "synchronized_13_migrations",
+      "instances": [
+        {
+          "id": "00000000-0000-0000-0000-000000000001",
+          "canonical_slug": "jhn",
+          "display_name": "Jean Hugues Noël Robert",
+          "bot_name": "John",
+          "kind": "living_person",
+          "role": "root_host",
+          "historical_anchors": { "twitter_x": "jhr" }
+        },
+        {
+          "id": "00000000-0000-0000-0000-000000000002",
+          "canonical_slug": "frederic-lecourtois",
+          "display_name": "Frédéric Lecourtois",
+          "bot_name": "Aréopage",
+          "host_instance_id": "00000000-0000-0000-0000-000000000001",
+          "purpose": "autonomy_augmentation",
+          "notes": "Classical humanities (French, Latin, Greek), Ghisonaccia"
+        },
+        {
+          "id": "00000000-0000-0000-0000-000000000003",
+          "canonical_slug": "marie-cornelie-lenglet",
+          "display_name": "Marie-Cornélie Lenglet",
+          "bot_name": "Ophélia",
+          "host_instance_id": "00000000-0000-0000-0000-000000000001",
+          "purpose": "autonomy_augmentation"
+        },
+        {
+          "id": "00000000-0000-0000-0000-000000000004",
+          "canonical_slug": "marie-louise-robert",
+          "display_name": "Marie-Louise Robert",
+          "bot_name": "Marie-Louise",
+          "host_instance_id": "00000000-0000-0000-0000-000000000001",
+          "purpose": "posthumous_memorial",
+          "subject_kind": "deceased_person"
+        }
+      ],
+      "monotone_registry": {
+        "table": "public.instance_aliases",
+        "allocated_aliases_count": 34,
+        "anti_usurpation_trigger": "enforce_instance_alias_monotonicity"
+      }
+    },
+    "runtime_modules": {
+      "cop_host_config": "packages/cop-host/src/config/instanceConfig.core.js",
+      "cop_host_resolver": "packages/cop-host/src/lib/instanceResolver.js",
+      "external_actor_adapter": "packages/cop-host/src/adapters/externalActorSource.js"
+    },
+    "bootstrap_pipeline": {
+      "seed_handle": "suvranu",
+      "following_count_approx": 5000,
+      "followers_count_approx": 1000,
+      "status": "x_archive_download_requested_eta_24h",
+      "cli_command": "node apps/platform/scripts/bootstrap-suvranu-twins.js --archive <path> --discover"
+    },
+    "oleole_impact": {
+      "target_service": "oleole",
+      "data_flow": "public_traces -> derived_claims -> oleole_presence_claims / oleole_places",
+      "purpose": "Météo du Débat Public (Territorial heat map and public actor discovery)"
+    }
+  },
+  "resumption_trigger": "Continue Inseme Issue #57 — Ingest Suvranu Twitter Archive"
+}
