@@ -234,8 +234,129 @@ export interface CognitivePacket {
   envelope?: Record<string, unknown>;
   /** Packet payload content or reference. */
   payload: Record<string, unknown>;
+  /**
+   * Packet Closure: condition under which packet carries or verifiably materializes
+   * everything needed for continuation without undocumented external context.
+   * (@since 1.1 / Issue #58)
+   */
+  closure?: PacketClosure;
+  /**
+   * Logical placements of this packet across store technologies (SQLite, PostgreSQL, GitHub).
+   * (@since 1.1 / Issue #58)
+   */
+  placements?: PacketPlacement[];
+  /**
+   * Causal frontier defining the boundary of observed events/dependencies.
+   * (@since 1.1 / Issue #58)
+   */
+  causal_frontier?: CausalFrontier;
+  /**
+   * Governed external side-effects (EffectIntent and EffectReceipt).
+   * (@since 1.1 / Issue #58)
+   */
+  effects?: Array<EffectIntent | EffectReceipt>;
   /** Residue: unrepresented observations during packet execution. */
   residue?: string[];
+}
+
+/**
+ * Packet Closure specification relative to an admissible-handler class.
+ */
+export interface PacketClosure {
+  /** Closure classification: self_contained, materializable via resolver, or open (unclosed). */
+  closure_kind: "self_contained" | "materializable" | "open";
+  /** Admissible handler identities or classes able to continue this packet. */
+  admissible_handlers?: string[];
+  /** Required runtime or host environment capabilities. */
+  required_environment?: Record<string, unknown>;
+  /** Referenced durable dependencies required for complete materialization. */
+  referenced_dependencies?: Array<{
+    dependency_id: string;
+    kind: "artifact" | "event" | "document" | "schema" | "capability";
+    locator: string;
+    hash?: string;
+  }>;
+  /** Timestamp when closure was verified or materialized. */
+  materialized_at?: string;
+}
+
+/**
+ * Logical placement and storage binding for a Cognitive Packet.
+ */
+export interface PacketPlacement {
+  /** Logical store identifier (e.g. "sqlite:local", "supabase:ndiysuhzmztatpxbkezn", "github:repo"). */
+  store_id: string;
+  /** Technology kind of the store. */
+  store_kind: "sqlite" | "postgres" | "github" | "object_storage" | "memory";
+  /** Resource locator within the store (table, file path, primary key, URL). */
+  locator: string;
+  /** Timestamp when packet was synchronized to this placement. */
+  synchronized_at?: string;
+  /** Whether this placement is currently the authoritative/primary store. */
+  is_primary?: boolean;
+}
+
+/**
+ * Causal Frontier defining the boundary of causal lineage and dependencies.
+ */
+export interface CausalFrontier {
+  /** Frontier events establishing the causal boundary. */
+  frontier_events: Array<{
+    event_id: string;
+    topic_id?: string;
+    sequence_number?: number;
+    observed_at: string;
+  }>;
+  /** Optional cryptographic hash or digest of the causal frontier. */
+  frontier_hash?: string;
+}
+
+/**
+ * Intent to execute a governed consequential effect.
+ */
+export interface EffectIntent {
+  /** Unique ID of the effect intent. */
+  intent_id: string;
+  /** Associated packet ID. */
+  packet_id: string;
+  /** Mandate authorizing the effect. */
+  mandate_id?: string;
+  /** Governed action name. */
+  action_name: string;
+  /** Target resource or system mutated by the effect. */
+  target_resource: string;
+  /** Stable idempotency key for safe replay / deduplication. */
+  idempotency_key: string;
+  /** Parameters passed to the executor. */
+  parameters: Record<string, unknown>;
+  /** Timestamp when effect was planned. */
+  planned_at: string;
+  /** Status of the intent. */
+  status: "planned" | "authorized" | "committed" | "rejected";
+}
+
+/**
+ * Receipt proving the execution of a governed consequential effect.
+ */
+export interface EffectReceipt {
+  /** Unique ID of the effect receipt. */
+  receipt_id: string;
+  /** Original effect intent ID. */
+  intent_id: string;
+  /** Associated packet ID. */
+  packet_id: string;
+  /** Idempotency key from the intent. */
+  idempotency_key: string;
+  /** Execution status. */
+  status: "success" | "failure" | "aborted";
+  /** Identity of the executor. */
+  executor: string;
+  /** Timestamp of execution. */
+  executed_at: string;
+  /** Result payload from executor. */
+  result?: Record<string, unknown>;
+  /** Error message if failed. */
+  error?: string;
 }
 
 /**
