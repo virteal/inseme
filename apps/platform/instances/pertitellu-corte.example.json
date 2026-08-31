@@ -1,0 +1,19 @@
+{
+  "subdomain": "pertitellu-corte",
+  "community_name": "Le Petit Parti — Corte",
+  "community_type": "association",
+  "city_name": "Corte",
+  "region_code": "COR",
+  "region_name": "Corse",
+  "contact_email": "contact@lepp.fr",
+  "contact_name": "Pertitellu Corte",
+  "map_center": [42.3084, 9.1505],
+  "supabase_url": "https://REPLACE_WITH_PERTITELLU.supabase.co",
+  "supabase_anon_key": "eyJ_REPLACE_WITH_ANON_KEY",
+  "hub_url": null,
+  "deployment_kind": "civic",
+  "application_profile": "civic-platform",
+  "host_domain": "lepp.fr",
+  "canonical_url": "https://lepp.fr",
+  "bot_name": "Ophélia"
+}

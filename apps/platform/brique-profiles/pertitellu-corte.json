@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "id": "pertitellu-corte",
+  "host_app": "platform",
+  "deployment_kind": "civic",
+  "application_profile": "civic-platform",
+  "core": {
+    "runtime": {
+      "kind": "cop-orchestration",
+      "required_packages": ["@inseme/cop-kernel", "@inseme/cop-host"]
+    },
+    "routes": [
+      "/",
+      "/consultations",
+      "/wiki",
+      "/democracy",
+      "/propositions",
+      "/transparence",
+      "/chat",
+      "/contact"
+    ],
+    "edge_functions": [
+      {
+        "function": "gen-ophelia-chat-stream",
+        "path": "/api/chat-stream",
+        "source": "../../packages/brique-ophelia/edge/gateway.js"
+      },
+      {
+        "function": "github-webhook",
+        "path": "/api/webhooks/github",
+        "source": "netlify/edge-functions/github-webhook.js"
+      }
+    ]
+  },
+  "briques": [
+    {
+      "id": "ophelia",
+      "routes": ["/chat", "/ophelia"],
+      "functions": [],
+      "edge_functions": ["chat-stream"]
+    },
+    {
+      "id": "democracy",
+      "routes": ["/democracy", "/propositions", "/consultations"],
+      "functions": [],
+      "edge_functions": []
+    },
+    {
+      "id": "wiki",
+      "routes": ["/wiki", "/wiki/new", "/wiki/dashboard", "/wiki/:slug", "/wiki/:slug/edit"],
+      "functions": ["sync", "resolve", "propose", "search"],
+      "edge_functions": []
+    },
+    {
+      "id": "actes",
+      "routes": ["/actes", "/actes/accueil", "/actes/liste", "/actes/:id", "/actes/chronologie", "/demandes"],
+      "functions": [],
+      "edge_functions": []
+    },
+    {
+      "id": "communes",
+      "routes": [],
+      "functions": [],
+      "edge_functions": []
+    },
+    {
+      "id": "fil",
+      "routes": ["/fil"],
+      "functions": [],
+      "edge_functions": []
+    },
+    {
+      "id": "map",
+      "routes": ["/map"],
+      "functions": [],
+      "edge_functions": []
+    },
+    {
+      "id": "tasks",
+      "routes": ["/projects"],
+      "functions": [],
+      "edge_functions": []
+    },
+    {
+      "id": "group",
+      "routes": ["/groups"],
+      "functions": [],
+      "edge_functions": []
+    }
+  ]
+}
