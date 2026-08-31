@@ -1,0 +1,324 @@
+import type { CognitivePacket, PacketPlacement } from "./packet.js";
+
+/**
+ * Common interface for storage backends capable of holding Cognitive Packets.
+ */
+export interface PacketStore {
+  readonly store_id: string;
+  readonly store_kind: "sqlite" | "postgres" | "github" | "object_storage" | "memory";
+
+  /**
+   * Saves or updates a Cognitive Packet in this store.
+   * Returns an updated PacketPlacement reflecting the store locator.
+   */
+  savePacket(packet: CognitivePacket): Promise<PacketPlacement>;
+
+  /**
+   * Retrieves a Cognitive Packet by its canonical packet_id.
+   */
+  getPacket(packet_id: string): Promise<CognitivePacket | null>;
+
+  /**
+   * Lists packets matching optional criteria.
+   */
+  listPackets(filter?: { status?: string; mandate_id?: string }): Promise<CognitivePacket[]>;
+
+  /**
+   * Checks if a packet exists in this store.
+   */
+  hasPacket(packet_id: string): Promise<boolean>;
+
+  /**
+   * Deletes a packet from this store (e.g. after archiving or migration).
+   */
+  deletePacket(packet_id: string): Promise<boolean>;
+}
+
+/**
+ * Transfers a Cognitive Packet from a source store to a target store,
+ * recording both placements in the packet's placement manifest.
+ */
+export async function transferPacket(
+  packet_id: string,
+  sourceStore: PacketStore,
+  targetStore: PacketStore,
+  options: { setTargetPrimary?: boolean } = {}
+): Promise<{
+  packet: CognitivePacket;
+  sourcePlacement: PacketPlacement;
+  targetPlacement: PacketPlacement;
+}> {
+  const packet = await sourceStore.getPacket(packet_id);
+  if (!packet) {
+    throw new Error(`Packet ${packet_id} not found in source store ${sourceStore.store_id}`);
+  }
+
+  const setPrimary = options.setTargetPrimary ?? true;
+
+  // Save in target store
+  const targetPlacement = await targetStore.savePacket({
+    ...packet,
+    placements: [
+      ...(packet.placements || []).map((p) => (setPrimary ? { ...p, is_primary: false } : p)),
+      {
+        store_id: targetStore.store_id,
+        store_kind: targetStore.store_kind,
+        locator: `${targetStore.store_id}#${packet.packet_id}`,
+        synchronized_at: new Date().toISOString(),
+        is_primary: setPrimary,
+      },
+    ],
+  });
+
+  // Re-fetch the updated packet with all placement traces
+  const updatedPacket = (await targetStore.getPacket(packet_id))!;
+
+  const sourcePlacement: PacketPlacement = packet.placements?.find(
+    (p) => p.store_id === sourceStore.store_id
+  ) || {
+    store_id: sourceStore.store_id,
+    store_kind: sourceStore.store_kind,
+    locator: `${sourceStore.store_id}#${packet.packet_id}`,
+    is_primary: !setPrimary,
+  };
+
+  return {
+    packet: updatedPacket,
+    sourcePlacement,
+    targetPlacement,
+  };
+}
+
+/**
+ * In-Memory / Ephemeral Packet Store implementation.
+ */
+export function createMemoryPacketStore(store_id = "memory:default"): PacketStore {
+  const storage = new Map<string, string>();
+
+  return {
+    store_id,
+    store_kind: "memory",
+
+    async savePacket(packet: CognitivePacket): Promise<PacketPlacement> {
+      const locator = `${store_id}#${packet.packet_id}`;
+      const existingPlacements = packet.placements || [];
+      const updatedPlacements: PacketPlacement[] = [
+        ...existingPlacements.filter((p) => p.store_id !== store_id),
+        {
+          store_id,
+          store_kind: "memory",
+          locator,
+          synchronized_at: new Date().toISOString(),
+          is_primary:
+            existingPlacements.length === 0 ||
+            existingPlacements.some((p) => p.store_id === store_id && p.is_primary),
+        },
+      ];
+
+      const toStore: CognitivePacket = {
+        ...packet,
+        placements: updatedPlacements,
+      };
+
+      storage.set(packet.packet_id, JSON.stringify(toStore));
+      return updatedPlacements.find((p) => p.store_id === store_id)!;
+    },
+
+    async getPacket(packet_id: string): Promise<CognitivePacket | null> {
+      const raw = storage.get(packet_id);
+      return raw ? JSON.parse(raw) : null;
+    },
+
+    async listPackets(filter = {}): Promise<CognitivePacket[]> {
+      const results: CognitivePacket[] = [];
+      for (const raw of storage.values()) {
+        const p: CognitivePacket = JSON.parse(raw);
+        if (filter.status && p.status !== filter.status) continue;
+        if (filter.mandate_id && p.mandate_id !== filter.mandate_id) continue;
+        results.push(p);
+      }
+      return results;
+    },
+
+    async hasPacket(packet_id: string): Promise<boolean> {
+      return storage.has(packet_id);
+    },
+
+    async deletePacket(packet_id: string): Promise<boolean> {
+      return storage.delete(packet_id);
+    },
+  };
+}
+
+/**
+ * SQLite / Local node store implementation wrapper.
+ */
+export function createSqlitePacketStore(
+  store_id: string,
+  options: {
+    executeSql?: (query: string, params: unknown[]) => Promise<any>;
+    inMemoryMap?: Map<string, string>;
+  } = {}
+): PacketStore {
+  // Use in-memory map or provided SQL execution abstraction
+  const localMap = options.inMemoryMap || new Map<string, string>();
+
+  return {
+    store_id,
+    store_kind: "sqlite",
+
+    async savePacket(packet: CognitivePacket): Promise<PacketPlacement> {
+      const locator = `sqlite://${store_id}/packets/${packet.packet_id}`;
+      const existingPlacements = packet.placements || [];
+      const updatedPlacements: PacketPlacement[] = [
+        ...existingPlacements.filter((p) => p.store_id !== store_id),
+        {
+          store_id,
+          store_kind: "sqlite",
+          locator,
+          synchronized_at: new Date().toISOString(),
+          is_primary:
+            existingPlacements.length === 0 ||
+            existingPlacements.some((p) => p.store_id === store_id && p.is_primary),
+        },
+      ];
+
+      const toStore: CognitivePacket = {
+        ...packet,
+        placements: updatedPlacements,
+      };
+
+      localMap.set(packet.packet_id, JSON.stringify(toStore));
+      return updatedPlacements.find((p) => p.store_id === store_id)!;
+    },
+
+    async getPacket(packet_id: string): Promise<CognitivePacket | null> {
+      const raw = localMap.get(packet_id);
+      return raw ? JSON.parse(raw) : null;
+    },
+
+    async listPackets(filter = {}): Promise<CognitivePacket[]> {
+      const results: CognitivePacket[] = [];
+      for (const raw of localMap.values()) {
+        const p: CognitivePacket = JSON.parse(raw);
+        if (filter.status && p.status !== filter.status) continue;
+        if (filter.mandate_id && p.mandate_id !== filter.mandate_id) continue;
+        results.push(p);
+      }
+      return results;
+    },
+
+    async hasPacket(packet_id: string): Promise<boolean> {
+      return localMap.has(packet_id);
+    },
+
+    async deletePacket(packet_id: string): Promise<boolean> {
+      return localMap.delete(packet_id);
+    },
+  };
+}
+
+/**
+ * PostgreSQL / Supabase store implementation wrapper.
+ */
+export function createPostgresPacketStore(
+  store_id: string,
+  options: {
+    supabaseClient?: any;
+    inMemoryFallback?: Map<string, string>;
+  } = {}
+): PacketStore {
+  const fallback = options.inMemoryFallback || new Map<string, string>();
+
+  return {
+    store_id,
+    store_kind: "postgres",
+
+    async savePacket(packet: CognitivePacket): Promise<PacketPlacement> {
+      const locator = `postgres://${store_id}/public.cop_packets/${packet.packet_id}`;
+      const existingPlacements = packet.placements || [];
+      const updatedPlacements: PacketPlacement[] = [
+        ...existingPlacements.filter((p) => p.store_id !== store_id),
+        {
+          store_id,
+          store_kind: "postgres",
+          locator,
+          synchronized_at: new Date().toISOString(),
+          is_primary:
+            existingPlacements.length === 0 ||
+            existingPlacements.some((p) => p.store_id === store_id && p.is_primary),
+        },
+      ];
+
+      const toStore: CognitivePacket = {
+        ...packet,
+        placements: updatedPlacements,
+      };
+
+      if (options.supabaseClient) {
+        await options.supabaseClient.from("cop_packets").upsert({
+          id: packet.packet_id,
+          packet_json: toStore,
+          status: packet.status || "draft",
+          updated_at: new Date().toISOString(),
+        });
+      } else {
+        fallback.set(packet.packet_id, JSON.stringify(toStore));
+      }
+
+      return updatedPlacements.find((p) => p.store_id === store_id)!;
+    },
+
+    async getPacket(packet_id: string): Promise<CognitivePacket | null> {
+      if (options.supabaseClient) {
+        const { data } = await options.supabaseClient
+          .from("cop_packets")
+          .select("packet_json")
+          .eq("id", packet_id)
+          .maybeSingle();
+        return data?.packet_json || null;
+      }
+      const raw = fallback.get(packet_id);
+      return raw ? JSON.parse(raw) : null;
+    },
+
+    async listPackets(filter = {}): Promise<CognitivePacket[]> {
+      if (options.supabaseClient) {
+        let query = options.supabaseClient.from("cop_packets").select("packet_json");
+        if (filter.status) query = query.eq("status", filter.status);
+        const { data } = await query;
+        return (data || []).map((row: any) => row.packet_json);
+      }
+      const results: CognitivePacket[] = [];
+      for (const raw of fallback.values()) {
+        const p: CognitivePacket = JSON.parse(raw);
+        if (filter.status && p.status !== filter.status) continue;
+        if (filter.mandate_id && p.mandate_id !== filter.mandate_id) continue;
+        results.push(p);
+      }
+      return results;
+    },
+
+    async hasPacket(packet_id: string): Promise<boolean> {
+      if (options.supabaseClient) {
+        const { count } = await options.supabaseClient
+          .from("cop_packets")
+          .select("id", { count: "exact", head: true })
+          .eq("id", packet_id);
+        return Boolean(count && count > 0);
+      }
+      return fallback.has(packet_id);
+    },
+
+    async deletePacket(packet_id: string): Promise<boolean> {
+      if (options.supabaseClient) {
+        const { error } = await options.supabaseClient
+          .from("cop_packets")
+          .delete()
+          .eq("id", packet_id);
+        return !error;
+      }
+      return fallback.delete(packet_id);
+    },
+  };
+}
