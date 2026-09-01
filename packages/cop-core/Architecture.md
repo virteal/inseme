@@ -1680,6 +1680,45 @@ If a Continuation cannot be resumed successfully:
 - Tasks or Steps associated with the Continuation MAY transition to `failed`.
 - No silent failure is permitted; failures MUST be observable via Events or projection state.
 
+### 5.5.6 Level-2 Exploration Scheduler (COP/AI profile)
+
+The COP/AI profile MAY provide a **Level-2 Exploration Scheduler** between the COP Scheduler
+(Level 1) and a bounded Handler reasoning loop (Level 3). It is a derived, replayable allocation
+projection; it MUST NOT become a second mutable store or an authority plane.
+
+The Level-2 Scheduler distinguishes three independent properties of each continuation branch:
+
+- **readiness** — `runnable` or `waiting`, determined by Level-1 wake conditions;
+- **viability** — `live`, `exhausted`, or `obsolete`, determined by immutable execution facts;
+- **allocation** — `funded` or `unfunded`, determined by an explicit allocation fact.
+
+An exploration Choice Point groups branches as either:
+
+- **OR**: one successful branch satisfies the choice point; unrun live siblings become `obsolete`;
+- **AND**: the declared quorum of successful branches is required before an explicit `join_completed`
+  fact records synthesis. Failed or exhausted branches remain visible as residue and are never erased.
+
+The scheduler MUST derive its Frontier solely from append-only events, including at minimum
+continuation registration, choice-point opening, allocation, branch execution, exhaustion,
+objective satisfaction, evidence publication/sharing, and join completion. Replaying the same log
+MUST reconstruct the same Frontier.
+
+Evidence shared between branches MUST be represented by reference to an immutable evidence event
+through `parentEventIds`; a scheduler MUST NOT silently copy a receipt into a sibling as if that
+sibling had independently produced it. A branch may consume shared evidence only when the causal
+reference remains present and readable.
+
+A continuation is materializable only relative to packet, handler profile, and environment:
+`Closed(p,h,E)`. Closure evaluation MUST distinguish integrity, protocol compatibility, required
+handler capabilities/events, declared environment dependencies, and remaining accounting budget.
+Declared closure metadata alone is not proof of materializability, authorization, funding, or
+runnable-now status.
+
+Level 2 MAY select or switch one funded runnable branch, but MUST NOT rewind state. It preserves
+branch receipts, cumulative accounting, causal parents, and rejected/exhausted residue. Level 3
+remains responsible for bounded governed execution; Level 1 remains responsible for wakeups,
+delivery, and durable event ordering. Neither Level 2 nor Level 3 grants a capability or an Act.
+
 ## 5.6 Separation of Concerns (Normative)
 
 The following separations are **mandatory**:
