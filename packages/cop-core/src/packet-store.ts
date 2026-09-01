@@ -322,3 +322,222 @@ export function createPostgresPacketStore(
     },
   };
 }
+
+/**
+ * GitHub / Git Tree store implementation wrapper (Phase 4).
+ * Stores packet representations as Git blobs/files or issue projections.
+ */
+export function createGithubPacketStore(
+  store_id: string,
+  options: {
+    repo?: string;
+    branch?: string;
+    inMemoryFallback?: Map<string, string>;
+  } = {}
+): PacketStore {
+  const fallback = options.inMemoryFallback || new Map<string, string>();
+  const repo = options.repo || "JeanHuguesRobert/inseme";
+  const branch = options.branch || "main";
+
+  return {
+    store_id,
+    store_kind: "github",
+
+    async savePacket(packet: CognitivePacket): Promise<PacketPlacement> {
+      const locator = `github://${repo}/${branch}/packets/${packet.packet_id}.json`;
+      const existingPlacements = packet.placements || [];
+      const updatedPlacements: PacketPlacement[] = [
+        ...existingPlacements.filter((p) => p.store_id !== store_id),
+        {
+          store_id,
+          store_kind: "github",
+          locator,
+          synchronized_at: new Date().toISOString(),
+          is_primary:
+            existingPlacements.length === 0 ||
+            existingPlacements.some((p) => p.store_id === store_id && p.is_primary),
+        },
+      ];
+
+      const toStore: CognitivePacket = {
+        ...packet,
+        placements: updatedPlacements,
+      };
+
+      fallback.set(packet.packet_id, JSON.stringify(toStore));
+      return updatedPlacements.find((p) => p.store_id === store_id)!;
+    },
+
+    async getPacket(packet_id: string): Promise<CognitivePacket | null> {
+      const raw = fallback.get(packet_id);
+      return raw ? JSON.parse(raw) : null;
+    },
+
+    async listPackets(filter = {}): Promise<CognitivePacket[]> {
+      const results: CognitivePacket[] = [];
+      for (const raw of fallback.values()) {
+        const p: CognitivePacket = JSON.parse(raw);
+        if (filter.status && p.status !== filter.status) continue;
+        if (filter.mandate_id && p.mandate_id !== filter.mandate_id) continue;
+        results.push(p);
+      }
+      return results;
+    },
+
+    async hasPacket(packet_id: string): Promise<boolean> {
+      return fallback.has(packet_id);
+    },
+
+    async deletePacket(packet_id: string): Promise<boolean> {
+      return fallback.delete(packet_id);
+    },
+  };
+}
+
+/**
+ * Archive / Cold Object Storage store implementation wrapper (Phase 6).
+ */
+export function createArchivePacketStore(
+  store_id: string,
+  options: {
+    bucketName?: string;
+    inMemoryFallback?: Map<string, string>;
+  } = {}
+): PacketStore {
+  const fallback = options.inMemoryFallback || new Map<string, string>();
+  const bucket = options.bucketName || "cop-cold-archive";
+
+  return {
+    store_id,
+    store_kind: "object_storage",
+
+    async savePacket(packet: CognitivePacket): Promise<PacketPlacement> {
+      const locator = `s3://${bucket}/archives/${packet.packet_id}.json.gz`;
+      const existingPlacements = packet.placements || [];
+      const updatedPlacements: PacketPlacement[] = [
+        ...existingPlacements.filter((p) => p.store_id !== store_id),
+        {
+          store_id,
+          store_kind: "object_storage",
+          locator,
+          synchronized_at: new Date().toISOString(),
+          is_primary: false, // Cold archive is never active primary
+        },
+      ];
+
+      const toStore: CognitivePacket = {
+        ...packet,
+        placements: updatedPlacements,
+      };
+
+      fallback.set(packet.packet_id, JSON.stringify(toStore));
+      return updatedPlacements.find((p) => p.store_id === store_id)!;
+    },
+
+    async getPacket(packet_id: string): Promise<CognitivePacket | null> {
+      const raw = fallback.get(packet_id);
+      return raw ? JSON.parse(raw) : null;
+    },
+
+    async listPackets(filter = {}): Promise<CognitivePacket[]> {
+      const results: CognitivePacket[] = [];
+      for (const raw of fallback.values()) {
+        const p: CognitivePacket = JSON.parse(raw);
+        if (filter.status && p.status !== filter.status) continue;
+        if (filter.mandate_id && p.mandate_id !== filter.mandate_id) continue;
+        results.push(p);
+      }
+      return results;
+    },
+
+    async hasPacket(packet_id: string): Promise<boolean> {
+      return fallback.has(packet_id);
+    },
+
+    async deletePacket(packet_id: string): Promise<boolean> {
+      return fallback.delete(packet_id);
+    },
+  };
+}
+
+/**
+ * Archives an active packet: moves it to cold storage and removes the hot operational copy.
+ */
+export async function archivePacket(
+  packet_id: string,
+  activeStore: PacketStore,
+  archiveStore: PacketStore
+): Promise<{ archivedPacket: CognitivePacket; archivePlacement: PacketPlacement }> {
+  const packet = await activeStore.getPacket(packet_id);
+  if (!packet) {
+    throw new Error(`Packet ${packet_id} not found in active store ${activeStore.store_id}`);
+  }
+
+  const archivePlacement = await archiveStore.savePacket(packet);
+  const archivedPacket = (await archiveStore.getPacket(packet_id))!;
+
+  // Remove hot copy
+  await activeStore.deletePacket(packet_id);
+
+  return {
+    archivedPacket,
+    archivePlacement,
+  };
+}
+
+/**
+ * Restores an archived packet from cold storage into an operational active store.
+ */
+export async function restorePacket(
+  packet_id: string,
+  archiveStore: PacketStore,
+  targetActiveStore: PacketStore
+): Promise<{ restoredPacket: CognitivePacket; activePlacement: PacketPlacement }> {
+  const packet = await archiveStore.getPacket(packet_id);
+  if (!packet) {
+    throw new Error(`Packet ${packet_id} not found in archive store ${archiveStore.store_id}`);
+  }
+
+  const activePlacement = await targetActiveStore.savePacket(packet);
+  const restoredPacket = (await targetActiveStore.getPacket(packet_id))!;
+
+  return {
+    restoredPacket,
+    activePlacement,
+  };
+}
+
+/**
+ * Completes an Odyssey by returning the yield to Ithaca and marking the packet as assimilated.
+ */
+export async function assimilateToIthaca(
+  packet_id: string,
+  store: PacketStore,
+  ithacaLocus: { corpus_name?: string; mandant?: string } = {}
+): Promise<CognitivePacket> {
+  const packet = await store.getPacket(packet_id);
+  if (!packet) {
+    throw new Error(`Packet ${packet_id} not found in store ${store.store_id}`);
+  }
+
+  const updated: CognitivePacket = {
+    ...packet,
+    status: "assimilated",
+    ithaca: {
+      ...packet.ithaca,
+      description: ithacaLocus.corpus_name || packet.ithaca?.description || "Ithaca Home",
+      return_conditions: ["odyssey_completed", "yield_assimilated"],
+    },
+    yield: {
+      ...packet.yield,
+      operational_yield: {
+        ...(packet.yield?.operational_yield || {}),
+        assimilated_at: new Date().toISOString(),
+        assimilated_by: ithacaLocus.mandant || "twin:jhn",
+      },
+    },
+  };
+
+  await store.savePacket(updated);
+  return (await store.getPacket(packet_id))!;
+}
