@@ -199,3 +199,49 @@ test("Resilient Routing 5: Exception handling when network probe throws (e.g. EC
   assert.ok(packet.envelope.hops[0].route_reason.includes("node:crashing-node"));
   assert.equal(packet.envelope.hops[1].node_id, "node:working-backup");
 });
+
+test("Resilient Routing 6 (Inseme #54): Provider reachable != provider admissible (Anti-Escalation)", async () => {
+  const spoolQueue = [];
+  const registry = new CapabilityRegistry();
+  // Two nodes declare the same capability 'sensitive.read'
+  registry.register("sensitive.read", {
+    providers: ["node:secure-enclave", "node:public-cloud"],
+  });
+
+  // Packet restricts admissible handlers to only 'node:secure-enclave'
+  const packet = asCognitivePacket({
+    kind: "sensitive-query",
+    envelope: {
+      id: "pkt-sensitive-006",
+      intent: "Read encrypted civic voting records",
+      routeTo: "node:secure-enclave",
+      requiredCapability: "sensitive.read",
+      status: "dispatched",
+      ithaca: { return_target: "governance-chamber" },
+      closure: {
+        admissible_handlers: ["node:secure-enclave"], // node:public-cloud is NOT admissible!
+      },
+    },
+  });
+
+  // Scenario:
+  // - node:secure-enclave is OFFLINE (reachable = false, admissible = true)
+  // - node:public-cloud is ONLINE (reachable = true, admissible = false)
+  const probeNode = async (nodeId) => {
+    if (nodeId === "node:secure-enclave") return false;
+    if (nodeId === "node:public-cloud") return true;
+    return false;
+  };
+
+  const result = await routePacketResiliently(packet, {
+    registry,
+    probeNode,
+    spoolQueue,
+  });
+
+  // MUST NOT route to public-cloud merely because it is reachable!
+  assert.notEqual(result.targetNode, "node:public-cloud");
+  assert.equal(result.status, "spooled_store_and_forward");
+  assert.equal(spoolQueue.length, 1);
+  assert.equal(spoolQueue[0].envelope.id, "pkt-sensitive-006");
+});

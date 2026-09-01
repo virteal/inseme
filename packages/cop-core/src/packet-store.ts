@@ -89,6 +89,14 @@ export async function transferPacket(
   };
 }
 
+function extractPacketId(packet: any): string {
+  const id = packet.packet_id || packet.id || packet.envelope?.id;
+  if (!id) {
+    throw new Error("CognitivePacket is missing packet_id or id");
+  }
+  return id;
+}
+
 /**
  * In-Memory / Ephemeral Packet Store implementation.
  */
@@ -100,7 +108,8 @@ export function createMemoryPacketStore(store_id = "memory:default"): PacketStor
     store_kind: "memory",
 
     async savePacket(packet: CognitivePacket): Promise<PacketPlacement> {
-      const locator = `${store_id}#${packet.packet_id}`;
+      const packetId = extractPacketId(packet);
+      const locator = `${store_id}#${packetId}`;
       const existingPlacements = packet.placements || [];
       const updatedPlacements: PacketPlacement[] = [
         ...existingPlacements.filter((p) => p.store_id !== store_id),
@@ -117,10 +126,11 @@ export function createMemoryPacketStore(store_id = "memory:default"): PacketStor
 
       const toStore: CognitivePacket = {
         ...packet,
+        packet_id: packetId,
         placements: updatedPlacements,
       };
 
-      storage.set(packet.packet_id, JSON.stringify(toStore));
+      storage.set(packetId, JSON.stringify(toStore));
       return updatedPlacements.find((p) => p.store_id === store_id)!;
     },
 
@@ -168,7 +178,8 @@ export function createSqlitePacketStore(
     store_kind: "sqlite",
 
     async savePacket(packet: CognitivePacket): Promise<PacketPlacement> {
-      const locator = `sqlite://${store_id}/packets/${packet.packet_id}`;
+      const packetId = extractPacketId(packet);
+      const locator = `sqlite://${store_id}/packets/${packetId}`;
       const existingPlacements = packet.placements || [];
       const updatedPlacements: PacketPlacement[] = [
         ...existingPlacements.filter((p) => p.store_id !== store_id),
@@ -185,10 +196,11 @@ export function createSqlitePacketStore(
 
       const toStore: CognitivePacket = {
         ...packet,
+        packet_id: packetId,
         placements: updatedPlacements,
       };
 
-      localMap.set(packet.packet_id, JSON.stringify(toStore));
+      localMap.set(packetId, JSON.stringify(toStore));
       return updatedPlacements.find((p) => p.store_id === store_id)!;
     },
 
@@ -235,7 +247,8 @@ export function createPostgresPacketStore(
     store_kind: "postgres",
 
     async savePacket(packet: CognitivePacket): Promise<PacketPlacement> {
-      const locator = `postgres://${store_id}/public.cop_packets/${packet.packet_id}`;
+      const packetId = extractPacketId(packet);
+      const locator = `postgres://${store_id}/public.cop_packets/${packetId}`;
       const existingPlacements = packet.placements || [];
       const updatedPlacements: PacketPlacement[] = [
         ...existingPlacements.filter((p) => p.store_id !== store_id),
@@ -252,18 +265,19 @@ export function createPostgresPacketStore(
 
       const toStore: CognitivePacket = {
         ...packet,
+        packet_id: packetId,
         placements: updatedPlacements,
       };
 
       if (options.supabaseClient) {
         await options.supabaseClient.from("cop_packets").upsert({
-          id: packet.packet_id,
+          id: packetId,
           packet_json: toStore,
           status: packet.status || "draft",
           updated_at: new Date().toISOString(),
         });
       } else {
-        fallback.set(packet.packet_id, JSON.stringify(toStore));
+        fallback.set(packetId, JSON.stringify(toStore));
       }
 
       return updatedPlacements.find((p) => p.store_id === store_id)!;

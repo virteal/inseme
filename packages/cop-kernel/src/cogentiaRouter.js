@@ -160,6 +160,7 @@ export async function routePacketResiliently(
     forwardToBus = null,
     probeNode = null,
     spoolQueue = null,
+    isAdmissible = null,
     source = "cogentia-resilient-router",
   } = {}
 ) {
@@ -179,9 +180,35 @@ export async function routePacketResiliently(
     }
   }
 
+  async function safeAdmissible(nodeId) {
+    // Check packet closure admissible_handlers if specified
+    const admissibleHandlers =
+      pkt.closure?.admissible_handlers ||
+      pkt.envelope?.closure?.admissible_handlers ||
+      pkt.envelope?.admissible_handlers;
+
+    if (Array.isArray(admissibleHandlers) && admissibleHandlers.length > 0) {
+      if (!admissibleHandlers.includes(nodeId)) {
+        return false;
+      }
+    }
+
+    // Check optional custom isAdmissible predicate
+    if (typeof isAdmissible === "function") {
+      try {
+        return Boolean(await isAdmissible(nodeId, pkt));
+      } catch {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   // 1. Direct Next-Hop Optimization
   if (routeTo) {
-    const isPreferredReachable = await safeProbe(routeTo);
+    const isPreferredAdmissible = await safeAdmissible(routeTo);
+    const isPreferredReachable = isPreferredAdmissible && (await safeProbe(routeTo));
     if (isPreferredReachable) {
       recordPacketHop(pkt, {
         node_id: routeTo,
@@ -201,18 +228,24 @@ export async function routePacketResiliently(
       };
     }
 
-    // Direct preferred hop failed / unreachable -> Record fallback hop
+    // Direct preferred hop failed / unreachable or inadmissible -> Record fallback hop
     recordPacketHop(pkt, {
       node_id: "router",
-      route_reason: `fallback:preferred-node-unreachable:${routeTo}`,
+      route_reason: !isPreferredAdmissible
+        ? `fallback:preferred-node-inadmissible:${routeTo}`
+        : `fallback:preferred-node-unreachable:${routeTo}`,
     });
   }
 
   // 2. Alternative Provider Fallback
+  // Invariant (Inseme #54): provider reachable != provider admissible != provider authorized
   if (requiredCapability && registry) {
     const providers = registry.getProviders(requiredCapability);
     for (const altNode of providers) {
       if (altNode !== routeTo) {
+        const isAltAdmissible = await safeAdmissible(altNode);
+        if (!isAltAdmissible) continue; // Inadmissible node MUST NOT be chosen merely because it is reachable!
+
         const isAltReachable = await safeProbe(altNode);
         if (isAltReachable) {
           recordPacketHop(pkt, {
