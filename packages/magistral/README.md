@@ -71,6 +71,57 @@ Defines _how_ to choose the best path (Algorithm).
 
 ## 🔌 3. Interface Contract (Protocol v1.0)
 
+### OpenCode through local Magistral
+
+The reference pilot can expose its routed models to OpenCode through the loopback
+OpenAI-compatible endpoint. Install a recent Deno release, provide the upstream provider key and a
+deployment-local gateway token, then start the pilot:
+
+```bash
+export OPENROUTER_API_KEY="<from the deployment vault>"
+export MAGISTRAL_API_KEY="<local-loopback-secret>"
+node packages/magistral/scripts/launcher.js \
+  --pilot packages/magistral/pilots/reference-js/src/main.js \
+  --blueprint coding --map default
+```
+
+Copy `packages/magistral/config/opencode-magistral.example.json` outside the repository or point
+`OPENCODE_CONFIG` directly at it. The template reads `MAGISTRAL_API_KEY` from the environment; never
+put the token in the file. Its `magistral-once` agent has `steps: 1` and disables tools. This is the
+anti-loop execution profile: any retry or rebinding is a new governed COP continuation.
+
+```bash
+export OPENCODE_CONFIG="$PWD/packages/magistral/config/opencode-magistral.example.json"
+opencode run --pure --model magistral/fallback --agent magistral-once \
+  --format json "Review the supplied artifact."
+```
+
+The historical `sesame` token is acceptable only for a loopback development Reality Test. A
+persistent deployment must use a vault-backed secret and remain bound to a private interface.
+
+### Selecting a coding handler
+
+Register every installed runtime and its matching capability offer. Magistral resolves a
+`CapabilityRequirement` as follows:
+
+1. `offer_id` or `runtime_id` pins one exact declared offer/runtime when an operator or governed
+   continuation requires it.
+2. `execution_surface` selects a class: `acp` selects Codex ACP in the current profile; `cli`
+   selects OpenCode.
+3. Without a pin, matching offers are ordered by descending `attraction`; this is policy preference,
+   not authority.
+
+```js
+const requirement = {
+  capability: "coding.assist.read",
+  runtime_id: "runtime:local:opencode-magistral",
+};
+```
+
+To prefer Codex automatically, give its offer the higher `attraction`; to prefer OpenCode, give
+the OpenCode offer the higher value. Capability selection never grants mandate, filesystem, tool,
+or spending authority.
+
 ### Public Guide via ACP (experimental)
 
 The public Guide can use Magistral as its OpenAI-compatible synthesis boundary by setting

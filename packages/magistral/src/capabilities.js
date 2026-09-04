@@ -23,6 +23,8 @@ export function createCapabilityCatalog({ offers = [] } = {}) {
       if (!requirement.capability) throw new TypeError("requirement.capability is required");
       return [...catalog.values()]
         .filter((offer) => offer.enabled)
+        .filter((offer) => !requirement.offer_id || offer.id === requirement.offer_id)
+        .filter((offer) => !requirement.runtime_id || offer.runtime_id === requirement.runtime_id)
         .filter((offer) => offer.capabilities.includes(requirement.capability))
         .filter(
           (offer) =>

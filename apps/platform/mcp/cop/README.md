@@ -51,6 +51,23 @@ a blank instance. This remains an optimisation, not its durable identity or memo
 consequential work must remain reconstructible from portable COP events, artifacts, and
 continuations when the account, provider, host, or inherited context is absent.
 
+## Selecting Codex or OpenCode
+
+`codexAcpRuntime()`/`codexAcpCapabilityOffer()` and
+`openCodeMagistralRuntime()`/`openCodeMagistralCapabilityOffer()` are distinct replaceable handler
+bindings for the same `coding.assist.read` capability. Register both pairs in the host runtime
+client and capability catalog. A continuation requirement may then:
+
+- pin `runtime_id` (or `offer_id`) for an explicit operator/governance choice;
+- request `execution_surface: "acp"` for Codex ACP or `execution_surface: "cli"` for OpenCode; or
+- omit both and let offer `attraction` express the deployment's default preference.
+
+The resolver validates that the selected offer and runtime agree on host, handler, execution
+surface, and capability before invoking it. OpenCode's reproducible, secret-free provider template
+is `packages/magistral/config/opencode-magistral.example.json`. It uses the `magistral-once` agent
+with one model step and no tools; the host runtime adds a hard elapsed-time termination boundary.
+Retries and handler changes must be represented by a new governed continuation.
+
 Usage:
 
 - Mount the router at `/cop` in `mcp/server.js`.

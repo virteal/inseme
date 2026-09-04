@@ -1,0 +1,28 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "magistral-once": {
+      "description": "Single-step Magistral continuation handler",
+      "mode": "primary",
+      "model": "magistral/fallback",
+      "steps": 1,
+      "tools": { "*": false }
+    }
+  },
+  "provider": {
+    "magistral": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Local Magistral",
+      "options": {
+        "baseURL": "http://127.0.0.1:8082/v1",
+        "apiKey": "{env:MAGISTRAL_API_KEY}"
+      },
+      "models": {
+        "fallback": {
+          "name": "Magistral fallback",
+          "limit": { "context": 200000, "output": 8192 }
+        }
+      }
+    }
+  }
+}
