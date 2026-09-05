@@ -246,6 +246,12 @@ export type ContinuationPayload = {
     retryDelayMs: number;
   };
 
+  /** Causal Trace reference (Trace-centric COP 2.x, Issue #61). */
+  traceRef?: string | string[];
+
+  /** Authority / Mandate reference under which this continuation operates (Issue #68). */
+  mandateRef?: string;
+
   label?: string;
   meta?: Record<string, JsonValue>;
 
@@ -258,6 +264,58 @@ export type ContinuationPayload = {
  */
 export interface COPContinuation extends COPArtifact<ContinuationPayload> {
   type: "cop/continuation";
+}
+
+/**
+ * Reserved Artifact type for packet forks (Issue #68, R2).
+ */
+export const ARTIFACT_TYPE_FORK = "cop/fork";
+
+/**
+ * Standard payload for a Fork Artifact.
+ * Represents a branched exploration or split execution under a shared authority envelope.
+ */
+export type ForkPayload = {
+  /** Parent packet or continuation being forked. */
+  forkSourcePacketId: UUID;
+
+  /** Stable branch identifier. */
+  branchId: string;
+
+  /** Causal trace reference leading to this fork point (COP 2.x). */
+  traceRef?: string | string[];
+
+  /**
+   * Authority / Mandate reference.
+   * Under the Consequential Rossignol invariant (Issue #68, R2), forking a packet
+   * cannot recreate consumed budget or escape authority limits.
+   */
+  mandateRef: string;
+
+  /** Context identifiers. */
+  topicId: UUID;
+  taskId?: UUID;
+  stepId?: UUID;
+
+  /** Target handler profile or requested capabilities for this branch. */
+  handlerProfile?: string;
+  requiredCapabilities?: string[];
+
+  /** State partitioned or specialized for this branch. */
+  state: JsonValue;
+
+  label?: string;
+  meta?: Record<string, JsonValue>;
+
+  /** Allow arbitrary extra fields for specific profiles. */
+  [key: string]: JsonValue | undefined;
+};
+
+/**
+ * Type guard for Fork Artifacts.
+ */
+export interface COPFork extends COPArtifact<ForkPayload> {
+  type: "cop/fork";
 }
 
 // ----------------------------------------------------------------------
