@@ -16,3 +16,6 @@ export * from "./composition.js";
 export * from "./closure.js";
 export * from "./packet-store.js";
 export * from "./effect.js";
+export * from "./trace.js";
+export * from "./local-trace-consolidation.js";
+export * from "./execution-budget.js";

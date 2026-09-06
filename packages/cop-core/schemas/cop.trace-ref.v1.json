@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inseme.local/schemas/cop.trace-ref.v1.json",
+  "title": "cop.trace-ref/v1",
+  "description": "Canonical COP Trace reference primitive (Issue #61, #63). Identifies or addresses a Trace without requiring COP to own its bytes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "trace_id", "target_type"],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "cop.trace-ref/v1"
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Canonical trace identity string or URI (e.g. cop:event:<id>, cop:artifact:<hash>, or external URN)."
+    },
+    "target_type": {
+      "type": "string",
+      "enum": ["cop_event", "cop_artifact", "external"],
+      "description": "Classification of target trace source."
+    },
+    "integrity": {
+      "type": ["string", "null"],
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "Optional cryptographic digest verifying trace integrity."
+    },
+    "locator": {
+      "type": ["string", "null"],
+      "description": "Resolution locator (URL, path, topic identifier, store ref) distinct from intrinsic content identity."
+    },
+    "resolution_hints": {
+      "type": ["object", "null"],
+      "description": "Optional hints aiding resolution (e.g. topic_id, topic_seq, mime_type, provider)."
+    }
+  }
+}

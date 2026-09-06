@@ -121,6 +121,85 @@ export interface COPArtifact<P extends JsonValue = JsonValue> {
 }
 
 // ----------------------------------------------------------------------
+// 2b. Trace-Centric Architecture Primitives (COP 2.x — Issue #61, #63)
+// ----------------------------------------------------------------------
+
+/** Target classification for a TraceRef */
+export type TraceTargetType = "cop_event" | "cop_artifact" | "external";
+
+/** Access and visibility class for a trace */
+export type TraceVisibility = "open" | "redacted" | "restricted" | "sealed" | "opaque_but_escrowed";
+
+/** Universal reference addressing a Trace without payload duplication */
+export interface TraceRef {
+  schema: "cop.trace-ref/v1";
+  trace_id: string;
+  target_type: TraceTargetType;
+  integrity?: string | null;
+  locator?: string | null;
+  resolution_hints?: Record<string, JsonValue> | null;
+}
+
+/** Metadata sufficient to reason about a Trace without materializing its bytes */
+export interface TraceDescriptor {
+  schema: "cop.trace-descriptor/v1";
+  trace_ref: TraceRef;
+  kind: string;
+  origin: string;
+  observed_at: ISODateTime;
+  occurred_at?: ISODateTime | null;
+  created_at?: ISODateTime | null;
+  integrity?: string | null;
+  visibility: TraceVisibility;
+  custody?: string | null;
+  meta?: Record<string, JsonValue>;
+}
+
+/** Qualitative epistemic linkage connecting a trace to an assertion */
+export type EvidenceRelationType = "supports" | "contradicts" | "contextualizes";
+
+/** Epistemic status of a proposition or event */
+export type EpistemicStatus =
+  | "observed"
+  | "computed"
+  | "declared"
+  | "inferred"
+  | "normative"
+  | "proposed"
+  | "decided"
+  | "published"
+  | "hypothesized"
+  | "disputed";
+
+/** Proposition known, held, or considered by the Corpus with stable identity */
+export interface Assertion<C = JsonValue> {
+  schema: "cop.assertion/v1";
+  assertion_id: string;
+  revision: number;
+  claim: C;
+  epistemic_status: EpistemicStatus;
+  subject_ref?: string | null;
+  asserted_by: string;
+  asserted_at: ISODateTime;
+  supersedes_id?: string | null;
+  meta?: Record<string, JsonValue>;
+}
+
+/** Typed link between a TraceRef and an Assertion */
+export interface EvidenceRelation {
+  schema: "cop.evidence-relation/v1";
+  relation_id: string;
+  relation_type: EvidenceRelationType;
+  trace_ref: TraceRef;
+  assertion_id: string;
+  strength?: "conclusive" | "strong" | "plausible" | "weak" | number | null;
+  justification?: JsonValue;
+  asserted_by: string;
+  recorded_at: ISODateTime;
+  meta?: Record<string, JsonValue>;
+}
+
+// ----------------------------------------------------------------------
 // 3. Projections (Derived State)
 // ----------------------------------------------------------------------
 

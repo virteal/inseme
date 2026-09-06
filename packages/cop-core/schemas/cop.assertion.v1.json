@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inseme.local/schemas/cop.assertion.v1.json",
+  "title": "cop.assertion/v1",
+  "description": "Proposition known, held, or considered by the Corpus with explicit epistemic status and stable identity (Issue #61, #63). Revisions preserve history without mutating contradictory evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "assertion_id",
+    "revision",
+    "claim",
+    "epistemic_status",
+    "asserted_by",
+    "asserted_at"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "cop.assertion/v1"
+    },
+    "assertion_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable canonical assertion identifier across revisions (e.g. ast:<uuid>)."
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Monotonic revision number of this assertion."
+    },
+    "claim": {
+      "description": "The propositional statement or structured claim held by the Corpus."
+    },
+    "epistemic_status": {
+      "type": "string",
+      "enum": [
+        "observed",
+        "computed",
+        "declared",
+        "inferred",
+        "normative",
+        "proposed",
+        "decided",
+        "published",
+        "hypothesized",
+        "disputed"
+      ],
+      "description": "Epistemic classification of the assertion."
+    },
+    "subject_ref": {
+      "type": ["string", "null"],
+      "description": "Subject reference or entity to which this assertion pertains."
+    },
+    "asserted_by": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Attributable identity (LogicalAgent, Principal, system rule) asserting the proposition."
+    },
+    "asserted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of assertion."
+    },
+    "supersedes_id": {
+      "type": ["string", "null"],
+      "description": "Identifier or ref of a prior revision superseded by this assertion."
+    },
+    "meta": {
+      "type": "object",
+      "description": "Contextual metadata."
+    }
+  }
+}

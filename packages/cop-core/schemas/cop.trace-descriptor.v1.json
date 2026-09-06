@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inseme.local/schemas/cop.trace-descriptor.v1.json",
+  "title": "cop.trace-descriptor/v1",
+  "description": "Metadata sufficient to reason about a Trace without materializing its raw payload (Issue #61, #63). MUST NOT contain assertion truth or interpretive claims.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "trace_ref", "kind", "origin", "observed_at"],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "cop.trace-descriptor/v1"
+    },
+    "trace_ref": {
+      "$ref": "cop.trace-ref.v1.json",
+      "description": "Reference identifying the trace."
+    },
+    "kind": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Classification of the trace occurrence (e.g. procedural_event, artifact_snapshot, external_metering, external_document, git_commit, sensor_log)."
+    },
+    "origin": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Durable provenance or origin source of the trace."
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the trace was observed or registered by the system."
+    },
+    "occurred_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Temporal claim of when the trace event physically took place."
+    },
+    "created_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Creation timestamp when distinct from occurred_at or observed_at."
+    },
+    "integrity": {
+      "type": ["string", "null"],
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "Cryptographic digest of trace content."
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "open",
+        "redacted",
+        "restricted",
+        "sealed",
+        "opaque_but_escrowed"
+      ],
+      "default": "restricted",
+      "description": "Access / visibility classification."
+    },
+    "custody": {
+      "type": ["string", "null"],
+      "description": "Source authority reference or custodian maintaining physical or digital custody."
+    },
+    "meta": {
+      "type": "object",
+      "description": "Non-interpretive metadata."
+    }
+  }
+}

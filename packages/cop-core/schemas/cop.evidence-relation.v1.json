@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inseme.local/schemas/cop.evidence-relation.v1.json",
+  "title": "cop.evidence-relation/v1",
+  "description": "Typed epistemic relationship between a TraceRef and an Assertion (Issue #61, #63). Supports non-destructive coexistence of contradictory evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "relation_id",
+    "relation_type",
+    "trace_ref",
+    "assertion_id",
+    "asserted_by",
+    "recorded_at"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "cop.evidence-relation/v1"
+    },
+    "relation_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique identifier for this evidence relationship (e.g. evr:<uuid>)."
+    },
+    "relation_type": {
+      "type": "string",
+      "enum": ["supports", "contradicts", "contextualizes"],
+      "description": "Qualitative epistemic linkage connecting the trace to the proposition."
+    },
+    "trace_ref": {
+      "$ref": "cop.trace-ref.v1.json",
+      "description": "The trace serving as evidence."
+    },
+    "assertion_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Target assertion identifier or reference."
+    },
+    "strength": {
+      "description": "Optional relation-specific strength or weighting (e.g. conclusive, strong, plausible, weak, or numerical weight 0.0-1.0).",
+      "oneOf": [
+        { "type": "string", "enum": ["conclusive", "strong", "plausible", "weak"] },
+        { "type": "number", "minimum": 0, "maximum": 1 }
+      ]
+    },
+    "justification": {
+      "description": "Explanatory rationale establishing why the trace supports, contradicts, or contextualizes the assertion."
+    },
+    "asserted_by": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identity of the agent, evaluator, or rule attributing this relation."
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this evidence relation was established and recorded."
+    },
+    "meta": {
+      "type": "object",
+      "description": "Auxiliary metadata."
+    }
+  }
+}
