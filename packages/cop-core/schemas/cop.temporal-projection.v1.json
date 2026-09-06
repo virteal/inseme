@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inseme.local/schemas/cop.temporal-projection.v1.json",
+  "title": "cop.temporal-projection/v1",
+  "description": "Reconstructible derived temporal projection and timeline view over trace-centric authoritative corpus material (Issue #61, #64). Projections are derived accelerators, never authoritative sources.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "projection_id",
+    "projector_id",
+    "projector_version",
+    "built_at",
+    "is_authoritative",
+    "is_derived",
+    "stale",
+    "source_commitments",
+    "timeline"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "cop.temporal-projection/v1"
+    },
+    "projection_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique identifier of this projection instance."
+    },
+    "subject_ref": {
+      "type": ["string", "null"],
+      "description": "Subject reference or entity to which this projection pertains."
+    },
+    "topic_ref": {
+      "type": ["string", "null"],
+      "description": "Topic reference if the projection is scoped to a topic."
+    },
+    "projector_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of the projector implementation."
+    },
+    "projector_version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Version string of the projector algorithm/policy."
+    },
+    "policy": {
+      "type": "object",
+      "description": "Epistemic and temporal projection policy parameters."
+    },
+    "built_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when this projection was materialized."
+    },
+    "is_authoritative": {
+      "type": "boolean",
+      "const": false,
+      "description": "MUST be false. A projection is an accelerator, never source authority."
+    },
+    "is_derived": {
+      "type": "boolean",
+      "const": true,
+      "description": "MUST be true. Explicitly marks this artifact as derived state."
+    },
+    "stale": {
+      "type": "boolean",
+      "description": "True if an underlying trace or assertion has changed since built_at."
+    },
+    "invalidation_cause": {
+      "type": ["object", "null"],
+      "description": "Reason and trigger reference for staleness.",
+      "properties": {
+        "trigger_ref": {
+          "type": "string",
+          "description": "Reference to trace, assertion, or version change causing invalidation."
+        },
+        "reason": {
+          "type": "string",
+          "description": "Explanation of invalidation."
+        },
+        "invalidated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when invalidation was flagged."
+        }
+      }
+    },
+    "source_commitments": {
+      "type": "object",
+      "required": ["assertion_count", "trace_count", "source_refs"],
+      "description": "Commitments and identifiers of authoritative sources used to build the projection.",
+      "properties": {
+        "assertion_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "trace_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "digest": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "description": "Reconstructed temporal items ordered chronologically.",
+      "items": {
+        "type": "object",
+        "required": [
+          "item_id",
+          "occurred_at",
+          "observed_or_ingested_at",
+          "source_trace_refs",
+          "epistemic_status"
+        ],
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "subject_ref": {
+            "type": ["string", "null"]
+          },
+          "occurred_at": {
+            "type": "object",
+            "required": ["value", "precision", "sort_key_ms"],
+            "description": "Valid-time claim of occurrence.",
+            "properties": {
+              "value": { "type": "string" },
+              "precision": {
+                "type": "string",
+                "enum": ["exact", "day", "month", "year", "interval", "approximate", "unknown"]
+              },
+              "sort_key_ms": { "type": "number" },
+              "interval_end_ms": { "type": ["number", "null"] }
+            }
+          },
+          "trace_created_at": {
+            "type": ["string", "null"],
+            "description": "When the underlying trace was originally created/authored."
+          },
+          "observed_or_ingested_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the Corpus first observed or ingested the trace."
+          },
+          "source_trace_refs": {
+            "type": "array",
+            "items": { "type": "object" },
+            "description": "Underlying TraceRefs witnessing this item."
+          },
+          "assertion_ref": {
+            "type": ["string", "null"],
+            "description": "Associated Assertion ID if item derives from an Assertion."
+          },
+          "epistemic_status": {
+            "type": "string",
+            "description": "Current epistemic status of the proposition/item."
+          },
+          "epistemic_summary": {
+            "type": ["object", "null"],
+            "properties": {
+              "supports_count": { "type": "integer", "minimum": 0 },
+              "contradicts_count": { "type": "integer", "minimum": 0 },
+              "has_contradiction": { "type": "boolean" }
+            }
+          },
+          "claim": {},
+          "description": { "type": "string" }
+        }
+      }
+    }
+  }
+}

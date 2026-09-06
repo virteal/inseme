@@ -779,6 +779,25 @@ export class EvidenceGraph {
       .map((id) => this.relations.get(id))
       .filter(Boolean);
   }
+
+  /**
+   * Summarize the epistemic status of an assertion based on linked evidence relations.
+   *
+   * @param {string} assertionId
+   * @returns {{ assertion_id: string, supports_count: number, contradicts_count: number, contextualizes_count: number, has_contradiction: boolean, has_support: boolean, total_relations: number }}
+   */
+  getAssertionEpistemicSummary(assertionId) {
+    const rels = this.getRelationsForAssertion(assertionId);
+    return {
+      assertion_id: assertionId,
+      supports_count: rels.supports.length,
+      contradicts_count: rels.contradicts.length,
+      contextualizes_count: rels.contextualizes.length,
+      has_contradiction: rels.contradicts.length > 0,
+      has_support: rels.supports.length > 0,
+      total_relations: rels.all.length,
+    };
+  }
 }
 
 // ----------------------------------------------------------------------

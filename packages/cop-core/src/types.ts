@@ -223,6 +223,77 @@ export interface ExecutionBudgetSnapshot {
 }
 
 // ----------------------------------------------------------------------
+// 2.2 Reactive Corpus & Temporal Projections (Issue #61, #64)
+// ----------------------------------------------------------------------
+
+/** Temporal Precision */
+export type TemporalPrecision =
+  | "exact"
+  | "day"
+  | "month"
+  | "year"
+  | "interval"
+  | "approximate"
+  | "unknown";
+
+/** Temporal Claim with precision and chronological sort keys */
+export interface TemporalClaim {
+  value: string;
+  precision: TemporalPrecision;
+  sort_key_ms: number;
+  interval_end_ms?: number | null;
+}
+
+/** Timeline Item in a derived Temporal Projection */
+export interface TimelineItem {
+  item_id: string;
+  subject_ref?: string | null;
+  occurred_at: TemporalClaim;
+  trace_created_at?: string | null;
+  observed_or_ingested_at: ISODateTime;
+  source_trace_refs: TraceRef[];
+  assertion_ref?: string | null;
+  epistemic_status: string;
+  epistemic_summary?: {
+    supports_count: number;
+    contradicts_count: number;
+    has_contradiction: boolean;
+  } | null;
+  claim?: unknown;
+  description?: string;
+}
+
+/** Invalidation cause explaining why a derived projection is stale */
+export interface InvalidationCause {
+  trigger_ref: string;
+  reason: string;
+  invalidated_at: ISODateTime;
+}
+
+/** Reconstructible derived Temporal Projection conforming to cop.temporal-projection/v1 */
+export interface TemporalProjection {
+  schema: "cop.temporal-projection/v1";
+  projection_id: string;
+  subject_ref?: string | null;
+  topic_ref?: string | null;
+  projector_id: string;
+  projector_version: string;
+  policy: Record<string, unknown>;
+  built_at: ISODateTime;
+  is_authoritative: false;
+  is_derived: true;
+  stale: boolean;
+  invalidation_cause?: InvalidationCause | null;
+  source_commitments: {
+    assertion_count: number;
+    trace_count: number;
+    source_refs: string[];
+    digest?: string | null;
+  };
+  timeline: TimelineItem[];
+}
+
+// ----------------------------------------------------------------------
 // 3. Projections (Derived State)
 // ----------------------------------------------------------------------
 
