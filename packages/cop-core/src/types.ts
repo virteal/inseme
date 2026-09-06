@@ -305,6 +305,84 @@ export interface CapabilityInvocationDiagnostic {
   committed?: boolean;
 }
 
+/** Mandate scope specifying permitted/forbidden actions and budget ceilings */
+export interface MandateScope {
+  domain?: string;
+  community?: string;
+  jurisdiction?: string;
+  allowed_actions?: string[];
+  capabilities?: string[];
+  authorized_capabilities?: string[];
+  forbidden_actions?: string[];
+  budget_ceiling?: Record<string, number>;
+  max_exposure?: string;
+  [key: string]: unknown;
+}
+
+/** Explicit Mandate object under COP/Identity and COP/Mandated Agent Security */
+export interface MandateObject {
+  artifactType?: "identity/mandate";
+  mandate_id: string;
+  version?: string;
+  principal_ref?: string;
+  principal_subject_id?: string;
+  logical_agent_ref?: string;
+  representative_subject_id?: string;
+  representative_kind?: string;
+  parent_mandate_ref?: string;
+  status: "active" | "suspended" | "revoked" | "expired" | "draft";
+  valid_from?: string;
+  valid_until?: string | null;
+  revocation_policy?: string;
+  scope?: MandateScope;
+  metadata?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+/** Inspectable authority evaluation decision or grant */
+export interface AuthorityGrant {
+  granted: boolean;
+  decision: "granted" | "refused";
+  reason: string | null;
+  error?: string | null;
+  mandate_ref: string | null;
+  mandate_version?: string | null;
+  principal_ref: string | null;
+  logical_agent_ref: string | null;
+  capability: string;
+  constraints?: MandateScope;
+  evaluated_at: ISODateTime;
+  diagnostic: CapabilityInvocationDiagnostic;
+}
+
+/** Options for evaluating mandate authority */
+export interface EvaluateMandateOptions {
+  mandate?: MandateObject | null;
+  mandate_ref?: string;
+  version_pin?: string | null;
+  expected_principal_ref?: string | null;
+  expected_actor_ref?: string | null;
+  capability: string;
+  action_category?: "suggestion" | "recommendation" | "authorization" | "mandate";
+  demand?: Record<string, number> | null;
+  parent_mandate?: MandateObject | null;
+  at_time?: string | Date;
+}
+
+/** Portable governed-capability bundle requiring local rebinding */
+export interface PortableCapabilityBundle {
+  continuation_id: string;
+  state: Record<string, unknown>;
+  required_capability: string;
+  authority_lineage: {
+    principal_ref: string;
+    mandate_ref: string;
+    logical_agent_ref: string;
+  };
+  bound: boolean;
+  local_binding?: Record<string, unknown> | null;
+}
+
 // ----------------------------------------------------------------------
 // 3. Projections (Derived State)
 // ----------------------------------------------------------------------

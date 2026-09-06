@@ -252,6 +252,7 @@ export async function invokeGovernedCapability(options) {
     provisional_cost = null,
     resource_assessments = [],
     packet_id = null,
+    portable_bundle = null,
   } = options;
 
   if (!store || typeof store.append !== "function") throw new TypeError("store.append is required");
@@ -265,12 +266,13 @@ export async function invokeGovernedCapability(options) {
   const topicId = identity.topic_id || `governed:${randomUUID()}`;
   const keyBase = idempotency_key || `gov-inv:${randomUUID()}`;
 
-  // 1. Initial Mandate Active check
-  if (!isMandateActive(store, identity.mandate_ref)) {
+  // 0. Portable bundle rebinding check
+  const bundle = portable_bundle || input?._portable_bundle;
+  if (bundle && !bundle.bound) {
     return {
       ok: false,
-      error: "mandate_inactive",
-      reason: "mandate_suspended_or_revoked",
+      error: "unbound_portable_authority",
+      reason: "imported state requires explicit local authority rebinding before execution",
       called_provider: false,
       diagnostic: {
         discovered: true,
@@ -287,7 +289,34 @@ export async function invokeGovernedCapability(options) {
     };
   }
 
-  // 1b. Capability Authorization check (Issue #66)
+  // 1. Mandate Authority Evaluation
+  const grant = evaluateMandate(store, {
+    mandate: identity.mandate,
+    mandate_ref: identity.mandate_ref,
+    version_pin:
+      identity.version_pin ||
+      (identity.mandate_ref?.includes("@") ? identity.mandate_ref.split("@")[1] : null),
+    expected_principal_ref: identity.principal_ref,
+    expected_actor_ref: identity.logical_agent_ref,
+    capability,
+    action_category: identity.action_category || "mandate",
+    demand,
+    parent_mandate: identity.parent_mandate,
+  });
+
+  if (!grant.granted) {
+    return {
+      ok: false,
+      error: grant.error || "authority_refused",
+      reason: grant.reason,
+      called_provider: false,
+      diagnostic: grant.diagnostic,
+      act_id: null,
+      receipt: null,
+    };
+  }
+
+  // 1b. Legacy authorized_capabilities check (if explicitly provided on identity)
   if (
     Array.isArray(identity.authorized_capabilities) &&
     identity.authorized_capabilities.length > 0 &&
@@ -368,8 +397,22 @@ export async function invokeGovernedCapability(options) {
     reservation = resResult.reservation;
   }
 
-  // 3. TOCTOU Pre-check: Verify mandate is STILL active immediately before external effect boundary!
-  if (!isMandateActive(store, identity.mandate_ref)) {
+  // 3. TOCTOU Pre-check: Verify mandate is STILL active & fresh immediately before external effect boundary!
+  const preCallGrant = evaluateMandate(store, {
+    mandate: identity.mandate,
+    mandate_ref: identity.mandate_ref,
+    version_pin:
+      identity.version_pin ||
+      (identity.mandate_ref?.includes("@") ? identity.mandate_ref.split("@")[1] : null),
+    expected_principal_ref: identity.principal_ref,
+    expected_actor_ref: identity.logical_agent_ref,
+    capability,
+    action_category: identity.action_category || "mandate",
+    demand,
+    parent_mandate: identity.parent_mandate,
+  });
+
+  if (!preCallGrant.granted) {
     if (ledger && reservation) {
       ledger.release({
         reservation_id: reservation.reservation_id,
@@ -377,10 +420,15 @@ export async function invokeGovernedCapability(options) {
         idempotency_key: `${keyBase}:toctou-release`,
       });
     }
+    const toctouError =
+      preCallGrant.error === "mandate_version_stale"
+        ? "mandate_version_stale"
+        : "mandate_revoked_before_effect";
     return {
       ok: false,
-      error: "mandate_revoked_before_effect",
-      reason: "mandate was revoked or suspended before provider call",
+      error: toctouError,
+      reason:
+        preCallGrant.reason || "mandate was revoked, suspended or updated before provider call",
       called_provider: false,
       diagnostic: {
         discovered: true,
@@ -490,8 +538,743 @@ function require(value, name) {
 }
 
 /**
- * U5 — record mandate or handler suspension/revocation before further Acts.
+ * Record an explicit Mandate Declaration in the append-only store (Issue #55).
+ *
+ * @param {object} store
+ * @param {object} mandate
+ */
+export function recordMandateDeclaration(store, mandate) {
+  if (!store || typeof store.append !== "function") throw new TypeError("store.append is required");
+  require(mandate?.mandate_id || mandate?.mandate_ref, "mandate.mandate_id");
+  const mandateId = mandate.mandate_id || mandate.mandate_ref;
+  const principalRef = mandate.principal_ref || mandate.principal_subject_id;
+  const logicalAgentRef = mandate.logical_agent_ref || mandate.representative_subject_id;
+  require(principalRef, "mandate.principal_ref");
+  require(logicalAgentRef, "mandate.logical_agent_ref");
+
+  const version = mandate.version || "v1";
+  const topicId = mandate.topic_id || `mandate:${mandateId}`;
+  const envelope = createCopEventEnvelope({
+    topic_id: topicId,
+    epistemic_status: "normative",
+    actor_ref: principalRef,
+    subject_ref: logicalAgentRef,
+    mandate_ref: mandateId,
+    visibility: "restricted",
+    payload: {
+      kind: "MandateDeclaration",
+      artifactType: "identity/mandate",
+      mandate_id: mandateId,
+      version,
+      principal_ref: principalRef,
+      principal_subject_id: principalRef,
+      logical_agent_ref: logicalAgentRef,
+      representative_subject_id: logicalAgentRef,
+      representative_kind: mandate.representative_kind || "agent",
+      parent_mandate_ref: mandate.parent_mandate_ref || null,
+      status: mandate.status || "active",
+      valid_from: mandate.valid_from || null,
+      valid_until: mandate.valid_until || null,
+      scope: mandate.scope || {
+        allowed_actions: mandate.authorized_capabilities || [],
+        forbidden_actions: mandate.forbidden_capabilities || [],
+        budget_ceiling: mandate.budget_ceiling || null,
+      },
+      metadata: mandate.metadata || {},
+    },
+    idempotency_key: `mandate-declaration:${mandateId}:${version}`,
+  });
+
+  const result = store.append(envelope);
+  if (!result.ok) throw new Error(`mandate_declaration_append_failed:${result.error}`);
+  return {
+    ok: true,
+    mandate_id: mandateId,
+    version,
+    event: result.event,
+    receipt: {
+      schema: "cop.mandate-declaration.receipt.v1",
+      mandate_id: mandateId,
+      version,
+      principal_ref: principalRef,
+      logical_agent_ref: logicalAgentRef,
+      event_id: result.event.event_id,
+    },
+  };
+}
+
+/**
+ * Resolve a mandate object from the append-only store.
+ *
+ * @param {object} store
+ * @param {string} mandateRef
+ * @returns {object|null}
+ */
+export function resolveMandate(store, mandateRef) {
+  if (!store || !mandateRef) return null;
+  const events =
+    typeof store.replay === "function" ? store.replay() : Array.isArray(store) ? store : [];
+  const baseRef = mandateRef.split("@")[0];
+  const version = mandateRef.includes("@") ? mandateRef.split("@")[1] : null;
+
+  // 1. Check for explicit MandateDeclaration
+  for (let i = events.length - 1; i >= 0; i--) {
+    const e = events[i];
+    if (
+      e.payload?.kind === "MandateDeclaration" ||
+      e.payload?.artifactType === "identity/mandate"
+    ) {
+      const mid = e.payload.mandate_id || e.mandate_ref;
+      if (mid === mandateRef || mid === baseRef) {
+        if (version && e.payload.version && e.payload.version !== version) continue;
+        return e.payload;
+      }
+    }
+  }
+
+  // 2. Check for MandateGranted
+  for (let i = events.length - 1; i >= 0; i--) {
+    const e = events[i];
+    if (e.event_type === "MandateGranted" || e.payload?.kind === "MandateGranted") {
+      const mid = e.payload?.mandate_ref || e.mandate_ref;
+      if (mid === mandateRef || mid === baseRef) {
+        return {
+          mandate_id: mid,
+          version: version || "v1",
+          principal_ref: e.actor_ref || e.payload?.principal_ref,
+          logical_agent_ref:
+            e.payload?.logical_agent_ref ||
+            (e.subject_ref && !e.subject_ref.startsWith("mandate:") ? e.subject_ref : null),
+          status: e.payload?.status || "active",
+          scope: e.payload?.scope || {
+            allowed_actions: e.payload?.authorized_capabilities || [],
+          },
+        };
+      }
+    }
+  }
+
+  // 3. Check for ExecutionBudgetGrant
+  for (let i = events.length - 1; i >= 0; i--) {
+    const e = events[i];
+    if (e.event_type === "ExecutionBudgetGrant" || e.payload?.kind === "ExecutionBudgetGrant") {
+      const mid = e.payload?.mandate_ref || e.mandate_ref;
+      if (mid === mandateRef || mid === baseRef) {
+        const agent =
+          e.payload?.logical_agent_ref ||
+          (e.subject_ref && !e.subject_ref.startsWith("mandate:") ? e.subject_ref : null);
+        return {
+          mandate_id: mid,
+          version: version || "v1",
+          principal_ref: e.payload?.principal_ref || e.actor_ref,
+          logical_agent_ref: agent,
+          status: "active",
+          scope: {},
+        };
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Canonical Mandate Authority Evaluator (Issue #55 P0a).
+ *
+ * Resolves and validates mandate existence, active status, validity window, principal/actor matching,
+ * capability scope, budget ceilings, and parent mandate attenuation.
+ * Returns an immutable, inspectable AuthorityGrant.
+ *
+ * @param {object} store
+ * @param {object} options
+ * @returns {object} AuthorityGrant
+ */
+export function evaluateMandate(store, options) {
+  if (!options) throw new TypeError("options are required");
+  const {
+    mandate: directMandate = null,
+    mandate_ref: rawMandateRef = null,
+    version_pin = null,
+    expected_principal_ref = null,
+    expected_actor_ref = null,
+    capability = null,
+    action_category = "mandate",
+    demand = null,
+    parent_mandate = null,
+    at_time = new Date(),
+  } = options;
+
+  const nowTime = at_time instanceof Date ? at_time : new Date(at_time);
+
+  // 1. Action category check (suggestion/recommendation cannot produce consequential effects without mandate)
+  if (action_category === "suggestion" || action_category === "recommendation") {
+    return {
+      granted: false,
+      decision: "refused",
+      error: "recommendation_without_mandate",
+      reason: `action category '${action_category}' cannot produce consequential effects without an explicit mandate`,
+      mandate_ref: rawMandateRef,
+      mandate_version: null,
+      principal_ref: null,
+      logical_agent_ref: null,
+      capability,
+      evaluated_at: nowTime.toISOString(),
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: true,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
+    };
+  }
+
+  // 2. Resolve mandate
+  const mandateRef = rawMandateRef || directMandate?.mandate_id || directMandate?.mandate_ref;
+  if (!mandateRef && !directMandate) {
+    return {
+      granted: false,
+      decision: "refused",
+      error: "mandate_not_found",
+      reason: "no mandate or mandate_ref was provided",
+      mandate_ref: null,
+      mandate_version: null,
+      principal_ref: null,
+      logical_agent_ref: null,
+      capability,
+      evaluated_at: nowTime.toISOString(),
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: false,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
+    };
+  }
+
+  const resolvedMandate = directMandate || resolveMandate(store, mandateRef);
+  if (!resolvedMandate && !directMandate) {
+    return {
+      granted: false,
+      decision: "refused",
+      error: "mandate_not_found",
+      reason: `mandate '${mandateRef}' could not be resolved from store`,
+      mandate_ref: mandateRef,
+      mandate_version: null,
+      principal_ref: null,
+      logical_agent_ref: null,
+      capability,
+      evaluated_at: nowTime.toISOString(),
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: false,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
+    };
+  }
+
+  const mandate = resolvedMandate || directMandate;
+  const principalRef =
+    mandate.principal_ref || mandate.principal_subject_id || expected_principal_ref;
+  const logicalAgentRef =
+    mandate.logical_agent_ref || mandate.representative_subject_id || expected_actor_ref;
+  const mandateVersion =
+    mandate.version || (mandateRef?.includes("@") ? mandateRef.split("@")[1] : null);
+
+  // 3. Version pinning & freshness
+  const expectedPin =
+    version_pin || (rawMandateRef?.includes("@") ? rawMandateRef.split("@")[1] : null);
+  if (expectedPin && mandateVersion && expectedPin !== mandateVersion) {
+    return {
+      granted: false,
+      decision: "refused",
+      error: "mandate_version_mismatch",
+      reason: `requested version pin '${expectedPin}' does not match mandate version '${mandateVersion}'`,
+      mandate_ref: mandateRef,
+      mandate_version: mandateVersion,
+      principal_ref: principalRef,
+      logical_agent_ref: logicalAgentRef,
+      capability,
+      evaluated_at: nowTime.toISOString(),
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: true,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
+    };
+  }
+
+  // Check if mandate version is stale (e.g. v1 was superseded by v2 in store)
+  if (store && mandateRef) {
+    const events =
+      typeof store.replay === "function" ? store.replay() : Array.isArray(store) ? store : [];
+    const baseId = mandateRef.split("@")[0];
+    const declarations = events.filter(
+      (e) =>
+        e.payload?.kind === "MandateDeclaration" &&
+        (e.payload.mandate_id === baseId || e.mandate_ref === baseId)
+    );
+    if (declarations.length > 0) {
+      const latest = declarations[declarations.length - 1].payload;
+      if (expectedPin && latest.version && latest.version !== expectedPin) {
+        return {
+          granted: false,
+          decision: "refused",
+          error: "mandate_version_stale",
+          reason: `mandate version '${expectedPin}' is stale; current active version is '${latest.version}'`,
+          mandate_ref: mandateRef,
+          mandate_version: expectedPin,
+          principal_ref: principalRef,
+          logical_agent_ref: logicalAgentRef,
+          capability,
+          evaluated_at: nowTime.toISOString(),
+          diagnostic: {
+            discovered: true,
+            reachable: true,
+            healthy: true,
+            admissible: true,
+            selected_or_funded: false,
+            authorized: false,
+            invoked: false,
+            committed: false,
+          },
+        };
+      }
+    }
+  }
+
+  // 4. Status and active checks
+  if (mandate.status && mandate.status !== "active") {
+    return {
+      granted: false,
+      decision: "refused",
+      error: "mandate_inactive",
+      reason: `mandate declared status is '${mandate.status}'`,
+      mandate_ref: mandateRef,
+      mandate_version: mandateVersion,
+      principal_ref: principalRef,
+      logical_agent_ref: logicalAgentRef,
+      capability,
+      evaluated_at: nowTime.toISOString(),
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: true,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
+    };
+  }
+
+  if (store && mandateRef && !isMandateActive(store, mandateRef)) {
+    return {
+      granted: false,
+      decision: "refused",
+      error: "mandate_inactive",
+      reason: "mandate has been suspended or revoked via MandateControl",
+      mandate_ref: mandateRef,
+      mandate_version: mandateVersion,
+      principal_ref: principalRef,
+      logical_agent_ref: logicalAgentRef,
+      capability,
+      evaluated_at: nowTime.toISOString(),
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: true,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
+    };
+  }
+
+  // 5. Validity Window (valid_from, valid_until)
+  if (mandate.valid_from && new Date(mandate.valid_from) > nowTime) {
+    return {
+      granted: false,
+      decision: "refused",
+      error: "mandate_not_yet_valid",
+      reason: `mandate validity begins at '${mandate.valid_from}', current evaluation time is '${nowTime.toISOString()}'`,
+      mandate_ref: mandateRef,
+      mandate_version: mandateVersion,
+      principal_ref: principalRef,
+      logical_agent_ref: logicalAgentRef,
+      capability,
+      evaluated_at: nowTime.toISOString(),
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: true,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
+    };
+  }
+
+  if (mandate.valid_until && new Date(mandate.valid_until) < nowTime) {
+    return {
+      granted: false,
+      decision: "refused",
+      error: "mandate_expired",
+      reason: `mandate validity expired at '${mandate.valid_until}', current evaluation time is '${nowTime.toISOString()}'`,
+      mandate_ref: mandateRef,
+      mandate_version: mandateVersion,
+      principal_ref: principalRef,
+      logical_agent_ref: logicalAgentRef,
+      capability,
+      evaluated_at: nowTime.toISOString(),
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: true,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
+    };
+  }
+
+  // 6. Expected Principal and Actor
+  if (expected_principal_ref && principalRef && expected_principal_ref !== principalRef) {
+    return {
+      granted: false,
+      decision: "refused",
+      error: "principal_mismatch",
+      reason: `expected principal '${expected_principal_ref}' does not match mandate principal '${principalRef}'`,
+      mandate_ref: mandateRef,
+      mandate_version: mandateVersion,
+      principal_ref: principalRef,
+      logical_agent_ref: logicalAgentRef,
+      capability,
+      evaluated_at: nowTime.toISOString(),
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: true,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
+    };
+  }
+
+  if (expected_actor_ref && logicalAgentRef && expected_actor_ref !== logicalAgentRef) {
+    return {
+      granted: false,
+      decision: "refused",
+      error: "actor_mismatch",
+      reason: `expected actor '${expected_actor_ref}' does not match mandate representative '${logicalAgentRef}'`,
+      mandate_ref: mandateRef,
+      mandate_version: mandateVersion,
+      principal_ref: principalRef,
+      logical_agent_ref: logicalAgentRef,
+      capability,
+      evaluated_at: nowTime.toISOString(),
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: true,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
+    };
+  }
+
+  // 7. Capability scope
+  const scope = mandate.scope || {};
+  const forbidden = scope.forbidden_actions || mandate.forbidden_capabilities || [];
+  if (capability && forbidden.includes(capability)) {
+    return {
+      granted: false,
+      decision: "refused",
+      error: "capability_forbidden",
+      reason: `capability '${capability}' is explicitly forbidden by mandate scope`,
+      mandate_ref: mandateRef,
+      mandate_version: mandateVersion,
+      principal_ref: principalRef,
+      logical_agent_ref: logicalAgentRef,
+      capability,
+      evaluated_at: nowTime.toISOString(),
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: true,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
+    };
+  }
+
+  const allowed = scope.allowed_actions || scope.capabilities || mandate.authorized_capabilities;
+  if (
+    capability &&
+    Array.isArray(allowed) &&
+    allowed.length > 0 &&
+    !allowed.includes(capability) &&
+    !allowed.includes("*")
+  ) {
+    return {
+      granted: false,
+      decision: "refused",
+      error: "capability_out_of_scope",
+      reason: `capability '${capability}' is not within authorized capabilities [${allowed.join(", ")}]`,
+      mandate_ref: mandateRef,
+      mandate_version: mandateVersion,
+      principal_ref: principalRef,
+      logical_agent_ref: logicalAgentRef,
+      capability,
+      evaluated_at: nowTime.toISOString(),
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: true,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
+    };
+  }
+
+  // 8. Budget Ceiling check
+  const ceiling = scope.budget_ceiling || mandate.budget_ceiling;
+  if (demand && ceiling) {
+    for (const [dim, requestedAmount] of Object.entries(demand)) {
+      if (ceiling[dim] != null && requestedAmount > ceiling[dim]) {
+        return {
+          granted: false,
+          decision: "refused",
+          error: "budget_ceiling_exceeded",
+          reason: `demand on dimension '${dim}' (${requestedAmount}) exceeds mandate ceiling (${ceiling[dim]})`,
+          mandate_ref: mandateRef,
+          mandate_version: mandateVersion,
+          principal_ref: principalRef,
+          logical_agent_ref: logicalAgentRef,
+          capability,
+          evaluated_at: nowTime.toISOString(),
+          diagnostic: {
+            discovered: true,
+            reachable: true,
+            healthy: true,
+            admissible: true,
+            selected_or_funded: false,
+            authorized: false,
+            invoked: false,
+            committed: false,
+          },
+        };
+      }
+    }
+  }
+
+  // 9. Parent Mandate Attenuation (Authority(child) <= Authority(parent))
+  const parent =
+    parent_mandate ||
+    (mandate.parent_mandate_ref ? resolveMandate(store, mandate.parent_mandate_ref) : null);
+  if (parent) {
+    const parentScope = parent.scope || {};
+    const parentAllowed =
+      parentScope.allowed_actions || parentScope.capabilities || parent.authorized_capabilities;
+    if (Array.isArray(allowed) && Array.isArray(parentAllowed)) {
+      for (const cap of allowed) {
+        if (!parentAllowed.includes(cap) && !parentAllowed.includes("*")) {
+          return {
+            granted: false,
+            decision: "refused",
+            error: "child_authority_exceeds_parent",
+            reason: `child capability '${cap}' exceeds parent authorized scope [${parentAllowed.join(", ")}]`,
+            mandate_ref: mandateRef,
+            mandate_version: mandateVersion,
+            principal_ref: principalRef,
+            logical_agent_ref: logicalAgentRef,
+            capability,
+            evaluated_at: nowTime.toISOString(),
+            diagnostic: {
+              discovered: true,
+              reachable: true,
+              healthy: true,
+              admissible: true,
+              selected_or_funded: false,
+              authorized: false,
+              invoked: false,
+              committed: false,
+            },
+          };
+        }
+      }
+    }
+    if (
+      mandate.valid_until &&
+      parent.valid_until &&
+      new Date(mandate.valid_until) > new Date(parent.valid_until)
+    ) {
+      return {
+        granted: false,
+        decision: "refused",
+        error: "child_authority_exceeds_parent",
+        reason: `child validity '${mandate.valid_until}' extends beyond parent validity '${parent.valid_until}'`,
+        mandate_ref: mandateRef,
+        mandate_version: mandateVersion,
+        principal_ref: principalRef,
+        logical_agent_ref: logicalAgentRef,
+        capability,
+        evaluated_at: nowTime.toISOString(),
+        diagnostic: {
+          discovered: true,
+          reachable: true,
+          healthy: true,
+          admissible: true,
+          selected_or_funded: false,
+          authorized: false,
+          invoked: false,
+          committed: false,
+        },
+      };
+    }
+    const parentCeiling = parentScope.budget_ceiling || parent.budget_ceiling;
+    if (ceiling && parentCeiling) {
+      for (const [dim, childLimit] of Object.entries(ceiling)) {
+        if (parentCeiling[dim] != null && childLimit > parentCeiling[dim]) {
+          return {
+            granted: false,
+            decision: "refused",
+            error: "child_authority_exceeds_parent",
+            reason: `child budget ceiling for '${dim}' (${childLimit}) exceeds parent ceiling (${parentCeiling[dim]})`,
+            mandate_ref: mandateRef,
+            mandate_version: mandateVersion,
+            principal_ref: principalRef,
+            logical_agent_ref: logicalAgentRef,
+            capability,
+            evaluated_at: nowTime.toISOString(),
+            diagnostic: {
+              discovered: true,
+              reachable: true,
+              healthy: true,
+              admissible: true,
+              selected_or_funded: false,
+              authorized: false,
+              invoked: false,
+              committed: false,
+            },
+          };
+        }
+      }
+    }
+  }
+
+  // 10. All checks pass -> Granted
+  return {
+    granted: true,
+    decision: "granted",
+    reason: null,
+    mandate_ref: mandateRef,
+    mandate_version: mandateVersion,
+    principal_ref: principalRef,
+    logical_agent_ref: logicalAgentRef,
+    capability,
+    constraints: scope,
+    evaluated_at: nowTime.toISOString(),
+    diagnostic: {
+      discovered: true,
+      reachable: true,
+      healthy: true,
+      admissible: true,
+      selected_or_funded: true,
+      authorized: true,
+      invoked: false,
+      committed: false,
+    },
+  };
+}
+
+/**
+ * Create a portable capability bundle requiring local authority rebinding.
+ */
+export function createPortableCapabilityBundle(options) {
+  require(options.continuation_id, "continuation_id");
+  require(options.required_capability, "required_capability");
+  require(options.authority_lineage?.principal_ref, "authority_lineage.principal_ref");
+  require(options.authority_lineage?.mandate_ref, "authority_lineage.mandate_ref");
+  require(options.authority_lineage?.logical_agent_ref, "authority_lineage.logical_agent_ref");
+
+  return {
+    schema: "cop.portable-capability-bundle/v1",
+    continuation_id: options.continuation_id,
+    state: options.state || {},
+    required_capability: options.required_capability,
+    authority_lineage: {
+      principal_ref: options.authority_lineage.principal_ref,
+      mandate_ref: options.authority_lineage.mandate_ref,
+      logical_agent_ref: options.authority_lineage.logical_agent_ref,
+    },
+    bound: false,
+    local_binding: null,
+  };
+}
+
+/**
+ * Rebind a portable capability bundle to an authorized local decision grant.
+ */
+export function rebindPortableAuthority(bundle, authorityGrant) {
+  if (!bundle) throw new TypeError("bundle is required");
+  if (!authorityGrant || !authorityGrant.granted) {
+    throw new Error("Cannot rebind portable bundle without a granted authority decision");
+  }
+  return {
+    ...bundle,
+    bound: true,
+    local_binding: {
+      rebound_at: new Date().toISOString(),
+      mandate_ref: authorityGrant.mandate_ref,
+      mandate_version: authorityGrant.mandate_version,
+      principal_ref: authorityGrant.principal_ref,
+      logical_agent_ref: authorityGrant.logical_agent_ref,
+      capability: authorityGrant.capability,
+    },
+  };
+}
+
+/**
+ * Record mandate or handler suspension/revocation before further Acts.
  * Stale results remain in the log; callers must check isMandateActive.
+ * Enforces authority check on caller principal (Issue #55).
  *
  * @param {object} store
  * @param {object} input
@@ -506,6 +1289,20 @@ function require(value, name) {
 export function recordMandateControl(store, input) {
   require(input.principal_ref, "principal_ref");
   require(input.mandate_ref, "mandate_ref");
+
+  // Authority check: verify principal_ref is authorized for this mandate
+  const declaredMandate = input.mandate || resolveMandate(store, input.mandate_ref);
+  if (declaredMandate) {
+    const expectedPrincipal = declaredMandate.principal_ref || declaredMandate.principal_subject_id;
+    if (expectedPrincipal && expectedPrincipal !== input.principal_ref) {
+      return {
+        ok: false,
+        error: "unauthorized_principal_control",
+        reason: `caller '${input.principal_ref}' is not the authorized principal '${expectedPrincipal}' of mandate '${input.mandate_ref}'`,
+      };
+    }
+  }
+
   const action = input.action === "suspend" ? "suspend" : "revoke";
   const controlId = randomUUID();
   const topicId = input.topic_id || `mandate-control:${input.mandate_ref}`;
