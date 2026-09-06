@@ -272,6 +272,42 @@ export async function invokeGovernedCapability(options) {
       error: "mandate_inactive",
       reason: "mandate_suspended_or_revoked",
       called_provider: false,
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: true,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
+      act_id: null,
+      receipt: null,
+    };
+  }
+
+  // 1b. Capability Authorization check (Issue #66)
+  if (
+    Array.isArray(identity.authorized_capabilities) &&
+    identity.authorized_capabilities.length > 0 &&
+    !identity.authorized_capabilities.includes(capability)
+  ) {
+    return {
+      ok: false,
+      error: "capability_unauthorized",
+      reason: `capability '${capability}' is not authorized under mandate '${identity.mandate_ref}'`,
+      called_provider: false,
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: true,
+        selected_or_funded: false,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
       act_id: null,
       receipt: null,
     };
@@ -287,6 +323,16 @@ export async function invokeGovernedCapability(options) {
         error: "mandate_budget_mismatch",
         reason: `budget belongs to ${snap.mandate_ref} but invocation is under ${identity.mandate_ref}`,
         called_provider: false,
+        diagnostic: {
+          discovered: true,
+          reachable: true,
+          healthy: true,
+          admissible: true,
+          selected_or_funded: false,
+          authorized: false,
+          invoked: false,
+          committed: false,
+        },
         act_id: null,
         receipt: null,
       };
@@ -305,6 +351,16 @@ export async function invokeGovernedCapability(options) {
         dimension: resResult.dimension,
         snapshot: resResult.snapshot,
         called_provider: false,
+        diagnostic: {
+          discovered: true,
+          reachable: true,
+          healthy: true,
+          admissible: true,
+          selected_or_funded: false,
+          authorized: true,
+          invoked: false,
+          committed: false,
+        },
         act_id: null,
         receipt: null,
       };
@@ -326,6 +382,16 @@ export async function invokeGovernedCapability(options) {
       error: "mandate_revoked_before_effect",
       reason: "mandate was revoked or suspended before provider call",
       called_provider: false,
+      diagnostic: {
+        discovered: true,
+        reachable: true,
+        healthy: true,
+        admissible: true,
+        selected_or_funded: true,
+        authorized: false,
+        invoked: false,
+        committed: false,
+      },
       act_id: null,
       receipt: null,
     };
@@ -396,6 +462,16 @@ export async function invokeGovernedCapability(options) {
     reservation,
     settlement,
     snapshot: ledger ? ledger.snapshot() : null,
+    diagnostic: {
+      discovered: true,
+      reachable: true,
+      healthy: outcome !== "failed",
+      admissible: true,
+      selected_or_funded: true,
+      authorized: true,
+      invoked: true,
+      committed: outcome === "ok",
+    },
     error: handlerError ? String(handlerError?.message || handlerError) : null,
   };
 }

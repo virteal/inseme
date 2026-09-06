@@ -293,6 +293,18 @@ export interface TemporalProjection {
   timeline: TimelineItem[];
 }
 
+/** Diagnostic breakdown separating reachability, admissibility, and authority (Issue #66) */
+export interface CapabilityInvocationDiagnostic {
+  discovered?: boolean;
+  reachable?: boolean;
+  healthy?: boolean;
+  admissible?: boolean;
+  selected_or_funded?: boolean;
+  authorized?: boolean;
+  invoked?: boolean;
+  committed?: boolean;
+}
+
 // ----------------------------------------------------------------------
 // 3. Projections (Derived State)
 // ----------------------------------------------------------------------

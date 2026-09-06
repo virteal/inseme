@@ -161,6 +161,7 @@ export async function routePacketResiliently(
     probeNode = null,
     spoolQueue = null,
     isAdmissible = null,
+    isAuthorized = null,
     source = "cogentia-resilient-router",
   } = {}
 ) {
@@ -171,11 +172,33 @@ export async function routePacketResiliently(
   const { envelope } = pkt;
   const { routeTo, requiredCapability } = envelope;
 
+  const diagnostics = {};
+  function trackNode(nodeId, state) {
+    diagnostics[nodeId] = {
+      discovered: true,
+      reachable: false,
+      healthy: false,
+      admissible: false,
+      selected_or_funded: false,
+      authorized: false,
+      invoked: false,
+      committed: false,
+      ...diagnostics[nodeId],
+      ...state,
+    };
+  }
+
   async function safeProbe(nodeId) {
-    if (!probeNode) return true;
+    if (!probeNode) {
+      trackNode(nodeId, { reachable: true, healthy: true });
+      return true;
+    }
     try {
-      return Boolean(await probeNode(nodeId));
+      const ok = Boolean(await probeNode(nodeId));
+      trackNode(nodeId, { reachable: ok, healthy: ok });
+      return ok;
     } catch {
+      trackNode(nodeId, { reachable: false, healthy: false });
       return false;
     }
   }
@@ -189,6 +212,7 @@ export async function routePacketResiliently(
 
     if (Array.isArray(admissibleHandlers) && admissibleHandlers.length > 0) {
       if (!admissibleHandlers.includes(nodeId)) {
+        trackNode(nodeId, { admissible: false });
         return false;
       }
     }
@@ -196,20 +220,56 @@ export async function routePacketResiliently(
     // Check optional custom isAdmissible predicate
     if (typeof isAdmissible === "function") {
       try {
-        return Boolean(await isAdmissible(nodeId, pkt));
+        const ok = Boolean(await isAdmissible(nodeId, pkt));
+        trackNode(nodeId, { admissible: ok });
+        return ok;
       } catch {
+        trackNode(nodeId, { admissible: false });
         return false;
       }
     }
 
+    trackNode(nodeId, { admissible: true });
+    return true;
+  }
+
+  async function safeAuthorized(nodeId) {
+    const authorizedHandlers =
+      pkt.closure?.authorized_handlers ||
+      pkt.envelope?.closure?.authorized_handlers ||
+      pkt.envelope?.authorized_handlers;
+
+    if (Array.isArray(authorizedHandlers) && authorizedHandlers.length > 0) {
+      if (!authorizedHandlers.includes(nodeId)) {
+        trackNode(nodeId, { authorized: false });
+        return false;
+      }
+    }
+
+    if (typeof isAuthorized === "function") {
+      try {
+        const ok = Boolean(await isAuthorized(nodeId, pkt));
+        trackNode(nodeId, { authorized: ok });
+        return ok;
+      } catch {
+        trackNode(nodeId, { authorized: false });
+        return false;
+      }
+    }
+
+    trackNode(nodeId, { authorized: true });
     return true;
   }
 
   // 1. Direct Next-Hop Optimization
   if (routeTo) {
+    trackNode(routeTo, { discovered: true });
     const isPreferredAdmissible = await safeAdmissible(routeTo);
-    const isPreferredReachable = isPreferredAdmissible && (await safeProbe(routeTo));
-    if (isPreferredReachable) {
+    const isPreferredAuthorized = await safeAuthorized(routeTo);
+    const isPreferredReachable = await safeProbe(routeTo);
+
+    if (isPreferredAdmissible && isPreferredAuthorized && isPreferredReachable) {
+      trackNode(routeTo, { selected_or_funded: true, invoked: true });
       recordPacketHop(pkt, {
         node_id: routeTo,
         route_reason: `direct-hop-optimization:${routeTo}`,
@@ -225,47 +285,57 @@ export async function routePacketResiliently(
         status: "routed_direct",
         targetNode: routeTo,
         capabilitySatisfied: true,
+        diagnostics,
       };
     }
 
-    // Direct preferred hop failed / unreachable or inadmissible -> Record fallback hop
+    // Direct preferred hop failed / unreachable / inadmissible / unauthorized -> Record fallback hop
+    const fallbackReason = !isPreferredAdmissible
+      ? `fallback:preferred-node-inadmissible:${routeTo}`
+      : !isPreferredAuthorized
+        ? `fallback:preferred-node-unauthorized:${routeTo}`
+        : `fallback:preferred-node-unreachable:${routeTo}`;
+
     recordPacketHop(pkt, {
       node_id: "router",
-      route_reason: !isPreferredAdmissible
-        ? `fallback:preferred-node-inadmissible:${routeTo}`
-        : `fallback:preferred-node-unreachable:${routeTo}`,
+      route_reason: fallbackReason,
     });
   }
 
   // 2. Alternative Provider Fallback
-  // Invariant (Inseme #54): provider reachable != provider admissible != provider authorized
+  // Invariant (Inseme #54, #66): provider reachable != provider admissible != provider authorized
   if (requiredCapability && registry) {
     const providers = registry.getProviders(requiredCapability);
     for (const altNode of providers) {
+      trackNode(altNode, { discovered: true });
       if (altNode !== routeTo) {
         const isAltAdmissible = await safeAdmissible(altNode);
-        if (!isAltAdmissible) continue; // Inadmissible node MUST NOT be chosen merely because it is reachable!
-
+        const isAltAuthorized = await safeAuthorized(altNode);
         const isAltReachable = await safeProbe(altNode);
-        if (isAltReachable) {
-          recordPacketHop(pkt, {
-            node_id: altNode,
-            route_reason: `fallback-provider-matched:${requiredCapability}->${altNode}`,
-          });
-          if (forwardToBus && typeof forwardToBus.publish === "function") {
-            await forwardToBus.publish({
-              type: "cop.packet.routed",
-              source,
-              data: { packet: pkt, method: "fallback_provider", targetNode: altNode },
-            });
-          }
-          return {
-            status: "routed_fallback",
-            targetNode: altNode,
-            capabilitySatisfied: true,
-            chosenCapability: requiredCapability,
-          };
+
+        if (!isAltAdmissible || !isAltAuthorized || !isAltReachable) {
+          continue;
         }
+
+        trackNode(altNode, { selected_or_funded: true, invoked: true });
+        recordPacketHop(pkt, {
+          node_id: altNode,
+          route_reason: `fallback-provider-matched:${requiredCapability}->${altNode}`,
+        });
+        if (forwardToBus && typeof forwardToBus.publish === "function") {
+          await forwardToBus.publish({
+            type: "cop.packet.routed",
+            source,
+            data: { packet: pkt, method: "fallback_provider", targetNode: altNode },
+          });
+        }
+        return {
+          status: "routed_fallback",
+          targetNode: altNode,
+          capabilitySatisfied: true,
+          chosenCapability: requiredCapability,
+          diagnostics,
+        };
       }
     }
   }
@@ -290,6 +360,7 @@ export async function routePacketResiliently(
     return {
       status: "attractor_pool_broadcast",
       capabilitySatisfied: registry ? registry.canSatisfy(requiredCapability) : true,
+      diagnostics,
     };
   }
 
@@ -304,6 +375,7 @@ export async function routePacketResiliently(
       status: "spooled_store_and_forward",
       capabilitySatisfied: false,
       spooledAt: new Date().toISOString(),
+      diagnostics,
     };
   }
 
@@ -311,6 +383,7 @@ export async function routePacketResiliently(
     status: "unroutable",
     capabilitySatisfied: false,
     reason: "no-reachable-provider-or-attractor",
+    diagnostics,
   };
 }
 
