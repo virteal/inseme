@@ -8,14 +8,7 @@
 
 import { conversationTopic } from "./jhnConversationState.js";
 import { loadCogentiaMcpClientFromEnv } from "./cogentiaMcpClient.js";
-import {
-  createEventSourcedExecutionBudgetLedger,
-  DIMENSIONS,
-} from "../../../../packages/cop-core/src/execution-budget.js";
-
-function zeroUsage() {
-  return Object.fromEntries(DIMENSIONS.map((dimension) => [dimension, 0]));
-}
+import { createEventSourcedExecutionBudgetLedger } from "../../../../packages/cop-core/src/execution-budget.js";
 
 function normalizeExecutionBudget(store, value) {
   if (!value || typeof value !== "object") return null;
@@ -36,13 +29,6 @@ function normalizeExecutionBudget(store, value) {
     throw new TypeError("execution_budget.demand is required");
   }
   return { ledger, demand: value.demand, forecasts: value.forecasts || [] };
-}
-
-function delegationUsage(receipt, elapsedMs) {
-  const trace = receipt?.events?.find((event) => event.payload?.kind === "Trace");
-  const reported = trace?.payload?.effect?.execution_usage;
-  if (reported && typeof reported === "object") return reported;
-  return { ...zeroUsage(), max_steps: 1, max_elapsed_ms: elapsedMs };
 }
 
 function requireText(value, name) {
@@ -135,7 +121,7 @@ export function createJhnDelegatingAgent(options = {}) {
           idempotency_key: `conv:${conversationId}:capability-unavailable:${turnId || Date.now()}`,
         });
       } else if (wantsDelegate && handler) {
-        const { jhnDelegateToHandler, isMandateActive } =
+        const { invokeGovernedCapability, isMandateActive } =
           await import("../../../../packages/cop-core/src/governed-act.js");
         if (!isMandateActive(store, identity.mandate_ref)) {
           store.append({
@@ -166,13 +152,19 @@ export function createJhnDelegatingAgent(options = {}) {
           });
         } else {
           const reservationKey = `jhn-delegation:${conversationId}:${turnId || Date.now()}`;
-          const reservation = executionBudget.ledger.reserve({
-            idempotency_key: reservationKey,
-            expected_version: executionBudget.ledger.snapshot().version,
+          const invResult = await invokeGovernedCapability({
+            store,
+            ledger: executionBudget.ledger,
+            handler,
+            identity: { ...identity, topic_id: topicId },
+            capability: handler.capability || "reasoning.assist",
+            input: { message, history },
             demand: executionBudget.demand,
             forecasts: executionBudget.forecasts,
+            idempotency_key: reservationKey,
           });
-          if (!reservation.ok) {
+
+          if (!invResult.ok && !invResult.called_provider) {
             store.append({
               topic_id: topicId,
               epistemic_status: "observed",
@@ -180,38 +172,16 @@ export function createJhnDelegatingAgent(options = {}) {
               visibility: "restricted",
               payload: {
                 kind: "conversation.delegation_refused",
-                reason: reservation.error,
+                reason: invResult.error,
                 mandate_ref: identity.mandate_ref,
                 capability: handler.capability || "reasoning.assist",
-                budget: reservation.snapshot,
+                budget: invResult.snapshot,
               },
               idempotency_key: `conv:${conversationId}:budget-refused:${turnId || Date.now()}`,
             });
           } else {
-            const startedAt = Date.now();
-            handlerReceipt = await jhnDelegateToHandler({
-              store,
-              handler,
-              identity: { ...identity, topic_id: topicId },
-              capability: handler.capability || "reasoning.assist",
-              input: { message, history },
-            });
-            const trace = handlerReceipt.events?.find((event) => event.payload?.kind === "Trace");
-            const outcome = trace?.payload?.outcome;
-            const settlement =
-              outcome === "failed" || outcome === "refused"
-                ? executionBudget.ledger.release({
-                    reservation_id: reservation.reservation.reservation_id,
-                    expected_version: reservation.snapshot.version,
-                    idempotency_key: `${reservationKey}:release`,
-                  })
-                : executionBudget.ledger.settle({
-                    reservation_id: reservation.reservation.reservation_id,
-                    expected_version: reservation.snapshot.version,
-                    usage: delegationUsage(handlerReceipt, Date.now() - startedAt),
-                    idempotency_key: `${reservationKey}:settle`,
-                  });
-            if (!settlement.ok) throw new Error(`execution_budget_${settlement.error}`);
+            handlerReceipt = invResult;
+            const trace = invResult.events?.find((event) => event.payload?.kind === "Trace");
             handlerText = trace?.payload?.effect?.text || trace?.payload?.effect?.summary || null;
           }
         }

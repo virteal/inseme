@@ -186,16 +186,29 @@ function listTopicEvents(store, topic) {
   throw new TypeError("COP event store must provide listTopic() or replay()");
 }
 
-function projectEventLedger({ budget_id, limits, events }) {
+function projectEventLedger({ budget_id, limits, events, require_authority_grant = false }) {
   const reservations = new Map();
   let reserved = zero();
   let settled = zero();
   let version = 0;
+  let authority_version = 0;
+  let mandate_ref = null;
+  let authoritative_limits = null;
+  let has_grant = false;
 
   for (const event of events) {
     version = Math.max(version, event.topic?.seq || 0);
     const payload = event.payload || {};
     if (payload.budget_id !== budget_id) continue;
+
+    if (event.event_type === "ExecutionBudgetGrant" || payload.kind === "ExecutionBudgetGrant") {
+      has_grant = true;
+      mandate_ref = payload.mandate_ref || mandate_ref;
+      authority_version = Math.max(authority_version, payload.authority_version || 1);
+      authoritative_limits = normalizeLimits(payload.limits, "grant.limits");
+      continue;
+    }
+
     if (event.event_type === "ExecutionBudgetReservation") {
       if (reservations.has(payload.reservation?.reservation_id)) continue;
       const reservation = structuredClone(payload.reservation);
@@ -216,16 +229,91 @@ function projectEventLedger({ budget_id, limits, events }) {
     }
   }
 
+  // The store's authoritative grant ALWAYS trumps caller-provided limits.
+  // If require_authority_grant is true and no grant exists, capacity is 0 (fail-closed).
+  const effectiveLimits = authoritative_limits
+    ? { ...authoritative_limits }
+    : require_authority_grant
+      ? zero()
+      : limits
+        ? { ...limits }
+        : zero();
+
   return {
     reservations,
     snapshot: {
       budget_id,
       version,
-      limits: { ...limits },
+      authority_version,
+      mandate_ref,
+      has_grant,
+      limits: { ...effectiveLimits },
       reserved,
       settled,
-      available: subtract(limits, add(reserved, settled)),
+      available: subtract(effectiveLimits, add(reserved, settled)),
     },
+  };
+}
+
+/**
+ * Record an authoritative execution-budget grant into the durable event store.
+ *
+ * @param {object} store - COP store with .append()
+ * @param {object} input
+ * @param {string} input.budget_id
+ * @param {string} input.mandate_ref
+ * @param {string} input.principal_ref
+ * @param {object} input.limits
+ * @param {number} [input.authority_version]
+ * @param {string} [input.topic_id]
+ * @param {string} [input.reason]
+ */
+export function recordExecutionBudgetGrant(store, input) {
+  if (!store || typeof store.append !== "function") {
+    throw new TypeError("COP event store must provide append()");
+  }
+  requireText(input?.budget_id, "budget_id");
+  requireText(input?.mandate_ref, "mandate_ref");
+  requireText(input?.principal_ref, "principal_ref");
+  const normalizedLimits = normalizeLimits(input.limits, "limits");
+  const topic = input.topic_id || executionBudgetTopic(input.budget_id);
+  const version =
+    Number.isInteger(input.authority_version) && input.authority_version > 0
+      ? input.authority_version
+      : 1;
+
+  const result = store.append({
+    event_type: "ExecutionBudgetGrant",
+    topic_id: topic,
+    epistemic_status: "normative",
+    actor_ref: input.principal_ref,
+    subject_ref: input.mandate_ref,
+    mandate_ref: input.mandate_ref,
+    visibility: "restricted",
+    payload: {
+      kind: "ExecutionBudgetGrant",
+      budget_id: input.budget_id,
+      mandate_ref: input.mandate_ref,
+      principal_ref: input.principal_ref,
+      limits: normalizedLimits,
+      authority_version: version,
+      reason: input.reason || null,
+      granted_at: new Date().toISOString(),
+    },
+    idempotency_key: `execution-budget:grant:${input.budget_id}:v${version}`,
+  });
+
+  if (!result.ok) {
+    throw new Error(`execution_budget_grant_append_failed:${result.error}`);
+  }
+
+  return {
+    ok: true,
+    budget_id: input.budget_id,
+    mandate_ref: input.mandate_ref,
+    authority_version: version,
+    limits: normalizedLimits,
+    event: result.event,
   };
 }
 
@@ -243,9 +331,10 @@ export function createEventSourcedExecutionBudgetLedger({
   budget_id,
   limits,
   event_context = {},
+  require_authority_grant = false,
 } = {}) {
   requireText(budget_id, "budget_id");
-  const maximum = normalizeLimits(limits, "limits");
+  const fallbackLimits = limits ? normalizeLimits(limits, "limits") : zero();
   if (!store || typeof store.append !== "function") {
     throw new TypeError("COP event store must provide append()");
   }
@@ -254,8 +343,9 @@ export function createEventSourcedExecutionBudgetLedger({
   function current() {
     return projectEventLedger({
       budget_id,
-      limits: maximum,
+      limits: fallbackLimits,
       events: listTopicEvents(store, topic),
+      require_authority_grant,
     });
   }
 
@@ -280,6 +370,9 @@ export function createEventSourcedExecutionBudgetLedger({
       requireText(idempotency_key, "idempotency_key");
       const requested = normalizeLimits(demand, "demand");
       const state = current();
+      if (require_authority_grant && !state.snapshot.has_grant) {
+        return { ok: false, error: "budget_not_authorized", snapshot: state.snapshot };
+      }
       const existing = [...state.reservations.values()].find(
         (reservation) => reservation.idempotency_key === idempotency_key
       );
@@ -293,7 +386,7 @@ export function createEventSourcedExecutionBudgetLedger({
       if (!Number.isInteger(expected_version) || expected_version !== state.snapshot.version)
         return conflict(state.snapshot);
       const next = add(add(state.snapshot.reserved, state.snapshot.settled), requested);
-      const dimension = exceeds(next, maximum);
+      const dimension = exceeds(next, state.snapshot.limits);
       if (dimension)
         return { ok: false, error: "budget_exhausted", dimension, snapshot: state.snapshot };
 

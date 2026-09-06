@@ -199,6 +199,29 @@ export interface EvidenceRelation {
   meta?: Record<string, JsonValue>;
 }
 
+/** Authoritative Execution Budget Limits */
+export interface ExecutionBudgetLimits {
+  max_steps?: number;
+  max_tool_calls?: number;
+  max_subagents?: number;
+  max_elapsed_ms?: number;
+  max_external_effects?: number;
+  [key: string]: number | undefined;
+}
+
+/** Execution Budget Ledger Snapshot */
+export interface ExecutionBudgetSnapshot {
+  budget_id: string;
+  version: number;
+  authority_version: number;
+  mandate_ref?: string | null;
+  has_grant: boolean;
+  limits: ExecutionBudgetLimits;
+  reserved: ExecutionBudgetLimits;
+  settled: ExecutionBudgetLimits;
+  available: ExecutionBudgetLimits;
+}
+
 // ----------------------------------------------------------------------
 // 3. Projections (Derived State)
 // ----------------------------------------------------------------------

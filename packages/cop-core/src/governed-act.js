@@ -174,11 +174,16 @@ export async function jhnDelegateToHandler(options) {
 
   let effect = null;
   let outcome = "ok";
-  try {
-    effect = await handler.invoke(input || {});
-  } catch (err) {
-    outcome = "failed";
-    effect = { error: String(err.message || err) };
+  if (!isMandateActive(store, identity.mandate_ref)) {
+    outcome = "refused";
+    effect = { error: "mandate_inactive_before_handler_invoke" };
+  } else {
+    try {
+      effect = await handler.invoke(input || {});
+    } catch (err) {
+      outcome = "failed";
+      effect = { error: String(err.message || err) };
+    }
   }
 
   // Token usage alone does not prove a monetary cost. This matters for
@@ -205,6 +210,194 @@ export async function jhnDelegateToHandler(options) {
     provisional_cost,
     resource_assessments,
   });
+}
+
+/**
+ * Generic governed capability invocation closing the audit & TOCTOU gap (Issue #68).
+ *
+ * Enforces:
+ * 1. Mandate active pre-check
+ * 2. Authority-bound budget reservation
+ * 3. Immediate pre-call TOCTOU re-check (revocation before effect prevents call)
+ * 4. Handler invocation (consequential effect)
+ * 5. Settlement or release of budget based on verified provider outcome
+ * 6. Attributable governed act chain recording (Invocation, Act, Trace, Imputation)
+ *
+ * @param {object} options
+ * @param {object} options.store - Append-only COP store
+ * @param {object} [options.ledger] - ExecutionBudget ledger (event-sourced or memory)
+ * @param {object} options.handler - Handler { id, invoke(input) => Promise<effect> }
+ * @param {object} options.identity - { principal_ref, mandate_ref, logical_agent_ref, topic_id }
+ * @param {string} options.capability - Capability string, e.g. "reasoning.code"
+ * @param {object} [options.input] - Input payload passed to handler
+ * @param {object} [options.demand] - Budget demand for reservation
+ * @param {string} [options.idempotency_key] - Idempotency key for reservation and act
+ * @param {object[]} [options.forecasts] - Optional risk/resource forecasts
+ * @param {string|null} [options.provisional_cost] - Optional provisional cost
+ * @param {object[]} [options.resource_assessments] - Optional external assessments
+ * @param {string|null} [options.packet_id] - Associated packet ID
+ * @returns {Promise<object>} Result receipt and effect
+ */
+export async function invokeGovernedCapability(options) {
+  const {
+    store,
+    ledger,
+    handler,
+    identity,
+    capability,
+    input = {},
+    demand,
+    idempotency_key,
+    forecasts = [],
+    provisional_cost = null,
+    resource_assessments = [],
+    packet_id = null,
+  } = options;
+
+  if (!store || typeof store.append !== "function") throw new TypeError("store.append is required");
+  if (!handler || typeof handler.invoke !== "function")
+    throw new TypeError("handler.invoke is required");
+  require(identity?.principal_ref, "identity.principal_ref");
+  require(identity?.mandate_ref, "identity.mandate_ref");
+  require(identity?.logical_agent_ref, "identity.logical_agent_ref");
+  require(capability, "capability");
+
+  const topicId = identity.topic_id || `governed:${randomUUID()}`;
+  const keyBase = idempotency_key || `gov-inv:${randomUUID()}`;
+
+  // 1. Initial Mandate Active check
+  if (!isMandateActive(store, identity.mandate_ref)) {
+    return {
+      ok: false,
+      error: "mandate_inactive",
+      reason: "mandate_suspended_or_revoked",
+      called_provider: false,
+      act_id: null,
+      receipt: null,
+    };
+  }
+
+  // 2. Budget reservation if ledger provided
+  let reservation = null;
+  if (ledger) {
+    const snap = ledger.snapshot();
+    if (snap.mandate_ref && snap.mandate_ref !== identity.mandate_ref) {
+      return {
+        ok: false,
+        error: "mandate_budget_mismatch",
+        reason: `budget belongs to ${snap.mandate_ref} but invocation is under ${identity.mandate_ref}`,
+        called_provider: false,
+        act_id: null,
+        receipt: null,
+      };
+    }
+    const reserveKey = `${keyBase}:reserve`;
+    const resResult = ledger.reserve({
+      idempotency_key: reserveKey,
+      expected_version: snap.version,
+      demand: demand || snap.limits,
+      forecasts,
+    });
+    if (!resResult.ok) {
+      return {
+        ok: false,
+        error: resResult.error,
+        dimension: resResult.dimension,
+        snapshot: resResult.snapshot,
+        called_provider: false,
+        act_id: null,
+        receipt: null,
+      };
+    }
+    reservation = resResult.reservation;
+  }
+
+  // 3. TOCTOU Pre-check: Verify mandate is STILL active immediately before external effect boundary!
+  if (!isMandateActive(store, identity.mandate_ref)) {
+    if (ledger && reservation) {
+      ledger.release({
+        reservation_id: reservation.reservation_id,
+        expected_version: ledger.snapshot().version,
+        idempotency_key: `${keyBase}:toctou-release`,
+      });
+    }
+    return {
+      ok: false,
+      error: "mandate_revoked_before_effect",
+      reason: "mandate was revoked or suspended before provider call",
+      called_provider: false,
+      act_id: null,
+      receipt: null,
+    };
+  }
+
+  // 4. Consequential Effect Boundary (Provider Execution)
+  let effect = null;
+  let outcome = "ok";
+  let handlerError = null;
+  try {
+    effect = await handler.invoke(input);
+  } catch (err) {
+    outcome = "failed";
+    handlerError = err;
+    effect = { error: String(err?.message || err) };
+  }
+
+  // 5. Settlement / Release
+  let settlement = null;
+  if (ledger && reservation) {
+    const snap = ledger.snapshot();
+    if (outcome === "failed" || outcome === "refused") {
+      settlement = ledger.release({
+        reservation_id: reservation.reservation_id,
+        expected_version: snap.version,
+        idempotency_key: `${keyBase}:release`,
+      });
+    } else {
+      const usage = effect?.execution_usage || effect?.usage || reservation.demand;
+      settlement = ledger.settle({
+        reservation_id: reservation.reservation_id,
+        expected_version: snap.version,
+        usage,
+        idempotency_key: `${keyBase}:settle`,
+      });
+    }
+  }
+
+  // 6. Attributable COP Act Trace Imputation Recording
+  const combinedAssessments = normalizeResourceAssessments([
+    ...resource_assessments,
+    ...(effect?.resource_assessments || []),
+  ]);
+
+  const actResult = recordGovernedAct(store, {
+    principal_ref: identity.principal_ref,
+    mandate_ref: identity.mandate_ref,
+    logical_agent_ref: identity.logical_agent_ref,
+    handler_instance_ref: handler.id || "handler:anonymous",
+    capability,
+    invocation_input: input,
+    effect,
+    outcome,
+    topic_id: topicId,
+    packet_id,
+    provisional_cost,
+    resource_assessments: combinedAssessments,
+  });
+
+  return {
+    ok: outcome === "ok",
+    outcome,
+    called_provider: true,
+    effect,
+    act_id: actResult.act_id,
+    receipt: actResult.receipt,
+    events: actResult.events,
+    reservation,
+    settlement,
+    snapshot: ledger ? ledger.snapshot() : null,
+    error: handlerError ? String(handlerError?.message || handlerError) : null,
+  };
 }
 
 function appendOne(store, partial) {
