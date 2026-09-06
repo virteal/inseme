@@ -1,7 +1,10 @@
 ---
 title: "COP FractaLog Profile"
 subtitle: "Packet-local source traces, federated projections, custody and delayed transparency"
-description: "Source profile for integrating FractaLog semantics into COP, with Cognitive Packets as the preferred source location for packet-borne trace facts and higher-level FractaLog views as governed projections."
+description:
+  "Source profile for integrating FractaLog semantics into COP, with Cognitive Packets as the
+  preferred source location for packet-borne trace facts and higher-level FractaLog views as
+  governed projections."
 author: "Jean Hugues Noël Robert, baron Mariani"
 affiliation: "Institut Mariani / C.O.R.S.I.C.A. / Inseme"
 canonical_path: "inseme/research/cop_fractalog_profile.md"
@@ -22,6 +25,7 @@ related_repositories:
   - "JeanHuguesRobert/barons-Mariani"
   - "JeanHuguesRobert/cogentia"
 related_documents:
+  - "inseme/research/cop_trace_model.md"
   - "FractaVolta/research/fractalog.md"
   - "inseme/packages/cop-kernel/docs/packet-strict-accounting-cascade.md"
   - "inseme/packages/cop-core/Architecture.md"
@@ -56,15 +60,23 @@ This document defines the source-level COP profile for FractaLog.
 
 Its central clarification is:
 
-> **For an act performed while processing a Cognitive Packet, the preferred source location of the trace facts is the packet itself, or a content-addressed object directly referenced by that packet. FractaLog above the packet is a governed projection/federation of those source facts, not a second source ledger.**
+> **For an act performed while processing a Cognitive Packet, the preferred source location of the
+> trace facts is the packet itself, or a content-addressed object directly referenced by that
+> packet. FractaLog above the packet is a governed projection/federation of those source facts, not
+> a second source ledger.**
 
-This applies the same source/projection discipline already used by packet-strict accounting: facts belong where the act and resource consumption occur; consolidated views are projections.
+This applies the same source/projection discipline already used by packet-strict accounting: facts
+belong where the act and resource consumption occur; consolidated views are projections.
 
-This does **not** require every byte of evidence to be physically embedded inline. Large, private, encrypted, immutable or externally preserved evidence may be represented by durable content-addressed references. The packet must retain enough provenance to make the source relationship explicit and auditable.
+This does **not** require every byte of evidence to be physically embedded inline. Large, private,
+encrypted, immutable or externally preserved evidence may be represented by durable
+content-addressed references. The packet must retain enough provenance to make the source
+relationship explicit and auditable.
 
 ## 2. Relation to COP/Core
 
-This profile preserves COP/Core invariants and does not replace Event, Topic, Task, Step, Artifact, Continuation, Store, Projector, Scheduler or Bus.
+This profile preserves COP/Core invariants and does not replace Event, Topic, Task, Step, Artifact,
+Continuation, Store, Projector, Scheduler or Bus.
 
 COP/FractaLog adds semantics for:
 
@@ -83,7 +95,8 @@ The profile distinguishes three layers.
 
 ### 3.1 Packet-local source trace
 
-When a Cognitive Packet is processed, facts created by that processing SHOULD be recorded on the packet or directly referenced from it:
+When a Cognitive Packet is processed, facts created by that processing SHOULD be recorded on the
+packet or directly referenced from it:
 
 ```text
 handler / tool / node act
@@ -113,7 +126,8 @@ Reference indirection MUST NOT be used to erase provenance or silently replace s
 
 ### 3.3 FractaLog projection
 
-Agent, Mission, institution, federation, audit and public FractaLog views are derived from packet-local sources and other legitimate non-packet events:
+Agent, Mission, institution, federation, audit and public FractaLog views are derived from
+packet-local sources and other legitimate non-packet events:
 
 ```text
 packet-local traces + non-packet governed events
@@ -126,17 +140,21 @@ institutional FractaLog
 federation audit view
 ```
 
-A projection MAY be cached, indexed, Merkle-anchored, redacted or replicated. It MUST NOT become a competing source of truth by copying and mutating source facts independently.
+A projection MAY be cached, indexed, Merkle-anchored, redacted or replicated. It MUST NOT become a
+competing source of truth by copying and mutating source facts independently.
 
 ## 4. Non-packet events
 
-Not every FractaLog fact originates in a Cognitive Packet. Custody transfers, legal acts, external observations, human decisions or infrastructure events may have their own authoritative source artifacts/events.
+Not every FractaLog fact originates in a Cognitive Packet. Custody transfers, legal acts, external
+observations, human decisions or infrastructure events may have their own authoritative source
+artifacts/events.
 
 The invariant is therefore not `all FractaLog facts are packets`.
 
 It is:
 
-> **Put source facts where the accountable act occurs; when the act is packet-borne cognitive work, keep its source trace packet-local; consolidate higher-level views by projection.**
+> **Put source facts where the accountable act occurs; when the act is packet-borne cognitive work,
+> keep its source trace packet-local; consolidate higher-level views by projection.**
 
 ## 5. Packet trace profile
 
@@ -158,7 +176,8 @@ A minimal packet-borne trace extension may contain:
 }
 ```
 
-The exact runtime schema remains experimental. This document freezes the semantic direction, not these field names.
+The exact runtime schema remains experimental. This document freezes the semantic direction, not
+these field names.
 
 ## 6. Lifecycle and governance events
 
@@ -188,33 +207,41 @@ A lifecycle projection must be explainable by replaying its source events and pa
 
 Content visibility and trace existence are distinct.
 
-| Level | Meaning |
-|---|---|
-| `open` | Trace and permitted content are accessible. |
-| `redacted` | Trace exists; selected content is masked. |
-| `restricted` | Access requires authorization. |
-| `sealed` | Integrity/existence may be attestable while content is closed. |
-| `escrowed` | Public disclosure is delayed while an accountable source record exists. |
+| Level        | Meaning                                                                 |
+| ------------ | ----------------------------------------------------------------------- |
+| `open`       | Trace and permitted content are accessible.                             |
+| `redacted`   | Trace exists; selected content is masked.                               |
+| `restricted` | Access requires authorization.                                          |
+| `sealed`     | Integrity/existence may be attestable while content is closed.          |
+| `escrowed`   | Public disclosure is delayed while an accountable source record exists. |
 
 Rule:
 
-> Restricted visibility may hide content. It must not silently erase the causal existence of an engaging act.
+> Restricted visibility may hide content. It must not silently erase the causal existence of an
+> engaging act.
 
 ## 8. Redaction, custody and delayed transparency
 
-Redaction is a new governed act or projection, never an in-place rewrite of committed source history.
+Redaction is a new governed act or projection, never an in-place rewrite of committed source
+history.
 
-Custody, ownership, controller and successor roles remain distinct. Moving custody of an evidence object does not change the causal source relationship recorded by the packet.
+Custody, ownership, controller and successor roles remain distinct. Moving custody of an evidence
+object does not change the causal source relationship recorded by the packet.
 
-Restricted traces SHOULD carry a review path with authority, reason, scope, review deadline, extension conditions and release/audit semantics. Secrecy may defer access; it must not destroy memory.
+Restricted traces SHOULD carry a review path with authority, reason, scope, review deadline,
+extension conditions and release/audit semantics. Secrecy may defer access; it must not destroy
+memory.
 
 ## 9. Mandate-trace non-erasure
 
-The profile distinguishes private data, collateral personal data and mandate traces. Private or collateral data may be minimized, redacted or access-limited according to applicable policy. An engaging mandate trace must remain causally accountable even when its content is restricted.
+The profile distinguishes private data, collateral personal data and mandate traces. Private or
+collateral data may be minimized, redacted or access-limited according to applicable policy. An
+engaging mandate trace must remain causally accountable even when its content is restricted.
 
 ## 10. Federation and fractality
 
-FractaLog remains fractal, but fractality is primarily a property of **views and commitments**, not a requirement to maintain independent mutable source ledgers at every level.
+FractaLog remains fractal, but fractality is primarily a property of **views and commitments**, not
+a requirement to maintain independent mutable source ledgers at every level.
 
 ```text
 packet source traces
@@ -228,7 +255,8 @@ institution / node projection
 federation roots and proofs
 ```
 
-Higher levels SHOULD aggregate references, roots and proofs when possible rather than absorb all lower-level content.
+Higher levels SHOULD aggregate references, roots and proofs when possible rather than absorb all
+lower-level content.
 
 ## 11. Conformance requirements
 
@@ -243,7 +271,8 @@ A conformant implementation SHOULD:
 7. preserve mandate-trace accountability;
 8. make content-addressed indirection explicit when evidence is not inline;
 9. preserve custody, delayed-transparency and review semantics;
-10. support deterministic reconstruction of the visible projection for a given policy and source set where feasible.
+10. support deterministic reconstruction of the visible projection for a given policy and source set
+    where feasible.
 
 ## 12. Non-conformant patterns
 
@@ -264,13 +293,17 @@ using restricted status to remove auditability rather than restrict access
 4. Which projector builds Mission/agent FractaLog views?
 5. How should Merkle anchoring compose packet-local commitments without duplicating payloads?
 6. Which non-packet event families remain first-class FractaLog sources?
-7. What regression fixture proves that packet-local source semantics survive handler substitution and projection rebuild?
+7. What regression fixture proves that packet-local source semantics survive handler substitution
+   and projection rebuild?
 
 ## 14. Continuation
 
 Next actions:
 
-1. Align `FractaVolta/research/fractalog.md` terminology with packet-local source semantics without discarding its governance model.
-2. Remove the implication that `COPMission.fractalogRef` denotes a separate source ledger; retain it only as a projection/view reference if useful.
-3. Add a conformance fixture using packet traces, projection rebuild and a deliberate attempted source/projection divergence.
+1. Align `FractaVolta/research/fractalog.md` terminology with packet-local source semantics without
+   discarding its governance model.
+2. Remove the implication that `COPMission.fractalogRef` denotes a separate source ledger; retain it
+   only as a projection/view reference if useful.
+3. Add a conformance fixture using packet traces, projection rebuild and a deliberate attempted
+   source/projection divergence.
 4. Verify consistency with packet-strict accounting.

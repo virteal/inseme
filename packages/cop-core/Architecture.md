@@ -41,11 +41,17 @@ external proper name, or in a compound term such as `LogicalAgent`.
 
 ### 1.6 Artifacts
 
-### 1.7 Events
+### 1.7 Traces, TraceRefs, and TraceDescriptors
 
-### 1.8 Continuations
+### 1.8 Events as Native Procedural Traces
 
-### 1.9 Profiles (COP/Core, COP/HITL, COP/AI)
+### 1.9 Assertions and EvidenceRelations
+
+### 1.10 Continuations
+
+### 1.11 Projections, Projectors, and Indexes/Caches
+
+### 1.12 Profiles (COP/Core, COP/HITL, COP/AI)
 
 ## 2. Core Data Model
 
@@ -95,7 +101,7 @@ external proper name, or in a compound term such as `LogicalAgent`.
 
 ## 5. Execution Model
 
-### 5.1 Projectors (Event → Projection)
+### 5.1 Projectors ((Traces + Assertions, Policy) → Projection)
 
 ### 5.2 Scheduler
 
@@ -116,6 +122,10 @@ external proper name, or in a compound term such as `LogicalAgent`.
 ### 5.4 Human-in-the-loop Execution
 
 ### 5.5 Continuation Execution Semantics
+
+### 5.6 Separation of Concerns (Normative)
+
+### 5.7 Canonical Execution Examples
 
 ## 6. Transport and Interoperability
 
@@ -216,21 +226,23 @@ Architecture and Specification – Version 1.0
 
 ### 0.1 Purpose of COP
 
-The Cognitive Orchestration Protocol (COP) defines a common, implementation-independent protocol for
-coordinating cognitive handlers (including AI systems and human actors) through an event-driven model.
+The Cognitive Orchestration Protocol (COP) defines an implementation-independent protocol for
+governing the evolution of a **Reactive Corpus** and coordinating cognitive handlers (including AI systems
+and human actors) through a **Trace-Centric architecture**.
 
 COP focuses on:
 
-- A **canonical event log** as the durable source of truth.
-- A **projection model** (store) for derived state.
+- A **trace-centric evidential substrate** (Traces, Events, Artifacts) as the ground truth of reality and procedural activity.
+- A **first-class epistemic layer** (Assertions, EvidenceRelations) distinguishing propositions from supporting, contradicting, or contextualizing evidence.
+- A **deterministic projection model** (`cop.temporal-projection/v1`) producing non-authoritative, reconstructible derived views over identified source sets and policies.
 - A **task/step model** to structure work across handlers.
-- A **uniform representation** of human and machine actions.
-- A **continuation model** to resume reasoning across time and systems.
+- A **continuation model** to resume reasoning across time, systems, and execution surfaces.
+- A **governed act model** enforcing that capability execution requires active mandate authority (`reachable != admissible != authorized`).
 
 COP is designed to:
 
 - Support distributed, multi-handler systems (AI handlers + humans).
-- Enable reliable replay, audit, and reasoning over past interactions.
+- Enable reliable replay, audit, non-destructive contradiction management, and reasoning over past interactions.
 - Provide a stable semantic layer for higher-level frameworks and runtimes.
 
 COP does **not** mandate a specific programming language, runtime, transport, or storage engine. It
@@ -241,13 +253,16 @@ conform to.
 
 This specification defines:
 
-> **Pre-operational clean break.** The handler terminology and field names are intentionally
-> breaking for early prototypes; COP has no installed-base compatibility obligation at this stage.
+> **COP 2.x Trace-Centric Clean Break.** Legacy Event-centric assumptions (such as the event log being
+> the sole source of all reality) are superseded. External reality leaves Traces; native Events are the
+> procedural traces of COP-mediated actions.
 
-- Core concepts: **Event**, **Topic**, **Task**, **Step**, **Artifact**, **Continuation**,
-  **Handler**, **Projector**, **Scheduler**, **Store**, **Bus**.
+- Core concepts: **Trace**, **TraceRef**, **TraceDescriptor**, **Event**, **Artifact**, **Assertion**,
+  **EvidenceRelation**, **Topic**, **Task**, **Step**, **Continuation**, **Act**, **Projector**,
+  **Projection**, **Store**, **Bus**, **Scheduler**.
 - Core data model:
-  - canonical JSON representation of COP objects,
+  - canonical JSON representation of COP objects (`cop.trace-ref/v1`, `cop.trace-descriptor/v1`,
+    `cop.assertion/v1`, `cop.evidence-relation/v1`, `cop.temporal-projection/v1`, `cop.event/v1`),
   - identifiers and versioning rules.
 
 - Causality and time semantics:
@@ -481,33 +496,70 @@ represented by new Artifacts with their own IDs, linked via Events or metadata.
 Artifacts are attached to Topics and may be attached to Tasks or Steps by reference. They are stored
 and indexed in the COP Store as part of the projection.
 
-### 1.7 Events
+### 1.7 Traces, TraceRefs, and TraceDescriptors
 
-An **Event** is the fundamental unit of change in COP.
+The **Trace** is the foundational causal and evidential primitive of COP 2.x.
+
+A Trace represents any physical, digital, external, or internal imprint left by an occurrence in reality.
+Unlike an Assertion, a Trace is not itself a truth claim; it is the raw evidential record.
+
+- **`TraceRef` (`cop.trace-ref/v1`):** A canonical, immutable, content-addressed cryptographic pointer
+  (`trace_id`, `target_type`, `integrity`, `locator`, `resolution_hints`). A `TraceRef` identifies a trace
+  independently of its network location (`locator`) and physical custody (`custody`).
+- **`TraceDescriptor` (`cop.trace-descriptor/v1`):** Structured observational metadata recording trace origin,
+  custody, visibility, and temporal coordinates. It does not embed subjective interpretation or confidence scalars.
+
+Traces may pre-exist COP (e.g. historical emails, legal contracts, sensory readings, external commits).
+When an external trace enters COP governance, its observation is registered through a native COP Event
+(`TraceObservation`) which preserves the external `origin_ref` and flags `cop_originated: false`.
+
+### 1.8 Events as Native Procedural Traces
+
+An **Event** is the native procedural representation of an occurrence within the COP runtime.
+In COP 2.x, **an Event is a procedural specialization of Trace (`Event ⊂ Trace`)**.
 
 Events:
 
-- are the only mutable input to the system,
-- are appended to per-Topic logs,
-- define the causal and temporal history from which all projections are derived.
+- are append-only entries recorded in per-Topic logs,
+- are totally ordered within their Topic via a monotonically increasing `topicSeq`,
+- record native COP actions (e.g. `TaskStepExecuted`, `CapabilityInvocation`, `TraceObservation`, `ExecutionBudgetGrant`),
+- define the immutable procedural history from which runtime task, step, and budget states are derived.
 
 Each Event has:
 
 - a globally unique identifier,
-- a `topicId` and `topicSeq` (sequence number within that Topic),
-- a `type` (opaque string, often namespaced),
+- a `topicId` and `topicSeq` (strict, gap-free sequence within that Topic),
+- a `type` (opaque string, namespaced),
 - a `createdAt` timestamp,
-- an optional schema/version tag,
+- an explicit schema version,
 - an opaque `payload` (JSON),
 - optional `metadata`,
-- optional causal links to parent events.
+- optional causal links (`parentEventIds`).
 
-COP makes the **event log** the single source of truth. The Store, Tasks, Steps, and Artifacts are
-projections that MUST be reconstructable from this log (subject to implementation limits such as
-retention). The event model, including ordering, causality, and replay semantics, is defined in
-detail in Sections 2 and 3.
+Every native Event is addressable as a Trace via zero-copy reference (`cop:event:<id>`), preserving
+seamless interoperability and deterministic procedural replay.
 
-### 1.8 Continuations
+### 1.9 Assertions and EvidenceRelations (The Epistemic Layer)
+
+COP 2.x introduces a first-class epistemic layer separating what is observed (Traces) from what is
+inferred, believed, or held by the Corpus:
+
+- **`Assertion` (`cop.assertion/v1`):** A proposition held by the Corpus with explicit epistemic status
+  (`hypothesized`, `inferred`, `declared`, `verified`, `normative`, `disputed`). An Assertion must state
+  its subject, predicate, object, asserting actor (`asserted_by`), authority reference (`mandate_ref`),
+  and valid-time interval.
+- **`EvidenceRelation` (`cop.evidence-relation/v1`):** An explicit, typed, directed relational link
+  connecting a `TraceRef` to an `Assertion` (`supports`, `contradicts`, `contextualizes`).
+
+This bipartite structure provides **non-destructive contradiction coexistence**:
+When contradictory traces arrive, neither trace is deleted or overwritten. The `EvidenceGraph` records
+both supporting and contradicting relations; the assertion transitions to `disputed` status; and
+dependent projections are selectively invalidated.
+
+**Anti-Amplification Invariant:** Summarization, projection, caching, or LLM synthesis MUST NOT silently
+elevate the epistemic status or authority of source material.
+
+### 1.10 Continuations
 
 A **Continuation** in COP is a standardized way to represent suspended or deferred work.
 
@@ -532,7 +584,21 @@ Continuations enable:
 
 Execution and semantics of Continuations are detailed in Sections 2.7 and 5.5.
 
-### 1.9 Profiles (COP/Core, COP/HITL, COP/AI)
+### 1.11 Projections, Projectors, and Indexes/Caches
+
+COP 2.x enforces strict separation between ground truth and derived state:
+
+- **`Projection` (`cop.temporal-projection/v1`):** A derived view computed over an identified source set
+  under a specific projector version and policy. Projections are non-authoritative
+  (`is_authoritative: false`, `is_derived: true`) and carry `source_commitments` (cryptographic SHA-256 digest
+  over all source references).
+- **`Projector`:** A pure, deterministic transformation: `(Authoritative Traces + Assertions, Policy) → Projection`.
+  If the projector code version changes, cached projections are automatically marked stale (`projector_version_mismatch`).
+- **`Index / Cache`:** Disposable accelerators (e.g. SQLite databases, vector stores, Redis).
+  Caches MUST NOT become competing sources of truth. The system guarantees:
+  $$\text{Delete Cache} \longrightarrow \text{Rebuild from Store} \equiv \text{Identical View}$$
+
+### 1.12 Profiles (COP/Core, COP/HITL, COP/AI)
 
 COP is designed to be **extensible** via profiles.
 
@@ -1316,83 +1382,88 @@ Handlers MAY or MAY NOT use `unwrap`, depending on language constraints.
 
 ## 4.5 Projection Invariants
 
-The Store MUST uphold the following invariants.
+The Store and all derived projections MUST uphold the following invariants.
 
-### 4.5.1 Replay Consistency
+### 4.5.1 Non-Authoritative Derived Views
 
-Replaying all Events in a Topic MUST produce:
+All Projections (conforming to `cop.temporal-projection/v1`) are derived artifacts:
+
+- They MUST explicitly declare `"is_authoritative": false` and `"is_derived": true`.
+- They MUST carry `source_commitments` detailing the sorted array of authoritative source references (`TraceRef`, `Assertion`, `Event`) and a cryptographic SHA-256 digest over them.
+- Projections, materialized views, indexes, or caches MUST NOT become competing mutable sources of truth.
+
+### 4.5.2 Replay & Reconstruction Consistency
+
+Replaying all authoritative Traces and Events in a Topic under the same projector version and policy MUST produce:
 
 - the exact same Topic state,
 - the same set of Tasks and Steps with identical fields,
 - the same Artifact index,
-- the same Continuation index.
+- the same Continuation index,
+- identical derived projection digests.
 
-### 4.5.2 Pure Projection Functions
+$$\text{Delete Cache} \longrightarrow \text{Rebuild from Authoritative Store} \equiv \text{Identical View}$$
+
+### 4.5.3 Pure Projection Functions
 
 Projector logic MUST be pure:
 
-- Same Events → same Projections (modulo external time/randomness)
-- No side effects outside the Store
-- Idempotent application
+- `(Authoritative Traces + Assertions, Policy) → Projection`
+- Same inputs + same projector version → same Projection.
+- No side effects outside the Store.
+- Idempotent application.
 
-### 4.5.3 Idempotent Application
+### 4.5.4 Algorithmic Versioning and Staleness Detection
 
-Applying the same Event twice MUST NOT change the projection.
+Projections record `projector_id` and `projector_version`. When projector code is upgraded, cached
+projections MUST be identified as stale (`projector_version_mismatch`) and rebuilt without data loss.
 
-This is crucial for at-least-once delivery semantics.
+### 4.5.5 Bounded Invalidation via Reactive Dependency Graph
 
-### 4.5.4 Monotonic TopicSeq Processing
+Invalidation is selective and bounded:
 
-For each Topic, Events MUST be applied in ascending `topicSeq` order.
+- Ingestion of a new Trace or Assertion MUST NOT trigger global corpus recompilation.
+- The `ReactiveDependencyGraph` traces dependencies along `Trace → Assertion → Continuation / Projection`.
+- Only projections whose source commitments are impacted transition to `stale: true` with an explicit `invalidation_cause` (e.g. `evidence_contradiction`, `assertion_superseded`, `source_trace_added`).
 
-Out-of-order processing MUST NOT occur.
+### 4.5.6 Monotonic TopicSeq Processing for Procedural Events
 
-### 4.5.5 Isolation Between Topics
+For each Topic, native Events MUST be applied in ascending `topicSeq` order. Out-of-order processing MUST NOT occur.
 
-Applying Events of Topic A MUST NOT modify projection state of Topic B, except for shared indexes
-(e.g. cross-topic references).
+### 4.5.7 Immutable Artifacts and Traces
 
-### 4.5.6 Immutable Artifacts
+Projection state MUST reflect the immutability of Artifacts and Traces:
 
-Projection state MUST reflect the immutability of Artifacts:
+- An Artifact or TraceRef MUST NOT be modified after creation.
+- Updating an Artifact creates a new Artifact with a new ID and content hash.
 
-- An Artifact MUST NOT be modified after creation.
-- Updating an Artifact MUST create a new Artifact with a new ID.
-
-### 4.5.7 Consistency of Task and Step Lifecycles
+### 4.5.8 Consistency of Task and Step Lifecycles
 
 Transitions MUST obey the normative lifecycle diagrams in Section 2.
-
 Illegal transitions (e.g. `done` → `running`) MUST raise projection errors.
-
 These errors MUST NOT reach handlers; they indicate internal bugs.
 
 ## 4.6 Rebuild / Replay Requirements
 
-Implementations MUST support rebuilding the entire projection state from Events.
+Implementations MUST support rebuilding the entire projection state from authoritative Traces and Events.
 
 ### 4.6.1 Full Rebuild
 
 A full rebuild consists of:
 
-1. Clearing all projection state.
-2. Replaying all Events in order.
-3. Reconstructing Topics, Tasks, Steps, and Artifact indexes.
+1. Clearing all disposable projection state and caches (e.g. in-memory indexes, SQLite tables).
+2. Re-evaluating all authoritative Traces, Events, Assertions, and EvidenceRelations from the store.
+3. Reconstructing Topics, Tasks, Steps, and Temporal Projections deterministically.
 
-This MUST produce a projection consistent with the pre-rebuild store.
+This MUST produce a projection consistent with pre-rebuild ground truth. Any ungrounded data injected directly into a cache vanishes upon rebuild.
 
-### 4.6.2 Partial Rebuild
+### 4.6.2 Partial Rebuild and Bounded Invalidation
 
 Implementations MAY provide:
 
-- replay from snapshot,
-- replay from checkpoint,
-- selective replay for affected Topics.
-
-However:
-
-- Snapshots MUST NOT violate replay semantics.
-- Rebuild from snapshot MUST yield identical projection state to full replay.
+- selective rebuild of stale projections via `rebuildProjection`,
+- targeted invalidation for affected assertions via `ReactiveDependencyGraph`,
+- replay from checkpoint or snapshot without violating replay semantics.
 
 ### 4.6.3 Incremental Replay
 
@@ -1434,29 +1505,32 @@ COP enforces a strict separation between:
 
 ## 5.1 Projectors
 
-A **Projector** is the component responsible for applying Events to projections in the COP Store.
+A **Projector** is a pure, deterministic component responsible for synthesizing authoritative Traces,
+Events, and Assertions into derived Projections in the COP Store:
+$$(Authoritative\ Traces + Assertions,\ Policy) \longrightarrow Projection$$
 
 ### 5.1.1 Responsibilities
 
 A Projector MUST:
 
-- read Events in the order defined by Section 3,
-- apply each Event exactly once to the Store (idempotently),
-- update all relevant projections (Topics, Tasks, Steps, Artifacts, Continuations),
-- maintain per-Topic progress (e.g. last applied `topicSeq`).
+- read authoritative Traces, Events, and Assertions from the Store,
+- apply each input deterministically and idempotently,
+- compute derived projections conforming to `cop.temporal-projection/v1`,
+- populate `source_commitments` with sorted references and SHA-256 integrity digest,
+- record `projector_id` and `projector_version` on every derived view,
+- declare `"is_authoritative": false` and `"is_derived": true`.
 
-### 5.1.2 Determinism
+### 5.1.2 Determinism & Staleness
 
-Projectors SHOULD be deterministic:
+Projectors MUST be deterministic:
 
-- Given the same sequence of Events, a Projector MAY produce the same Store state.
+- Given the same authoritative sources, projector version, and policy, a Projector MUST produce identical projection state.
+- If the projector version is upgraded, previously generated projections are identified as stale (`projector_version_mismatch`) and rebuildable on demand.
 - Projectors MUST NOT depend on:
-  - wall-clock time,
+  - wall-clock time (all timelines use `occurred_at` sort keys),
   - random values,
-  - external services,
-  - mutable global state.
-
-Any non-deterministic behavior MUST be encoded explicitly as Events.
+  - ungrounded external network calls,
+  - mutable ambient global state.
 
 ### 5.1.3 Purity
 
@@ -1466,7 +1540,7 @@ Projectors MUST be pure with respect to COP state:
 - They MUST NOT invoke Handlers.
 - They MUST NOT perform side effects outside the Store.
 
-Projectors exist solely to transform Events into projections.
+Projectors exist solely to transform authoritative sources into derived projections.
 
 ## 5.2 Scheduler
 
@@ -1731,6 +1805,52 @@ The following separations are **mandatory**:
 | Human UI  | Yes             | No               | No                |
 
 This separation is fundamental to COP’s correctness, replayability, and auditability.
+
+## 5.7 Canonical Execution Examples
+
+The following three examples illustrate how COP 2.x governs the interaction between Traces, Events,
+Assertions, Projections, and Mandates.
+
+### 5.7.1 Native COP Act
+
+```text
+CapabilityInvocation → Act → COP Event/Trace → Projection
+```
+
+1. **Mandate Authorization:** Principal authorizes a LogicalAgent under Mandate `M-101`.
+2. **Packet Receipt:** A HandlerInstance receives a Cognitive Packet carrying a `CapabilityRequirement`.
+3. **Security Invariant Check:** Guard check evaluates `Reachable != Admissible != Authorized`. The capability is admissible under current policy, authorized by the active mandate, and backed by an unexhausted execution budget grant.
+4. **Invocation & Act:** `CapabilityInvocation` is performed; the Act produces an effect.
+5. **Event Emission:** The runtime emits an immutable COP Event (e.g. `TaskStepExecuted`, `ExecutionBudgetSettled`).
+6. **Zero-Copy TraceRef:** The event is immediately addressable as a Trace via `cop:event:<event-id>`.
+7. **Projection Update:** `TemporalProjector` deterministically updates derived projections.
+
+### 5.7.2 External Historical Trace Ingestion
+
+```text
+external email created in 2008 → observed by COP in 2026 → COP observation Event → Assertion supported by the external Trace
+```
+
+1. **External Trace Presentation:** An external record (e.g. email authored on April 12, 2008) is discovered or ingested in 2026.
+2. **Handle Creation:** A `TraceRef` is registered (`trace_id: "urn:email:2008:abc"`, `target_type: "external"`, `integrity: "sha256:..."`).
+3. **Procedural Observation Event:** A native COP Event `TraceObservation` is appended to the event log (`observed_at: "2026-09-06"`, `cop_originated: false`, `origin_ref: "urn:email:2008:abc"`).
+4. **Epistemic Registration:** An `Assertion` is registered: "Contract terms accepted on 2008-04-12" (`valid_time: "2008-04-12"`, `epistemic_status: "declared"`).
+5. **Evidence Linkage:** An `EvidenceRelation` is registered: `supports(TraceRef, Assertion)`.
+6. **Timeline Projection:** The projection indexes the assertion at its true valid-time (2008) while COP's audit log accurately reflects the 2026 observation event, without fictionalizing COP as the author of the 2008 email.
+
+### 5.7.3 Contradiction, Coexistence & Bounded Invalidation
+
+```text
+Trace A supports Assertion X; Trace B contradicts Assertion X → no historical deletion → epistemic revision / Continuation / projection invalidation
+```
+
+1. **Initial Supported State:** Assertion X ("Service Node Alpha is operational") is supported by Trace A (heartbeat packet) via `supports(Trace A, X)`. Projection P displays "Node Alpha: Active".
+2. **Conflicting Evidence Arrival:** Trace B arrives (hardware panic core dump from the same node and timeframe).
+3. **Contradiction Linkage:** An `EvidenceRelation` is recorded: `contradicts(Trace B, X)`.
+4. **Non-Destructive Coexistence:** Neither Trace A nor Trace B is overwritten or deleted. Both coexist in the `EvidenceGraph`.
+5. **Epistemic Revision:** Assertion X automatically transitions to `epistemic_status: "disputed"`, `has_contradiction: true`.
+6. **Bounded Invalidation:** The `ReactiveDependencyGraph` identifies that Projection P depends on Assertion X. Projection P is flagged `stale: true` (`invalidation_cause: "evidence_contradiction"`).
+7. **Adjudication Continuation:** A review Continuation is emitted to prompt cognitive arbitration, while the projector recalculates the derived view to reflect the dispute.
 
 ---
 

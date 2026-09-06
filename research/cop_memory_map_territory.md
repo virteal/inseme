@@ -17,6 +17,7 @@ classification_version: "1"
 classification_rule: "working-note"
 classification_confidence: "medium"
 related:
+  - "research/cop_trace_model.md"
   - "research/cop_memory_profile.md"
   - "research/cop_memory_metadata_recursion.md"
   - "https://github.com/JeanHuguesRobert/cogentia/blob/main/research/Cogentia-and-Cogentigram.md"
@@ -111,7 +112,8 @@ captured map       = projection shaped by an actor's interest
 beautiful map      = coherent representation masking a false premise
 ```
 
-COP/Memory must therefore record not only what a MemoryView contains, but why it was generated and under which constraints.
+COP/Memory must therefore record not only what a MemoryView contains, but why it was generated and
+under which constraints.
 
 ## 6. Agent invariant
 
@@ -141,9 +143,8 @@ absolute memory model -> bounded MemoryView -> agent action
 territory             -> map                -> navigation
 ```
 
-The absolute model prevents category errors.
-The map enables action.
-The stop rules prevent infinite cartography.
+The absolute model prevents category errors. The map enables action. The stop rules prevent infinite
+cartography.
 
 ## 8. Small manipulable maps
 
@@ -159,7 +160,8 @@ one decision opens into motives, pressures, mandates, evidence and consequences
 one corpus opens into a graph of traces, contexts and derived products
 ```
 
-A full map of the territory would become the territory again, and therefore would no longer be usable as a map.
+A full map of the territory would become the territory again, and therefore would no longer be
+usable as a map.
 
 A practical MemoryView must therefore be:
 
@@ -171,9 +173,11 @@ explicit enough about what it omits
 expandable enough when the risk justifies it
 ```
 
-This is the operational reason why COP/Memory needs pragmatic projections rather than direct exposure of the full trace graph.
+This is the operational reason why COP/Memory needs pragmatic projections rather than direct
+exposure of the full trace graph.
 
-The agent does not need the universe. It needs a map sufficient for the next action, with a visible path for expansion if the map becomes insufficient.
+The agent does not need the universe. It needs a map sufficient for the next action, with a visible
+path for expansion if the map becomes insufficient.
 
 ## 9. Thing and representation
 
@@ -184,8 +188,8 @@ thing           = what is, happened, exists, persists, or leaves traces
 representation  = an image, model, name, description, map, memory, symbol, metadata record or view of that thing
 ```
 
-A representation can point to a thing, describe it, simplify it, simulate it, orient action toward it, or preserve a trace of it.
-It is not the thing itself.
+A representation can point to a thing, describe it, simplify it, simulate it, orient action toward
+it, or preserve a trace of it. It is not the thing itself.
 
 This is the invariant expressed by Magritte's pipe:
 
@@ -206,8 +210,8 @@ A map of a place is not the place.
 A model of a corpus is not the corpus.
 ```
 
-The representation may itself become a thing in COP if it is stored, hashed, cited, audited, versioned, criticized or reused.
-This is the fractal point:
+The representation may itself become a thing in COP if it is stored, hashed, cited, audited,
+versioned, criticized or reused. This is the fractal point:
 
 ```text
 thing -> representation -> represented thing for another representation
@@ -217,7 +221,8 @@ The recursion is legitimate only if each level keeps its status explicit.
 
 ## 10. Representation status
 
-Every pragmatic memory object should therefore indicate, explicitly or implicitly, its representation status:
+Every pragmatic memory object should therefore indicate, explicitly or implicitly, its
+representation status:
 
 ```text
 pointer         = minimal reference to a thing
@@ -231,14 +236,15 @@ memory view     = bounded task-relative representation
 proof bundle    = representation designed for challenge and audit
 ```
 
-A representation can be useful, beautiful, actionable, probative or misleading.
-Its value depends on purpose, scale, freshness, confidence, provenance and omissions.
+A representation can be useful, beautiful, actionable, probative or misleading. Its value depends on
+purpose, scale, freshness, confidence, provenance and omissions.
 
 ## 11. Representation as approximation
 
 A representation is necessarily partial.
 
-It selects, compresses, abstracts, normalizes, frames, filters and sometimes distorts. Even when it is useful, it remains an approximation of the thing represented.
+It selects, compresses, abstracts, normalizes, frames, filters and sometimes distorts. Even when it
+is useful, it remains an approximation of the thing represented.
 
 This point is already explicit in the Cogentia / Cogentigram / Cogentiscope triad:
 
@@ -248,7 +254,8 @@ Cogentigram  = a structured measurable representation of that signature;
 Cogentiscope = the instrument or protocol that produces the representation.
 ```
 
-The Cogentigram is not Cogentia itself. It is a projection, produced by an instrument, under assumptions, with uncertainty, drift and limits.
+The Cogentigram is not Cogentia itself. It is a projection, produced by an instrument, under
+assumptions, with uncertainty, drift and limits.
 
 COP/Memory generalizes this beyond Cogentia:
 
@@ -289,11 +296,14 @@ status        = draft, working view, audited view, probative bundle, obsolete vi
 
 This is philosophy and epistemology, but it is also operational engineering.
 
-An agent must not only receive a representation. It must know the kind of representation it is using, the action for which it is sufficient, and the point at which it must ask for a deeper or different representation.
+An agent must not only receive a representation. It must know the kind of representation it is
+using, the action for which it is sufficient, and the point at which it must ask for a deeper or
+different representation.
 
 ## 13. Circumstances and situation
 
-The ordinary phrase "it depends on the circumstances" is a practical way to express the more technical idea of situated representation.
+The ordinary phrase "it depends on the circumstances" is a practical way to express the more
+technical idea of situated representation.
 
 ```text
 circumstances = the concrete surrounding conditions that matter for judgment or action
@@ -307,7 +317,8 @@ circumstances = common language, immediately intelligible, flexible, non-technic
 situation     = philosophical, epistemological and architectural term, easier to formalize
 ```
 
-For public explanation, "circumstances" is often preferable because it is ordinary language. For COP/Memory, "situation" is useful because it can be structured:
+For public explanation, "circumstances" is often preferable because it is ordinary language. For
+COP/Memory, "situation" is useful because it can be structured:
 
 ```text
 time
@@ -355,11 +366,14 @@ secrecy                   -> manipulation, protection, prudence, betrayal, tacti
 destruction               -> vandalism, liberation, sabotage, healing, ecological defense
 ```
 
-The behavior is not enough. Judgment requires a situated interpretation of the act, its causes, constraints, alternatives, intentions, pressures, risks and consequences.
+The behavior is not enough. Judgment requires a situated interpretation of the act, its causes,
+constraints, alternatives, intentions, pressures, risks and consequences.
 
-This is why a non-manichean narrative is often more realistic than a simple good/evil classification.
-In a film such as *Princess Mononoke*, the same character can appear right or wrong depending on the local configuration of life, violence, survival, loyalty, injury, revenge, protection and ecological balance.
-The value of the action is not readable from the gesture alone. It depends on the circumstances.
+This is why a non-manichean narrative is often more realistic than a simple good/evil
+classification. In a film such as _Princess Mononoke_, the same character can appear right or wrong
+depending on the local configuration of life, violence, survival, loyalty, injury, revenge,
+protection and ecological balance. The value of the action is not readable from the gesture alone.
+It depends on the circumstances.
 
 COP/Memory should therefore distinguish:
 
@@ -371,7 +385,8 @@ judgment            = an evaluative conclusion under explicit criteria
 revision_condition  = what new information could change the judgment
 ```
 
-A judgment is therefore a representation too. It must remain marked as situated, partial and revisable.
+A judgment is therefore a representation too. It must remain marked as situated, partial and
+revisable.
 
 Practical rule:
 
@@ -390,8 +405,8 @@ Never let a situated representation silently pass as context-free knowledge.
 Never let a situated judgment silently pass as a context-free moral truth.
 ```
 
-The practical task of COP/Memory is not to eliminate representations.
-It is to make representations small, explicit, typed, bounded, traceable, approximate, contestable, situated and expandable.
+The practical task of COP/Memory is not to eliminate representations. It is to make representations
+small, explicit, typed, bounded, traceable, approximate, contestable, situated and expandable.
 
 ## 16. Stable formula
 

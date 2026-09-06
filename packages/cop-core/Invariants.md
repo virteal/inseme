@@ -20,20 +20,23 @@ They are architectural constraints, not implementation suggestions.
 
 ## 1. Immutability
 
-**Events and Artifacts are immutable.**
+**Traces, Events, Artifacts, and EvidenceRelations are immutable.**
 
 Once created:
 
+- a TraceRef or TraceDescriptor MUST never be modified or deleted,
 - an Event MUST never be modified or deleted,
-- an Artifact MUST never be modified or deleted.
+- an Artifact MUST never be modified or deleted,
+- an EvidenceRelation MUST never be modified or deleted.
 
-Corrections, updates, or reversals MUST be expressed as **new Events**.
+Corrections, updates, or reversals MUST be expressed as **new Events** or **new EvidenceRelations**.
+Assertions can be superseded or marked disputed, but their historical assertion records are never erased.
 
 Immutability guarantees:
 
 - auditability,
 - causal reasoning,
-- deterministic replay,
+- deterministic replay and reconstructibility,
 - long-term integrity.
 
 ---
@@ -52,7 +55,7 @@ Across Topics:
 - no global ordering is assumed,
 - causal links MAY exist via explicit references.
 
-Topic-local ordering is the foundation of replay.
+Topic-local ordering is the foundation of procedural replay.
 
 ---
 
@@ -63,8 +66,8 @@ Event delivery is **at-least-once**.
 Therefore:
 
 - Projectors MUST be idempotent,
-- repeated processing of the same Event MUST NOT corrupt state,
-- deduplication MUST rely on Event identity, not transport guarantees.
+- repeated processing of the same Event or Trace observation MUST NOT corrupt state,
+- deduplication MUST rely on Event/Trace identity and integrity hash, not transport guarantees.
 
 Idempotency enables:
 
@@ -74,20 +77,25 @@ Idempotency enables:
 
 ---
 
-## 4. Durability
+## 4. Durability & Reconstructibility
+
+COP preserves and governs locally authoritative traces and reconstructible projections over them.
+Native COP Events are the canonical procedural traces of COP-mediated activity.
 
 All meaningful system state MUST be derivable from:
 
-- the Event log,
-- and the set of Artifacts.
+- the append-only Event log and the set of Artifacts (for procedural history),
+- and authoritative Traces, Assertions, and EvidenceRelations (for corpus knowledge).
 
 No critical state MAY live exclusively in:
 
 - handler-instance memory,
 - process-local variables,
-- ephemeral caches.
+- ephemeral caches, local SQLite databases, or vector stores.
 
-If a system cannot be reconstructed from Events and Artifacts, it is not COP-compliant.
+Projections, materialized views, indexes, and caches are derived and non-authoritative
+(`is_authoritative: false`, `is_derived: true`). If a derived view cannot be reconstructed
+from authoritative source traces and policy, it is not valid COP state.
 
 ---
 
@@ -99,7 +107,7 @@ This means:
 
 - no mutable in-memory state across events,
 - no reliance on hidden local caches for correctness,
-- all context must be obtained from the Store or Continuation payloads.
+- all context must be obtained from the Store, EvidenceGraph, or Continuation payloads.
 
 Stateless handlers enable:
 
@@ -110,14 +118,15 @@ Stateless handlers enable:
 
 ---
 
-## 6. Isolation via Events
+## 6. Isolation via Events and Packets
 
 Handlers MUST NOT communicate directly with each other.
 
 All coordination MUST occur via:
 
 - Events published to the Bus,
-- and Artifacts referenced by Events.
+- Artifacts referenced by Events,
+- or Cognitive Packets carrying trace facts and explicit continuations.
 
 This ensures:
 
@@ -128,23 +137,51 @@ This ensures:
 
 ---
 
-## 7. Deterministic Replay
+## 7. Deterministic Replay & Pure Projection
 
 Given:
 
 - the same ordered Event log per Topic,
+- the same authoritative Traces, Assertions, and EvidenceRelations,
 - the same Artifact set,
-- and deterministic Projectors,
+- and deterministic Projectors under the same version and policy,
 
-replay MUST reconstruct the same observable state.
+replay and reconstruction MUST reconstruct the same observable state and derived views.
 
-Non-determinism MUST be externalized as Events or Artifacts.
+> **The same authoritative source set + projector version + applicable policy MUST be sufficient to reconstruct an equivalent derived view where determinism is claimed.**
+
+Non-determinism MUST be externalized as Events, Artifacts, or explicit Assertions.
 
 ---
 
-## 8. Schema Versioning
+## 8. Epistemic Separation & Non-Amplification of Authority
 
-Events and Artifacts MUST carry explicit `schemaVersion` fields.
+A Trace is an evidential imprint, not a truth claim. Assertions represent propositions held by the
+Corpus and MUST remain distinct from the Traces that support, contradict, or contextualize them.
+
+> **Projection, summarization, consolidation, caching, or LLM synthesis MUST NOT silently amplify epistemic status or authority relative to their sources.**
+
+- An ungrounded or low-trust trace summarized into memory remains `hypothesized` or `inferred`.
+- Only an authorized Principal with active Mandate authority can designate an assertion as `normative`.
+- Conflicting evidence coexists non-destructively in the `EvidenceGraph`; contradiction does not cause historical deletion.
+
+---
+
+## 9. The Three Temporal Coordinates
+
+Time semantics MUST distinguish:
+
+1. **`occurred_at` (Valid-Time / Reality Time):** When the occurrence took place in reality, handled across multiple precisions (`exact`, `day`, `month`, `year`, `interval`, `approximate`, `unknown`).
+2. **`trace_created_at` (Physical Registration Time):** When the external artifact or record was created.
+3. **`observed_or_ingested_at` (Corpus Ingestion Time):** When COP observed or registered the trace.
+
+External trace ingestion MUST NOT fictionalize COP as the origin of pre-existing realities. External traces enter via `TraceObservation` events with `cop_originated: false`.
+
+---
+
+## 10. Schema Versioning
+
+Events, Artifacts, Traces, Assertions, and Projections MUST carry explicit schema version identifiers.
 
 Rules:
 
@@ -156,7 +193,7 @@ Versioning protects long-term interpretability.
 
 ---
 
-## 9. Transparency over Convenience
+## 11. Transparency over Convenience
 
 COP favors:
 
@@ -166,7 +203,7 @@ COP favors:
 
 If an optimization violates an invariant, it is invalid.
 
-### 9.1 Scope of Determinism and the Role of Human Anchors
+### 11.1 Scope of Determinism and the Role of Human Anchors
 
 The invariants guarantee deterministic replay of the _trace_ (Events, causal ordering, Artifacts
 produced, continuation states). They do not require or promise deterministic re-execution of the
@@ -184,7 +221,7 @@ such anchors, traceability of the log remains, but accountability dissolves.
 
 ---
 
-## 10. Governed Delegation Profiles
+## 12. Governed Delegation Profiles
 
 COP Core distinguishes protocol invariants from governance profiles. Systems in which an actor exercises consequential capabilities for a principal SHOULD additionally declare conformance with [`COP_MANDATED_AGENT_SECURITY.md`](COP_MANDATED_AGENT_SECURITY.md).
 

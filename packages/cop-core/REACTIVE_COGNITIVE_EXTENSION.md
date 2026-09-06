@@ -37,6 +37,7 @@ the low-level runtime. Native implementation is delegated to Inox.
 
 ### Associated documents
 
+- [COP Trace Model](../../research/cop_trace_model.md) — canonical trace-centric architecture;
 - [Reactive Cognitive COP Extension](../../research/reactive_cognitive_cop_extension.md) — source
   document;
 - [Packet Attractor — Fractanet Distributed Demand and Capability Routing](../../research/packet_attractor_fractanet.md)
@@ -63,11 +64,11 @@ future code and schema work.
 
 COP owns:
 
-- event representation;
+- trace, event, and assertion representation;
 - artifact representation;
-- causality links;
+- causality links and evidence relations;
 - continuation boundaries;
-- projection contracts;
+- projection contracts and bounded invalidation (`ReactiveDependencyGraph`);
 - protocol-level metadata.
 
 Inox owns:

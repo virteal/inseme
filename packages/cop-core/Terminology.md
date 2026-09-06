@@ -19,47 +19,71 @@ review:
 
 # COP Terminology — Mandated Cognitive Handling
 
-This document is the normative vocabulary for COP concepts concerning authority, execution,
-and accountability. It resolves the previously overloaded use of `agent`.
+This document is the normative vocabulary for COP concepts concerning authority, execution, and
+accountability. It resolves the previously overloaded use of `agent`.
 
-COP Core remains a protocol for durable coordination through Events, Artifacts, Views, and
-Continuations. COP/Mandate remains an additive profile; this terminology does not make mandate
-enforcement a Core claim.
+COP Core is the governance protocol for the evolution of a Reactive Corpus through Traces, Events,
+Artifacts, Assertions, EvidenceRelations, Projections, and Continuations. COP/Mandate remains an
+additive profile; this terminology integrates the trace-centric substrate of COP 2.x without making
+mandate enforcement a universal Core claim.
 
-## 1. Normative chain
+## 1. Normative chains
+
+### 1.1 Authority and Execution Chain
 
 ```text
 Principal → Mandate → LogicalAgent → HandlerProfile → HandlerInstance
           → CapabilityInvocation → Act → Trace → Imputation
 ```
 
-Each relation is explicit when it matters to authorization, replay, accountability, or audit.
-An implementation MUST NOT infer authority solely from technical reachability, capability, successful
+### 1.2 Evidential and Epistemic Chain
+
+```text
+Reality → Trace (external or procedural Event)
+        → EvidenceRelation (supports | contradicts | contextualizes)
+        → Assertion (epistemic status)
+        → Projector (deterministic function)
+        → Projection (non-authoritative derived view)
+        → Continuation / Decision → Act
+```
+
+Each relation is explicit when it matters to authorization, replay, accountability, or audit. An
+implementation MUST NOT infer authority solely from technical reachability, capability, successful
 execution, or the protocol used to communicate with an executor.
 
 ## 2. Terms
 
-| Term | Definition |
-|---|---|
-| **Subject** | Any identifiable entity to which COP may relate: a person, legal person, informal collective, digital instance, or other organized entity. |
-| **Principal** | A Subject from which authority originates for a given Mandate. A Principal is not necessarily the owner of every resource involved. |
-| **Actor** | Any entity that may cause, participate in, attest to, or be attributed an Act. This is the generic term. |
-| **Mandate** | A durable, reviewable authorization relation specifying who may do what, for whom, under which scope, limits, delegation rules, trace regime, and revocation conditions. |
-| **LogicalAgent** | A durable mandate-bearing identity that may receive, hold, or delegate authority. It is a role of an Actor or Subject, not a process and not necessarily the concrete executor. |
-| **AuthorityRelation** | The authority relation applicable between participants for a bounded context. At minimum COP distinguishes hierarchical/delegated execution from peer cooperation. The interaction protocol does not determine this relation. |
-| **InteractionMode** | The communicative form used between participants, such as request/response, conversation, negotiation, event stream, call/result, or asynchronous task exchange. Interaction mode does not create or imply authority. |
-| **ExecutionSurface** | The concrete technical interface through which a capability is accessed, such as HTTP, OpenAI-compatible API, ACP, A2A, MCP, CLI, stdio, shell, Inox, or a human interface. An execution surface is not an authority source. |
-| **HandlerProfile** | A stable declaration of how work may be handled: accepted packet classes, required or offered capabilities, policy constraints, and result contract. |
-| **Handler** | A competent executor of a Cognitive Packet. A Handler may be human, model, script, tool, repository, review queue, publication process, runtime, or governance process. It is not presumed to hold authority. |
-| **HandlerInstance** | A concrete, identifiable incarnation of a Handler Profile executing work in a bounded context. It may be durable, suspended, restarted, substituted, or ephemeral. |
-| **Capability** | A declared ability to perform a bounded transformation or effect. Capability proves neither authority nor entitlement to use it. |
-| **CapabilityRequirement** | A transport- and provider-neutral description of work that requires one or more capabilities, together with relevant constraints such as locality, cost, latency, trust, quality, deadline, or execution class. |
-| **CapabilityInvocation** | One recorded attempt or execution of a Capability by a HandlerInstance. |
-| **Act** | A meaningful operation or effect asserted by COP. An Act MAY be proposed, authorized, attempted, completed, refused, compensated, or observed; these states MUST NOT be conflated. |
-| **Trace** | Durable, causally linkable evidence about authority, handling, inputs, outputs, effects, custody, or review. FractaLog is a governed trace projection, not merely runtime telemetry. |
-| **Imputation** | The explicit relation by which responsibility, credit, cost, custody, or consequence is attributed. |
-| **Supervisor** | A runtime component that starts, stops, monitors, or restarts child work. Supervision does not create Mandate authority. |
-| **Continuation** | A durable, resumable request or state describing what remains to be handled. A Continuation SHOULD be capability-bound unless identity-bound resumption is explicitly required. |
+| Term                      | Definition                                                                                                                                                                                                                                      |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Subject**               | Any identifiable entity to which COP may relate: a person, legal person, informal collective, digital instance, or other organized entity.                                                                                                      |
+| **Principal**             | A Subject from which authority originates for a given Mandate. A Principal is not necessarily the owner of every resource involved.                                                                                                             |
+| **Actor**                 | Any entity that may cause, participate in, attest to, or be attributed an Act. This is the generic term.                                                                                                                                        |
+| **Mandate**               | A durable, reviewable authorization relation specifying who may do what, for whom, under which scope, limits, delegation rules, trace regime, and revocation conditions.                                                                        |
+| **LogicalAgent**          | A durable mandate-bearing identity that may receive, hold, or delegate authority. It is a role of an Actor or Subject, not a process and not necessarily the concrete executor.                                                                 |
+| **AuthorityRelation**     | The authority relation applicable between participants for a bounded context. At minimum COP distinguishes hierarchical/delegated execution from peer cooperation. The interaction protocol does not determine this relation.                   |
+| **InteractionMode**       | The communicative form used between participants, such as request/response, conversation, negotiation, event stream, call/result, or asynchronous task exchange. Interaction mode does not create or imply authority.                           |
+| **ExecutionSurface**      | The concrete technical interface through which a capability is accessed, such as HTTP, OpenAI-compatible API, ACP, A2A, MCP, CLI, stdio, shell, Inox, or a human interface. An execution surface is not an authority source.                    |
+| **HandlerProfile**        | A stable declaration of how work may be handled: accepted packet classes, required or offered capabilities, policy constraints, and result contract.                                                                                            |
+| **Handler**               | A competent executor of a Cognitive Packet. A Handler may be human, model, script, tool, repository, review queue, publication process, runtime, or governance process. It is not presumed to hold authority.                                   |
+| **HandlerInstance**       | A concrete, identifiable incarnation of a Handler Profile executing work in a bounded context. It may be durable, suspended, restarted, substituted, or ephemeral.                                                                              |
+| **Capability**            | A declared ability to perform a bounded transformation or effect. Capability proves neither authority nor entitlement to use it.                                                                                                                |
+| **CapabilityRequirement** | A transport- and provider-neutral description of work that requires one or more capabilities, together with relevant constraints such as locality, cost, latency, trust, quality, deadline, or execution class.                                 |
+| **CapabilityInvocation**  | One recorded attempt or execution of a Capability by a HandlerInstance.                                                                                                                                                                         |
+| **Act**                   | A meaningful operation or effect asserted by COP. An Act MAY be proposed, authorized, attempted, completed, refused, compensated, or observed; these states MUST NOT be conflated.                                                              |
+| **Trace**                 | The general causal or evidential primitive. Any physical, digital, external, or internal imprint left by an occurrence in reality. A Trace is not itself a truth claim. FractaLog is a governed trace projection, not merely runtime telemetry. |
+| **TraceRef**              | A canonical, immutable, content-addressed cryptographic pointer (`cop.trace-ref/v1`) identifying a trace independently of network location (`locator`) and physical custody (`custody`).                                                        |
+| **TraceDescriptor**       | Structured observational metadata (`cop.trace-descriptor/v1`) recording trace origin, custody, visibility, valid-time, and classification without embedding subjective confidence scalars.                                                      |
+| **Event**                 | A COP-native procedural representation of an occurrence within the COP runtime (e.g. `TaskStepExecuted`, `TraceObservation`, `ExecutionBudgetGrant`). An Event is a procedural specialization of Trace (`Event ⊂ Trace`).                       |
+| **Artifact**              | An immutable computational object (document, code, data structure, binary blob) identified by content digest (SHA-256). An Artifact may embody a Trace or be referenced by a Trace.                                                             |
+| **Assertion**             | A proposition or claim held by the Corpus (`cop.assertion/v1`) with explicit epistemic status (`hypothesized`, `inferred`, `declared`, `verified`, `normative`, `disputed`). An Assertion remains distinct from the Traces that evidence it.    |
+| **EvidenceRelation**      | An explicit, typed, directed relational link (`cop.evidence-relation/v1`) connecting a `TraceRef` to an `Assertion` (`supports`, `contradicts`, `contextualizes`). Allows contradictory evidence to coexist without historical deletion.        |
+| **Projection**            | A derived, reproducible view (`cop.temporal-projection/v1`) computed over an identified source set under a specified projector version and policy. Projections are non-authoritative (`is_authoritative: false`, `is_derived: true`).           |
+| **Projector**             | A pure, deterministic transformation function: `(Authoritative Traces + Assertions, Policy) → Projection`. When projector code changes, cached projections are marked stale (`projector_version_mismatch`).                                     |
+| **Store**                 | An authoritative, append-only persistence facility holding immutable Traces, native Events, Artifacts, and Assertions.                                                                                                                          |
+| **Index / Cache**         | A disposable, reconstructible performance accelerator (e.g. SQLite database, vector index, in-memory table). Indexes must never become competing sources of truth.                                                                              |
+| **Imputation**            | The explicit relation by which responsibility, credit, cost, custody, or consequence is attributed.                                                                                                                                             |
+| **Supervisor**            | A runtime component that starts, stops, monitors, or restarts child work. Supervision does not create Mandate authority.                                                                                                                        |
+| **Continuation**          | A durable, resumable request or state describing what remains to be handled. A Continuation SHOULD be capability-bound unless identity-bound resumption is explicitly required.                                                                 |
 
 ## 3. Rules for `agent`
 
@@ -76,14 +100,14 @@ Phase 2. No compatibility alias is intended.
 
 ## 4. Public metaphors
 
-Terms such as *Father Christmas*, *elves*, *workshop*, or equivalent localized metaphors are
+Terms such as _Father Christmas_, _elves_, _workshop_, or equivalent localized metaphors are
 informative public communication only. They have no protocol, authorization, identity, schema, or
 runtime meaning.
 
 ## 5. Execution and authority
 
-A HandlerInstance MAY execute an Act only within the applicable protocol and policy conditions.
-For consequential effects, the record MUST be capable of distinguishing, where applicable:
+A HandlerInstance MAY execute an Act only within the applicable protocol and policy conditions. For
+consequential effects, the record MUST be capable of distinguishing, where applicable:
 
 ```text
 Principal / authorizing Subject
@@ -108,10 +132,10 @@ The following invariants apply:
 >
 > **Execution is not identity.**
 
-A conversational request/response exchange MAY occur under a hierarchical mandate, between peers,
-or with a service-like capability. Conversely, peer cooperation MAY use a task protocol, event
-stream, conversation, or other interaction mode. Protocol semantics MUST NOT silently manufacture
-an authority relation that is absent from the applicable Mandate or peer agreement.
+A conversational request/response exchange MAY occur under a hierarchical mandate, between peers, or
+with a service-like capability. Conversely, peer cooperation MAY use a task protocol, event stream,
+conversation, or other interaction mode. Protocol semantics MUST NOT silently manufacture an
+authority relation that is absent from the applicable Mandate or peer agreement.
 
 ## 6. Lifecycle, substitution, and anti-capture
 
@@ -137,10 +161,10 @@ A runtime MAY submit a `CapabilityRequirement` to an external capability-resolut
 layer may select among local or remote services, coding agents, models, human handlers, Inox
 runtimes, or other available capabilities according to policy and constraints.
 
-For the Fractanet implementation family, **Magistral is the intended capability-resolution and access
-boundary** between COP orchestration and concrete work capabilities. ACP, A2A, MCP, OpenAI-compatible
-HTTP, CLI/stdio, Inox, and future protocols are candidate execution surfaces or adapters below that
-boundary; none is normative for COP Core.
+For the Fractanet implementation family, **Magistral is the intended capability-resolution and
+access boundary** between COP orchestration and concrete work capabilities. ACP, A2A, MCP,
+OpenAI-compatible HTTP, CLI/stdio, Inox, and future protocols are candidate execution surfaces or
+adapters below that boundary; none is normative for COP Core.
 
 Compact formulation:
 
